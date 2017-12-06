@@ -212,8 +212,7 @@ public class BoxListFragment extends BaseFragment {
         listview_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String mac = mDeviceListAdapter.getDevice(position).getAddress();
-                Log.e(TAG, "mac=" + mac);
+                Log.d(TAG, "开始绑定");
                 showProgress(getResources().getString(R.string.device_connect));
                 stopScanLe();
                 BleService.get().connectionDevice(context, mDeviceListAdapter.getDevice(position).getAddress());
@@ -253,9 +252,11 @@ public class BoxListFragment extends BaseFragment {
         }
     }
 
-    //开始扫描
+    /**
+     * 开始扫描
+     */
     private void scanLeDevice(final String address, final String deviceUUID) {
-        showProgress("搜索设备中。。。。");
+        showProgress("搜索设备...");
         BLEScanCfg scanCfg = new BLEScanCfg.ScanCfgBuilder(SCAN_PERIOD).builder();
         BLEScanner.get().startScanner(scanCfg, new BLEScanListener() {
             boolean isScanDevice;//是否扫描到设备
@@ -268,7 +269,7 @@ public class BoxListFragment extends BaseFragment {
             @Override
             public void onScanning(BLEDevice device) {
                 if (device.getMac().equals(address)) {
-                    showProgress("搜索到设备。。。");
+                    showProgress("搜索到设备...");
                     stopScanLe();
                     isScanDevice = true;
                     synchronized (this) {
@@ -344,6 +345,9 @@ public class BoxListFragment extends BaseFragment {
         }
     }
 
+    /**
+     * 注册设备连接广播
+     */
     private void initBleReceiver() {
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
         IntentFilter intentFilter = new IntentFilter();
@@ -360,7 +364,7 @@ public class BoxListFragment extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case CaptureActivity.REQ_CODE:
+            case CaptureActivity.REQ_CODE://二维码扫描回调
                 switch (resultCode) {
                     case RESULT_OK:
                         CommonKit.showMsgShort(context, "扫描成功");
@@ -368,7 +372,7 @@ public class BoxListFragment extends BaseFragment {
                         uuid = uuid.replace("", "-");
                         Log.e(TAG, "扫描结果：" + data.getStringExtra(CaptureActivity.EXTRA_SCAN_RESULT));  //or do sth
                         if (uuid.length() > 32) {
-                            bindBox(uuid.trim());
+                            bindBox(uuid.trim());//扫描到UUID
                         } else {
                             CommonKit.showMsgShort(context, "扫描失败");
                         }
@@ -440,9 +444,6 @@ public class BoxListFragment extends BaseFragment {
 
     /**
      * 获取设备列表
-     * {"code":0,"devicelist":[
-     * {"boxName":"Box","deviceStatus":"1","isDefault":"0","isOnLine":1,"lat":"0","lon":"0",
-     * "mac":"B0:91:22:69:42:0A","uuid":"B0912269420A0000000070D042190000"}]}
      */
     public void boxlist() {
         NetApi.boxlist(getToken(), ((MainActivity) context).username, new ResultCallBack<BoxDeviceModel>() {
@@ -520,15 +521,7 @@ public class BoxListFragment extends BaseFragment {
     }
 
     /**
-     * result:{"code":0,"data":{
-     * "become":"","becomeFinger1":"","becomeFinger2":"","becomeFinger3":"",
-     * "boxName":"","carryPersonNum":"","deviceStatus":"","deviceType":"A",
-     * "dismountPolice":"","elevation":"0","heartbeatRate":"","highestTemp":"0",
-     * "isDefault":"0","latitude":"0","locationRate":"","longitude":"0",
-     * "lowestTemp":"0","police":"","policeDiatance":"",
-     * "possessorFinger1":"","possessorFinger2":"","possessorFinger3":"",
-     * "unlocking":"","unlockingMode":""},
-     * "token":"77895B5BDF5E2A5593C812414532F3F6"}
+     * 接收广播
      */
     public class BleBroadCast extends BroadcastReceiver {
 
@@ -536,8 +529,8 @@ public class BoxListFragment extends BaseFragment {
         public void onReceive(Context context, Intent intent) {
             String mac = intent.getStringExtra("deviceMac");
             switch (intent.getAction()) {
-                case BLE_CONN_SUCCESS:
-                case BLE_CONN_SUCCESS_ALLCONNECTED:
+                case BLE_CONN_SUCCESS://连接成功
+                case BLE_CONN_SUCCESS_ALLCONNECTED://重复连接
                     BleService.get().enableNotify(mac);
                     showProgress("连接成功...");
                     Log.e(TAG, "开始获取UUID");
@@ -580,18 +573,7 @@ public class BoxListFragment extends BaseFragment {
     }
 
     /**
-     * 三、搜索BLE设备：
-     * <p>
-     * 通过调用BluetoothAdapter的startLeScan()搜索BLE设备。调用此方法时需要传入 BluetoothAdapter.LeScanCallback参数。
-     * 因此你需要实现 BluetoothAdapter.LeScanCallback接口，BLE设备的搜索结果将通过这个callback返回。
-     * <p>
-     * 由于搜索需要尽量减少功耗，因此在实际使用时需要注意：
-     * <p>
-     * 1、当找到对应的设备后，立即停止扫描；
-     * 2、不要循环搜索设备，为每次搜索设置适合的时间限制。避免设备不在可用范围的时候持续不停扫描，消耗电量。
-     * <p>
-     * 如果你只需要搜索指定UUID的外设，你可以调用 startLeScan(UUID[], BluetoothAdapter.LeScanCallback)方法。
-     * 其中UUID数组指定你的应用程序所支持的GATT Services的UUID。
+     * 搜索BLE设备：
      *
      * @param enable
      */

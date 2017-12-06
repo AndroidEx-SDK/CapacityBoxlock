@@ -19,7 +19,6 @@ import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
-import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.L;
 import com.androidex.capbox.data.net.base.ResultCallBack;
@@ -109,7 +108,7 @@ public class LockActivity extends BaseActivity implements OnClickListener {
     private TimerTask task_sendrssi;// 心跳任务
     private Timer timer_location = new Timer();// 设计定时器
     private TimerTask timer_getlocation;
-    private String address = null;//B0:91:22:69:42:2C//B0:91:22:69:41:7D
+    private String address = null;
     private String uuid = null;
     private String deviceName = "Box";
     public static String boxName = "AndroidEx";
@@ -125,11 +124,6 @@ public class LockActivity extends BaseActivity implements OnClickListener {
         uuid = getIntent().getStringExtra("uuid");
         deviceName = getIntent().getStringExtra("name");
         Log.e(TAG, "mac=" + address + "\nuuid=" + uuid + "\ndeviceName=" + deviceName);
-        if (address == null) {
-            if (SharedPreTool.getInstance(getContext()).getStringData(SharedPreTool.DEFAULT_MAC, null) != null) {
-                address = SharedPreTool.getInstance(getContext()).getStringData(SharedPreTool.DEFAULT_MAC, null);
-            }
-        }
         initView();
         initMap();
         initBleBroadCast();

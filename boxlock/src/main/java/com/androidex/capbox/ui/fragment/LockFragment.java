@@ -19,7 +19,6 @@ import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.MainActivity;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseFragment;
-import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.L;
 import com.androidex.capbox.data.net.base.ResultCallBack;
@@ -115,8 +114,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     private TimerTask task_sendrssi;// 心跳任务
     private Timer timer_location = new Timer();// 设计定时器
     private TimerTask timer_getlocation;
-
-    private String address = "B0:91:22:69:41:7D";//B0:91:22:69:42:2C//B0:91:22:69:41:7D
+    private String address = null;
     private String uuid = null;
     private String deviceName = "Box";
     public static String boxName = "AndroidEx";
@@ -134,11 +132,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         uuid = bundle.getString("uuid");
         deviceName = bundle.getString("name");
         Log.e(TAG, "mac=" + address);
-        if (address == null) {
-            if (SharedPreTool.getInstance(getContext()).getStringData(SharedPreTool.DEFAULT_MAC, null) != null) {
-                address = SharedPreTool.getInstance(getContext()).getStringData(SharedPreTool.DEFAULT_MAC, null);
-            }
-        }
         if (uuid != null) getLocation(true);
         initView();
         initMap();
@@ -164,7 +157,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
      * 初始化蓝牙广播
      */
     private void initBleBroadCast() {
-        Log.e("LockFragment", "--注册蓝牙广播");
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BLE_CONN_SUCCESS);
         intentFilter.addAction(BLE_CONN_SUCCESS_ALLCONNECTED);
@@ -361,7 +353,9 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         }
     }
 
-    //开始扫描
+    /**
+     * 开始扫描
+     */
     private void scanLeDevice() {
         showProgress("搜索设备中。。。");
         BLEScanCfg scanCfg = new BLEScanCfg.ScanCfgBuilder(SCAN_PERIOD).builder();
@@ -610,12 +604,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                 case ACTION_HEART:
                     String s = new StringBuilder(1).append(String.format("%02X", b[4])).toString();
                     String s1 = new StringBuilder(1).append(String.format("%02X", b[5])).toString();
-                    Log.e(TAG, "s=" + s);
-                    Log.e(TAG, "s1=" + s1);
                     Double parseInt = Double.valueOf(Integer.parseInt(s + s1, 16)) / 100 - 100;
-                    Log.e(TAG, "转化后=" + parseInt);
-                    Log.e(TAG, "温度=" + parseInt);
-
                     current_temp.setText(df.format(parseInt));
                     String s2 = new StringBuilder(1).append(String.format("%02X", b[6])).toString();
                     String s3 = new StringBuilder(1).append(String.format("%02X", b[7])).toString();
@@ -665,7 +654,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         }
 
         @Override
-
         public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
             if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
                 //没有找到检索结果
@@ -673,9 +661,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                 return;
             }
             tv_address.setText(result.getAddress() + result.getSematicDescription());
-            Log.e(TAG, "result=" + result.getAddress());
-            Log.e(TAG, "result=" + result.getBusinessCircle());
-            Log.e(TAG, "result=" + result.getSematicDescription());
             //获取反向地理编码结果
         }
     };
