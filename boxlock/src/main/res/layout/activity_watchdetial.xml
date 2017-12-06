@@ -1,0 +1,240 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/background"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.androidex.capbox.ui.widget.SecondTitleBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:titleText="@string/setting_tv_wristband"></com.androidex.capbox.ui.widget.SecondTitleBar>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tv_line_height"
+                android:layout_marginTop="@dimen/tv_distance"
+                android:background="@color/line_color" />
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- 防丢报警 -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/tv_line_height"
+                    android:background="@color/line_color" />
+
+                <LinearLayout
+                    android:id="@+id/setting_alarm_function"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/adduser_ll_height"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/marginPadding16">
+
+                    <com.androidex.capbox.ui.view.TypeFaceText
+                        android:id="@+id/TextView08_function"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingLeft="@dimen/setting_tv_padding_left"
+                        android:text="@string/setting_tv_alarm"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/setting_tv" />
+
+                    <ToggleButton
+                        android:id="@+id/alarm"
+                        android:layout_width="@dimen/marginPadding120"
+                        android:layout_height="@dimen/marginPadding35"
+                        android:layout_marginRight="@dimen/marginPadding16"
+                        android:background="@drawable/thumbs"
+                        android:checked="true"
+                        android:textOff="  "
+                        android:textOn="  " />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/tv_line_height"
+                    android:background="@color/line_color" />
+
+                <!-- 静默开关 -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/tv_line_height"
+                    android:background="@color/line_color" />
+
+                <LinearLayout
+                    android:id="@+id/setting_silence"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/adduser_ll_height"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/marginPadding16">
+
+                    <com.androidex.capbox.ui.view.TypeFaceText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingLeft="@dimen/setting_tv_padding_left"
+                        android:text="@string/setting_tv_silence"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/setting_tv" />
+
+                    <ToggleButton
+                        android:id="@+id/silence"
+                        android:layout_width="@dimen/marginPadding120"
+                        android:layout_height="@dimen/marginPadding35"
+                        android:layout_marginRight="@dimen/setting_tv_marginRight"
+                        android:background="@drawable/thumbs"
+                        android:checked="true"
+                        android:textOff="  "
+                        android:textOn="  " />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/tv_line_height"
+                    android:background="@color/line_color" />
+
+                <!--添加携行人指纹信息-->
+                <LinearLayout
+                    android:id="@+id/ll_possessorFinger"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/adduser_ll_height"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/marginPadding16">
+
+                    <com.androidex.capbox.ui.view.TypeFaceText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingLeft="@dimen/setting_tv_padding_left"
+                        android:text="@string/setting_tv_carryFinger"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/setting_tv" />
+
+                    <TextView
+                        android:id="@+id/tv_possessorFinger"
+                        android:layout_width="@dimen/setting_btn_right_height"
+                        android:layout_height="@dimen/setting_btn_right_height"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="@color/white" />
+
+                    <ImageView
+                        android:layout_width="@dimen/marginPadding20"
+                        android:layout_height="@dimen/marginPadding20"
+                        android:layout_marginRight="@dimen/marginPadding30"
+                        android:src="@mipmap/white_right" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/tv_line_height"
+                    android:background="@color/line_color" />
+
+                <!--拍照-->
+                <LinearLayout
+                    android:id="@+id/photograph"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/adduser_ll_height"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/marginPadding16">
+
+                    <com.androidex.capbox.ui.view.TypeFaceText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingLeft="@dimen/setting_tv_padding_left"
+                        android:text="@string/setting_tv_photograph"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/setting_tv" />
+
+                    <ImageView
+                        android:layout_width="@dimen/marginPadding20"
+                        android:layout_height="@dimen/marginPadding20"
+                        android:layout_marginRight="@dimen/marginPadding30"
+                        android:src="@mipmap/white_right" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dp"
+                    android:background="@color/line_color" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dp"
+                    android:layout_marginTop="@dimen/marginPadding16"
+                    android:background="@color/line_color" />
+
+                <!-- 一键重置腕表 -->
+                <LinearLayout
+                    android:id="@+id/setting_factory_settings"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/adduser_ll_height"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/marginPadding16">
+
+                    <com.androidex.capbox.ui.view.TypeFaceText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_weight="1"
+                        android:paddingLeft="@dimen/setting_tv_padding_left"
+                        android:text="@string/setting_tv_wristband_factory_setings"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/setting_tv" />
+
+                    <ImageView
+                        android:layout_width="@dimen/marginPadding20"
+                        android:layout_height="@dimen/marginPadding20"
+                        android:layout_marginRight="@dimen/marginPadding30"
+                        android:src="@mipmap/white_right" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/tv_line_height"
+                    android:background="@color/line_color" />
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_boxConfig"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginBottom="@dimen/marginPadding16"
+        android:layout_marginLeft="@dimen/marginPadding16"
+        android:layout_marginRight="@dimen/marginPadding16"
+        android:layout_marginTop="55dp"
+        android:background="@drawable/sel_bg_dark_blue_radius_5"
+        android:enabled="true"
+        android:gravity="center"
+        android:text="@string/label_configbracelet"
+        android:textColor="@color/white"
+        android:textSize="15sp" />
+
+</LinearLayout>

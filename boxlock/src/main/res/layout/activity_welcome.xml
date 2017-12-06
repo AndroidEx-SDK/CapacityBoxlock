@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@mipmap/welcome" />
+    <!--android:scaleType="centerCrop"-->
+    <!--android:layout_centerInParent="true"-->
+    <com.androidex.capbox.ui.view.TypeFaceText
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:paddingBottom="@dimen/layout_margin_padding"
+        android:text="@string/corporate_name"
+        android:textColor="@color/loading_text_color"
+        android:textSize="@dimen/font_size_small"
+        android:visibility="gone" />
+
+</RelativeLayout>

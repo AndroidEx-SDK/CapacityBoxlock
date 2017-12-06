@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#1983d1</color>
+    <color name="colorPrimaryDark">#1E90FF</color>
+    <color name="colorAccent">#0197DC</color>
+    <color name="blue_deep">#dd1E90FF</color>
+    <color name="starsBar_blue">#dd000000</color>
+
+    <color name="title_bg_color">#1E90FF</color>
+    <color name="bottom_bg_color">#ffffff</color>
+    <color name="text_color">#1983d1</color>
+    <color name="text_color1">#0197DC</color>
+    <color name="theme_color">#1E90FF</color>
+    <color name="line_color">#c7c7c7</color>
+    <color name="white">#FFFFFF</color>
+    <color name="white1">#FFD7D2</color>
+    <color name="violet">#250021</color>
+    <color name="temp_red">#001E90FF</color>
+    <color name="temp_green">#08C3B8</color>
+
+    <!-- 欢迎界面 -->
+    <color name="loading_text_color">#000000</color>
+    <color name="drak">#FF600109</color>
+
+    <!-- fragment_temp -->
+    <color name="min_text_color">#00BDFF</color>
+    <color name="max_text_color">#FF3145</color>
+
+    <!-- userlist -->
+    <color name="userlist_sideslip_update">#FF9BB7</color>
+    <color name="userlist_sideslip_delete">#56E5E5</color>
+    <!-- fragment_history -->
+    <color name="text_unit_color">#57E5E6</color>
+    <!-- about -->
+    <color name="gray_9">#999999</color>
+    <color name="blue_online">#089DE8</color>
+    <!-- 暗灰色 -->
+    <color name="dimgrey">#696969</color>
+    <!-- 灰色 -->
+    <color name="gray">#7F7F7F</color>
+    <!-- 花白色 -->
+    <color name="floralwhite">#FFFAF0</color>
+    <!-- 红色 -->
+    <color name="red">#ff3145</color>
+
+    <!-- 历史记录 自定义ListView 颜色 -->
+    <color name="transparent">#00000000</color>
+    <color name="gold">#000000</color>
+    <color name="pull_refresh_textview">#000000</color>
+    <color name="black">#000000</color>
+    <color name="blue">#039dea</color>
+
+    <!-- 设置界面字体颜色 -->
+    <color name="setting_text_color">#000000</color>
+
+    <!-- 报警界面 -->
+    <color name="alarm_text">#7F7F7F</color>
+    <color name="alarm_music">#B2B2B2</color>
+
+    <!-- dialog填充色 -->
+    <color name="dark_red">#E61441</color>
+    <color name="Gray_e6">#e6e6e6</color>
+    <color name="Gray_e5">#e5e5e5</color>
+    <color name="dialogColor">#f0ffffff</color>
+    <color name="dialogTxtColor">#0048fc</color>
+    <color name="tab_text_color_checked">#e61441</color>
+    <color name="tab_text_color_normal">#676767</color>
+    <color name="font_black">#3c3c3c</color>
+    <color name="divider_color">#DCDCDC</color>
+    <color name="bg_gray">#efefef</color>
+    <color name="bg_gray_33">#333333</color>
+    <color name="bg_gray_e8">#a3a1a1</color>
+    <color name="bt_dark_gray">#676767</color>
+</resources>

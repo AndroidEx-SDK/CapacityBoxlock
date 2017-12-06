@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">智能箱锁</string>
+    <string name="action_settings">设置</string>
+    <string name="action_config">配置</string>
+    <string name="action_connectlist">连接列表</string>
+    <string name="copy_right">西安中仪动控信息科技版权所有</string>
+    <string name="corporate_name">西安中仪动控信息科技有限公司</string>
+    <!-- fragment_lock -->
+    <string name="main_title_tv">智能监控</string>
+    <string name="user_name0">昵称：</string>
+    <string name="user_name">箱子</string>
+    <string name="user_binding">设备：</string>
+    <string name="user_device">FF:FF:FF:FF:FF</string>
+    <string name="current_temp">当前温度</string>
+    <string name="main_max_temp1">最高:</string>
+    <string name="main_max_temp">0</string>
+    <string name="main_max_temp2">℃</string>
+    <string name="main_min_temp1">最低:</string>
+    <string name="main_min_temp">26.6</string>
+    <string name="main_min_temp2">℃</string>
+    <string name="main_max_hum1">最高:</string>
+    <string name="main_max_hum">90.25</string>
+    <string name="main_max_hum2">%RH</string>
+    <string name="main_min_hum1">最低:</string>
+    <string name="main_min_hum">25.55</string>
+    <string name="main_min_hum2">%RH</string>
+    <string name="main_temp">37.2</string>
+    <string name="main_temp_unit">℃</string>
+    <string name="main_temp_type3">室温</string>
+    <string name="main_tv_watchlist">携行腕表</string>
+    <string name="main_tv_boxlist">携行箱</string>
+    <string name="main_tv_find">查找设备</string>
+    <string name="main_tv_setting">我</string>
+
+    <!-- userlist -->
+    <string name="userlist_title_tv">用户</string>
+    <!-- userlist_item -->
+    <string name="userlist_item_btn_text">立即绑定</string>
+    <string name="userlist_item_btn_modify">修改</string>
+    <string name="userlist_item_btn_delete">删除</string>
+
+    <!-- adduser -->
+    <string name="adduser_title_tv">新建用户</string>
+    <string name="adduser_title_tv1">修改用户</string>
+    <string name="adduser_btn_binding">绑定设备</string>
+    <string name="adduser_btn_unbinding">解绑</string>
+    <string name="adduser_btn_signout">退出当前用户</string>
+    <string name="adduser_btn_cancellation">注销用户</string>
+
+    <!--refresh-->
+    <string name="pull_to_refresh">下拉可以刷新</string>
+    <string name="release_to_refresh">释放立即刷新</string>
+    <string name="refreshing">正在刷新…</string>
+    <string name="not_updated_yet">暂未更新过</string>
+    <string name="updated_at">上次更新于%1$s前</string>
+    <string name="updated_just_now">刚刚更新</string>
+    <string name="time_error">时间有问题</string>
+    <string name="setting">设置</string>
+
+    <!-- fragment_history -->
+    <string name="history_title_tv">历史记录</string>
+    <string name="history_page_bt_year">2015年</string>
+    <string name="history_page_bt_month">02月</string>
+    <string name="history_page_bt_day">09日</string>
+    <string name="history_page_unit">单位:℃</string>
+    <string name="history_page_time">时间:</string>
+    <string name="history_page_tv_time">日</string>
+    <string name="history_page_tv_maxtemp">38.2℃</string>
+
+    <!-- fragment_setting -->
+    <string name="setting_tv_rule">开锁规则</string>
+    <string name="setting_tv_modes">开锁方式</string>
+    <string name="setting_tv_clearFinger">清除指纹</string>
+    <string name="setting_tv_possessorFinger">所有人指纹</string>
+    <string name="setting_tv_settingFinger">指纹设置</string>
+    <string name="setting_tv_carryFinger">携行人员指纹</string>
+    <string name="setting_tv_becomeFinger">无线静默功能指纹</string>
+    <string name="setting_tv_personnel">携行设备</string>
+    <string name="setting_tv_distance">报警距离</string>
+    <string name="setting_tv_photograph">携行人员信息</string>
+    <string name="setting_tv_phonenumbers">携行人手机号</string>
+    <string name="setting_tv_distance_settings">距离设定</string>
+    <string name="setting_tv_configure">一键配置</string>
+    <string name="setting_tv_heartbeatRate">心跳更新频率</string>
+    <string name="setting_tv_Location">定位更新频率</string>
+    <string name="setting_tv_temperature">最低温度</string>
+    <string name="setting_tv_temperature2">最高温度</string>
+    <string name="setting_tv_alarm">报警设置</string>
+    <string name="setting_tv_openalarm">报警开关</string>
+    <string name="setting_tv_lowtemp">设置最低温度</string>
+    <string name="setting_tv_hightemp">设置最高温度</string>
+    <string name="setting_tv_silence">静默开关</string>
+    <string name="setting_tv_tempPolice">温度报警开关</string>
+    <string name="setting_tv_humidityPolice">湿度报警开关</string>
+    <string name="setting_tv_distancePolice">距离报警开关</string>
+    <string name="setting_tv_fingerprint_unlock">静默模式指纹开锁</string>
+    <string name="setting_tv_factory_settings">恢复出厂设置</string>
+    <string name="setting_tv_wristband_factory_setings">重置腕表</string>
+    <string name="setting_tv_alarm_demolition">防拆报警</string>
+    <string name="setting_tv_wristband">腕表配置</string>
+    <string name="setting_tv_box">配置</string>
+    <string name="setting_tv_boxConfig">密运箱配置</string>
+    <string name="setting_tv_settingFigner">指纹设置</string>
+    <string name="settint_title_tv">个人中心</string>
+    <string name="setting_tv_function">防丢报警</string>
+    <string name="setting_tv_open">开启</string>
+    <string name="setting_tv_close">关闭</string>
+    <string name="setting_tv_temp">温度报警标准</string>
+    <string name="setting_tv_call_temp">37.5℃</string>
+    <string name="setting_tv_cry">踢被子报警</string>
+    <string name="setting_tv_Nolocation">箱体位置未知</string>
+    <string name="setting_tv_real">体温计模式</string>
+    <string name="setting_tv_fever">温度报警</string>
+    <string name="setting_tv_cold_proof">温度报警</string>
+    <string name="setting_tv_coldtemp">湿度报警标准</string>
+    <string name="setting_tv_cold_temp">30.0℃以下</string>
+    <string name="setting_tv_decibel">60dB以上</string>
+    <string name="setting_tv_mode">报警方式</string>
+    <string name="setting_tv_device">设备</string>
+    <string name="setting_tv_down_fever">紧急求助</string>
+    <string name="setting_tv_about">关于</string>
+
+    <!-- activity_typeofalarm -->
+    <string name="typeofalarm_title_tv">报警方式</string>
+    <string name="typeofalarm_tv_lost">防丢报警方式</string>
+    <string name="typeofalarm_tv_lost_type">震动+铃声</string>
+    <string name="typeofalarm_tv_bells">铃声选择</string>
+    <string name="typeofalarm_tv_bells_name">青春纪念册</string>
+    <string name="typeofalarm_tv_fever">温度/湿度报警方式</string>
+    <string name="typeofalarm_tv_fever_type">铃声</string>
+    <string name="typeofalarm_tv_cry">哭声报警方式</string>
+    <string name="typeofalarm_tv_cry_type">震动+铃声</string>
+    <string name="typeofalarm_tv_kickaquilt">踢被子报警方式</string>
+
+    <!-- setmusic -->
+    <string name="setmusic_selectbtn">选择</string>
+    <string name="setmusic_cancelbtn">取消</string>
+
+    <!-- activity_about -->
+    <string name="about_title_tv">关于我们</string>
+    <string name="about_null_versionNum">未检测到版本</string>
+    <string name="about_tv_versionNum">版本号:Ver</string>
+    <string name="about_tv1">智能箱锁APP</string>
+    <string name="about_tv2">版本号:Ver1.0.0</string>
+    <string name="about_btn_tv">版本检测</string>
+    <string name="about_tv3">用户使用条款</string>
+    <string name="about_tv4">版权所有</string>
+    <string name="about_tv5">Copyright © 2014-2015 lyp</string>
+    <string name="about_tv6">All rights reserved</string>
+
+    <!-- activity_device -->
+    <string name="device_title_tv">设备</string>
+    <string name="device_title_text1">已连接设备</string>
+    <string name="device_title_text2">搜索设备</string>
+    <string name="device_title_text3">已绑定设备</string>
+    <string name="device_box_bind">已绑定携行箱</string>
+    <string name="device_watch_bind">已绑定腕表</string>
+    <string name="device_btn_connect">连接</string>
+    <string name="device_btn_online">离线</string>
+    <string name="device_status_leisure">空闲状态</string>
+    <string name="device_status_config">配置状态</string>
+    <string name="device_status_carry">携行状态</string>
+    <string name="device_status_open">开箱状态</string>
+    <string name="device_status_become">静默状态</string>
+    <string name="device_btn_bind">绑定</string>
+    <string name="device_btn_disconnect">断开连接</string>
+    <string name="ble_not_supported">BLE is not supported(该软件不支持蓝牙4.0)</string>
+    <string name="error_bluetooth_not_supported">Bluetooth not supported(该手机不支持蓝牙4.0)</string>
+    <string name="unknown_device">Unknown device(未知设备)</string>
+    <string name="device_connect">正在连接设备...</string>
+
+    <!-- activity_downfever -->
+    <string name="downfever_title_tv">紧急求助</string>
+    <string name="downfever_tv_commonsense">宝宝发烧常识</string>
+    <string name="downfever_tv_massage">按摩降温法</string>
+    <string name="downfever_tv_physics">物理降温法</string>
+    <string name="downfever_tv_taboo">发烧饮食四忌</string>
+    <string name="downfever_tv_matters">日常护理注意事项</string>
+
+    <!-- activity_historylist -->
+    <string name="historylist_title_tv">历史记录</string>
+    <string name="historylist_title_text">发烧记录</string>
+    <string name="historylist_tv_titile">按钮显示文字表示当前ListView的设置状态</string>
+    <string name="historylist_bt_canPullRefBtn">启用下拉刷新</string>
+    <string name="historylist_bt_canLoadMoreFlagBtn">启用加载更多</string>
+    <string name="historylist_bt_autoLoadMoreFlagBtn">关闭自动加载更多</string>
+    <string name="historylist_bt_isMoveToFirstItemBtn">关闭移动到第一条Item</string>
+
+    <!-- historylist_item -->
+    <string name="historylist_item_date">2015年2月4日</string>
+    <string name="historylist_item_fever">发烧情况:已退烧</string>
+    <string name="historylist_item_start_time">开始时间</string>
+    <string name="historylist_item_starttime">12:12:10</string>
+    <string name="historylist_item_duration_time">持续至</string>
+    <string name="historylist_item_durationtime">15:15:10</string>
+    <string name="historylist_item_max_temp">最高体温</string>
+    <string name="historylist_item_maxtemp">37.6℃</string>
+    <string name="historylist_item_min_temp">最低体温</string>
+    <string name="historylist_item_mintemp">36.8℃</string>
+
+    <!-- 历史记录 自定义ListView -->
+    <string name="p2refresh_head_load_more">加载更多</string>
+    <string name="p2refresh_end_load_more">更 多</string>
+    <string name="p2refresh_end_click_load_more">点击加载</string>
+    <string name="p2refresh_release_refresh">松开刷新</string>
+    <string name="p2refresh_pull_to_refresh">下拉刷新</string>
+    <string name="p2refresh_doing_head_refresh">正在刷新&#8230;</string>
+    <string name="p2refresh_doing_end_refresh">加载中&#8230;</string>
+    <string name="p2refresh_refresh_lasttime">最近更新&#160;&#058;&#160;</string>
+
+    <!-- Dialog -->
+    <string name="pointMessage">提示信息</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确定</string>
+
+    <!-- 代码文字 -->
+    <!-- AddUserActivity.java -->
+    <string name="adduser_username">请输入用户名</string>
+    <string name="adduser_userdate">请输入出生日期</string>
+    <string name="adduser_pic">获取图片方式</string>
+    <string name="adduser_photograph">拍照</string>
+    <string name="adduser_phone">从手机中选择</string>
+    <string name="adduser_back">返回</string>
+    <string name="adduser_date">请选择日期与时间</string>
+    <string name="adduser_year">年</string>
+    <string name="adduser_month">月</string>
+    <string name="adduser_day">日</string>
+    <string name="adduser_month_unit">月</string>
+    <string name="adduser_day_unit">日</string>
+    <string name="adduser_hour_unit">小时</string>
+    <string name="adduser_years">岁</string>
+
+    <!-- BLEDeviceActivity.java -->
+    <string name="bledevice_toast1">当前用户已绑定一个设备！</string>
+    <string name="bledevice_toast2">创建用户后点击绑定设备！</string>
+    <string name="bledevice_toast3">箱子已经连接</string>
+    <string name="bledevice_toast_hand">手环已经连接</string>
+    <string name="bledevice_toast4">已经断开连接</string>
+    <string name="bledevice_toast5">同步设备时间成功</string>
+    <string name="bledevice_toast6">同步设备时间失败</string>
+
+    <!-- HistoryListActivity.java -->
+    <string name="historylist_fever">发烧情况：已退烧</string>
+
+    <!-- MainActivity.java -->
+    <string name="main_exit">再按一次返回键退出程序</string>
+
+    <!-- TypeOfAlarm.java -->
+    <string name="typeofalarm_shake">震动</string>
+    <string name="typeofalarm_bells">铃声</string>
+    <string name="typeofalarm_shake_bells">震动+铃声</string>
+    <string name="typeofalarm_type">提醒方式</string>
+
+    <!-- BLEConnectDeviceListAdapter.java -->
+    <string name="devicelist_connected_user">连接用户：</string>
+
+    <!-- UserInfoAdapter.java -->
+    <string name="userinfoadapter_discon">未绑定设备</string>
+
+    <!-- HistoryFragment.java -->
+    <string name="historyfragment_toast1">蓝牙无法使用!</string>
+    <string name="historyfragment_no_his_data">数据同步完成或无历史数据</string>
+    <string name="historyfragment_nor_data_ok">同步一条体温数据</string>
+    <string name="historyfragment_nor_data_failed">体温数据同步丢包</string>
+    <string name="historyfragment_hig_data_ok">同步一条高烧数据</string>
+    <string name="historyfragment_hig_data_failed">高烧数据同步丢包</string>
+
+    <!-- LockFragment.java -->
+    <string name="itemfragment_ble_toast">请先创建用户！</string>
+    <string name="itemfragment_username">宝贝</string>
+    <string name="itemfragment_exceed">温度超出测量范围!</string>
+    <string name="itemfragment_toast1">已断开</string>
+    <string name="itemfragment_toast2">已主动断开</string>
+    <string name="itemfragment_toast3">请先绑定设备</string>
+    <string name="itemfragment_toast4">未搜索到设备</string>
+    <string name="itemfragment_toast5">请重新连接设备</string>
+    <string name="itemfragment_dialog_fever">停止高烧提醒</string>
+    <string name="itemfragment_dialog_cold">停止防寒穿衣提醒</string>
+    <string name="itemfragment_dialog_kick">停止踢被子提醒</string>
+    <string name="itemfragment_dialog_lost">已经离开安全距离。</string>
+
+    <!-- SettingFragment.java -->
+    <string name="setting_tv_above">以上</string>
+    <string name="setting_dialog_title">温度报警</string>
+    <string name="setting_tv_ujuicer_alarm_ok">防丢报警设置成功。</string>
+    <string name="setting_tv_ble_disconnect">蓝牙未连接</string>
+    <string name="setting_tv_below">以下</string>
+    <string name="setting_dialog_title1">湿度报警</string>
+    <string name="setting_tv_Indicator">温度指示灯</string>
+    <string name="fd1">远距离响应防丢</string>
+    <string name="fd2">近距离防丢</string>
+    <string name="fd3">防丢服务不开启</string>
+
+
+    <string name="app_label">指南针</string>
+    <string name="getting_location">正在获取经纬度...</string>
+    <string name="cannot_get_location">无法获取经纬度</string>
+    <string name="location_north">北纬 %s</string>
+    <string name="location_south">南纬 %sS</string>
+    <string name="location_east">东经 %s</string>
+    <string name="location_west">西经 %s</string>
+
+    <string name="bracelet_bindfail">手环未连接</string>
+
+    <string name="label_login">登录</string>
+    <string name="label_automatic_login">自动登录</string>
+    <string name="label_configBox">配置箱体</string>
+    <string name="label_configbracelet">配置腕表</string>
+    <string name="label_settingLock">开锁设置</string>
+    <string name="label_startCarryScort">启动携行押运</string>
+    <string name="label_finish">提交</string>
+    <string name="label_register">提交审核</string>
+    <string name="label_user_login">用户登录</string>
+    <string name="label_box_name">箱体昵称</string>
+    <string name="label_user_login_account">手机号码</string>
+    <string name="hint_phone_input">请输入11位手机号</string>
+    <string name="hint_uuid_commit">箱体uuid为空</string>
+    <string name="hint_boxname_commit">请设置箱体昵称</string>
+    <string name="hint_possessorFinger_commit">请设置所有人指纹信息</string>
+    <string name="hint_becomeFinger_commit">请设置无线静默指纹信息</string>
+    <string name="hint_unlocking_commit">请设置开锁次数</string>
+    <string name="hint_unlockingmode_commit">请设置开锁模式</string>
+    <string name="hint_carryPersonNum_commit">请添加携行人员</string>
+    <string name="hint_police_commit">警告，报警开关没开</string>
+    <string name="hint_heartbeatRate_commit">请设置正确的心跳频率(30s-120s)</string>
+    <string name="hint_locationRate_commit">请设置正确的定位频率(60s-300s)</string>
+    <string name="hint_highestTemp_commit">请设置最高温度(60°-100°)</string>
+    <string name="hint_lowestTemp_commit">请设置最低温度(0°-60°)</string>
+    <string name="hint_dismountPolice_commit">请开启破拆报警</string>
+    <string name="hint_become_commit">请开启无线静默</string>
+    <string name="hint_password_input">请输入6-32位的密码</string>
+    <string name="hint_authcode_input">验证码不正确</string>
+    <string name="hint_cardid_input">身份证号码非法</string>
+    <string name="hint_regist_ok">提交成功，请耐心等待审核</string>
+    <string name="hint_regist_fail">审核未通过，请与客服联系</string>
+    <string name="hint_name_input">姓名非法</string>
+    <string name="hint_reg_ok">注册成功</string>
+    <string name="hint_reg_fail">注册失败</string>
+    <string name="hint_find_pwd_ok">密码找回成功</string>
+    <string name="hint_find_pwd_fail">密码找回失败</string>
+    <string name="hint_login_ok">登录成功</string>
+    <string name="hint_bind_ok">绑定成功</string>
+    <string name="hint_unbind_ok">解绑成功</string>
+    <string name="hint_login_fail">登录失败</string>
+    <string name="label_login_ing">正在登录</string>
+    <string name="label_config_ing">正在配置</string>
+    <string name="label_getlist_ing">正在获取设备列表</string>
+    <string name="label_intnet_fail">网络连接失败</string>
+    <string name="hint_password_not_equal">两次密码输入不同</string>
+    <string name="label_register_ing">正在注册</string>
+    <string name="label_find_pwd_ing">正在找回密码</string>
+    <string name="label_logout_ing">正在退出登录</string>
+    <string name="hint_logout_fail">退出登录失败</string>
+    <string name="hint_logout_ok">退出登录成功</string>
+    <string name="hint_logoff_ok">注销成功</string>
+    <string name="hint_password">密码</string>
+    <string name="hint_authcode">验证码</string>
+    <string name="label_reg_by_phone">手机号注册</string>
+    <string name="label_forget_password">忘记密码？</string>
+    <string name="label_user_req">注册账号</string>
+    <string name="label_finger_enter">指纹录入</string>
+    <string name="label_find_pwd">找回密码</string>
+    <string name="hint_input_phone">请输入手机号码</string>
+    <string name="hint_name">姓名</string>
+    <string name="hint_captcha">身份证号码</string>
+    <string name="label_get_captcha">身份验证</string>
+    <string name="hint_set_login_pwd">输入登录密码</string>
+    <string name="hint_input_new_pwd">输入新密码</string>
+    <string name="hint_set_login_pwd_confirm">确认登录密码</string>
+    <string name="hint_new_pwd_confirm">确认新密码</string>
+    <string name="hint_send_mobile_code_again">%ds后可重新获取</string>
+    <string name="label_send_mobile_code">获取验证码</string>
+    <string name="hint_get_mobile_code_ing">正在获取验证码</string>
+    <string name="hint_get_mobile_code_error">验证码错误，请重新输入</string>
+    <string name="hint_get_mobile_code_success"><font color='red'>%ds</font><font color='#666666'>后可重新获取</font></string>
+    <string name="hint_get_code_error">获取验证码失败</string>
+    <string name="label_ing">进行中</string>
+    <string name="hint_input_captcha">输入验证码</string>
+    <string name="hint_input_finger">请将手指放在箱体指纹传感器上</string>
+    <string name="hint_input_fingeragin">请再次将手指放在箱体指纹传感器上</string>
+    <string name="hint_input_fingerfail">请再次将手指放在箱体指纹传感器上</string>
+    <string name="hint_input_fingersucced">恭喜指纹录入完成</string>
+
+    <string name="fingerprint_recognition_start">开始指纹识别</string>
+    <string name="fingerprint_recognition_cancel">取消指纹识别</string>
+    <string name="fingerprint_recognition_guide_tip">开始指纹识别</string>
+    <string name="fingerprint_recognition_tip">请进行指纹识别，长按指纹解锁键</string>
+    <string name="fingerprint_recognition_not_support">此设备不支持指纹解锁</string>
+    <string name="fingerprint_recognition_success">指纹识别成功</string>
+    <string name="fingerprint_recognition_failed">指纹识别失败，请重试！</string>
+    <string name="fingerprint_recognition_error">指纹识别错误，等待几秒之后再重试</string>
+    <string name="fingerprint_recognition_authenticating">指纹识别已经开启，长按指纹解锁键</string>
+    <string name="fingerprint_recognition_unlock_screen">测试密码解锁屏幕</string>
+    <string name="fingerprint_recognition_not_enrolled">您还没有录制指纹，请录入！</string>
+    <string name="fingerprint_not_set_unlock_screen_pws">系统没有设置锁屏密码，请设置！</string>
+    <string name="fingerprint_sys_setting_page">进入系统指纹设置页面</string>
+    <string name="sys_pwd_recognition_success">系统密码识别成功</string>
+    <string name="sys_pwd_recognition_failed">系统密码识别失败</string>
+
+</resources>

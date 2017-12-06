@@ -1,0 +1,475 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/background"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/title_height"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/main_bt_ble"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingBottom="5dp"
+                android:paddingRight="@dimen/marginPadding16"
+                android:paddingTop="5dp"
+                android:src="@drawable/ble_button" />
+
+            <ImageView
+                android:id="@+id/main_bt_ble_close"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/main_bt_ble"
+                android:background="@drawable/ble_pressed"
+                android:paddingBottom="5dp"
+                android:paddingLeft="@dimen/title_button_mar"
+                android:paddingRight="5dp"
+                android:paddingTop="5dp"
+                android:visibility="gone" />
+
+            <com.androidex.capbox.ui.view.TypeFaceText
+                android:id="@+id/main_tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="@string/main_title_tv"
+                android:textColor="@color/white"
+                android:textSize="@dimen/size18" />
+
+            <com.androidex.capbox.ui.view.TypeFaceText
+                android:id="@+id/tv_boxConfig"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@+id/iv_menu"
+                android:gravity="center"
+                android:paddingLeft="@dimen/marginPadding16"
+                android:paddingRight="@dimen/marginPadding16"
+                android:text="@string/setting_tv_box"
+                android:textColor="@color/white"
+                android:textSize="@dimen/size14" />
+
+            <ImageView
+                android:id="@+id/iv_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingBottom="5dp"
+                android:paddingRight="@dimen/marginPadding16"
+                android:paddingLeft="@dimen/marginPadding10"
+                android:paddingTop="5dp"
+                android:src="@mipmap/list_pop" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/blue" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl"
+        android:layout_weight="1"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/ll_temp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="@dimen/temp_page_maxmin_margin1"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/imageView1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/temp" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_lowtemp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/marginPadding30"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/rl_temp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/marginPadding6">
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                style="@style/fragment_lock_name"
+                                android:text="当前温度：" />
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                android:id="@+id/current_temp"
+                                style="@style/fragment_lock_data"
+                                android:text="@string/main_max_temp" />
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                android:id="@+id/current_temp_unit"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/main_min_temp2"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/temp_page_maxmin_textsize" />
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/marginPadding6">
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                style="@style/fragment_lock_name"
+                                android:text="@string/main_max_temp1" />
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                android:id="@+id/main_tv_maxtemp"
+                                style="@style/fragment_lock_data"
+                                android:text="@string/main_max_temp" />
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/main_min_temp2"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/temp_page_maxmin_textsize" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/marginPadding6">
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                style="@style/fragment_lock_name"
+                                android:text="@string/main_min_temp1" />
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                android:id="@+id/main_tv_mintemp"
+                                style="@style/fragment_lock_data"
+                                android:text="@string/main_min_temp" />
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                style="@style/fragment_lock_unit"
+                                android:text="@string/main_min_temp2" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/marginPadding6">
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                style="@style/fragment_lock_name"
+                                android:text="经度：" />
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                android:id="@+id/tv_longitude"
+                                style="@style/fragment_lock_data"
+                                android:text="@string/main_max_temp" />
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                style="@style/fragment_lock_unit"
+                                android:text="°" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/marginPadding6">
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                style="@style/fragment_lock_name"
+                                android:text="纬度：" />
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                android:id="@+id/tv_latitude"
+                                style="@style/fragment_lock_data"
+                                android:text="@string/main_max_temp" />
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                style="@style/fragment_lock_unit"
+                                android:text="°" />
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/marginPadding6">
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                style="@style/fragment_lock_name"
+                                android:text="高程：" />
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                android:id="@+id/tv_elevation"
+                                style="@style/fragment_lock_data"
+                                android:text="0" />
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                style="@style/fragment_lock_unit"
+                                android:text="M" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_hum"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/temp_page_maxmin_margin1"
+                    android:layout_marginTop="20dp">
+
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/temp_page_maxmin_margin1"
+                        android:src="@mipmap/hum" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/marginPadding30"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/marginPadding16">
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                style="@style/fragment_lock_name"
+                                android:text="当前湿度：" />
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                android:id="@+id/current_hum"
+                                style="@style/fragment_lock_data"
+                                android:text="@string/main_max_temp" />
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                style="@style/fragment_lock_unit"
+                                android:text="@string/main_min_hum2" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ll_heighthum"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/marginPadding6">
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                style="@style/fragment_lock_name"
+                                android:text="@string/main_max_hum1" />
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                android:id="@+id/main_tv_maxhum"
+                                style="@style/fragment_lock_data"
+                                android:text="@string/main_max_hum" />
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                style="@style/fragment_lock_unit"
+                                android:text="@string/main_max_hum2" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/marginPadding6">
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                style="@style/fragment_lock_name"
+                                android:text="@string/main_min_hum1" />
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                android:id="@+id/main_tv_minhum"
+                                style="@style/fragment_lock_data"
+                                android:text="@string/main_min_hum" />
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                style="@style/fragment_lock_unit"
+                                android:text="@string/main_min_hum2" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/marginPadding6">
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                style="@style/fragment_lock_name"
+                                android:text="锁状态：" />
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                android:id="@+id/tv_status"
+                                style="@style/fragment_lock_data"
+                                android:text="@string/setting_tv_close" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/marginPadding6">
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                style="@style/fragment_lock_name"
+                                android:text="箱体电量：" />
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                android:id="@+id/tv_electric_quantity"
+                                style="@style/fragment_lock_data"
+                                android:text="@string/main_max_temp" />
+
+                            <com.androidex.capbox.ui.view.TypeFaceText
+                                style="@style/fragment_lock_unit"
+                                android:text="%" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/marginPadding16"
+                    android:layout_marginTop="@dimen/marginPadding16">
+
+                    <com.androidex.capbox.ui.view.TypeFaceText
+                        style="@style/fragment_lock_name"
+                        android:text="心跳时间：" />
+
+                    <com.androidex.capbox.ui.view.TypeFaceText
+                        android:id="@+id/tv_lastTime"
+                        style="@style/fragment_lock_data"
+                        android:text="@string/main_max_temp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/marginPadding16"
+                    android:layout_marginTop="@dimen/marginPadding6">
+
+                    <com.androidex.capbox.ui.view.TypeFaceText
+                        style="@style/fragment_lock_name"
+                        android:text="定位时间：" />
+
+                    <com.androidex.capbox.ui.view.TypeFaceText
+                        android:id="@+id/tv_locationTime"
+                        style="@style/fragment_lock_data"
+                        android:text="@string/main_max_temp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/marginPadding16"
+                    android:layout_marginTop="@dimen/marginPadding6">
+
+                    <com.androidex.capbox.ui.view.TypeFaceText
+                        style="@style/fragment_lock_name"
+                        android:text="定位位置：" />
+
+                    <com.androidex.capbox.ui.view.TypeFaceText
+                        android:id="@+id/tv_address"
+                        style="@style/fragment_lock_data"
+                        android:text="@string/setting_tv_Nolocation" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/iv_lock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/marginPadding20"
+                android:src="@mipmap/open_lock" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginPadding16"
+                android:layout_marginTop="@dimen/marginPadding16">
+
+                <com.androidex.capbox.ui.view.TypeFaceText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/user_name0"
+                    android:textColor="@color/white" />
+
+                <com.androidex.capbox.ui.view.TypeFaceText
+                    android:id="@+id/main_tv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="7"
+                    android:lines="1"
+                    android:text="@string/user_name"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginPadding16">
+
+                <com.androidex.capbox.ui.view.TypeFaceText
+                    android:id="@+id/main_tv_binding"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="@string/user_binding"
+                    android:textColor="@color/white" />
+
+                <com.androidex.capbox.ui.view.TypeFaceText
+                    android:id="@+id/main_tv_device"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/user_device"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

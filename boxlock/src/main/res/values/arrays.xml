@@ -1,0 +1,29 @@
+<?xml version = "1.0"   encoding = "UTF-8"?>
+<resources>
+
+    <string-array name="areas">
+        <item>@string/typeofalarm_shake_bells</item><!-- 震动+铃声 -->
+        <item>@string/typeofalarm_bells</item><!-- 铃声 -->
+        <item>@string/typeofalarm_shake</item><!-- 震动 -->
+    </string-array>
+    <string-array name="rule">
+        <item>多次有效</item>
+        <item>一次有效</item>
+    </string-array>
+    <string-array name="mode">
+        <item>指纹开锁</item>
+        <item>手环开锁</item>
+        <item>指定位置开锁</item>
+    </string-array>
+    <string-array name="configure">
+        <item>任务发布人配置</item>
+        <item>携行人配置</item>
+    </string-array>
+    <string-array name="distance">
+        <item>脱距</item>
+        <item>较近</item>
+        <item>近</item>
+        <item>较远</item>
+        <item>远</item>
+    </string-array>
+</resources>

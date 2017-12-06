@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ZydcKJBox</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+
+    <!-- 欢迎界面 -->
+    <string name="copy_right">Xian ZhongYi DongKong KJ all rights reserved</string>
+    <string name="corporate_name">Lthyh all rights reserved</string>
+
+    <!-- fragment_lock -->
+    <string name="main_title_tv">Intelligent Monitoring</string>
+    <string name="user_name0">nickname:</string>
+    <string name="user_name">Box</string>
+    <string name="user_age">6 years</string>
+    <string name="user_date0">birthday:</string>
+    <string name="user_date">2015-02-11</string>
+    <string name="user_binding">device:</string>
+    <string name="user_device">FF:FF:FF:FF:FF</string>
+    <string name="main_max_temp1">highest:</string>
+    <string name="main_max_temp">35.5</string>
+    <string name="main_max_temp2">℃</string>
+    <string name="main_min_temp1">lowest:</string>
+    <string name="main_min_temp">0</string>
+    <string name="main_min_temp2">℃</string>
+    <string name="main_temp">37.2</string>
+    <string name="main_temp_unit">℃</string>
+    <string name="main_max_hum1">highest:</string>
+    <string name="main_max_hum">38.5</string>
+    <string name="main_max_hum2">%RH</string>
+    <string name="main_min_hum1">lowest:</string>
+    <string name="main_min_hum">26.6</string>
+    <string name="main_min_hum2">%RH</string>
+    <string name="main_hum">37.2</string>
+    <string name="main_hum_unit">℃</string>
+    <string name="main_temp_type1">normothermia</string>
+    <string name="main_temp_type2">high fever</string>
+    <string name="main_temp_type3">ambient temp</string>
+    <string name="main_tv_temp">Real Time Monitoring</string>
+    <string name="main_tv_setting">Feature Set</string>
+    <string name="main_tv_find">Find Devices</string>
+
+    <!-- userlist -->
+    <string name="userlist_title_tv">User</string>
+
+    <!-- userlist_item -->
+    <string name="userlist_item_btn_text">binding</string>
+    <string name="userlist_item_btn_modify">Modify</string>
+    <string name="userlist_item_btn_delete">Remove</string>
+
+    <!-- adduser -->
+    <string name="adduser_title_tv">New User</string>
+    <string name="adduser_title_tv1">Usermod</string>
+    <string name="adduser_btn_binding">binding</string>
+    <string name="adduser_tv_name">NAME:</string>
+    <string name="adduser_tv_sex">SEX:</string>
+    <string name="adduser_tv_sex_man">male</string>
+    <string name="adduser_tv_sex_woman">lady</string>
+    <string name="adduser_tv_age">BIRTHDAY:</string>
+
+    <!-- fragment_history -->
+    <string name="history_title_tv">History</string>
+    <string name="history_page_bt_year">2015</string>
+    <string name="history_page_bt_month">February</string>
+    <string name="history_page_bt_day">09</string>
+    <string name="history_page_unit">Unit:℃</string>
+    <string name="history_page_time">Time:</string>
+    <string name="history_page_tv_time">day</string>
+    <string name="history_page_tv_maxtemp">38.2℃</string>
+
+    <!-- fragment_setting -->
+    <string name="settint_title_tv">Feature Set</string>
+    <string name="setting_tv_function">Anti lost alarm</string>
+    <string name="setting_tv_open">open</string>
+    <string name="setting_tv_close">close</string>
+    <string name="setting_tv_temp">Fever Alarm</string>
+    <string name="setting_tv_call_temp">38℃ above</string>
+    <string name="setting_tv_cry">Kicking alarm</string>
+    <string name="setting_tv_fever">Fever alarm</string>
+    <string name="setting_tv_cold_proof">Cold dressing alarm</string>
+    <string name="setting_tv_cold_temp">30.0 ℃ or less</string>
+    <string name="setting_tv_decibel">More than 60dB</string>
+    <string name="setting_tv_real">thermometer mode</string>
+    <string name="setting_tv_mode">Type Of Alarm</string>
+    <string name="setting_tv_device">Device</string>
+    <string name="setting_tv_down_fever">Nursing station</string>
+    <string name="setting_tv_about">About</string>
+
+    <!-- activity_typeofalarm -->
+    <string name="typeofalarm_title_tv">Type Of Alarm</string>
+    <string name="typeofalarm_tv_lost">Anti lost alarm mode</string>
+    <string name="typeofalarm_tv_lost_type">shake</string>
+    <string name="typeofalarm_tv_bells">bells</string>
+    <string name="typeofalarm_tv_bells_name">Youth autograph album</string>
+    <string name="typeofalarm_tv_fever">Fever alarm way</string>
+    <string name="typeofalarm_tv_fever_type">bells</string>
+    <string name="typeofalarm_tv_cry">Cry alarm way</string>
+    <string name="typeofalarm_tv_cry_type">Vibration + bell</string>
+    <string name="typeofalarm_tv_kickaquilt">Kicking alarm</string>
+
+    <!-- setmusic -->
+    <string name="setmusic_selectbtn">choice</string>
+    <string name="setmusic_cancelbtn">cancel</string>
+
+    <!-- activity_about -->
+    <string name="about_title_tv">About</string>
+    <string name="about_null_versionNum">Version not detected</string>
+    <string name="about_tv_versionNum">Version Number:V</string>
+    <string name="about_tv1">Version Number:V1.01</string>
+    <string name="about_btn_tv">Version Check</string>
+    <string name="about_tv2">(User License Agreement)</string>
+    <string name="about_tv3">All rights reserved: xian ZhongYi DongKong KJ co., LTD</string>
+    <string name="about_tv4">www.androidex.com</string>
+    <string name="about_tv5"></string>
+    <string name="about_tv6"></string>
+
+    <!-- activity_device -->
+    <string name="device_title_tv">Device</string>
+    <string name="device_title_text1">The connected device</string>
+    <string name="device_title_text2">search equipment</string>
+    <string name="device_btn_connect">connect</string>
+    <string name="device_btn_disconnect">disconnect</string>
+    <string name="ble_not_supported">BLE is not supported</string>
+    <string name="error_bluetooth_not_supported">Bluetooth not supported</string>
+    <string name="unknown_device">Unknown device</string>
+    <string name="device_connect">Are connected devices...</string>
+
+    <!-- activity_downfever -->
+    <string name="downfever_title_tv">emergency calling</string>
+    <string name="downfever_tv_commonsense">Baby fever common sense</string>
+    <string name="downfever_tv_massage">Massage Reducing Method</string>
+    <string name="downfever_tv_physics">Physical Reducing Method</string>
+    <string name="downfever_tv_taboo">Four Prohibitions in Eating</string>
+    <string name="downfever_tv_matters">Attentions in Daily Care</string>
+
+    <!-- activity_massage -->
+    <string name="massage_tv_title">Five Massage Reducing Methods</string>
+    <string name="massage_tv_title1">1, Clear the Lung Meridian</string>
+    <string name="massage_tv_title1_place">Position: the ring finger’s pulp</string>
+    <string name="massage_tv_title1_method">Operation: Pinch the baby’s ring finger with your thumb
+        and index finger. Push 50 times from the finger top to the end. Thus clear the baby’s lung
+        meridian.
+    </string>
+
+    <!-- activity_historylist -->
+    <string name="historylist_title_tv">history</string>
+    <string name="historylist_title_text">Have a fever to record</string>
+    <string name="historylist_tv_titile">According to the button text said the current setting of
+        the ListView
+    </string>
+    <string name="historylist_bt_canPullRefBtn">To enable the drop-down refresh</string>
+    <string name="historylist_bt_canLoadMoreFlagBtn">Enable to load more</string>
+    <string name="historylist_bt_autoLoadMoreFlagBtn">Shut down automatically loaded more</string>
+    <string name="historylist_bt_isMoveToFirstItemBtn">Close to move to the first Item</string>
+
+    <!-- historylist_item -->
+    <string name="historylist_item_date">2015.02.04</string>
+    <string name="historylist_item_fever">Fever: have fever</string>
+    <string name="historylist_item_start_time">start time</string>
+    <string name="historylist_item_starttime">12:12:10</string>
+    <string name="historylist_item_duration_time">continued to</string>
+    <string name="historylist_item_durationtime">15:15:10</string>
+    <string name="historylist_item_max_temp">highest temperature</string>
+    <string name="historylist_item_maxtemp">37.6℃</string>
+    <string name="historylist_item_min_temp">lowest temperature</string>
+    <string name="historylist_item_mintemp">36.8℃</string>
+
+    <!-- 历史记录 自定义ListView -->
+    <string name="p2refresh_head_load_more">To load more</string>
+    <string name="p2refresh_end_load_more">More</string>
+    <string name="p2refresh_end_click_load_more">Click on the load</string>
+    <string name="p2refresh_release_refresh">Loosen the refresh</string>
+    <string name="p2refresh_pull_to_refresh">pull-to-refresh</string>
+    <string name="p2refresh_doing_head_refresh">Is refreshing&#8230;</string>
+    <string name="p2refresh_doing_end_refresh">Loading&#8230;</string>
+    <string name="p2refresh_refresh_lasttime">recent updates&#160;&#058;&#160;</string>
+
+    <!-- Dialog -->
+    <string name="pointMessage">Prompt Message</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+
+    <!-- 代码文字 -->
+    <!-- AddUserActivity.java -->
+    <string name="adduser_username">Please input user name</string>
+    <string name="adduser_userdate">Please enter the date of birth</string>
+    <string name="adduser_pic">Get photo way</string>
+    <string name="adduser_photograph">Photograph</string>
+    <string name="adduser_phone">Choose from the phone</string>
+    <string name="adduser_back">return</string>
+    <string name="adduser_date">Please select a date and time</string>
+    <string name="adduser_year"></string>
+    <string name="adduser_month"></string>
+    <string name="adduser_day"></string>
+    <string name="adduser_month_unit">month</string>
+    <string name="adduser_day_unit">day</string>
+    <string name="adduser_hour_unit">hour</string>
+    <string name="adduser_years">years</string>
+
+    <!-- BLEDeviceActivity.java -->
+    <string name="bledevice_toast1">The current user has binding a device!</string>
+    <string name="bledevice_toast2">Create a user and then click the binding equipment!</string>
+    <string name="bledevice_toast3">already connected</string>
+    <string name="bledevice_toast4">has been disconnected</string>
+    <string name="bledevice_toast5">Time synchronization equipment successfully</string>
+    <string name="bledevice_toast6">Time synchronization equipment failure</string>
+
+    <!-- HistoryListActivity.java -->
+    <string name="historylist_fever">Fever: have fever</string>
+
+    <!-- MainActivity.java -->
+    <string name="main_exit">Press the return key once again and exit the program</string>
+
+    <!-- TypeOfAlarm.java -->
+    <string name="typeofalarm_shake">shake</string>
+    <string name="typeofalarm_bells">bells</string>
+    <string name="typeofalarm_shake_bells">shake + bells</string>
+    <string name="typeofalarm_type">Remind the way</string>
+
+    <string name="devicelist_connected_user">connected user:</string>
+
+    <!-- UserInfoAdapter.java -->
+    <string name="userinfoadapter_discon">Not binding device</string>
+
+    <!-- HistoryFragment.java -->
+    <string name="historyfragment_toast1">Bluetooth can\'t use!</string>
+    <string name="historyfragment_no_his_data">No historical data</string>
+    <string name="historyfragment_nor_data_ok">Temperature data synchronization is complete</string>
+    <string name="historyfragment_nor_data_failed">Temperature data synchronization packet loss
+    </string>
+    <string name="historyfragment_hig_data_ok">A high temperature data synchronization is complete
+    </string>
+    <string name="historyfragment_hig_data_failed">A high temperature data synchronization packet
+        loss
+    </string>
+
+    <!-- LockFragment.java -->
+    <string name="itemfragment_ble_toast">Create a user first!</string>
+    <string name="itemfragment_username">baby</string>
+    <string name="itemfragment_exceed">Temperature is beyond measurement range.</string>
+    <string name="itemfragment_toast1">disconnected</string>
+    <string name="itemfragment_toast2">has been actively disconnect</string>
+    <string name="itemfragment_toast3">Please first binding equipment</string>
+    <string name="itemfragment_toast4">Fail to search device</string>
+    <string name="itemfragment_toast5">Please reconnect the device</string>
+    <string name="itemfragment_dialog_fever">Stop the fever to remind</string>
+    <string name="itemfragment_dialog_cold">Stop warm clothing to remind</string>
+    <string name="itemfragment_dialog_kick">Stop kicking, remind</string>
+    <string name="itemfragment_dialog_lost">Has left a safe distance.</string>
+
+    <!-- SettingFragment.java -->
+    <string name="setting_tv_above">above</string>
+    <string name="setting_dialog_title">Fever alarm</string>
+    <string name="setting_tv_open_kick_ok">Open the kicking, success.</string>
+    <string name="setting_tv_close_kick_ok">Close the kicking, success.</string>
+    <string name="setting_tv_open_real_time_ok">Open the thermometer model success.</string>
+    <string name="setting_tv_close_real_time_ok">Close the thermometer model success.</string>
+    <string name="setting_tv_open_indicator_light_ok">Open the temperature indicator light ofsuccess.</string>
+    <string name="setting_tv_ujuicer_alarm_ok">Anti lost alarm set successfully.</string>
+    <string name="setting_tv_close_indicator_light_ok">The temperature indicator light of success.</string>
+    <string name="setting_tv_ble_disconnect">Bluetooth not connected</string>
+
+    <string name="setting_tv_below">below</string>
+    <string name="setting_dialog_title1">Warm clothing alarm</string>
+    <string name="setting_tv_coldtemp">Warm clothing temp</string>
+    <string name="setting_tv_Indicator">Temp indicator light</string>
+    <string name="fd1">Open distance response function</string>
+    <string name="fd2">Open close the response function</string>
+    <string name="fd3">Equipment service is not open</string>
+
+    <string name="app_label">Compass</string>
+    <string name="getting_location">Getting location...</string>
+    <string name="cannot_get_location">Cannot get your location</string>
+    <string name="location_north">%s N</string>
+    <string name="location_south">%s S</string>
+    <string name="location_east">%s E</string>
+    <string name="location_west">%s W</string>
+
+    <string name="bracelet_bindfail">Bracelet is mac not bind</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="text_inside_circle_button_text_normal">Text Inside Circle Button(Normal)</string>
+    <string name="text_inside_circle_button_text_highlighted">Text Inside Circle Button(Highlighted)</string>
+    <string name="text_inside_circle_button_text_unable">Text Inside Circle Button(Unable)</string>
+
+    <string name="text_outside_circle_button_text_normal">Text Outside Circle Button(Normal)</string>
+    <string name="text_outside_circle_button_text_highlighted">Text Outside Circle Button(Highlighted)</string>
+    <string name="text_outside_circle_button_text_unable">Text Outside Circle Button(Unable)</string>
+
+    <string name="text_ham_button_text_normal">Ham Button Text(Normal)</string>
+    <string name="text_ham_button_text_highlighted">Ham Button Text(Highlighted)</string>
+    <string name="text_ham_button_text_unable">Ham Button Text(Unable)</string>
+    <string name="text_ham_button_sub_text_normal">Ham Button Sub Text(Normal)</string>
+    <string name="text_ham_button_sub_text_highlighted">Ham Button Sub Text(Highlighted)</string>
+    <string name="text_ham_button_sub_text_unable">Ham Button Sub Text(Unable)</string>s
+
+</resources>

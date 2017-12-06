@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.androidex.capbox"
+    android:installLocation="auto"
+    android:versionCode="1"
+    android:versionName="1.0.0">
+
+    <uses-sdk
+        android:minSdkVersion="18"
+        android:targetSdkVersion="25" />
+
+    <!-- 地图 -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
+
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- 相机 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 蓝牙 -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- 震动 -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
+
+    <application
+        android:name="com.androidex.capbox.MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="fc51UqGugQUOwzhBuan3UHSZ1MUERHXz" />
+
+        <activity
+            android:name="com.androidex.capbox.ui.activity.FingerprintMainActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActivityTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.androidex.capbox.ui.activity.WelcomeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.androidex.capbox.MainActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.androidex.capbox.ui.activity.TypeOfAlarm"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.androidex.capbox.ui.activity.AboutActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name="com.androidex.capbox.ui.activity.AuthentiCationActivity" />
+        <activity
+            android:name="com.androidex.capbox.ui.activity.CameraActivity"
+            android:screenOrientation="landscape" /> <!-- landscape -->
+        <activity
+            android:name="com.androidex.capbox.ui.activity.SearchDeviceActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.androidex.capbox.ui.activity.BoxDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.androidex.capbox.ui.activity.WatchDetialActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.androidex.capbox.ui.activity.LoginActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.acker.simplezxing.activity.CaptureActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.androidex.capbox.ui.activity.RegisterActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.androidex.capbox.ui.activity.FindPwdActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.androidex.capbox.ui.activity.Forget2Activtiy"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.androidex.capbox.ui.activity.SettingActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.androidex.capbox.ui.activity.SettingAlarmActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.androidex.capbox.ui.activity.SettingLockActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.androidex.capbox.ui.activity.SettingFingerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.androidex.capbox.ui.activity.FingerEnterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.androidex.capbox.ui.activity.WatchListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.androidex.capbox.ui.activity.BoxSettingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.androidex.capbox.ui.activity.LockActivity"
+            android:screenOrientation="portrait" />
+
+        <service android:name="com.androidex.capbox.service.MyBleService"></service>
+
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote">
+            <intent-filter>
+                <action android:name="com.baidu.location.service_v2.2"></action>
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name="com.androidex.capbox.ui.activity.LockScreenActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity="com.androidex.capbox"
+            android:theme="@style/LockScreenBase"></activity>
+
+    </application>
+
+</manifest>

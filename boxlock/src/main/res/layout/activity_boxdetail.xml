@@ -1,0 +1,396 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/background"
+    android:orientation="vertical">
+
+    <com.androidex.capbox.ui.widget.SecondTitleBar
+        android:id="@+id/titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:rightText="@string/main_title_tv"
+        app:titleText="@string/setting_tv_boxConfig" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/rl_boxset"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/iv_head"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginBottom="@dimen/marginPadding8"
+                    android:layout_marginLeft="@dimen/marginPadding16"
+                    android:layout_marginTop="@dimen/marginPadding8"
+                    android:src="@mipmap/ic_label_head" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/iv_head">
+
+                    <TextView
+                        android:id="@+id/tv_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/marginPadding16"
+                        android:text="Box"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/size16" />
+
+                    <TextView
+                        android:id="@+id/tv_connect_starts"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/tv_name"
+                        android:layout_toRightOf="@+id/tv_name"
+                        android:paddingLeft="@dimen/marginPadding16"
+                        android:text="未连接"
+                        android:textColor="@color/theme_color"
+                        android:textSize="@dimen/size10" />
+
+                    <TextView
+                        android:id="@+id/tv_mac"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_name"
+                        android:layout_marginLeft="@dimen/marginPadding16"
+                        android:layout_marginTop="@dimen/marginPadding10"
+                        android:text="FF:FF:FF:FF:FF:FF"
+                        android:textColor="@color/Gray_e5"
+                        android:textSize="@dimen/size14" />
+
+                    <ImageView
+                        android:id="@+id/iv_right"
+                        android:layout_width="@dimen/marginPadding20"
+                        android:layout_height="@dimen/marginPadding20"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/marginPadding16"
+                        android:src="@mipmap/white_right" />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+            <!-- 防丢报警 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tv_line_height"
+                android:background="@color/line_color" />
+
+            <LinearLayout
+                android:id="@+id/ll_settingAlarm"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/adduser_ll_height"
+                android:gravity="center_vertical">
+
+                <com.androidex.capbox.ui.view.TypeFaceText
+                    android:id="@+id/TextView08_function"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/imageView4_function"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/setting_tv_padding_left"
+                    android:text="@string/setting_tv_alarm"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/size16" />
+
+                <ImageView
+                    android:layout_width="@dimen/marginPadding20"
+                    android:layout_height="@dimen/marginPadding20"
+                    android:layout_marginRight="@dimen/marginPadding16"
+                    android:src="@mipmap/white_right" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tv_line_height"
+                android:background="@color/line_color" />
+
+            <!--规则-->
+            <LinearLayout
+                android:id="@+id/ll_settinglock"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/adduser_ll_height"
+                android:gravity="center_vertical">
+
+                <com.androidex.capbox.ui.view.TypeFaceText
+                    android:id="@+id/TextView08"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/setting_tv_padding_left"
+                    android:text="@string/label_settingLock"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/size16" />
+
+                <ImageView
+                    android:layout_width="@dimen/marginPadding20"
+                    android:layout_height="@dimen/marginPadding20"
+                    android:layout_marginRight="@dimen/marginPadding16"
+                    android:src="@mipmap/white_right" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tv_line_height"
+                android:background="@color/line_color" />
+
+            <!--指纹设置-->
+            <LinearLayout
+                android:id="@+id/ll_settingFinger"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/adduser_ll_height"
+                android:gravity="center_vertical">
+
+                <com.androidex.capbox.ui.view.TypeFaceText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/setting_tv_padding_left"
+                    android:text="@string/setting_tv_settingFinger"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/size16" />
+
+                <ImageView
+                    android:layout_width="@dimen/marginPadding20"
+                    android:layout_height="@dimen/marginPadding20"
+                    android:layout_marginRight="@dimen/marginPadding16"
+                    android:src="@mipmap/white_right" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tv_line_height"
+                android:background="@color/line_color" />
+
+            <!--携行设备-->
+            <LinearLayout
+                android:id="@+id/setting_carryPersonNum"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/adduser_ll_height"
+                android:gravity="center_vertical">
+
+                <com.androidex.capbox.ui.view.TypeFaceText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/setting_tv_padding_left"
+                    android:text="@string/setting_tv_personnel"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/size16" />
+
+                <TextView
+                    android:id="@+id/tv_carryNum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/setting_btn_right_height"
+                    android:layout_marginRight="@dimen/marginPadding10"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="@color/white" />
+
+                <ImageView
+                    android:layout_width="@dimen/marginPadding20"
+                    android:layout_height="@dimen/marginPadding20"
+                    android:layout_marginRight="@dimen/marginPadding16"
+                    android:src="@mipmap/white_right" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tv_line_height"
+                android:background="@color/line_color" />
+
+            <!--心跳频率-->
+            <LinearLayout
+                android:id="@+id/ll_heartbeatRate"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/adduser_ll_height"
+                android:gravity="center_vertical">
+
+                <com.androidex.capbox.ui.view.TypeFaceText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/setting_tv_padding_left"
+                    android:text="@string/setting_tv_heartbeatRate"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/size16" />
+
+                <TextView
+                    android:id="@+id/tv_heartbeatRate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/setting_btn_right_height"
+                    android:layout_marginRight="@dimen/marginPadding10"
+                    android:gravity="center"
+                    android:text="60s/次"
+                    android:textColor="@color/white" />
+
+                <ImageView
+                    android:layout_width="@dimen/marginPadding20"
+                    android:layout_height="@dimen/marginPadding20"
+                    android:layout_marginRight="@dimen/marginPadding16"
+                    android:src="@mipmap/white_right" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tv_line_height"
+                android:background="@color/line_color" />
+
+            <!--定位-->
+            <LinearLayout
+                android:id="@+id/setting_Location"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/adduser_ll_height"
+                android:gravity="center_vertical">
+
+                <com.androidex.capbox.ui.view.TypeFaceText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/setting_tv_padding_left"
+                    android:text="@string/setting_tv_Location"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/size16" />
+
+                <TextView
+                    android:id="@+id/tv_locationRate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/setting_btn_right_height"
+                    android:layout_marginRight="@dimen/marginPadding10"
+                    android:gravity="center"
+                    android:text="60s/次"
+                    android:textColor="@color/white" />
+
+                <ImageView
+                    android:layout_width="@dimen/marginPadding20"
+                    android:layout_height="@dimen/marginPadding20"
+                    android:layout_marginRight="@dimen/marginPadding16"
+                    android:src="@mipmap/white_right" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tv_line_height"
+                android:background="@color/line_color" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tv_line_height"
+                android:layout_marginTop="@dimen/marginPadding16"
+                android:background="@color/line_color" />
+
+            <!-- 恢复出厂设置 -->
+            <LinearLayout
+                android:id="@+id/setting_factory_settings"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/adduser_ll_height"
+                android:gravity="center_vertical">
+
+                <com.androidex.capbox.ui.view.TypeFaceText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/setting_tv_padding_left"
+                    android:text="@string/setting_tv_factory_settings"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/size16" />
+
+                <ImageView
+                    android:layout_width="@dimen/marginPadding20"
+                    android:layout_height="@dimen/marginPadding20"
+                    android:layout_marginRight="@dimen/marginPadding16"
+                    android:src="@mipmap/white_right" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tv_line_height"
+                android:background="@color/line_color" />
+
+            <!--一键配置-->
+            <LinearLayout
+                android:id="@+id/setting_configure"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/adduser_ll_height"
+                android:gravity="center_vertical"
+                android:visibility="gone">
+
+                <com.androidex.capbox.ui.view.TypeFaceText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/setting_tv_padding_left"
+                    android:text="@string/setting_tv_configure"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/size16" />
+
+                <TextView
+                    android:id="@+id/oneKeyConfig"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/sel_bg_dark_blue_radius_5"
+                    android:enabled="false"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/marginPadding12"
+                    android:paddingLeft="@dimen/marginPadding16"
+                    android:paddingRight="@dimen/marginPadding16"
+                    android:paddingTop="@dimen/marginPadding12"
+                    android:text="开始配置"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tv_line_height"
+                android:background="@color/line_color" />
+
+            <TextView
+                android:id="@+id/tv_boxConfig"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/marginPadding45"
+                android:layout_marginLeft="@dimen/marginPadding30"
+                android:layout_marginRight="@dimen/marginPadding30"
+                android:layout_marginTop="@dimen/marginPadding30"
+                android:background="@drawable/sel_bg_dark_blue_radius_5"
+                android:enabled="true"
+                android:gravity="center"
+                android:text="@string/label_configBox"
+                android:textColor="@color/white"
+                android:textSize="@dimen/size16" />
+
+            <TextView
+                android:id="@+id/tv_startCarryScort"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/marginPadding45"
+                android:layout_marginBottom="@dimen/marginPadding16"
+                android:layout_marginLeft="@dimen/marginPadding30"
+                android:layout_marginRight="@dimen/marginPadding30"
+                android:layout_marginTop="@dimen/marginPadding16"
+                android:background="@drawable/sel_bg_dark_blue_radius_5"
+                android:enabled="true"
+                android:gravity="center"
+                android:text="@string/label_startCarryScort"
+                android:textColor="@color/white"
+                android:textSize="@dimen/size16" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@mipmap/background"
+    android:orientation="vertical">
+
+    <com.androidex.capbox.ui.widget.SecondTitleBar
+        android:id="@+id/rl_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        titleText="@string/label_user_req"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fadingEdge="none"
+        android:visibility="visible"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/ll_register"
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="19dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/divider_color" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/marginPadding16">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleType="fitCenter"
+                        android:src="@mipmap/ic_label_phone" />
+
+                    <EditText
+                        android:id="@+id/et_phone"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:background="@android:color/transparent"
+                        android:hint="@string/hint_input_phone"
+                        android:inputType="phone"
+                        android:paddingLeft="16dp"
+                        android:singleLine="true"
+                        android:textColor="@color/white"
+                        android:textColorHint="#737578"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/divider_color" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/marginPadding16">
+
+                    <ImageView
+                        android:id="@+id/iv_userlabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitCenter"
+                        android:src="@mipmap/ic_label_sms" />
+
+                    <TextView
+                        android:gravity="center_vertical"
+                        android:id="@+id/et_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/marginPadding6"
+                        android:layout_toRightOf="@id/iv_userlabel"
+                        android:background="@android:color/transparent"
+                        android:hint="@string/hint_name"
+                        android:inputType="textPersonName"
+                        android:paddingLeft="16dp"
+                        android:singleLine="true"
+                        android:textColor="@color/white"
+                        android:textColorHint="#737578"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/tv_getCaptcha"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/sel_bg_dark_blue_radius_5"
+                        android:gravity="center"
+                        android:paddingBottom="@dimen/marginPadding8"
+                        android:paddingLeft="@dimen/marginPadding12"
+                        android:paddingRight="@dimen/marginPadding12"
+                        android:paddingTop="@dimen/marginPadding8"
+                        android:text="@string/label_get_captcha"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/divider_color" />
+
+                <RelativeLayout
+                    android:id="@+id/rl_captcha"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/marginPadding16">
+
+                    <ImageView
+                        android:id="@+id/iv_captchaLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitCenter"
+                        android:src="@mipmap/ic_label_sms" />
+
+                    <TextView
+                        android:gravity="center_vertical"
+                        android:id="@+id/et_cardID"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/marginPadding6"
+                        android:layout_toRightOf="@id/iv_captchaLabel"
+                        android:background="@android:color/transparent"
+                        android:hint="@string/hint_captcha"
+                        android:inputType="number"
+                        android:paddingLeft="16dp"
+                        android:singleLine="true"
+                        android:textColor="@color/white"
+                        android:textColorHint="#737578"
+                        android:textSize="16sp" />
+
+                </RelativeLayout>
+
+                <View
+                    android:id="@+id/view_dividerPwdConfirm"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/divider_color" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_register"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="@dimen/marginPadding16"
+                android:layout_marginRight="@dimen/marginPadding16"
+                android:layout_marginTop="62dp"
+                android:background="@drawable/sel_bg_dark_blue_radius_5"
+                android:enabled="true"
+                android:gravity="center"
+                android:text="@string/label_finish"
+                android:textColor="#f7f7f7"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/ll_update"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+
+        <ImageView
+            android:id="@+id/iv_error_emotion"
+            android:layout_width="@dimen/width150"
+            android:layout_height="@dimen/width150"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="fitCenter"
+            android:src="@mipmap/ic_common_update" />
+
+        <TextView
+            android:id="@+id/tv_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/sel_bg_dark_blue_radius_5"
+            android:padding="@dimen/marginPadding16"
+            android:text="点击刷新"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

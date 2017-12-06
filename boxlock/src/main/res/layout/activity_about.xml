@@ -1,0 +1,142 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/background"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_height"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/about_btn_back"
+            android:layout_width="@dimen/title_button"
+            android:layout_height="@dimen/title_button"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/back_button" />
+
+        <com.androidex.capbox.ui.view.TypeFaceText
+            android:id="@+id/about_title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/about_title_tv"
+            android:textColor="@color/white"
+            android:textSize="@dimen/title_tv_size" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/TextView"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/blue" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/marginPadding50"
+        android:src="@mipmap/icon" />
+
+    <com.androidex.capbox.ui.view.TypeFaceText
+        android:id="@+id/about_tv_versionNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/marginPadding16"
+        android:layout_marginTop="@dimen/marginPadding16"
+        android:hint="@string/about_tv2"
+        android:textSize="@dimen/about_tv2" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tv_line_height"
+        android:layout_marginTop="@dimen/marginPadding45"
+        android:background="@color/line_color" />
+
+    <LinearLayout
+        android:id="@+id/ll_version_check"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/marginPadding45"
+        android:gravity="center_vertical">
+
+        <com.androidex.capbox.ui.view.TypeFaceText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/marginPadding16"
+            android:layout_weight="1"
+            android:text="@string/about_btn_tv"
+            android:textColor="@color/white"
+            android:textSize="@dimen/size16" />
+
+        <ImageView
+            android:layout_width="@dimen/marginPadding20"
+            android:layout_height="@dimen/marginPadding20"
+            android:layout_marginRight="@dimen/marginPadding16"
+            android:src="@mipmap/white_right" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tv_line_height"
+        android:background="@color/line_color" />
+
+    <LinearLayout
+        android:id="@+id/ll_user_regimen"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/marginPadding45"
+        android:gravity="center_vertical">
+
+        <com.androidex.capbox.ui.view.TypeFaceText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/marginPadding16"
+            android:layout_weight="1"
+            android:text="@string/about_tv3"
+            android:textColor="@color/white"
+            android:textSize="@dimen/size16" />
+
+        <ImageView
+            android:layout_width="@dimen/marginPadding20"
+            android:layout_height="@dimen/marginPadding20"
+            android:layout_marginRight="@dimen/marginPadding16"
+            android:src="@mipmap/white_right" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tv_line_height"
+        android:background="@color/line_color" />
+
+    <LinearLayout
+        android:id="@+id/ll_all_right_reserved"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/marginPadding45"
+        android:gravity="center_vertical">
+
+        <com.androidex.capbox.ui.view.TypeFaceText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/marginPadding16"
+            android:layout_weight="1"
+            android:text="@string/about_tv4"
+            android:textColor="@color/white"
+            android:textSize="@dimen/size16" />
+
+        <ImageView
+            android:layout_width="@dimen/marginPadding20"
+            android:layout_height="@dimen/marginPadding20"
+            android:layout_marginRight="@dimen/marginPadding16"
+            android:src="@mipmap/white_right" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tv_line_height"
+        android:background="@color/line_color" />
+
+</LinearLayout>

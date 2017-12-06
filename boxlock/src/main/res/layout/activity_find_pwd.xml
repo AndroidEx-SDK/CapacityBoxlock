@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+
+        <com.androidex.capbox.ui.widget.SecondTitleBar
+            android:id="@+id/rl_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:titleText="@string/label_find_pwd" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fadingEdge="none"
+            android:overScrollMode="never"
+            android:scrollbars="none">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="36dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/marginPadding32"
+                    android:layout_marginTop="@dimen/marginPadding32"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/marginPadding16">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:scaleType="fitCenter"
+                            android:src="@mipmap/ic_label_phone" />
+
+                        <EditText
+                            android:id="@+id/et_phone"
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:background="@android:color/transparent"
+                            android:hint="@string/hint_input_phone"
+                            android:inputType="phone"
+                            android:paddingLeft="@dimen/marginPadding16"
+                            android:singleLine="true"
+                            android:textColor="@color/font_black"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="@color/divider_color" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/marginPadding16"
+                        android:paddingLeft="@dimen/marginPadding16"
+                        android:paddingRight="@dimen/marginPadding16">
+
+                        <ImageView
+                            android:id="@+id/iv_userlabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:scaleType="fitCenter"
+                            android:src="@mipmap/ic_label_sms" />
+
+                        <EditText
+                            android:id="@+id/et_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="@dimen/marginPadding6"
+                            android:layout_toRightOf="@id/iv_userlabel"
+                            android:background="@android:color/transparent"
+                            android:hint="@string/hint_name"
+                            android:inputType="number"
+                            android:paddingLeft="16dp"
+                            android:singleLine="true"
+                            android:textColor="@color/font_black"
+                            android:textColorHint="#737578"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/tv_getCaptcha"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/sel_bg_dark_blue_radius_5"
+                            android:gravity="center"
+                            android:paddingBottom="@dimen/marginPadding8"
+                            android:paddingLeft="@dimen/marginPadding12"
+                            android:paddingRight="@dimen/marginPadding12"
+                            android:paddingTop="@dimen/marginPadding8"
+                            android:text="@string/label_get_captcha"
+                            android:textColor="#f7f7f7"
+                            android:textSize="12sp" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:text="请确认姓名是否正确"
+                        android:textColor="@color/red"
+                        android:textSize="12sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="@color/divider_color" />
+
+                    <RelativeLayout
+                        android:id="@+id/rl_captcha"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/marginPadding16"
+                        android:paddingLeft="@dimen/marginPadding16"
+                        android:paddingRight="@dimen/marginPadding16">
+
+                        <ImageView
+                            android:id="@+id/iv_captchaLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:scaleType="fitCenter"
+                            android:src="@mipmap/ic_label_sms" />
+
+                        <EditText
+                            android:id="@+id/et_cardID"
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="@dimen/marginPadding6"
+                            android:layout_toRightOf="@id/iv_captchaLabel"
+                            android:background="@android:color/transparent"
+                            android:hint="@string/hint_captcha"
+                            android:inputType="number"
+                            android:paddingLeft="16dp"
+                            android:singleLine="true"
+                            android:textColor="@color/font_black"
+                            android:textColorHint="#737578"
+                            android:textSize="16sp" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:text="请确认身份证号码是否正确"
+                        android:textColor="@color/red"
+                        android:textSize="12sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="@color/divider_color" />
+
+
+                    <View
+                        android:id="@+id/view_dividerCaptcha"
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="@color/divider_color" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/marginPadding16">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:scaleType="fitCenter"
+                            android:src="@mipmap/ic_label_password1" />
+
+                        <EditText
+                            android:id="@+id/et_password"
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:background="@android:color/transparent"
+                            android:hint="输入新登录密码"
+                            android:inputType="textPassword"
+                            android:paddingLeft="@dimen/marginPadding16"
+                            android:singleLine="true"
+                            android:textColor="@color/font_black"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="@color/divider_color" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_pwdConfirm"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/marginPadding16">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:scaleType="fitCenter"
+                            android:src="@mipmap/ic_label_password1" />
+
+                        <EditText
+                            android:id="@+id/et_passwordConfirm"
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:background="@android:color/transparent"
+                            android:hint="确认新登录密码"
+                            android:inputType="textPassword"
+                            android:paddingLeft="@dimen/marginPadding16"
+                            android:singleLine="true"
+                            android:textColor="@color/font_black"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/view_dividerPwdConfirm"
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="@color/divider_color" />
+
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:id="@+id/tv_findPwd"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="@dimen/marginPadding16"
+                    android:layout_marginRight="@dimen/marginPadding16"
+                    android:layout_marginTop="@dimen/marginPadding32"
+                    android:background="@drawable/sel_bg_dark_blue_radius_5"
+                    android:enabled="false"
+                    android:gravity="center"
+                    android:text="确认重设密码"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+
+            </LinearLayout>
+
+        </ScrollView>
+    </LinearLayout>
+</LinearLayout>

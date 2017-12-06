@@ -1,0 +1,140 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/background"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/TextView01"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tv_line_height"
+        android:background="@color/line_color" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/homepage_tab1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/tbe_image1"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@mipmap/bottom_box_gray" />
+
+            <com.androidex.capbox.ui.view.TypeFaceText
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/marginPadding3"
+                android:text="@string/main_tv_boxlist"
+                android:textColor="@color/line_color" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/homepage_tab2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/tbe_image2"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@mipmap/bottom_watch_gray" />
+
+            <com.androidex.capbox.ui.view.TypeFaceText
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/marginPadding3"
+                android:gravity="center_horizontal"
+                android:text="@string/main_tv_watchlist"
+                android:textColor="@color/line_color" />
+        </LinearLayout>
+
+        <com.nightonke.boommenu.BoomMenuButton
+            android:id="@+id/bmb2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:bmb_buttonEnum="textInsideCircle"
+            />
+        <!--
+        android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+
+        app:bmb_highlightedColor="@android:color/holo_blue_dark"
+            app:bmb_normalColor="@android:color/holo_blue_bright"
+
+            app:bmb_hideMoveEaseEnum="inExpo"
+            app:bmb_hideRotateEaseEnum="inExpo"
+            app:bmb_hideScaleEaseEnum="inExpo"
+            app:bmb_showMoveEaseEnum="outExpo"
+            app:bmb_showRotateEaseEnum="outExpo"
+            app:bmb_showScaleEaseEnum="outExpo"-->
+
+        <LinearLayout
+            android:id="@+id/homepage_tab3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/tbe_image3"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@mipmap/bottom_location_gray" />
+
+            <com.androidex.capbox.ui.view.TypeFaceText
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/marginPadding3"
+                android:text="@string/main_tv_find"
+                android:textColor="@color/line_color" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/homepage_tab4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/tbe_image4"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@mipmap/bottom_setting_gray" />
+
+            <com.androidex.capbox.ui.view.TypeFaceText
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/marginPadding3"
+                android:text="@string/main_tv_setting"
+                android:textColor="@color/line_color" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

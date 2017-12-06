@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- RoundImageView圆形图片 -->
+    <declare-styleable name="headview">
+        <attr name="title_circle" format="integer" />
+    </declare-styleable>
+    <declare-styleable name="roundedimageview">
+        <attr name="border_thickness" format="dimension" />
+        <attr name="border_inside_color" format="color" />
+        <attr name="border_outside_color" format="color"></attr>
+    </declare-styleable>
+
+    <declare-styleable name="PreviewBorderView">
+        <attr name="tipText" format="string" />
+        <attr name="tipTextColor" format="color|reference" />
+        <attr name="tipTextSize" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="SecondTitleBar">
+        <attr name="titleText" format="string" />
+        <attr name="rightText" format="string" />
+        <attr name="rightRes" format="reference" />
+    </declare-styleable>
+</resources>

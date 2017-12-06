@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <SurfaceView
+        android:id="@+id/surfaceview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.androidex.capbox.ui.view.PreviewBorderView
+        android:id="@+id/borderview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        app:tipTextColor="@color/text_color1"
+        app:tipTextSize="16dp"
+        />
+
+    <LinearLayout
+        android:id="@+id/linearlaout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:orientation="vertical"
+        android:background="#000000">
+
+        <Button
+            android:id="@+id/take"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="拍  照"
+            android:textColor="#ffffffff"/>
+
+        <Button
+            android:id="@+id/light"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="闪光灯"
+            android:textColor="#ffffffff"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

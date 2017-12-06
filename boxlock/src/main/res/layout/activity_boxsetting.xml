@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@mipmap/background"
+    android:orientation="vertical">
+
+    <com.androidex.capbox.ui.widget.SecondTitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:titleText="@string/label_box_name" />
+
+    <EditText
+        android:id="@+id/et_name"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/marginPadding50"
+        android:layout_marginBottom="@dimen/marginPadding16"
+        android:layout_marginLeft="@dimen/marginPadding76"
+        android:layout_marginRight="@dimen/marginPadding76"
+        android:layout_marginTop="@dimen/marginPadding16"
+        android:background="@drawable/sel_bg_shape_blue_radius_5"
+        android:gravity="center"
+        android:textColor="@color/black" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="@dimen/marginPadding12"
+        android:layout_marginLeft="@dimen/marginPadding16"
+        android:layout_marginRight="@dimen/marginPadding16"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/tv_cancle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/marginPadding30"
+            android:layout_marginRight="@dimen/marginPadding30"
+            android:layout_weight="1"
+            android:background="@drawable/sel_bg_bt_dark_gray_radius_5"
+            android:gravity="center"
+            android:paddingBottom="@dimen/marginPadding8"
+            android:paddingLeft="@dimen/marginPadding15"
+            android:paddingRight="@dimen/marginPadding15"
+            android:paddingTop="@dimen/marginPadding8"
+            android:text="取消" />
+
+        <TextView
+            android:id="@+id/tv_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/marginPadding30"
+            android:layout_marginRight="@dimen/marginPadding30"
+            android:layout_weight="1"
+            android:background="@drawable/sel_bg_dark_blue_radius_5"
+            android:gravity="center"
+            android:paddingBottom="@dimen/marginPadding8"
+            android:paddingLeft="@dimen/marginPadding15"
+            android:paddingRight="@dimen/marginPadding15"
+            android:paddingTop="@dimen/marginPadding8"
+            android:text="确定"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+</LinearLayout>
