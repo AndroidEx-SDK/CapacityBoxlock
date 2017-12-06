@@ -21,6 +21,7 @@ import com.androidex.capbox.data.net.base.L;
 import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.module.DeviceWatchModel;
 import com.androidex.boxlib.service.BleService;
+import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.activity.WatchDetialActivity;
 import com.androidex.capbox.ui.adapter.WatchListAdapter;
 import com.androidex.capbox.ui.widget.ThirdTitleBar;
@@ -29,7 +30,6 @@ import com.androidex.capbox.utils.Constants;
 import com.e.ble.bean.BLEDevice;
 import com.e.ble.scan.BLEScanCfg;
 import com.e.ble.scan.BLEScanListener;
-import com.e.ble.scan.BLEScanner;
 import com.e.ble.util.BLEError;
 
 import java.util.ArrayList;
@@ -114,7 +114,7 @@ public class WatchListFragment extends BaseFragment {
         showProgress("搜索设备中。。。。");
         BLEScanCfg scanCfg = new BLEScanCfg.ScanCfgBuilder(SCAN_PERIOD)
                 .builder();
-        BLEScanner.get().startScanner(scanCfg, new BLEScanListener() {
+        MyBleService.get().startScanner(scanCfg, new BLEScanListener() {
             @Override
             public void onScannerStart() {
 
@@ -150,7 +150,7 @@ public class WatchListFragment extends BaseFragment {
 
     private void stopScanLe() {
         disProgress();
-        BLEScanner.get().stopScan();
+        MyBleService.get().stopScan();
     }
 
     private void initBleReceiver() {

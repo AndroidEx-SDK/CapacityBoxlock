@@ -43,7 +43,6 @@ import com.androidex.capbox.utils.Constants;
 import com.e.ble.bean.BLEDevice;
 import com.e.ble.scan.BLEScanCfg;
 import com.e.ble.scan.BLEScanListener;
-import com.e.ble.scan.BLEScanner;
 import com.e.ble.util.BLEError;
 
 import java.util.ArrayList;
@@ -258,7 +257,7 @@ public class BoxListFragment extends BaseFragment {
     private void scanLeDevice(final String address, final String deviceUUID) {
         showProgress("搜索设备...");
         BLEScanCfg scanCfg = new BLEScanCfg.ScanCfgBuilder(SCAN_PERIOD).builder();
-        BLEScanner.get().startScanner(scanCfg, new BLEScanListener() {
+        MyBleService.get().startScanner(scanCfg, new BLEScanListener() {
             boolean isScanDevice;//是否扫描到设备
 
             @Override
@@ -306,7 +305,7 @@ public class BoxListFragment extends BaseFragment {
 
     private void stopScanLe() {
         disProgress();
-        BLEScanner.get().stopScan();
+        MyBleService.get().stopScan();
     }
 
     /**

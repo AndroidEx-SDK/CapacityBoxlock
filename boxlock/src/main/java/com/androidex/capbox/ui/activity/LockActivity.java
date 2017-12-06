@@ -37,7 +37,6 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.e.ble.bean.BLEDevice;
 import com.e.ble.scan.BLEScanCfg;
 import com.e.ble.scan.BLEScanListener;
-import com.e.ble.scan.BLEScanner;
 import com.e.ble.util.BLEError;
 
 import java.text.DecimalFormat;
@@ -265,7 +264,7 @@ public class LockActivity extends BaseActivity implements OnClickListener {
         showProgress("搜索设备中。。。。");
         BLEScanCfg scanCfg = new BLEScanCfg.ScanCfgBuilder(Constants.BLE.SCAN_PERIOD)
                 .builder();
-        BLEScanner.get().startScanner(scanCfg, new BLEScanListener() {
+        MyBleService.get().startScanner(scanCfg, new BLEScanListener() {
             boolean isScanDevice;//是否扫描到设备
 
             @Override
@@ -306,7 +305,7 @@ public class LockActivity extends BaseActivity implements OnClickListener {
 
     private void stopScanLe() {
         disProgress();
-        BLEScanner.get().stopScan();
+        MyBleService.get().stopScan();
     }
 
     /**
