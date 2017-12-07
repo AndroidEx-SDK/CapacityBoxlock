@@ -322,7 +322,7 @@ public class BoxListFragment extends BaseFragment {
                     @Override
                     public void run() {
                         if (mac != null) {
-                            MyBleService.get().getDevice().getUUID(mac);
+                            MyBleService.get().getUUID(mac);
                         }
                     }
                 };

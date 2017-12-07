@@ -269,7 +269,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
             @Override
             public void confirm() {
                 if (ConnectedDevice.get().getConnectDevice(address) != null) {
-                    MyBleService.get().getDevice().endTask(address);
+                    MyBleService.get().endTask(address);
                 } else {
                     CommonKit.showErrorShort(context, "请先连接蓝牙");
                     return;
@@ -346,7 +346,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
      */
     private void openLock() {
         if (ConnectedDevice.get().getConnectDevice(address) != null) {
-            MyBleService.get().getDevice().openLock(address);
+            MyBleService.get().openLock(address);
         } else {
             CommonKit.showErrorShort(context, getResources().getString(R.string.setting_tv_ble_disconnect));
         }
@@ -513,7 +513,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                 @Override
                 public void run() {// 通过消息更新
                     //sendMessage(REFRESH_RSSI);
-                    MyBleService.get().getDevice().sentHeartBeat(address, 60);
+                    MyBleService.get().sentHeartBeat(address, 60);
                 }
             };
             if (timer_rssi == null) {
@@ -564,7 +564,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
 
                 case ACTION_LOCK_OPEN_SUCCED:
                     CommonKit.showOkShort(context, "开锁成功");
-                    MyBleService.get().getDevice().getLockStatus(address);
+                    MyBleService.get().getLockStatus(address);
                     break;
 
                 case ACTION_LOCK_STARTS://锁状态FB 32 00 01 00 00 FE

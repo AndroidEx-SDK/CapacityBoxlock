@@ -313,7 +313,7 @@ public class BoxDetailActivity extends BaseActivity {
                 BoxSettingActivity.lauch(context);
                 break;
             case R.id.oneKeyConfig://一键配置
-                MyBleService.get().getDevice().startBoxConfig(mac);
+                MyBleService.get().startBoxConfig(mac);
                 break;
             case R.id.setting_carryPersonNum://携行设备
                 Bundle bundle = new Bundle();
@@ -370,13 +370,13 @@ public class BoxDetailActivity extends BaseActivity {
                 SettingFingerActivity.lauch(context, bundle1);
                 break;
             case R.id.setting_factory_settings://恢复出厂
-                MyBleService.get().getDevice().recover(mac);
+                MyBleService.get().recover(mac);
                 break;
             case R.id.tv_startCarryScort://启动/结束携行押运
                 if (status == 2) {
-                    MyBleService.get().getDevice().endTask(mac);
+                    MyBleService.get().endTask(mac);
                 } else {
-                    MyBleService.get().getDevice().startEscort(mac);
+                    MyBleService.get().startEscort(mac);
                 }
                 break;
             case R.id.ll_settingAlarm://报警设置

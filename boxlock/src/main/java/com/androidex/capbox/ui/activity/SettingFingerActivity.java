@@ -90,7 +90,7 @@ public class SettingFingerActivity extends BaseActivity {
                 FingerEnterActivity.lauch(context, bundle1, REQUESTCODE_FINGER_POSSESSOR);
                 break;
             case R.id.ll_clearFinger:
-                MyBleService.get().getDevice().clearFinger(mac);
+                MyBleService.get().clearFinger(mac);
                 break;
             default:
                 break;

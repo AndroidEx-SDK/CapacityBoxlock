@@ -87,11 +87,11 @@ public class FingerEnterActivity extends BaseActivity {
         initBroadCast();
         if (ConnectedDevice.get().getConnectDevice(mac) != null) {
             if (code == REQUESTCODE_FINGER_POSSESSOR) {
-                MyBleService.get().getDevice().getFinger(mac, "1101");
+                MyBleService.get().getFinger(mac, "1101");
                 tv_hint_printFinger.setText("请将手指放到箱体的指纹处");
             } else if (code == REQUESTCODE_FINGER_BECOME) {
                 tv_hint_printFinger.setText("请将手指放到箱体的指纹处");
-                MyBleService.get().getDevice().getFinger(mac, "1301");
+                MyBleService.get().getFinger(mac, "1301");
             } else {
 
             }
@@ -156,7 +156,7 @@ public class FingerEnterActivity extends BaseActivity {
                             break;
                         case (byte) 0x02://识别失败
                             tv_hint_printFinger.setText("");
-                            MyBleService.get().getDevice().getFinger(mac, "1101");
+                            MyBleService.get().getFinger(mac, "1101");
                             CommonKit.showErrorShort(context, "请重新录入");
                             tv_hint_printFinger.setText("指纹录入失败，请重新录入");
                             break;
@@ -176,7 +176,7 @@ public class FingerEnterActivity extends BaseActivity {
                             break;
                         case (byte) 0x02://识别失败
                             tv_hint_printFinger.setText("");
-                            MyBleService.get().getDevice().getFinger(mac, "1301");
+                            MyBleService.get().getFinger(mac, "1301");
                             CommonKit.showErrorShort(context, "请重新录入");
                             tv_hint_printFinger.setText("指纹录入失败，请重新录入");
                             break;
