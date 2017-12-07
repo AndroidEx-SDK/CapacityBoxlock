@@ -1,5 +1,6 @@
 package com.androidex.capbox.service;
 
+import android.content.Intent;
 import android.util.Log;
 
 import com.androidex.boxlib.modules.ConnectedDevice;
@@ -8,6 +9,7 @@ import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.utils.SystemUtil;
 
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
+import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
 import static com.baidu.mapapi.BMapManager.getContext;
 
 /**
@@ -39,7 +41,9 @@ public class MyBleService extends BleService {
         ServiceBean device = ConnectedDevice.get().getConnectDevice(address);
         if (device != null) {
             if (!device.isActiveDisConnect()) {
-                sendBleState(BLE_CONN_DIS, address);
+                Intent intent = new Intent(BLE_CONN_DIS);
+                intent.putExtra(BLECONSTANTS_ADDRESS, address);
+                sendBroadcast(intent);
                 SystemUtil.startPlayerRaw(getContext());
             }
             ConnectedDevice.get().removeConnectMap(address);

@@ -53,9 +53,12 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_STARTS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_TEMP_UPDATE;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
-import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_RSSI;
+import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_RSSI_FAIL;
+import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_RSSI_SUCCED;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCONNECTED;
+import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
+import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
 import static com.baidu.mapapi.BMapManager.getContext;
 
 public class LockActivity extends BaseActivity implements OnClickListener {
@@ -154,7 +157,8 @@ public class LockActivity extends BaseActivity implements OnClickListener {
         intentFilter.addAction(BLE_CONN_DIS);
         intentFilter.addAction(ACTION_LOCK_STARTS);
         intentFilter.addAction(ACTION_TEMP_UPDATE);
-        intentFilter.addAction(BLE_CONN_RSSI);
+        intentFilter.addAction(BLE_CONN_RSSI_SUCCED);
+        intentFilter.addAction(BLE_CONN_RSSI_FAIL);
         intentFilter.addAction(ACTION_HEART);
         intentFilter.addAction(ACTION_LOCK_OPEN_SUCCED);
         registerReceiver(dataUpdateRecevice, intentFilter);
@@ -443,15 +447,15 @@ public class LockActivity extends BaseActivity implements OnClickListener {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            String deviceMac = intent.getStringExtra("deviceMac");
-            byte[] b = intent.getByteArrayExtra("data");
+            String deviceMac = intent.getStringExtra(BLECONSTANTS_ADDRESS);
+            byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
             if (deviceMac == null) return;
             if (!address.equals(deviceMac)) return;
             L.e("收到数据的设备MAC：" + deviceMac);
             switch (intent.getAction()) {
                 case BLE_CONN_SUCCESS:
                 case BLE_CONN_SUCCESS_ALLCONNECTED:
-                    Log.e("LockFragment", "连接成功f");
+                    Log.e("LockFragment", "连接成功");
                     CommonKit.showMsgShort(context, "设备连接成功");
                     disProgress();
                     BleService.get().enableNotify(address);
@@ -472,8 +476,7 @@ public class LockActivity extends BaseActivity implements OnClickListener {
                     break;
 
                 case ACTION_LOCK_STARTS://锁状态FB 32 00 01 00 00 FE
-                    byte[] b_lockstarts = intent.getByteArrayExtra("data");
-                    if (b_lockstarts[2] == (byte) 0x01) {
+                    if (b[2] == (byte) 0x01) {
                         tv_status.setText("已打开");
                     } else {
                         tv_status.setText("已关闭");
@@ -481,15 +484,13 @@ public class LockActivity extends BaseActivity implements OnClickListener {
                     break;
 
                 case ACTION_TEMP_UPDATE://温度
-                    Log.d("BTTempBLEService", "温湿度 mac: " + intent.getStringExtra("mac"));
                     if (intent.getStringExtra("temp") == null) return;
                     current_temp.setText(intent.getStringExtra("temp"));
                     if (intent.getStringExtra("hum") == null) return;
                     current_hum.setText(intent.getStringExtra("hum"));
                     break;
 
-                case BLE_CONN_RSSI://获取到信号强度值
-                    Log.d("LockFragment", "mac: " + intent.getStringExtra("deviceMac") + ", rssi: " + intent.getIntExtra("rssi", -100));
+                case BLE_CONN_RSSI_SUCCED://获取到信号强度值
 //                    if (intent.getIntExtra("rssi", -100) <= -90) {
 //                        if (!MyApplication.connDeviceFail) {
 //                            MyApplication.connDeviceFail = true;
@@ -498,6 +499,9 @@ public class LockActivity extends BaseActivity implements OnClickListener {
 //                    } else {
                     //MyApplication.connDeviceFail = false;
                     //}
+                    break;
+                case BLE_CONN_RSSI_FAIL://获取信号强度失败
+
                     break;
                 //收到心跳//0xFB 0x31 0x00 0x1B
                 //          0x31 0x6A 0x40 0x66 0x00 0x4B 0x37 0x00 0xFE
@@ -554,9 +558,6 @@ public class LockActivity extends BaseActivity implements OnClickListener {
                 return;
             }
             tv_address.setText(result.getAddress() + result.getSematicDescription());
-            Log.e(TAG, "result=" + result.getAddress());
-            Log.e(TAG, "result=" + result.getBusinessCircle());
-            Log.e(TAG, "result=" + result.getSematicDescription());
             //获取反向地理编码结果
         }
     };

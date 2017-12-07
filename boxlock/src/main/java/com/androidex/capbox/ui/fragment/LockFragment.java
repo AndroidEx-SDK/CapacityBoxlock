@@ -59,10 +59,13 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_STARTS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_TEMP_UPDATE;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
-import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_RSSI;
+import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_RSSI_FAIL;
+import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_RSSI_SUCCED;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCONNECTED;
 import static com.androidex.boxlib.utils.BleConstants.BLE.SCAN_PERIOD;
+import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
+import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
 
 public class LockFragment extends BaseFragment implements OnClickListener {
     private final static String TAG = "LockFragment";
@@ -163,7 +166,8 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         intentFilter.addAction(BLE_CONN_DIS);
         intentFilter.addAction(ACTION_LOCK_STARTS);
         intentFilter.addAction(ACTION_TEMP_UPDATE);
-        intentFilter.addAction(BLE_CONN_RSSI);
+        intentFilter.addAction(BLE_CONN_RSSI_SUCCED);
+        intentFilter.addAction(BLE_CONN_RSSI_FAIL);
         intentFilter.addAction(ACTION_HEART);
         intentFilter.addAction(ACTION_END_TAST);
         intentFilter.addAction(ACTION_LOCK_OPEN_SUCCED);
@@ -540,8 +544,8 @@ public class LockFragment extends BaseFragment implements OnClickListener {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            String deviceMac = intent.getStringExtra("deviceMac");
-            byte[] b = intent.getByteArrayExtra("data");
+            String deviceMac = intent.getStringExtra(BLECONSTANTS_ADDRESS);
+            byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
             if (deviceMac == null) return;
             if (!address.equals(deviceMac)) return;
             L.e("收到数据的设备MAC：" + deviceMac);
@@ -583,8 +587,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     current_hum.setText(intent.getStringExtra("hum"));
                     break;
 
-                case BLE_CONN_RSSI://获取到信号强度值
-                    Log.d("LockFragment", "mac: " + intent.getStringExtra("deviceMac") + ", rssi: " + intent.getIntExtra("rssi", -100));
+                case BLE_CONN_RSSI_SUCCED://获取到信号强度值
 //                    if (intent.getIntExtra("rssi", -100) <= -90) {
 //                        if (!MyApplication.connDeviceFail) {
 //                            MyApplication.connDeviceFail = true;
@@ -593,6 +596,9 @@ public class LockFragment extends BaseFragment implements OnClickListener {
 //                    } else {
                     //MyApplication.connDeviceFail = false;
                     //}
+                    break;
+                case BLE_CONN_RSSI_FAIL://获取信号强度失败
+
                     break;
 
                 /**

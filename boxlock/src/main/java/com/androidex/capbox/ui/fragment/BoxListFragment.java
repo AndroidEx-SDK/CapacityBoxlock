@@ -62,6 +62,8 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCONNECTED;
+import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
+import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
 
 /**
  * 箱体列表
@@ -526,7 +528,7 @@ public class BoxListFragment extends BaseFragment {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            String mac = intent.getStringExtra("deviceMac");
+            String mac = intent.getStringExtra(BLECONSTANTS_ADDRESS);
             switch (intent.getAction()) {
                 case BLE_CONN_SUCCESS://连接成功
                 case BLE_CONN_SUCCESS_ALLCONNECTED://重复连接
@@ -544,7 +546,7 @@ public class BoxListFragment extends BaseFragment {
                     break;
 
                 case Constants.BLE.ACTION_UUID:
-                    byte[] b = intent.getByteArrayExtra("data");
+                    byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
                     if (b.length >= 20) {
                         showProgress("开始绑定...");
                         startGetUUID(false, null);

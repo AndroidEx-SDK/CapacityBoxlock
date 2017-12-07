@@ -39,6 +39,8 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCONNECTED;
+import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
+import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
 import static com.androidex.capbox.MainActivity.username;
 import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_ADD_DEVICE;
 
@@ -178,9 +180,9 @@ public class WatchDetialActivity extends BaseActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            String deviceMac = intent.getStringExtra("deviceMac");
+            String deviceMac = intent.getStringExtra(BLECONSTANTS_ADDRESS);
             if (!mac.equals(deviceMac)) return;
-            byte[] b = intent.getByteArrayExtra("data");
+            byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
             switch (intent.getAction()) {
                 case BLE_CONN_SUCCESS:
                 case BLE_CONN_SUCCESS_ALLCONNECTED:
