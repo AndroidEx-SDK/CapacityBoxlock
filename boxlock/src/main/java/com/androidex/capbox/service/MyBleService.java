@@ -22,7 +22,6 @@ public class MyBleService extends BleService {
     public void onCreate() {
         super.onCreate();
         Log.d("BleService", "MyBleService 启动");
-        setRssiMaxValue(-80);//设置距离报警的阈值
     }
 
     /**
