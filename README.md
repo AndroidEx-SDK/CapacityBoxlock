@@ -5,18 +5,21 @@
 
 ------------------版本：0.0.1-------------------------------
 
-## 该库提供蓝牙连接、断开、搜索、连接判断、连接状态发生变化、获取连接设备、读取数据、写入数据、
+## 该库提供蓝牙连接、断开、搜索、连接判断、连接状态发生变化、获取连接设备、读取数据、写入数据、信号强度回调、
 
 蓝牙相关主要通过BleService来实现，BleService是个单例，使用BleService.get()方法调用。
 
-蓝牙搜索：startScanner(scanCfg, new BLEScanListener(){}
+蓝牙搜索：startScanner(scanCfg, new BLEScanListener();
 
 蓝牙停止搜索：stopScan();
 
 蓝牙连接：connectDevice(Context context, String bleMac);第二个参数为需要连接的设备的address.
 
 断开某个设备连接：disConnectDevice(String bleMac);
+
 断开所有设备连接：disConnectDeviceALL();
+
+断开回调：disConnect(String address);需要做脱距报警只需要在这里处理即可;
 
 连接判断：isConnectDevice(String bleMac);
 
@@ -27,6 +30,14 @@
         该方法为临时或者额外增加协议时使用，协议里面所有的指令都已经在后面写好，直接调用就可以，不需要重复使用该方法。后面会介绍到。
 
 读取数据：readCharacter(String address);//主动特征值变化，该方法一般不用。无返回值。
+
+获取连接的设备: getConnectDevice(String address); 返回值类型为ServiceBean;
+
+获取连接的所有设备: getAllConnectDevice();返回值Map<String, ServiceBean> ;
+
+设置信号强度：setRssiMaxValue(int maxValue);参数取值范围为-100到0;为蓝牙信号强度阈值;
+
+信号强度达到阈值后回调：outOfScopeRssi();达到阈值后会调用。
 
 ### 接收的广播：
 
@@ -54,6 +65,8 @@
        ACTION_END_TAST -------结束携行押运;
        ACTION_DISCONNECT_BLE_AFFIRM -------断开确认;
        ACTION_TEMP_UPDATE -------温度更新;
+            ---通过 BLECONSTANTS_ADDRESS 从intent中获取设备的mac地址;
+            ---通过 BLECONSTANTS_DATA 从intent中获取设备返回的信息;
 
 ### 发送数据接口：
 
@@ -141,6 +154,24 @@
          */
         void sentBraceletMac(String address, String mac);
 ------------------------0.0.1----------------------------------
+
+-------版本 0.0.2-------
+###增加手机蓝牙状态监听
+
+    通过广播的形式接收：
+        手机蓝牙关闭----BLUTOOTH_OFF
+        手机蓝牙打开----BLUTOOTH_ON
+
+###获取蓝牙设备的信号强度
+
+    通过广播的形式接收：
+        获取信号强度成功----BLE_CONN_RSSI_SUCCED
+        获取信号强度失败----BLE_CONN_RSSI_FAIL
+            ----通过 BLECONSTANTS_ADDRESS 从intent中获取设备mac
+            ----通过 BLECONSTANTS_RSSI 从intent中获取信号强度
+            ----通过 BLECONSTANTS_RSSI_CODE 从intent中获取失败识别码;
+
+##############################
 
 
 

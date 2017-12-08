@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.androidex.boxlib.modules.ConnectedDevice;
 import com.androidex.boxlib.service.BleService;
 import com.androidex.boxlib.utils.Byte2HexUtil;
 import com.androidex.capbox.R;
@@ -86,7 +85,7 @@ public class FingerEnterActivity extends BaseActivity {
         mContext = context;
         mac = getIntent().getStringExtra("mac");
         initBroadCast();
-        if (ConnectedDevice.get().getConnectDevice(mac) != null) {
+        if (MyBleService.get().getConnectDevice(mac) != null) {
             if (code == REQUESTCODE_FINGER_POSSESSOR) {
                 MyBleService.get().getFinger(mac, "1101");
                 tv_hint_printFinger.setText("请将手指放到箱体的指纹处");

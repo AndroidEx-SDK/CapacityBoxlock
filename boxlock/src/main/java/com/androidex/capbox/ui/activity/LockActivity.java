@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.androidex.boxlib.modules.ConnectedDevice;
 import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.R;
@@ -130,10 +129,10 @@ public class LockActivity extends BaseActivity implements OnClickListener {
         initMap();
         initBleBroadCast();
         if (uuid != null) getLocation(true);
-        if (ConnectedDevice.get().getConnectDevice(address) == null) {
+        if (MyBleService.get().getConnectDevice(address) == null) {
             scanLeDevice();
         } else {
-            if (ConnectedDevice.get().getConnectDevice(address).isActiveDisConnect()) {
+            if (MyBleService.get().getConnectDevice(address).isActiveDisConnect()) {
                 scanLeDevice();
             } else {
                 Log.e(TAG, "已连接 address=" + address);
@@ -201,7 +200,7 @@ public class LockActivity extends BaseActivity implements OnClickListener {
                 break;
             case R.id.main_bt_ble_close://连接状态，点击关闭
                 stopHeart();
-                ServiceBean device = ConnectedDevice.get().getConnectDevice(address);
+                ServiceBean device = MyBleService.get().getConnectDevice(address);
                 if (device != null) {
                     device.setActiveDisConnect(true);
                 }
@@ -254,7 +253,7 @@ public class LockActivity extends BaseActivity implements OnClickListener {
      * 开锁
      */
     private void openLock() {
-        if (ConnectedDevice.get().getConnectDevice(address) != null) {
+        if (MyBleService.get().getConnectDevice(address) != null) {
             MyBleService.get().openLock(address);
         } else {
             CommonKit.showErrorShort(context, getResources().getString(R.string.setting_tv_ble_disconnect));

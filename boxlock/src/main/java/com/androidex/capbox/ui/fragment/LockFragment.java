@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.androidex.boxlib.modules.ConnectedDevice;
 import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.MainActivity;
@@ -138,11 +137,11 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         initView();
         initMap();
         initBleBroadCast();
-        if (ConnectedDevice.get().getConnectDevice(address) == null) {
+        if (MyBleService.get().getConnectDevice(address) == null) {
             Log.e(TAG, "开始扫描蓝牙设备1");
             scanLeDevice();
         } else {
-            if (ConnectedDevice.get().getConnectDevice(address).isActiveDisConnect()) {
+            if (MyBleService.get().getConnectDevice(address).isActiveDisConnect()) {
                 Log.e(TAG, "开始扫描蓝牙设备2");
                 scanLeDevice();
             } else {
@@ -234,7 +233,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         switch (v.getId()) {
             case R.id.main_bt_ble_close://连接状态，点击关闭
                 stopHeart();
-                ServiceBean device = ConnectedDevice.get().getConnectDevice(address);
+                ServiceBean device = MyBleService.get().getConnectDevice(address);
                 if (device != null) {
                     device.setActiveDisConnect(true);
                 }
@@ -272,7 +271,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         Dialog.showAlertDialog(context, "确定结束携行押运吗？", new Dialog.DialogFingerListener() {
             @Override
             public void confirm() {
-                if (ConnectedDevice.get().getConnectDevice(address) != null) {
+                if (MyBleService.get().getConnectDevice(address) != null) {
                     MyBleService.get().endTask(address);
                 } else {
                     CommonKit.showErrorShort(context, "请先连接蓝牙");
@@ -349,7 +348,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
      * 开锁
      */
     private void openLock() {
-        if (ConnectedDevice.get().getConnectDevice(address) != null) {
+        if (MyBleService.get().getConnectDevice(address) != null) {
             MyBleService.get().openLock(address);
         } else {
             CommonKit.showErrorShort(context, getResources().getString(R.string.setting_tv_ble_disconnect));
@@ -360,7 +359,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
      * 开始扫描
      */
     private void scanLeDevice() {
-        showProgress("搜索设备中。。。");
+        showProgress("搜索设备中...");
         BLEScanCfg scanCfg = new BLEScanCfg.ScanCfgBuilder(SCAN_PERIOD).builder();
         MyBleService.get().startScanner(scanCfg, new BLEScanListener() {
             boolean isScanDevice;//是否扫描到设备
@@ -374,8 +373,8 @@ public class LockFragment extends BaseFragment implements OnClickListener {
             public void onScanning(BLEDevice device) {
                 if (device.getMac().equals(address)) {
                     isScanDevice = true;
-                    Log.e(TAG, "搜索到设备。。");
-                    CommonKit.showOkShort(context, "搜索到设备。。。");
+                    Log.e(TAG, "搜索到设备...");
+                    CommonKit.showOkShort(context, "搜索到设备...");
                     stopScanLe();
                     BleService.get().connectionDevice(context, address);
                 }
@@ -383,7 +382,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
 
             @Override
             public void onScannerStop() {
-                showProgress("扫描结束。。");
+                showProgress("扫描结束...");
                 Log.e(TAG, "扫描结束");
                 disProgress();
                 if (!isScanDevice) {
@@ -510,13 +509,15 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         });
     }
 
+    /**
+     * 开始心跳
+     */
     private void startHeart() {
         stopHeart();
         if (task_sendrssi == null) {
             task_sendrssi = new TimerTask() {
                 @Override
                 public void run() {// 通过消息更新
-                    //sendMessage(REFRESH_RSSI);
                     MyBleService.get().sentHeartBeat(address, 60);
                 }
             };
@@ -527,6 +528,9 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         }
     }
 
+    /**
+     * 停止心跳
+     */
     private void stopHeart() {
         if (task_sendrssi != null) {
             task_sendrssi.cancel();

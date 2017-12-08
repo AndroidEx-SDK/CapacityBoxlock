@@ -19,9 +19,9 @@ import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.module.BaseModel;
-import com.androidex.boxlib.modules.ConnectedDevice;
 import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.boxlib.service.BleService;
+import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.fragment.LockFragment;
 import com.androidex.capbox.ui.view.TypeFaceText;
 import com.androidex.capbox.utils.CommonKit;
@@ -222,7 +222,7 @@ public class BoxListAdapter extends BaseAdapter {
                                 case Constants.API.API_OK:
                                     CommonKit.showOkShort(mContext, mContext.getString(R.string.hint_unbind_ok));
                                     removeItem(position);
-                                    ServiceBean device = ConnectedDevice.get().getConnectDevice(mac);
+                                    ServiceBean device = MyBleService.get().getConnectDevice(mac);
                                     if (device != null) {
                                         device.setActiveDisConnect(true);
                                         BleService.get().disConnectDevice(mac);

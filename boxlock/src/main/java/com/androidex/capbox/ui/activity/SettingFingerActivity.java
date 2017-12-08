@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.androidex.boxlib.modules.ConnectedDevice;
 import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
@@ -76,7 +75,7 @@ public class SettingFingerActivity extends BaseActivity {
             R.id.ll_becomeFinger,
     })
     public void clickEvent(View view) {
-        if (ConnectedDevice.get().getConnectDevice(mac) == null) {
+        if (MyBleService.get().getConnectDevice(mac) == null) {
             CommonKit.showErrorShort(context, "蓝牙未连接");
             return;
         }
@@ -128,13 +127,13 @@ public class SettingFingerActivity extends BaseActivity {
             }
         });
 
-        if (ConnectedDevice.get().getConnectDevice(mac) != null) {
+        if (MyBleService.get().getConnectDevice(mac) != null) {
             titlebar.getRightTv().setText("已连接");
         }
         titlebar.getRightTv().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (ConnectedDevice.get().getConnectDevice(mac) == null) {
+                if (MyBleService.get().getConnectDevice(mac) == null) {
                     BleService.get().connectionDevice(context, mac);
                 }
             }

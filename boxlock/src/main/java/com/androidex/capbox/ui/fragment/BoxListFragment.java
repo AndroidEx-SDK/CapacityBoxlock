@@ -19,7 +19,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.acker.simplezxing.activity.CaptureActivity;
-import com.androidex.boxlib.modules.ConnectedDevice;
 import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.boxlib.service.BleService;
 import com.androidex.boxlib.utils.Byte2HexUtil;
@@ -165,7 +164,7 @@ public class BoxListFragment extends BaseFragment {
             public void listViewItemClick(int position, View v) {
                 switch (v.getId()) {
                     case R.id.rl_normal:
-                        if (ConnectedDevice.get().getConnectDevice(mylist.get(position).get("mac")) != null) {
+                        if (MyBleService.get().getConnectDevice(mylist.get(position).get("mac")) != null) {
                             Bundle bundle = new Bundle();
                             bundle.putString("name", mylist.get(position).get("name"));
                             bundle.putString("uuid", mylist.get(position).get("uuid"));
@@ -190,7 +189,7 @@ public class BoxListFragment extends BaseFragment {
             public void listViewItemClick(int position, View v) {
                 switch (v.getId()) {
                     case R.id.tv_connect:
-                        ServiceBean device = ConnectedDevice.get().getConnectDevice(mDeviceListAdapter.getDevice(position).getAddress());
+                        ServiceBean device = MyBleService.get().getConnectDevice(mDeviceListAdapter.getDevice(position).getAddress());
                         if (device != null) {
                             Log.d(TAG, "断开连接");
                             mDeviceListAdapter.setTextHint(-1, "");//刷新列表的提醒显示
@@ -559,8 +558,8 @@ public class BoxListFragment extends BaseFragment {
                             bindBox(uuid.trim());
                         }
                     }
-                    ConnectedDevice.get().getConnectDevice(mac).setActiveDisConnect(true);
-                    BleService.get().disConnectDevice(mac);
+                    MyBleService.get().getConnectDevice(mac).setActiveDisConnect(true);
+                    MyBleService.get().disConnectDevice(mac);
                     mDeviceListAdapter.setTextHint(-1, "");
                     if (!mScanning) {
                         scanLeDeviceList(true);

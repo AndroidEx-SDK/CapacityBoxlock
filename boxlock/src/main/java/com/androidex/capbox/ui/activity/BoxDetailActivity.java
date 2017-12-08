@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.androidex.boxlib.modules.ConnectedDevice;
 import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
@@ -112,7 +111,7 @@ public class BoxDetailActivity extends BaseActivity {
         initBroadCast();
         initTitleBar();
 
-        if (ConnectedDevice.get().getConnectDevice(mac) == null) {
+        if (MyBleService.get().getConnectDevice(mac) == null) {
             if (mac != null) {
                 BleService.get().connectionDevice(context, mac);
             } else {
