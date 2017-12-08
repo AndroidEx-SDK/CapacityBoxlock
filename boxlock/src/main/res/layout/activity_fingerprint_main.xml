@@ -19,8 +19,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/marginPadding120"
-        android:text="@string/fingerprint_recognition_guide_tip"
-        android:textSize="18sp"
-        android:textColor="@color/colorAccent" />
+        android:text="@string/fingerprint_recognition_start"
+        android:textColor="@color/colorAccent"
+        android:textSize="18sp" />
 
-   </LinearLayout>
+</LinearLayout>

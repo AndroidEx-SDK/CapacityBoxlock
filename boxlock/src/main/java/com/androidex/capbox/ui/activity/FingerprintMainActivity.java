@@ -1,7 +1,9 @@
 package com.androidex.capbox.ui.activity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,7 +30,7 @@ public class FingerprintMainActivity extends BaseActivity {
     public void initData(Bundle savedInstanceState) {
         if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
             //结束你的activity
-            finish();
+            CommonKit.finishActivity(this);
             return;
         }
         initViews();
@@ -68,10 +70,12 @@ public class FingerprintMainActivity extends BaseActivity {
     /**
      * 开始锁屏密码
      */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void startFingerprintRecognitionUnlockScreen() {
         if (mKeyguardLockScreenManager == null) {
             return;
         }
+        //判断是否设置锁屏密码或指纹，没有设置直接进入欢迎界面
         if (!mKeyguardLockScreenManager.isOpenLockScreenPwd()) {
             CommonKit.showMsgShort(context, getString(R.string.fingerprint_not_set_unlock_screen_pws));
             //FingerprintUtil.openFingerPrintSettingPage(this);//开启系统设置界面
@@ -84,6 +88,7 @@ public class FingerprintMainActivity extends BaseActivity {
     /**
      * 开始指纹识别
      */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void startFingerprintRecognition() {
         if (mFingerprintCore.isSupport()) {
             if (!mFingerprintCore.isHasEnrolledFingerprints()) {//未录入
@@ -107,9 +112,11 @@ public class FingerprintMainActivity extends BaseActivity {
     }
 
     private void resetGuideViewState() {
-        mFingerGuideTxt.setText(R.string.fingerprint_recognition_guide_tip);
+        mFingerGuideTxt.setText(R.string.fingerprint_recognition_start);
         mFingerGuideImg.setImageResource(R.mipmap.fingerprint_normal);
     }
+
+    int error = 0;
 
     private FingerprintCore.IFingerprintResultListener mResultListener = new FingerprintCore.IFingerprintResultListener() {
         @Override
@@ -118,10 +125,16 @@ public class FingerprintMainActivity extends BaseActivity {
             WelcomeActivity.lauch(context);
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         @Override
         public void onAuthenticateFailed(int helpId) {
             CommonKit.showMsgShort(context, getString(R.string.fingerprint_recognition_failed));
             mFingerGuideTxt.setText(R.string.fingerprint_recognition_failed);
+            error++;
+            if (error == 3) {
+                startFingerprintRecognitionUnlockScreen();
+                error = 0;  
+            }
         }
 
         @Override

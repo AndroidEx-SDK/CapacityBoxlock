@@ -38,6 +38,7 @@ import okhttp3.Response;
 
 
 /**
+ * 身份证拍照页面
  * Created by androidex on 2017/8/26.
  */
 
@@ -61,37 +62,37 @@ public class AuthentiCationActivity extends BaseActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case UPDATE_TEXTVIEW:
-                    String s=msg.obj.toString();
-                    String pre="姓名: ";
-                    String suf="性别: ";
-                    String Name=s.substring((s.indexOf(pre)+pre.length()), s.indexOf(suf));
-                    Log.e("姓名",Name);
+                    String s = msg.obj.toString();
+                    String pre = "姓名: ";
+                    String suf = "性别: ";
+                    String Name = s.substring((s.indexOf(pre) + pre.length()), s.indexOf(suf));
+                    Log.e("姓名", Name);
 
-                    String pre1="性别: ";
-                    String suf1="民族: ";
-                    String Gender=s.substring((s.indexOf(pre1)+pre1.length()), s.indexOf(suf1));
-                    Log.e("性别",Gender);
+                    String pre1 = "性别: ";
+                    String suf1 = "民族: ";
+                    String Gender = s.substring((s.indexOf(pre1) + pre1.length()), s.indexOf(suf1));
+                    Log.e("性别", Gender);
 
-                    String pre2="民族: ";
-                    String suf2="出生: ";
-                    String Nation=s.substring((s.indexOf(pre2)+pre2.length()), s.indexOf(suf2));
-                    Log.e("民族",Nation);
+                    String pre2 = "民族: ";
+                    String suf2 = "出生: ";
+                    String Nation = s.substring((s.indexOf(pre2) + pre2.length()), s.indexOf(suf2));
+                    Log.e("民族", Nation);
 
-                    String pre3="出生: ";
-                    String suf3="住址: ";
-                    String Native=s.substring((s.indexOf(pre3)+pre3.length()), s.indexOf(suf3));
-                    Log.e("出生日期",Native);
+                    String pre3 = "出生: ";
+                    String suf3 = "住址: ";
+                    String Native = s.substring((s.indexOf(pre3) + pre3.length()), s.indexOf(suf3));
+                    Log.e("出生日期", Native);
 
 
-                    String pre4="住址: ";
-                    String suf4="公民身份号码: ";
-                    String Address=s.substring((s.indexOf(pre4)+pre4.length()), s.indexOf(suf4));
-                    Log.e("住址",Address);
+                    String pre4 = "住址: ";
+                    String suf4 = "公民身份号码: ";
+                    String Address = s.substring((s.indexOf(pre4) + pre4.length()), s.indexOf(suf4));
+                    Log.e("住址", Address);
 
-                    String pre5="公民身份号码: ";
-                    String suf5="签发机关: ";
-                    String ID_number=s.substring((s.indexOf(pre5)+pre5.length()), s.indexOf(suf5));
-                    Log.e("公民身份号码",ID_number);
+                    String pre5 = "公民身份号码: ";
+                    String suf5 = "签发机关: ";
+                    String ID_number = s.substring((s.indexOf(pre5) + pre5.length()), s.indexOf(suf5));
+                    Log.e("公民身份号码", ID_number);
 
                     et_name.setText(Name);
                     et_cardID.setText(ID_number);
@@ -120,8 +121,8 @@ public class AuthentiCationActivity extends BaseActivity {
             R.id.tv_getCaptcha,
             R.id.tv_register,
     })
-    public void clickEvent(View view){
-        switch (view.getId()){
+    public void clickEvent(View view) {
+        switch (view.getId()) {
             case R.id.tv_getCaptcha:
                 Intent intent = new Intent(AuthentiCationActivity.this, CameraActivity.class);
                 startActivityForResult(intent, 100);
@@ -174,8 +175,8 @@ public class AuthentiCationActivity extends BaseActivity {
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    Log.e("----------->>",response.toString());
-                    Log.e("===========>>",response.body().toString());
+                    Log.e("----------->>", response.toString());
+                    Log.e("===========>>", response.body().toString());
                     String result = response.body().string();
                     Document parse = Jsoup.parse(result);
                     Elements select = parse.select("div#ocrresult");
