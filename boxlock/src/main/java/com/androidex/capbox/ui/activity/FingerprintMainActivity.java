@@ -133,7 +133,7 @@ public class FingerprintMainActivity extends BaseActivity {
             error++;
             if (error == 3) {
                 startFingerprintRecognitionUnlockScreen();
-                error = 0;  
+                error = 0;
             }
         }
 
