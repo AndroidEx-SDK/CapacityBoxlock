@@ -5,10 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
-import android.widget.Spinner;
 import android.widget.ToggleButton;
 
 import com.androidex.capbox.R;
@@ -21,13 +18,12 @@ import butterknife.Bind;
 import butterknife.OnClick;
 
 /**
+ * 箱体的报警设置页面
  * @author liyp
  * @editTime 2017/10/10
  */
 
 public class SettingAlarmActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
-    @Bind(R.id.setting_distance)
-    Spinner setting_distance;
     @Bind(R.id.tv_lowestTemp)
     TypeFaceText tv_lowestTemp;
     @Bind(R.id.tv_highestTemp)
@@ -42,7 +38,6 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
     private static final String TAG = "SettingAlarmActivity";
     private String police = "A";//报警开启A和关闭B
     private String dismountPolice = "A";//报警开启A和关闭B
-    private int policeDiatance = 0;////报警距离：0脱距、1较近、2近、3较远、4远
     private float highestTemp = 80;  //最高温度
     private float lowestTemp = 0;  //最低温度
     private String become = "A";    //静默开启A 关闭B
@@ -52,7 +47,6 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        settingDistance();//报警距离
     }
 
     @Override
@@ -114,7 +108,6 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
             case R.id.tv_finish:
                 Intent intent = new Intent();
                 intent.putExtra("police", police);
-                intent.putExtra("policeDiatance", policeDiatance);
                 intent.putExtra("dismountPolice", dismountPolice);
                 intent.putExtra("highestTemp", highestTemp);
                 intent.putExtra("lowestTemp", lowestTemp);
@@ -128,34 +121,6 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
             default:
                 break;
         }
-    }
-
-    //报警距离
-    private void settingDistance() {
-        String[] mItems2 = getResources().getStringArray(R.array.distance);
-        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, mItems2);
-        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        setting_distance.setAdapter(adapter1);//绑定 Adapter到控件
-        setting_distance.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                policeDiatance = pos;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Another interface callback
-            }
-        });
-    }
-
-    public static void lauch(Activity activity, int requestCode) {
-        CommonKit.startActivityForResult(activity, SettingAlarmActivity.class, null, requestCode);
-    }
-
-    @Override
-    public int getLayoutId() {
-        return R.layout.activity_settingalarm;
     }
 
     @Override
@@ -229,4 +194,14 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
                 break;
         }
     }
+
+    public static void lauch(Activity activity, int requestCode) {
+        CommonKit.startActivityForResult(activity, SettingAlarmActivity.class, null, requestCode);
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_settingalarm;
+    }
+
 }

@@ -485,8 +485,9 @@ public class BoxDetailActivity extends BaseActivity {
             switch (resultCode) {
                 case Activity.RESULT_OK:
                     police = data.getStringExtra("police");//报警开关
-                    policeDiatance = data.getIntExtra("policeDiatance", 0);//报警距离
-                    dismountPolice = data.getStringExtra("dismountPolice");//报警距离
+                    //policeDiatance = data.getIntExtra("policeDiatance", 0);//报警距离
+
+                    dismountPolice = data.getStringExtra("dismountPolice");//防拆报警开关
                     highestTemp = data.getFloatExtra("highestTemp", 80);   //最高温
                     lowestTemp = data.getFloatExtra("lowestTemp", 0);     //最低温
                     become = data.getStringExtra("become");             //静默开关

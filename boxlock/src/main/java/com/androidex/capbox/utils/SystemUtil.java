@@ -175,7 +175,7 @@ public class SystemUtil {
     public static void startPlayerRaw(Context context) {
         AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-        //stopPlayRaw();
+        stopPlayRaw();
         mediaPlayer = MediaPlayer.create(context, R.raw.alarm);
         mediaPlayer.setLooping(true);
         mediaPlayer.start();

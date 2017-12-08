@@ -49,8 +49,20 @@ public class MyBleService extends BleService {
         }
     }
 
+    /**
+     * 连续三次超出阈值会回调这里，1s更新一次信号强度
+     */
     @Override
     public void outOfScopeRssi() {
         SystemUtil.startPlayerRaw(getContext());
     }
+
+    /**
+     * 超出阈值调用报警后，又恢复到阈值范围内，停止报警回调
+     */
+    @Override
+    public void inOfScopeRssi() {
+        SystemUtil.stopPlayRaw();
+    }
+
 }

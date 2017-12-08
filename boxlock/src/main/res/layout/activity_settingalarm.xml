@@ -228,40 +228,6 @@
                 android:layout_height="@dimen/tv_line_height"
                 android:background="@color/line_color" />
 
-            <!--距离-->
-            <LinearLayout
-                android:id="@+id/setting_distances"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/adduser_ll_height"
-                android:gravity="center_vertical"
-                android:paddingLeft="@dimen/marginPadding16">
-
-                <com.androidex.capbox.ui.view.TypeFaceText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_weight="1"
-                    android:paddingLeft="@dimen/setting_tv_padding_left"
-                    android:text="@string/setting_tv_distance"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/setting_tv" />
-
-                <Spinner
-                    android:id="@+id/setting_distance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:entries="@array/configure" />
-
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/tv_line_height"
-                android:background="@color/line_color" />
-
             <LinearLayout
                 android:id="@+id/ll_lowestTemp"
                 android:layout_width="match_parent"
