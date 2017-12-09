@@ -1,5 +1,6 @@
 package com.androidex.capbox.ui.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -27,13 +28,8 @@ public class AboutActivity extends BaseActivity {
     TextView versionNum;
 
     @Override
-    public int getLayoutId() {
-        return R.layout.activity_about;
-    }
-
-    @Override
     public void initData(Bundle savedInstanceState) {
-        versionNum.setText(getResources().getString(R.string.about_tv_versionNum)+ getVersionName(context));
+        versionNum.setText(getResources().getString(R.string.about_tv_versionNum)+ CommonKit.getVersionName(context));
     }
 
     @OnClick({
@@ -54,15 +50,6 @@ public class AboutActivity extends BaseActivity {
     @Override
     public void setListener() {
 
-    }
-
-    //获取版本号
-    private String getVersionName(Context context) {
-        try {
-            return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            return "";
-        }
     }
 
     //获取版本号
@@ -124,4 +111,14 @@ public class AboutActivity extends BaseActivity {
             }
         });
     }
+
+    public static void lauch(Activity activity) {
+        CommonKit.startActivity(activity, AboutActivity.class, null, false);
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_about;
+    }
+
 }

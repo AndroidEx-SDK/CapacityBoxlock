@@ -69,7 +69,11 @@ public abstract class UserBaseActivity extends BaseActivity {
                             callback.action();
                             break;
                         case Constants.API.API_FAIL:
-                            CommonKit.showErrorShort(context, "登录失败");
+                            if (model.info != null) {
+                                CommonKit.showErrorShort(context, model.info);
+                            } else {
+                                CommonKit.showErrorShort(context, "登录错误");
+                            }
                             LoginActivity.lauch(context);
                             break;
                         case Constants.API.API_NOPERMMISION:

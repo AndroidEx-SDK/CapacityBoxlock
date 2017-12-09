@@ -119,8 +119,8 @@
     <string name="setting_tv_decibel">60dB以上</string>
     <string name="setting_tv_mode">报警方式</string>
     <string name="setting_tv_device">设备</string>
-    <string name="setting_tv_down_fever">紧急求助</string>
     <string name="setting_tv_about">关于</string>
+    <string name="setting_tv_connectdevice">已连接设备</string>
 
     <!-- activity_typeofalarm -->
     <string name="typeofalarm_title_tv">报警方式</string>

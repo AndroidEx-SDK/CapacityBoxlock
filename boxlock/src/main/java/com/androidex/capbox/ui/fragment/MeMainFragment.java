@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -19,14 +20,14 @@ import com.androidex.capbox.ui.activity.TypeOfAlarm;
 
 import butterknife.Bind;
 
-public class SettingFragment extends BaseFragment {
-    private static String TAG = "SettingFragment";
+public class MeMainFragment extends BaseFragment implements CompoundButton.OnCheckedChangeListener {
+    private static String TAG = "MeMainFragment";
     @Bind(R.id.settint_bt_user)
     TextView tv_setting;
     @Bind(R.id.setting_alarm)
     LinearLayout setting_alarm;
-    @Bind(R.id.setting_about)
-    LinearLayout setting_about;
+    @Bind(R.id.ll_connectDevice)
+    LinearLayout ll_connectDevice;
     @Bind(R.id.tv_username)
     TextView tv_username;
     @Bind(R.id.setting_distance)
@@ -41,7 +42,7 @@ public class SettingFragment extends BaseFragment {
     public void setListener() {
         tv_setting.setOnClickListener(this);
         setting_alarm.setOnClickListener(this);
-        setting_about.setOnClickListener(this);
+        ll_connectDevice.setOnClickListener(this);
     }
 
     /**
@@ -70,7 +71,7 @@ public class SettingFragment extends BaseFragment {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.settint_bt_user:
+            case R.id.settint_bt_user://
                 Intent intent = new Intent(getActivity(), SettingActivity.class);
                 startActivity(intent);
                 break;
@@ -78,7 +79,7 @@ public class SettingFragment extends BaseFragment {
                 Intent intent_1 = new Intent(context, TypeOfAlarm.class);
                 startActivity(intent_1);
                 break;
-            case R.id.setting_about://关于
+            case R.id.ll_connectDevice://已连接设备
                 startActivity(new Intent(context, AboutActivity.class));
                 break;
             default:
@@ -116,7 +117,6 @@ public class SettingFragment extends BaseFragment {
                         MyBleService.get().setRssiMaxValue(0);
                         break;
                 }
-
             }
 
             @Override
@@ -127,8 +127,24 @@ public class SettingFragment extends BaseFragment {
     }
 
     @Override
-    public int getLayoutId() {
-        return R.layout.fragment_setting;
+    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+        switch (compoundButton.getId()) {
+            case R.id.tb_alarm://报警开关
+                if (isChecked) {
+                    //选中
+
+                } else {
+                    //未选中
+
+                }
+                break;
+        }
     }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.fragment_memain;
+    }
+
 
 }

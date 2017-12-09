@@ -7,14 +7,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.androidex.capbox.ui.view.TypeFaceText
+        <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="@string/settint_title_tv"
             android:textColor="@color/white"
-            android:textSize="@dimen/title_tv_size" />
+            android:textSize="@dimen/size18" />
 
         <TextView
             android:id="@+id/settint_bt_user"
@@ -79,7 +79,7 @@
                     android:layout_marginLeft="@dimen/marginPadding16"
                     android:layout_marginTop="@dimen/marginPadding16"
                     android:layout_toRightOf="@+id/iv_head"
-                    android:text="15829873689"
+                    android:text=""
                     android:textColor="@color/white"
                     android:textSize="@dimen/size18" />
 
@@ -94,93 +94,37 @@
 
             </RelativeLayout>
 
+            <!-- 防丢报警 -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/tv_line_height"
                 android:background="@color/line_color" />
 
             <LinearLayout
+                android:id="@+id/setting_alarm_function"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/adduser_ll_height"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/marginPadding16">
 
-                <com.androidex.capbox.ui.view.TypeFaceText
-                    android:id="@+id/TextViewIndicator"
+                <TextView
+                    android:id="@+id/TextView08_function"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:paddingLeft="@dimen/setting_tv_padding_left"
-                    android:text="@string/setting_tv_Indicator"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/setting_tv" />
+                    android:text="@string/setting_tv_openalarm"
+                    android:textColor="@color/white" />
 
                 <ToggleButton
-                    android:id="@+id/setting_img_indicator_light"
+                    android:id="@+id/tb_alarm"
                     android:layout_width="@dimen/marginPadding120"
                     android:layout_height="@dimen/marginPadding35"
                     android:layout_marginRight="@dimen/marginPadding16"
                     android:background="@drawable/thumbs"
-                    android:checked="false"
-                    android:textOff="  "
-                    android:textOn="  " />
-            </LinearLayout>
+                    android:checked="true"
+                    android:textOff=" "
+                    android:textOn=" " />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/tv_line_height"
-                android:background="@color/line_color" />
-
-            <LinearLayout
-                android:id="@+id/setting_alarm"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/adduser_ll_height"
-                android:gravity="center_vertical"
-                android:paddingLeft="@dimen/marginPadding16">
-
-                <com.androidex.capbox.ui.view.TypeFaceText
-                    android:id="@+id/TextView08"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingLeft="@dimen/setting_tv_padding_left"
-                    android:text="@string/setting_tv_mode"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/setting_tv" />
-
-                <ImageView
-                    android:layout_width="@dimen/marginPadding20"
-                    android:layout_height="@dimen/marginPadding20"
-                    android:layout_marginRight="@dimen/marginPadding30"
-                    android:src="@mipmap/white_right" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/tv_line_height"
-                android:background="@color/line_color" />
-
-            <LinearLayout
-                android:id="@+id/setting_about"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/adduser_ll_height"
-                android:gravity="center_vertical"
-                android:paddingLeft="@dimen/marginPadding16">
-
-                <com.androidex.capbox.ui.view.TypeFaceText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingLeft="@dimen/setting_tv_padding_left"
-                    android:text="@string/setting_tv_about"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/setting_tv" />
-
-                <ImageView
-                    android:layout_width="@dimen/marginPadding20"
-                    android:layout_height="@dimen/marginPadding20"
-                    android:layout_marginRight="@dimen/marginPadding30"
-                    android:src="@mipmap/white_right" />
             </LinearLayout>
 
             <TextView
@@ -196,15 +140,13 @@
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/marginPadding16">
 
-                <com.androidex.capbox.ui.view.TypeFaceText
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_weight="1"
-                    android:paddingLeft="@dimen/setting_tv_padding_left"
                     android:text="@string/setting_tv_distance"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/setting_tv" />
+                    android:textColor="@color/white" />
 
                 <Spinner
                     android:id="@+id/setting_distance"
@@ -215,6 +157,60 @@
                     android:layout_marginRight="15dp"
                     android:entries="@array/configure" />
 
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tv_line_height"
+                android:background="@color/line_color" />
+            <!--报警方式-->
+            <LinearLayout
+                android:id="@+id/setting_alarm"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/adduser_ll_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/marginPadding16">
+
+                <TextView
+                    android:id="@+id/TextView08"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/setting_tv_mode"
+                    android:textColor="@color/white" />
+
+                <ImageView
+                    android:layout_width="@dimen/marginPadding20"
+                    android:layout_height="@dimen/marginPadding20"
+                    android:layout_marginRight="@dimen/marginPadding30"
+                    android:src="@mipmap/white_right" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tv_line_height"
+                android:background="@color/line_color" />
+
+            <!--已连接的设备-->
+            <LinearLayout
+                android:id="@+id/ll_connectDevice"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/adduser_ll_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/marginPadding16">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/setting_tv_connectdevice"
+                    android:textColor="@color/white" />
+
+                <ImageView
+                    android:layout_width="@dimen/marginPadding20"
+                    android:layout_height="@dimen/marginPadding20"
+                    android:layout_marginRight="@dimen/marginPadding30"
+                    android:src="@mipmap/white_right" />
             </LinearLayout>
 
             <TextView

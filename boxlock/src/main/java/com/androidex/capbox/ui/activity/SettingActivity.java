@@ -45,10 +45,14 @@ public class SettingActivity extends UserBaseActivity {
     @OnClick({
             R.id.tv_logout,
             R.id.tv_logoff,
+            R.id.ll_about,
     })
     public void clickEvent(View view) {
         String username = SharedPreTool.getInstance(context).getStringData(SharedPreTool.PHONE, null);
         switch (view.getId()) {
+            case R.id.ll_about:
+                AboutActivity.lauch(context);
+                break;
             case R.id.tv_logout:
                 if (username != null) {
                     NetApi.userLogout(getToken(), username, new ResultCallBack<BaseModel>() {
@@ -59,6 +63,8 @@ public class SettingActivity extends UserBaseActivity {
                                 switch (model.code) {
                                     case Constants.API.API_OK:
                                         CommonKit.showOkShort(context, getString(R.string.hint_logout_ok));
+                                        break;
+                                    default:
                                         break;
                                 }
                             }

@@ -58,7 +58,7 @@
     <dimen name="adduser_ll_height">50dp</dimen>
     <dimen name="adduser_tv_width">100dp</dimen>
 
-    <!-- fragment_setting -->
+    <!-- fragment_memain -->
     <dimen name="setting_tv_padding_left">10dp</dimen>
     <dimen name="setting_tv_marginRight">15dp</dimen>
     <dimen name="setting_btn_right_width">61dp</dimen>

@@ -29,7 +29,7 @@
                 android:layout_height="@dimen/marginPadding50"
                 android:layout_marginTop="10dp"
                 android:gravity="center_vertical"
-                android:paddingLeft="@dimen/marginPadding30">
+                android:paddingLeft="@dimen/marginPadding16">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -41,7 +41,7 @@
                 <ImageView
                     android:layout_width="@dimen/marginPadding20"
                     android:layout_height="@dimen/marginPadding20"
-                    android:layout_marginRight="30dp"
+                    android:layout_marginRight="@dimen/marginPadding16"
                     android:src="@mipmap/white_right" />
 
             </LinearLayout>
@@ -57,7 +57,7 @@
                 android:layout_height="@dimen/marginPadding50"
                 android:layout_marginTop="10dp"
                 android:gravity="center_vertical"
-                android:paddingLeft="@dimen/marginPadding30">
+                android:paddingLeft="@dimen/marginPadding16">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -70,7 +70,7 @@
                 <ImageView
                     android:layout_width="@dimen/marginPadding20"
                     android:layout_height="@dimen/marginPadding20"
-                    android:layout_marginRight="30dp"
+                    android:layout_marginRight="@dimen/marginPadding16"
                     android:src="@mipmap/white_right" />
 
             </LinearLayout>
@@ -85,7 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/marginPadding50"
                 android:gravity="center_vertical"
-                android:paddingLeft="@dimen/marginPadding30">
+                android:paddingLeft="@dimen/marginPadding16">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -97,7 +97,7 @@
                 <ImageView
                     android:layout_width="@dimen/marginPadding20"
                     android:layout_height="@dimen/marginPadding20"
-                    android:layout_marginRight="30dp"
+                    android:layout_marginRight="@dimen/marginPadding16"
                     android:src="@mipmap/white_right" />
 
             </LinearLayout>
@@ -113,7 +113,7 @@
                 android:layout_height="@dimen/marginPadding50"
                 android:layout_marginTop="10dp"
                 android:gravity="center_vertical"
-                android:paddingLeft="@dimen/marginPadding30">
+                android:paddingLeft="@dimen/marginPadding16">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -126,7 +126,7 @@
                 <ImageView
                     android:layout_width="@dimen/marginPadding20"
                     android:layout_height="@dimen/marginPadding20"
-                    android:layout_marginRight="30dp"
+                    android:layout_marginRight="@dimen/marginPadding16"
                     android:src="@mipmap/white_right" />
             </LinearLayout>
 
@@ -140,7 +140,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/marginPadding50"
                 android:gravity="center_vertical"
-                android:paddingLeft="@dimen/marginPadding30">
+                android:paddingLeft="@dimen/marginPadding16">
 
                 <TextView
                     android:id="@+id/TextView37"
@@ -154,7 +154,7 @@
                 <ImageView
                     android:layout_width="@dimen/marginPadding20"
                     android:layout_height="@dimen/marginPadding20"
-                    android:layout_marginRight="30dp"
+                    android:layout_marginRight="@dimen/marginPadding16"
                     android:src="@mipmap/white_right" />
 
             </LinearLayout>
