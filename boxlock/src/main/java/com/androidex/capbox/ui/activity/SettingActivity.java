@@ -148,8 +148,12 @@ public class SettingActivity extends UserBaseActivity {
                     switch (model.code) {
                         case Constants.API.API_OK:
                             Log.d(TAG, model.toString());
+                            if (model.appVersion>CommonKit.getAppVersionCode(context)){
+                                Log.d(TAG, "发现新版本");
 
-
+                            }else {
+                                CommonKit.showOkShort(context,"已经是最新版本");
+                            }
                             break;
                         case Constants.API.API_FAIL:
                             Log.d(TAG, "网络连接失败");

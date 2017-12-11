@@ -18,7 +18,7 @@ public class CheckVersionModel extends BaseModel {
      * watchVersion:’0.0.2’         //腕表固件版本号
      * watchFileName:’ 20171129.hex’, //腕表固件名字
      */
-    public String appVersion;
+    public int appVersion;
     public String appFileName;
     public String boxVersion;
     public String boxFileName;
