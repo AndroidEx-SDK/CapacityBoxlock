@@ -497,7 +497,9 @@ public class BoxListFragment extends BaseFragment {
             @Override
             public void onFailure(int statusCode, Request request, Exception e) {
                 super.onFailure(statusCode, request, e);
-                showProgress("刷新列表失败");
+                if (context!=null){
+                    showProgress("刷新列表失败");
+                }
                 disProgress();
                 CommonKit.showErrorShort(context, "网络连接异常");
                 scanLeDeviceList(true);

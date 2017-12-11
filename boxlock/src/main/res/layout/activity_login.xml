@@ -71,7 +71,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:scaleType="fitCenter"
-                    android:src="@mipmap/ic_label_password1" />
+                    android:src="@mipmap/ic_password" />
 
                 <EditText
                     android:id="@+id/et_password"
@@ -104,7 +104,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:scaleType="fitCenter"
-                    android:src="@mipmap/ic_label_password1" />
+                    android:src="@mipmap/ic_authcode" />
 
                 <EditText
                     android:id="@+id/et_authcode"

@@ -60,7 +60,7 @@
                         android:background="@android:color/transparent"
                         android:hint="@string/hint_input_phone"
                         android:inputType="phone"
-                        android:paddingLeft="16dp"
+                        android:paddingLeft="@dimen/marginPadding14"
                         android:singleLine="true"
                         android:textColor="@color/white"
                         android:textColorHint="#737578"
@@ -86,7 +86,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:scaleType="fitCenter"
-                        android:src="@mipmap/ic_label_sms" />
+                        android:src="@mipmap/ic_name" />
 
                     <EditText
                         android:id="@+id/et_name"
@@ -98,7 +98,7 @@
                         android:background="@android:color/transparent"
                         android:hint="@string/hint_name"
                         android:inputType="textPersonName"
-                        android:paddingLeft="16dp"
+                        android:paddingLeft="@dimen/marginPadding16"
                         android:singleLine="true"
                         android:textColor="@color/white"
                         android:textColorHint="#737578"
@@ -150,7 +150,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:scaleType="fitCenter"
-                        android:src="@mipmap/ic_label_sms" />
+                        android:src="@mipmap/ic_idcard" />
 
                     <EditText
                         android:id="@+id/et_cardID"
@@ -162,7 +162,7 @@
                         android:background="@android:color/transparent"
                         android:hint="@string/hint_captcha"
                         android:inputType="number"
-                        android:paddingLeft="16dp"
+                        android:paddingLeft="@dimen/marginPadding14"
                         android:singleLine="true"
                         android:textColor="@color/white"
                         android:textColorHint="#737578"
@@ -204,7 +204,7 @@
                         android:background="@android:color/transparent"
                         android:hint="@string/hint_set_login_pwd"
                         android:inputType="textPassword"
-                        android:paddingLeft="16dp"
+                        android:paddingLeft="@dimen/marginPadding14"
                         android:singleLine="true"
                         android:textColor="@color/white"
                         android:textColorHint="#737578"
@@ -229,7 +229,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:scaleType="fitCenter"
-                        android:src="@mipmap/ic_label_password1" />
+                        android:src="@mipmap/ic_passwordconfirm" />
 
                     <EditText
                         android:id="@+id/et_passwordConfirm"
@@ -265,7 +265,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:scaleType="fitCenter"
-                    android:src="@mipmap/ic_label_password1" />
+                    android:src="@mipmap/ic_authcode" />
 
                 <EditText
                     android:id="@+id/et_authcode"

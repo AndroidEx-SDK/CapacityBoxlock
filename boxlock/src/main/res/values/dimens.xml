@@ -155,7 +155,7 @@
     <dimen name="marginPadding18">13.5dp</dimen>
     <dimen name="marginPadding15">15dp</dimen>
     <dimen name="marginPadding16">16dp</dimen>
-    <dimen name="marginPadding14">-16dp</dimen>
+    <dimen name="marginPadding14">14dp</dimen>
     <dimen name="marginPadding11.25">11.25dp</dimen>
     <dimen name="marginPadding10">10dp</dimen>
     <dimen name="marginPadding12">9dp</dimen>

@@ -14,7 +14,6 @@ import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseFragment;
 import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.service.MyBleService;
-import com.androidex.capbox.ui.activity.AboutActivity;
 import com.androidex.capbox.ui.activity.SettingActivity;
 import com.androidex.capbox.ui.activity.TypeOfAlarm;
 
@@ -80,7 +79,7 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
                 startActivity(intent_1);
                 break;
             case R.id.ll_connectDevice://已连接设备
-                startActivity(new Intent(context, AboutActivity.class));
+
                 break;
             default:
                 break;
