@@ -143,13 +143,22 @@
                 android:paddingLeft="@dimen/marginPadding16">
 
                 <TextView
-                    android:id="@+id/TextView37"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_weight="1"
                     android:text="检测版本"
                     android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/tv_versionNum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/setting_btn_right_height"
+                    android:layout_marginRight="@dimen/marginPadding10"
+                    android:gravity="center"
+                    android:text="0.0.1"
+                    android:textColor="@color/white" />
+
 
                 <ImageView
                     android:layout_width="@dimen/marginPadding20"

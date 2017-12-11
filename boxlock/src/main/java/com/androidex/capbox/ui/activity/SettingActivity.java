@@ -2,9 +2,12 @@ package com.androidex.capbox.ui.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.androidex.capbox.MainActivity;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.UserBaseActivity;
 import com.androidex.capbox.data.Event;
@@ -12,6 +15,7 @@ import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.module.BaseModel;
+import com.androidex.capbox.module.CheckVersionModel;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
 
@@ -31,10 +35,12 @@ public class SettingActivity extends UserBaseActivity {
     LinearLayout ll_clearCache;
     @Bind(R.id.ll_searchVersion)
     LinearLayout ll_searchVersion;
+    @Bind(R.id.tv_versionNum)
+    TextView tv_versionNum;
 
     @Override
     public void initData(Bundle savedInstanceState) {
-
+        tv_versionNum.setText(getResources().getString(R.string.about_tv_versionNum) + CommonKit.getVersionName(context));
     }
 
     @Override
@@ -46,6 +52,7 @@ public class SettingActivity extends UserBaseActivity {
             R.id.tv_logout,
             R.id.tv_logoff,
             R.id.ll_about,
+            R.id.ll_searchVersion,
     })
     public void clickEvent(View view) {
         String username = SharedPreTool.getInstance(context).getStringData(SharedPreTool.PHONE, null);
@@ -115,9 +122,59 @@ public class SettingActivity extends UserBaseActivity {
                 postSticky(new Event.UserLoginEvent());//登录状态发生改变
                 LoginActivity.lauch(context);
                 break;
+
+            case R.id.ll_searchVersion:
+                checkVersion();
+                break;
             default:
                 break;
         }
+    }
+
+    /**
+     * 检测版本号，包括APP的，箱体的，腕表的
+     */
+    public void checkVersion() {
+        NetApi.checkVersion(getToken(), MainActivity.username, new ResultCallBack<CheckVersionModel>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Headers headers, CheckVersionModel model) {
+                super.onSuccess(statusCode, headers, model);
+                if (model != null) {
+                    switch (model.code) {
+                        case Constants.API.API_OK:
+                            Log.d(TAG, model.toString());
+
+
+                            break;
+                        case Constants.API.API_FAIL:
+                            Log.d(TAG, "网络连接失败");
+                            CommonKit.showErrorShort(context, "网络连接失败");
+                            break;
+                        default:
+                            if (model.info != null) {
+                                Log.d(TAG, model.info);
+                                CommonKit.showErrorShort(context, model.info);
+                            } else {
+                                Log.d(TAG, "网络连接失败");
+                                CommonKit.showErrorShort(context, "网络连接失败");
+                            }
+                            break;
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Request request, Exception e) {
+                super.onFailure(statusCode, request, e);
+                Log.d(TAG, "网络连接失败");
+                CommonKit.showErrorShort(context, "网络连接失败");
+            }
+        });
     }
 
     /**

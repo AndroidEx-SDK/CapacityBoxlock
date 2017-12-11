@@ -1,8 +1,6 @@
 package com.androidex.capbox.ui.activity;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -51,16 +49,6 @@ public class AboutActivity extends BaseActivity {
     public void setListener() {
 
     }
-
-    //获取版本号
-    private int getVersionCode(Context context) {
-        try {
-            return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            return 0;
-        }
-    }
-
 
     @Override
     public void onClick(View v) {
