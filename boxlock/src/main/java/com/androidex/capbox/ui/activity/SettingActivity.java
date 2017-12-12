@@ -18,6 +18,8 @@ import com.androidex.capbox.module.BaseModel;
 import com.androidex.capbox.module.CheckVersionModel;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
+import com.dou361.update.UpdateHelper;
+import com.dou361.update.listener.ForceListener;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -148,11 +150,21 @@ public class SettingActivity extends UserBaseActivity {
                     switch (model.code) {
                         case Constants.API.API_OK:
                             Log.d(TAG, model.toString());
-                            if (model.appVersion>CommonKit.getAppVersionCode(context)){
+                            if (model.appVersion > CommonKit.getAppVersionCode(context)) {
                                 Log.d(TAG, "发现新版本");
+                                String requestStri = "{\"code\":0," +
+                                        "\"data\":" +
+                                        "{\"download_url\":" +NetApi.getAppUpadeUrl(model.appFileName)+
+                                        "\"," +
+                                        "\"force\":false," +
+                                        "\"update_content\":\"测试更新接口\"," +
+                                        "\"v_code\":\"10\",\"v_name\":\"v1.0.0.16070810\"," +
+                                        "\"v_sha1\":\"7db76e18ac92bb29ff0ef012abfe178a78477534\"," +
+                                        "\"v_size\":12365909}}";
 
-                            }else {
-                                CommonKit.showOkShort(context,"已经是最新版本");
+                                networkAutoUpdate(requestStri);
+                            } else {
+                                CommonKit.showOkShort(context, "已经是最新版本");
                             }
                             break;
                         case Constants.API.API_FAIL:
@@ -180,6 +192,25 @@ public class SettingActivity extends UserBaseActivity {
             }
         });
     }
+
+    /**
+     * 分离网络的自动检测更新
+     */
+    private void networkAutoUpdate(String data) {
+        UpdateHelper.getInstance()
+                .setRequestResultData(data)
+                .setForceListener(new ForceListener() {
+                    @Override
+                    public void onUserCancel(boolean force) {
+                        if (force) {
+                            //退出应用
+                            finish();
+                        }
+                    }
+                })
+                .checkNoUrl(context);
+    }
+
 
     /**
      * 删除缓存本地的账号和密码

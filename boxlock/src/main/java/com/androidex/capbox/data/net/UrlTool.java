@@ -15,6 +15,9 @@ public class UrlTool {
     private static final String urlSuffix = "%s%s";
 
     public static final String LOGIC_USER = "";
+    public static final String APP_UPDATA_URL = "version/app/";
+    public static final String BOX_UPDATA_URL = "version/box/";
+    public static final String WATCH_UPDATA_URL = "version/watch/";
     public static final String USER_ACTION_REGISTER = "regist";  //注册
     public static final String USER_ACTION_LOGIN = "login";   //登录
     public static final String USER_ACTION_LOGOUT = "logout"; //用户退出

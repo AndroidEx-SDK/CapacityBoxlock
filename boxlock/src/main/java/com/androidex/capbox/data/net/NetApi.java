@@ -603,6 +603,25 @@ public class NetApi {
     }
 
     /**
+     * 获取APP安装包的下载路径
+     *
+     * @param appFileName 文件名
+     * @return
+     */
+    public static String getAppUpadeUrl(String appFileName) {
+        return UrlTool.getUrl(UrlTool.APP_UPDATA_URL, appFileName);
+    }
+
+    public static String getBoxUpadeUrl(String boxFileName) {
+        return UrlTool.getUrl(UrlTool.BOX_UPDATA_URL, boxFileName);
+    }
+
+    public static String getWatchUpadeUrl(String watchFileName) {
+        return UrlTool.getUrl(UrlTool.WATCH_UPDATA_URL, watchFileName);
+    }
+
+
+    /**
      * 获取本机蓝牙地址
      *
      * @return
