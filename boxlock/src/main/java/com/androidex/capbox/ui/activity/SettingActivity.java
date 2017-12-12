@@ -2,6 +2,7 @@ package com.androidex.capbox.ui.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -18,8 +19,6 @@ import com.androidex.capbox.module.BaseModel;
 import com.androidex.capbox.module.CheckVersionModel;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
-import com.dou361.update.UpdateHelper;
-import com.dou361.update.listener.ForceListener;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -152,17 +151,7 @@ public class SettingActivity extends UserBaseActivity {
                             Log.d(TAG, model.toString());
                             if (model.appVersion > CommonKit.getAppVersionCode(context)) {
                                 Log.d(TAG, "发现新版本");
-                                String requestStri = "{\"code\":0," +
-                                        "\"data\":" +
-                                        "{\"download_url\":" +NetApi.getAppUpadeUrl(model.appFileName)+
-                                        "\"," +
-                                        "\"force\":false," +
-                                        "\"update_content\":\"测试更新接口\"," +
-                                        "\"v_code\":\"10\",\"v_name\":\"v1.0.0.16070810\"," +
-                                        "\"v_sha1\":\"7db76e18ac92bb29ff0ef012abfe178a78477534\"," +
-                                        "\"v_size\":12365909}}";
-
-                                networkAutoUpdate(requestStri);
+                                downloadAppApk(model.appFileName);
                             } else {
                                 CommonKit.showOkShort(context, "已经是最新版本");
                             }
@@ -194,23 +183,44 @@ public class SettingActivity extends UserBaseActivity {
     }
 
     /**
-     * 分离网络的自动检测更新
+     * 下载Apk
+     *
+     * @param appFireName
      */
-    private void networkAutoUpdate(String data) {
-        UpdateHelper.getInstance()
-                .setRequestResultData(data)
-                .setForceListener(new ForceListener() {
-                    @Override
-                    public void onUserCancel(boolean force) {
-                        if (force) {
-                            //退出应用
-                            finish();
-                        }
-                    }
-                })
-                .checkNoUrl(context);
+    public void downloadAppApk(final String appFireName) {
+        final String SDCard = Environment.getExternalStorageDirectory() + "/androidex";
+        Log.v("downloadFile", "File path: " + SDCard);
+        NetApi.downloadAppApk(getToken(), SDCard, appFireName, new ResultCallBack() {
+            @Override
+            public void onStart() {
+                super.onStart();
+                Log.e(TAG, "开始下载新版本");
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Headers headers, Object model) {
+                super.onSuccess(statusCode, headers, model);
+                Log.e(TAG, "下载完成");
+
+                CommonKit.installNormal(context, SDCard + "/" + appFireName);
+            }
+
+            @Override
+            public void onProgress(long bytesWritten, long totalSize) {
+                super.onProgress(bytesWritten, totalSize);
+                Log.e(TAG, "bytesWritten=" + bytesWritten + "\ntotalSize=" + totalSize);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Request request, Exception e) {
+                super.onFailure(statusCode, request, e);
+                Log.e(TAG, "下载失败" + e.getMessage());
+
+            }
+        });
     }
 
+    ;
 
     /**
      * 删除缓存本地的账号和密码

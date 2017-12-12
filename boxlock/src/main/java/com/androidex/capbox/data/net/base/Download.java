@@ -24,7 +24,6 @@ public class Download extends Get {
     private String destFileDir;
     private String destFileName;
 
-
     protected Download(String url, String tag, Headers headers, RequestParams params, String destFileDir, String destFileName) {
         super(url, tag, headers, params);
         this.destFileDir = destFileDir;
@@ -36,7 +35,7 @@ public class Download extends Get {
     protected OkRequest invoke(final ResultCallBack callBack) {
         prepareInvoke(callBack);
 
-        //logInfo();
+        logInfo();
 
         okHttpClient.newCall(request).enqueue(new Callback() {
 
@@ -100,7 +99,6 @@ public class Download extends Get {
                 L.e(e);
             }
         }
-
     }
 
     private String getFileName(String path) {

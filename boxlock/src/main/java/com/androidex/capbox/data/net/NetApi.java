@@ -22,6 +22,7 @@ import com.androidex.capbox.module.WatchDetailModel;
 import okhttp3.Headers;
 
 import static com.androidex.capbox.data.net.UrlTool.USER_ACTION_REGISTER;
+import static com.androidex.capbox.data.net.UrlTool.getUrl;
 
 /**
  * @author liyp
@@ -47,7 +48,7 @@ public class NetApi {
                 .put("password", password)
                 .put("authcode", authcode);
 
-        String url = UrlTool.getUrl(UrlTool.LOGIC_USER, USER_ACTION_REGISTER);
+        String url = getUrl(UrlTool.LOGIC_USER, USER_ACTION_REGISTER);
         new OkRequest.Builder().url(url).params(params).post(callBack);
     }
 
@@ -65,7 +66,7 @@ public class NetApi {
                 .put("password", password)
                 .put("authcode", authcode);
 
-        String url = UrlTool.getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_LOGIN);
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_LOGIN);
         new OkRequest.Builder().url(url).params(params).post(callBack);
     }
 
@@ -83,7 +84,7 @@ public class NetApi {
         RequestParams params = RequestParams.newInstance()
                 .put("username", username);
 
-        String url = UrlTool.getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_GET_CAPTCHA);
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_GET_CAPTCHA);
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
 
@@ -100,7 +101,7 @@ public class NetApi {
         RequestParams params = RequestParams.newInstance()
                 .put("username", username);
 
-        String url = UrlTool.getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_LOGOUT);
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_LOGOUT);
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
 
@@ -118,7 +119,7 @@ public class NetApi {
         RequestParams params = RequestParams.newInstance()
                 .put("username", username);
 
-        String url = UrlTool.getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_LOGOFF);
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_LOGOFF);
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
 
@@ -141,7 +142,7 @@ public class NetApi {
                 .put("cardId", cardId)
                 .put("authcode", authcode);
 
-        String url = UrlTool.getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_FORGET_PASSWORD);
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_FORGET_PASSWORD);
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
 
@@ -164,7 +165,7 @@ public class NetApi {
                 .put("uuid", uuid)
                 .put("mobileMac", getLocalMac());
 
-        String url = UrlTool.getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_BOXBAND);
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_BOXBAND);
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
 
@@ -185,7 +186,7 @@ public class NetApi {
                 .put("uuid", uuid)
                 .put("mac", mac);
 
-        String url = UrlTool.getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_RELIEVEBOXBIND);
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_RELIEVEBOXBIND);
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
 
@@ -206,7 +207,7 @@ public class NetApi {
                 .put("uuid", uuid)
                 .put("mac", mac);
 
-        String url = UrlTool.getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_RELIEVEWATCHBIND);
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_RELIEVEWATCHBIND);
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
 
@@ -223,7 +224,7 @@ public class NetApi {
         RequestParams params = RequestParams.newInstance()
                 .put("username", username);
 
-        String url = UrlTool.getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_BOXLIST);
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_BOXLIST);
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
 
@@ -240,7 +241,7 @@ public class NetApi {
                 .put("username", username)
                 .put("uuid", uuid);
 
-        String url = UrlTool.getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_WATCHLIST);
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_WATCHLIST);
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
 
@@ -257,7 +258,7 @@ public class NetApi {
         RequestParams params = RequestParams.newInstance()
                 .put("username", username);
 
-        String url = UrlTool.getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_ALL_WATCHLIST);
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_ALL_WATCHLIST);
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
 
@@ -277,7 +278,7 @@ public class NetApi {
                 .put("username", username)
                 .put("uuid", uuid);
 
-        String url = UrlTool.getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_BOXDETAIL);
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_BOXDETAIL);
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
 
@@ -296,7 +297,7 @@ public class NetApi {
                 .put("username", username)
                 .put("uuid", uuid);
 
-        String url = UrlTool.getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_BOXLOCATION);
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_BOXLOCATION);
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
 
@@ -317,7 +318,7 @@ public class NetApi {
                 .put("uuid", uuid)
                 .put("mac", mac);
 
-        String url = UrlTool.getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_WATCHDETAIL);
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_WATCHDETAIL);
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
 
@@ -425,7 +426,7 @@ public class NetApi {
                 .put("become", humidityPolice)
                 .put("become", distancePolice);
 
-        String url = UrlTool.getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_BOXCONFIG);
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_BOXCONFIG);
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
 
@@ -444,7 +445,7 @@ public class NetApi {
                 .put("username", username)
                 .put("uuid", uuid);
 
-        String url = UrlTool.getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_STARTESCORT);
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_STARTESCORT);
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
 
@@ -462,7 +463,7 @@ public class NetApi {
                 .put("username", username)
                 .put("uuid", uuid);
 
-        String url = UrlTool.getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_ENDTASK);
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_ENDTASK);
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
 
@@ -500,7 +501,7 @@ public class NetApi {
                 .put("carryCall", carryCall)
                 .put("become", become);
 
-        String url = UrlTool.getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_WATCHCONFIG);
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_WATCHCONFIG);
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
 
@@ -519,7 +520,7 @@ public class NetApi {
                 .put("username", username)
                 .put("uuid", uuid);
 
-        String url = UrlTool.getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_DEFAULTDEVICE);
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_DEFAULTDEVICE);
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
 
@@ -536,7 +537,7 @@ public class NetApi {
         RequestParams params = RequestParams.newInstance()
                 .put("username", username)
                 .put("uuid", uuid);
-        String url = UrlTool.getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_GETDEVICEMAC);
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_GETDEVICEMAC);
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
 
@@ -551,7 +552,7 @@ public class NetApi {
                 .put("mobileMac", getLocalMac())
                 .put("forOpenBox", islock)
                 .put("uuid", uuid);
-        String url = UrlTool.getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_GET_CAPTCHA);
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_GET_CAPTCHA);
         new OkRequest.Builder().url(url).params(params).post(callBack);
     }
 
@@ -580,7 +581,7 @@ public class NetApi {
         RequestParams params = RequestParams.newInstance()
                 .put("username", username)
                 .put("uuid", uuid);
-        String url = UrlTool.getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_GETALARMLIST);
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_GETALARMLIST);
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
 
@@ -598,28 +599,34 @@ public class NetApi {
         RequestParams params = RequestParams.newInstance()
                 .put("username", username);
 
-        String url = UrlTool.getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_CHECKVERSION);
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_CHECKVERSION);
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
 
     /**
      * 获取APP安装包的下载路径
      *
-     * @param appFileName 文件名
-     * @return
+     * @param token
+     * @param path APK的安装路径
+     * @param appFileName
+     * @param callBack
      */
-    public static String getAppUpadeUrl(String appFileName) {
-        return UrlTool.getUrl(UrlTool.APP_UPDATA_URL, appFileName);
+    public static void downloadAppApk(String token, String path, String appFileName, ResultCallBack callBack) {
+        Headers headers = new Headers.Builder()
+                .add("token", token)
+                .build();
+
+        String url = UrlTool.getUrl(UrlTool.APP_UPDATA_URL, appFileName);
+        new OkRequest.Builder().url(url).headers(headers).destFileDir(path).destFileName(appFileName).download(callBack);
     }
 
     public static String getBoxUpadeUrl(String boxFileName) {
-        return UrlTool.getUrl(UrlTool.BOX_UPDATA_URL, boxFileName);
+        return getUrl(UrlTool.BOX_UPDATA_URL, boxFileName);
     }
 
     public static String getWatchUpadeUrl(String watchFileName) {
-        return UrlTool.getUrl(UrlTool.WATCH_UPDATA_URL, watchFileName);
+        return getUrl(UrlTool.WATCH_UPDATA_URL, watchFileName);
     }
-
 
     /**
      * 获取本机蓝牙地址

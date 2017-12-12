@@ -25,6 +25,54 @@ public class CheckVersionModel extends BaseModel {
     public String watchVersion;
     public String watchFileName;
 
+    public int getAppVersion() {
+        return appVersion;
+    }
+
+    public void setAppVersion(int appVersion) {
+        this.appVersion = appVersion;
+    }
+
+    public String getAppFileName() {
+        return appFileName;
+    }
+
+    public void setAppFileName(String appFileName) {
+        this.appFileName = appFileName;
+    }
+
+    public String getBoxVersion() {
+        return boxVersion;
+    }
+
+    public void setBoxVersion(String boxVersion) {
+        this.boxVersion = boxVersion;
+    }
+
+    public String getBoxFileName() {
+        return boxFileName;
+    }
+
+    public void setBoxFileName(String boxFileName) {
+        this.boxFileName = boxFileName;
+    }
+
+    public String getWatchVersion() {
+        return watchVersion;
+    }
+
+    public void setWatchVersion(String watchVersion) {
+        this.watchVersion = watchVersion;
+    }
+
+    public String getWatchFileName() {
+        return watchFileName;
+    }
+
+    public void setWatchFileName(String watchFileName) {
+        this.watchFileName = watchFileName;
+    }
+
     @Override
     public String toString() {
         return "CheckVersionModel{" +

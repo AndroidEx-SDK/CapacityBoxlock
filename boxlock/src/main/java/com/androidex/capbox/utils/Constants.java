@@ -30,7 +30,6 @@ public class Constants extends BleConstants{
         public static final int DEST_PIC_WIDTH = 400;     //上传图片的宽
         public static final int DEST_PIC_HEIGHT = 400;    //上传图片的高
         public static final int SHARE_LUCKY_MAX_IMG_COUNT = 5;    //晒单分享上传的最大图片数
-
     }
 
     /**
