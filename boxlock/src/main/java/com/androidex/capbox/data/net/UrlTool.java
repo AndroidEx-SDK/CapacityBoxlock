@@ -48,6 +48,12 @@ public class UrlTool {
         return builder.toString();
     }
 
+    public static String getDownloadUrl(String logic, String action) {
+        StringBuilder builder = new StringBuilder(Constants.CONFIG.APP_BASIC_SERVER_DOWNLOAD);
+        builder.append(String.format(urlSuffix, logic, action));
+        return builder.toString();
+    }
+
     public static String getUrl1(String logic, String action) {
         StringBuilder builder = new StringBuilder(Constants.CONFIG.APP_BASIC_SERVER_BAIDU);
         builder.append(String.format(urlSuffix, logic, action));

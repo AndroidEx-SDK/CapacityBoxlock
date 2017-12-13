@@ -616,7 +616,7 @@ public class NetApi {
                 .add("token", token)
                 .build();
 
-        String url = UrlTool.getUrl(UrlTool.APP_UPDATA_URL, appFileName);
+        String url = UrlTool.getDownloadUrl(UrlTool.APP_UPDATA_URL, appFileName);
         new OkRequest.Builder().url(url).headers(headers).destFileDir(path).destFileName(appFileName).download(callBack);
     }
 

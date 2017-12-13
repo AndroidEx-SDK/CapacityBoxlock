@@ -201,7 +201,6 @@ public class SettingActivity extends UserBaseActivity {
             public void onSuccess(int statusCode, Headers headers, Object model) {
                 super.onSuccess(statusCode, headers, model);
                 Log.e(TAG, "下载完成");
-
                 CommonKit.installNormal(context, SDCard + "/" + appFireName);
             }
 

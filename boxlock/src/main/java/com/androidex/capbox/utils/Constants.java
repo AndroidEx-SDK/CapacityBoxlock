@@ -24,12 +24,14 @@ public class Constants extends BleConstants{
         // http://125.76.235.28/securitybox/app/getDeviceMac//测试服务器地址
         public static final String APP_BASIC_SERVER = "http://125.76.235.28/securitybox/app/";   //基本服务器地址
         public static final String APP_BASIC_SERVER_BAIDU = "http://api.map.baidu.com/ag/coord/convert";   //基本服务器地址
+        public static final String APP_BASIC_SERVER_DOWNLOAD = "http://125.76.235.28/securitybox/";   //基本服务器地址
 
         public static final String API_SECRET_KEY = "qb1y";
 
         public static final int DEST_PIC_WIDTH = 400;     //上传图片的宽
         public static final int DEST_PIC_HEIGHT = 400;    //上传图片的高
         public static final int SHARE_LUCKY_MAX_IMG_COUNT = 5;    //晒单分享上传的最大图片数
+
     }
 
     /**
