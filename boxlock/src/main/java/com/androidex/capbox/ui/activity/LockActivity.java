@@ -419,7 +419,7 @@ public class LockActivity extends BaseActivity implements OnClickListener {
                 @Override
                 public void run() {// 通过消息更新
                     //sendMessage(REFRESH_RSSI);
-                    MyBleService.get().sentHeartBeat(address, 60);
+                    MyBleService.get().sentHeartBeat(address);
                 }
             };
             if (timer_rssi == null) {

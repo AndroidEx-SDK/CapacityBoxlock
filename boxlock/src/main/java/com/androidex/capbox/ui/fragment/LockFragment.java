@@ -518,7 +518,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
             task_sendrssi = new TimerTask() {
                 @Override
                 public void run() {// 通过消息更新
-                    MyBleService.get().sentHeartBeat(address, 60);
+                    MyBleService.get().sentHeartBeat(address);
                 }
             };
             if (timer_rssi == null) {
