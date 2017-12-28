@@ -196,9 +196,9 @@ public class BoxListFragment extends BaseFragment {
                             device.setActiveDisConnect(true);
                             MyBleService.get().disConnectDevice(mDeviceListAdapter.getDevice(position).getAddress());
                         } else {
-                            Log.d(TAG, "开始绑定");
-                            showProgress(getResources().getString(R.string.device_connect));
+                            Log.d(TAG, "开始绑定2");
                             stopScanLe();
+                            showProgress(getResources().getString(R.string.device_connect));
                             MyBleService.get().connectionDevice(context, mDeviceListAdapter.getDevice(position).getAddress());
                         }
                         break;
@@ -212,11 +212,10 @@ public class BoxListFragment extends BaseFragment {
         listview_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Log.d(TAG, "开始绑定");
-                showProgress(getResources().getString(R.string.device_connect));
+                Log.d(TAG, "开始绑定1");
                 stopScanLe();
+                showProgress(getResources().getString(R.string.device_connect));
                 BleService.get().connectionDevice(context, mDeviceListAdapter.getDevice(position).getAddress());
-
             }
         });
     }
@@ -530,10 +529,12 @@ public class BoxListFragment extends BaseFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             String mac = intent.getStringExtra(BLECONSTANTS_ADDRESS);
+            Log.e(TAG,"mac="+mac+" action="+intent.getAction());
             switch (intent.getAction()) {
                 case BLE_CONN_SUCCESS://连接成功
                 case BLE_CONN_SUCCESS_ALLCONNECTED://重复连接
                     BleService.get().enableNotify(mac);
+                    disProgress();
                     showProgress("连接成功...");
                     Log.e(TAG, "开始获取UUID");
                     startGetUUID(true, mac);
@@ -566,6 +567,11 @@ public class BoxListFragment extends BaseFragment {
                     if (!mScanning) {
                         scanLeDeviceList(true);
                     }
+                    break;
+
+                case Constants.BLE.BLE_CONN_FAIL:
+                    disProgress();
+                    CommonKit.showErrorLong(context, "连接失败");
                     break;
 
                 default:

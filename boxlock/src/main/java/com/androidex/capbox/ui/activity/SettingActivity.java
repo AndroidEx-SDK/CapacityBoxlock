@@ -214,12 +214,9 @@ public class SettingActivity extends UserBaseActivity {
             public void onFailure(int statusCode, Request request, Exception e) {
                 super.onFailure(statusCode, request, e);
                 Log.e(TAG, "下载失败" + e.getMessage());
-
             }
         });
     }
-
-    ;
 
     /**
      * 删除缓存本地的账号和密码

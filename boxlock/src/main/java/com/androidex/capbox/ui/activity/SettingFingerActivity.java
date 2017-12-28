@@ -127,8 +127,10 @@ public class SettingFingerActivity extends BaseActivity {
             }
         });
 
-        if (MyBleService.get().getConnectDevice(mac) != null) {
-            titlebar.getRightTv().setText("已连接");
+        if(mac!=null){
+            if (MyBleService.get().getConnectDevice(mac) != null) {
+                titlebar.getRightTv().setText("已连接");
+            }
         }
         titlebar.getRightTv().setOnClickListener(new View.OnClickListener() {
             @Override

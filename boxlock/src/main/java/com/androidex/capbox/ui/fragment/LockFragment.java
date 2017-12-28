@@ -137,19 +137,21 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         initView();
         initMap();
         initBleBroadCast();
-        if (MyBleService.get().getConnectDevice(address) == null) {
-            Log.e(TAG, "开始扫描蓝牙设备1");
-            scanLeDevice();
-        } else {
-            if (MyBleService.get().getConnectDevice(address).isActiveDisConnect()) {
-                Log.e(TAG, "开始扫描蓝牙设备2");
+        if (address!=null){
+            if (MyBleService.get().getConnectDevice(address) == null) {
+                Log.e(TAG, "开始扫描蓝牙设备1");
                 scanLeDevice();
             } else {
-                Log.e(TAG, "已连接 address=" + address);
-                CommonKit.showMsgShort(context, "设备已连接");
-                BleService.get().enableNotify(address);
-                updateBleView(View.GONE, View.VISIBLE);
-                startHeart();
+                if (MyBleService.get().getConnectDevice(address).isActiveDisConnect()) {
+                    Log.e(TAG, "开始扫描蓝牙设备2");
+                    scanLeDevice();
+                } else {
+                    Log.e(TAG, "已连接 address=" + address);
+                    CommonKit.showMsgShort(context, "设备已连接");
+                    BleService.get().enableNotify(address);
+                    updateBleView(View.GONE, View.VISIBLE);
+                    startHeart();
+                }
             }
         }
     }

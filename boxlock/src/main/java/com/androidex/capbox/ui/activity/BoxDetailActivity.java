@@ -111,19 +111,21 @@ public class BoxDetailActivity extends BaseActivity {
         initBroadCast();
         initTitleBar();
 
-        if (MyBleService.get().getConnectDevice(mac) == null) {
-            if (mac != null) {
-                BleService.get().connectionDevice(context, mac);
+        if (mac!=null){
+            if (MyBleService.get().getConnectDevice(mac) == null) {
+                if (mac != null) {
+                    BleService.get().connectionDevice(context, mac);
+                } else {
+                    Log.d(TAG, "mac is null");
+                }
             } else {
-                Log.d(TAG, "mac is null");
+                Log.d(TAG, "已经连接");
+                BleService.get().enableNotify(mac);
+                tv_connect_starts.setText("已连接");
+                CommonKit.showOkShort(mContext, "设备已连接");
             }
-        } else {
-            Log.d(TAG, "已经连接");
-            BleService.get().enableNotify(mac);
-            tv_connect_starts.setText("已连接");
-            CommonKit.showOkShort(mContext, "设备已连接");
+            tv_mac.setText(mac);
         }
-        tv_mac.setText(mac);
         if (name != null) {
             tv_name.setText(name);
         }
