@@ -62,6 +62,8 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_RSSI_FAIL;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_RSSI_SUCCED;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCONNECTED;
+import static com.androidex.boxlib.utils.BleConstants.BLE.BLUTOOTH_OFF;
+import static com.androidex.boxlib.utils.BleConstants.BLE.BLUTOOTH_ON;
 import static com.androidex.boxlib.utils.BleConstants.BLE.SCAN_PERIOD;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
@@ -172,6 +174,8 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         intentFilter.addAction(ACTION_HEART);
         intentFilter.addAction(ACTION_END_TAST);
         intentFilter.addAction(ACTION_LOCK_OPEN_SUCCED);
+        intentFilter.addAction(BLUTOOTH_OFF);
+        intentFilter.addAction(BLUTOOTH_ON);
         context.registerReceiver(dataUpdateRecevice, intentFilter);
     }
 
@@ -572,11 +576,16 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     setLostAlarm(deviceName);//防丢报警设置
                     break;
 
+                case BLUTOOTH_OFF:
+                    CommonKit.showOkShort(context, "开锁成功");
+                    break;
+                case BLUTOOTH_ON:
+                    CommonKit.showOkShort(context, "开锁成功");
+                    break;
                 case ACTION_LOCK_OPEN_SUCCED:
                     CommonKit.showOkShort(context, "开锁成功");
                     MyBleService.get().getLockStatus(address);
                     break;
-
                 case ACTION_LOCK_STARTS://锁状态FB 32 00 01 00 00 FE
                     if (b[2] == (byte) 0x01) {
                         tv_status.setText("已打开");
