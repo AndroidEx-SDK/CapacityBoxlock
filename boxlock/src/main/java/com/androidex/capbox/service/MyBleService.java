@@ -36,19 +36,16 @@ public class MyBleService extends BleService {
      */
     @Override
     public void disConnect(String address) {
-        Log.e(TAG,"disConnect address="+address);
         ServiceBean device = getConnectDevice(address);
         if (device != null) {
             device.setStopGetRssi();
             if (!device.isActiveDisConnect()) {//判断是否是主动断开，true就不报警,在主动断开的时候就要设置该值为true
-                Log.e(TAG,"非主动断开 disConnect address="+address);
                 Intent intent = new Intent(BLE_CONN_DIS);
                 intent.putExtra(BLECONSTANTS_ADDRESS, address);
                 sendBroadcast(intent);
                 SystemUtil.startPlayerRaw(getContext());
             }
         }else{
-            Log.e(TAG,"异常断开 disConnect address="+address);
             Intent intent = new Intent(BLE_CONN_DIS);
             intent.putExtra(BLECONSTANTS_ADDRESS, address);
             sendBroadcast(intent);
