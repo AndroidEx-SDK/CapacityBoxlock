@@ -36,7 +36,6 @@ public class MyBleService extends BleService {
      */
     @Override
     public void disConnect(String address) {
-        super.disConnect(address);
         Log.e(TAG,"disConnect address="+address);
         ServiceBean device = getConnectDevice(address);
         if (device != null) {
