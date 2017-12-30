@@ -570,17 +570,27 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     break;
 
                 case BLE_CONN_DIS://断开连接
-                    Log.e("LockFragment", "断开连接");
+                    Log.e(TAG, "断开连接");
                     stopHeart();
                     updateBleView(View.VISIBLE, View.GONE);
                     setLostAlarm(deviceName);//防丢报警设置
                     break;
 
                 case BLUTOOTH_OFF:
-                    CommonKit.showOkShort(context, "开锁成功");
+                    Log.e(TAG,"手机蓝牙断开");
+                    CommonKit.showErrorShort(context, "手机蓝牙断开");
+                    stopHeart();
+                    ServiceBean device = MyBleService.get().getConnectDevice(address);
+                    if (device != null) {
+                        device.setActiveDisConnect(true);
+                    }
+                    MyBleService.get().disConnectDevice(address);
+                    updateBleView(View.VISIBLE, View.GONE);
                     break;
                 case BLUTOOTH_ON:
-                    CommonKit.showOkShort(context, "开锁成功");
+                    Log.e(TAG,"手机蓝牙开启");
+                    CommonKit.showOkShort(context, "手机蓝牙开启");
+                    scanLeDevice();
                     break;
                 case ACTION_LOCK_OPEN_SUCCED:
                     CommonKit.showOkShort(context, "开锁成功");
