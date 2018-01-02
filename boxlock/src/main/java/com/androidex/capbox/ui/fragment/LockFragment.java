@@ -18,8 +18,8 @@ import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.MainActivity;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseFragment;
+import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
-import com.androidex.capbox.data.net.base.L;
 import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.module.ActionItem;
 import com.androidex.capbox.module.BaiduModel;
@@ -43,7 +43,6 @@ import com.e.ble.scan.BLEScanCfg;
 import com.e.ble.scan.BLEScanListener;
 import com.e.ble.util.BLEError;
 
-import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -67,6 +66,11 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.BLUTOOTH_ON;
 import static com.androidex.boxlib.utils.BleConstants.BLE.SCAN_PERIOD;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
+import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ELECTRIC_QUANTITY;
+import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_HUM;
+import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_TEMP;
+import static com.androidex.capbox.data.cache.SharedPreTool.HIGHEST_TEMP;
+import static com.androidex.capbox.data.cache.SharedPreTool.LOWEST_TEMP;
 
 public class LockFragment extends BaseFragment implements OnClickListener {
     private final static String TAG = "LockFragment";
@@ -100,6 +104,10 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     TextView tv_status;
     @Bind(R.id.current_temp)
     TextView current_temp;
+    @Bind(R.id.main_tv_maxtemp)
+    TextView main_tv_maxtemp;
+    @Bind(R.id.main_tv_mintemp)
+    TextView main_tv_mintemp;
     @Bind(R.id.current_hum)
     TextView current_hum;
     @Bind(R.id.tv_electric_quantity)
@@ -108,10 +116,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     TextView maxhum;
     @Bind(R.id.main_tv_minhum)
     TextView minhum;
-    @Bind(R.id.main_tv_maxtemp)
-    TextView maxtemp;
-    @Bind(R.id.main_tv_mintemp)
-    TextView mintemp;
 
     private Timer timer_rssi = new Timer();// 设计定时器
     private TimerTask task_sendrssi;// 心跳任务
@@ -126,7 +130,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     private String elevation;
     private GeoCoder mSearch;
     private TitlePopup titlePopup;
-    DecimalFormat df = new DecimalFormat("#.00");
 
     @Override
     public void initData() {
@@ -139,7 +142,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         initView();
         initMap();
         initBleBroadCast();
-        if (address!=null){
+        if (address != null) {
             if (MyBleService.get().getConnectDevice(address) == null) {
                 Log.e(TAG, "开始扫描蓝牙设备1");
                 scanLeDevice();
@@ -167,15 +170,15 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         intentFilter.addAction(BLE_CONN_SUCCESS_ALLCONNECTED);
         intentFilter.addAction(BLE_CONN_FAIL);
         intentFilter.addAction(BLE_CONN_DIS);
-        intentFilter.addAction(ACTION_LOCK_STARTS);
-        intentFilter.addAction(ACTION_TEMP_UPDATE);
+        intentFilter.addAction(ACTION_LOCK_STARTS);//锁状态
+        intentFilter.addAction(ACTION_TEMP_UPDATE);//更新温度
         intentFilter.addAction(BLE_CONN_RSSI_SUCCED);
         intentFilter.addAction(BLE_CONN_RSSI_FAIL);
-        intentFilter.addAction(ACTION_HEART);
-        intentFilter.addAction(ACTION_END_TAST);
-        intentFilter.addAction(ACTION_LOCK_OPEN_SUCCED);
-        intentFilter.addAction(BLUTOOTH_OFF);
-        intentFilter.addAction(BLUTOOTH_ON);
+        intentFilter.addAction(ACTION_HEART);//收到心跳返回
+        intentFilter.addAction(ACTION_END_TAST);//结束携行押运
+        intentFilter.addAction(ACTION_LOCK_OPEN_SUCCED);//开锁成功
+        intentFilter.addAction(BLUTOOTH_OFF);//手机蓝牙关闭
+        intentFilter.addAction(BLUTOOTH_ON);//手机蓝牙关闭
         context.registerReceiver(dataUpdateRecevice, intentFilter);
     }
 
@@ -206,6 +209,10 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         } else {
             tv_deviceMac.setText(address);
         }
+        String lowestTemp = SharedPreTool.getInstance(context).getStringData(LOWEST_TEMP, "0");
+        String highestTemp = SharedPreTool.getInstance(context).getStringData(HIGHEST_TEMP, "80");
+        main_tv_mintemp.setText(String.format("%s℃", lowestTemp));
+        main_tv_maxtemp.setText(String.format("%s℃", highestTemp));
         // 实例化标题栏弹窗
         titlePopup = new TitlePopup(context, RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         // 给标题栏弹窗添加子类
@@ -549,16 +556,12 @@ public class LockFragment extends BaseFragment implements OnClickListener {
 
     BroadcastReceiver dataUpdateRecevice = new BroadcastReceiver() {
 
-        private int t = 0;
-        private int q = 0;
-
         @Override
         public void onReceive(Context context, Intent intent) {
             String deviceMac = intent.getStringExtra(BLECONSTANTS_ADDRESS);
             byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
             if (deviceMac == null) return;
             if (!address.equals(deviceMac)) return;
-            L.e("收到数据的设备MAC：" + deviceMac);
             switch (intent.getAction()) {
                 case BLE_CONN_SUCCESS:
                 case BLE_CONN_SUCCESS_ALLCONNECTED:
@@ -577,7 +580,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     break;
 
                 case BLUTOOTH_OFF:
-                    Log.e(TAG,"手机蓝牙断开");
+                    Log.e(TAG, "手机蓝牙断开");
                     CommonKit.showErrorShort(context, "手机蓝牙断开");
                     stopHeart();
                     ServiceBean device = MyBleService.get().getConnectDevice(address);
@@ -588,7 +591,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     updateBleView(View.VISIBLE, View.GONE);
                     break;
                 case BLUTOOTH_ON:
-                    Log.e(TAG,"手机蓝牙开启");
+                    Log.e(TAG, "手机蓝牙开启");
                     CommonKit.showOkShort(context, "手机蓝牙开启");
                     scanLeDevice();
                     break;
@@ -602,14 +605,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     } else {
                         tv_status.setText("已关闭");
                     }
-                    break;
-
-                case ACTION_TEMP_UPDATE://温度
-                    Log.d("BTTempBLEService", "温湿度 mac: " + intent.getStringExtra("mac"));
-                    if (intent.getStringExtra("temp") == null) return;
-                    current_temp.setText(intent.getStringExtra("temp"));
-                    if (intent.getStringExtra("hum") == null) return;
-                    current_hum.setText(intent.getStringExtra("hum"));
                     break;
 
                 case BLE_CONN_RSSI_SUCCED://获取到信号强度值
@@ -626,28 +621,10 @@ public class LockFragment extends BaseFragment implements OnClickListener {
 
                     break;
 
-                /**
-                 * 收到心跳  0xFB 0x31 0x00 0x1B 0x31 0x6A 0x40 0x66 0x00 0x4B 0x37 0x00 0xFE
-                 * 示例：温度做加100再乘以100然后将值转化为16进制两个字节传送给客户端
-                 * 温度：26.5℃  计算完后值为：12650，转化16进制→316A →0x31 0x6A
-                 */
-                case ACTION_HEART:
-                    String s = new StringBuilder(1).append(String.format("%02X", b[4])).toString();
-                    String s1 = new StringBuilder(1).append(String.format("%02X", b[5])).toString();
-                    Double parseInt = Double.valueOf(Integer.parseInt(s + s1, 16)) / 100 - 100;
-                    current_temp.setText(df.format(parseInt));
-                    String s2 = new StringBuilder(1).append(String.format("%02X", b[6])).toString();
-                    String s3 = new StringBuilder(1).append(String.format("%02X", b[7])).toString();
-                    if (s2 != null) {
-                        q = Integer.parseInt(s2, 16);
-                    }
-                    if (s3 != null) {
-                        t = Integer.parseInt(s3, 16);
-                    }
-                    current_hum.setText(q + "." + t);
-                    String s4 = new StringBuilder(1).append(String.format("%02X", b[10])).toString();
-                    int n = Integer.parseInt(s4, 16);
-                    tv_electric_quantity.setText("" + n);
+                case ACTION_HEART://温度、湿度、电量
+                    current_temp.setText(intent.getStringExtra(BLECONSTANTS_TEMP)!=null?intent.getStringExtra(BLECONSTANTS_TEMP):"");
+                    current_hum.setText(intent.getStringExtra(BLECONSTANTS_HUM)!=null?intent.getStringExtra(BLECONSTANTS_HUM):"");
+                    tv_electric_quantity.setText(intent.getStringExtra(BLECONSTANTS_ELECTRIC_QUANTITY)!=null?intent.getStringExtra(BLECONSTANTS_ELECTRIC_QUANTITY):"");
                     break;
 
                 case ACTION_END_TAST://结束携行押运

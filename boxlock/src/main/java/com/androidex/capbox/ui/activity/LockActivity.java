@@ -18,6 +18,7 @@ import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
+import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.L;
 import com.androidex.capbox.data.net.base.ResultCallBack;
@@ -38,7 +39,6 @@ import com.e.ble.scan.BLEScanCfg;
 import com.e.ble.scan.BLEScanListener;
 import com.e.ble.util.BLEError;
 
-import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -56,8 +56,15 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_RSSI_FAIL;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_RSSI_SUCCED;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCONNECTED;
+import static com.androidex.boxlib.utils.BleConstants.BLE.BLUTOOTH_OFF;
+import static com.androidex.boxlib.utils.BleConstants.BLE.BLUTOOTH_ON;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
+import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ELECTRIC_QUANTITY;
+import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_HUM;
+import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_TEMP;
+import static com.androidex.capbox.data.cache.SharedPreTool.HIGHEST_TEMP;
+import static com.androidex.capbox.data.cache.SharedPreTool.LOWEST_TEMP;
 import static com.baidu.mapapi.BMapManager.getContext;
 
 public class LockActivity extends BaseActivity implements OnClickListener {
@@ -92,6 +99,10 @@ public class LockActivity extends BaseActivity implements OnClickListener {
     TextView tv_status;
     @Bind(R.id.current_temp)
     TextView current_temp;
+    @Bind(R.id.main_tv_maxtemp)
+    TextView main_tv_maxtemp;
+    @Bind(R.id.main_tv_mintemp)
+    TextView main_tv_mintemp;
     @Bind(R.id.current_hum)
     TextView current_hum;
     @Bind(R.id.tv_electric_quantity)
@@ -100,10 +111,6 @@ public class LockActivity extends BaseActivity implements OnClickListener {
     TextView maxhum;
     @Bind(R.id.main_tv_minhum)
     TextView minhum;
-    @Bind(R.id.main_tv_maxtemp)
-    TextView maxtemp;
-    @Bind(R.id.main_tv_mintemp)
-    TextView mintemp;
 
     private Timer timer_rssi = new Timer();// 设计定时器
     private TimerTask task_sendrssi;// 心跳任务
@@ -117,7 +124,6 @@ public class LockActivity extends BaseActivity implements OnClickListener {
     private String longitude;
     private String elevation;
     private GeoCoder mSearch;
-    DecimalFormat df = new DecimalFormat("#.00");
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -159,6 +165,8 @@ public class LockActivity extends BaseActivity implements OnClickListener {
         intentFilter.addAction(BLE_CONN_RSSI_SUCCED);
         intentFilter.addAction(BLE_CONN_RSSI_FAIL);
         intentFilter.addAction(ACTION_HEART);
+        intentFilter.addAction(BLUTOOTH_OFF);//手机蓝牙关闭
+        intentFilter.addAction(BLUTOOTH_ON);//手机蓝牙关闭
         intentFilter.addAction(ACTION_LOCK_OPEN_SUCCED);
         registerReceiver(dataUpdateRecevice, intentFilter);
     }
@@ -185,6 +193,10 @@ public class LockActivity extends BaseActivity implements OnClickListener {
     private void initView() {
         tv_deviceMac.setText(address);
         name.setText(deviceName);
+        String lowestTemp = SharedPreTool.getInstance(context).getStringData(LOWEST_TEMP, "0");
+        String highestTemp = SharedPreTool.getInstance(context).getStringData(HIGHEST_TEMP, "80");
+        main_tv_mintemp.setText(String.format("%s℃", lowestTemp));
+        main_tv_maxtemp.setText(String.format("%s℃", highestTemp));
         if (address == null || address.equals("")) {
             tv_deviceMac.setText("FF:FF:FF:FF:FF:FF");
         } else {
@@ -469,6 +481,23 @@ public class LockActivity extends BaseActivity implements OnClickListener {
                     setLostAlarm(deviceName);//防丢报警设置
                     break;
 
+                case BLUTOOTH_OFF:
+                    Log.e(TAG, "手机蓝牙断开");
+                    CommonKit.showErrorShort(context, "手机蓝牙断开");
+                    stopHeart();
+                    ServiceBean device = MyBleService.get().getConnectDevice(address);
+                    if (device != null) {
+                        device.setActiveDisConnect(true);
+                    }
+                    MyBleService.get().disConnectDevice(address);
+                    updateBleView(View.VISIBLE, View.GONE);
+                    break;
+                case BLUTOOTH_ON:
+                    Log.e(TAG, "手机蓝牙开启");
+                    CommonKit.showOkShort(context, "手机蓝牙开启");
+                    scanLeDevice();
+                    break;
+
                 case ACTION_LOCK_OPEN_SUCCED:
                     CommonKit.showOkShort(context, "开锁成功");
                     MyBleService.get().getLockStatus(address);
@@ -505,27 +534,9 @@ public class LockActivity extends BaseActivity implements OnClickListener {
                 //收到心跳//0xFB 0x31 0x00 0x1B
                 //          0x31 0x6A 0x40 0x66 0x00 0x4B 0x37 0x00 0xFE
                 case ACTION_HEART:
-                    String s = new StringBuilder(1).append(String.format("%02X", b[4])).toString();
-                    String s1 = new StringBuilder(1).append(String.format("%02X", b[5])).toString();
-                    Log.e(TAG, "s=" + s);
-                    Log.e(TAG, "s1=" + s1);
-                    Double parseInt = Double.valueOf(Integer.parseInt(s + s1, 16)) / 100 - 100;
-                    Log.e(TAG, "转化后=" + parseInt);
-                    Log.e(TAG, "温度=" + parseInt);
-
-                    current_temp.setText(df.format(parseInt));
-                    String s2 = new StringBuilder(1).append(String.format("%02X", b[6])).toString();
-                    String s3 = new StringBuilder(1).append(String.format("%02X", b[7])).toString();
-                    if (s2 != null) {
-                        q = Integer.parseInt(s2, 16);
-                    }
-                    if (s3 != null) {
-                        t = Integer.parseInt(s3, 16);
-                    }
-                    current_hum.setText(q + "." + t);
-                    String s4 = new StringBuilder(1).append(String.format("%02X", b[10])).toString();
-                    int n = Integer.parseInt(s4, 16);
-                    tv_electric_quantity.setText("" + n);
+                    current_temp.setText(intent.getStringExtra(BLECONSTANTS_TEMP)!=null?intent.getStringExtra(BLECONSTANTS_TEMP):"");
+                    current_hum.setText(intent.getStringExtra(BLECONSTANTS_HUM)!=null?intent.getStringExtra(BLECONSTANTS_HUM):"");
+                    tv_electric_quantity.setText(intent.getStringExtra(BLECONSTANTS_ELECTRIC_QUANTITY)!=null?intent.getStringExtra(BLECONSTANTS_ELECTRIC_QUANTITY):"");
                     break;
                 default:
                     break;

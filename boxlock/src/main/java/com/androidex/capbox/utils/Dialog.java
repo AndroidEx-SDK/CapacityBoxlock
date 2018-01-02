@@ -143,7 +143,7 @@ public class Dialog {
 
             @Override
             public void onClick(View arg0) {
-                String str = et_carryNum.getText().toString();
+                String str = et_carryNum.getText().toString().trim();
                 listener.confirm(str);
                 dialog1.dismiss();
             }

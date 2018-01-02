@@ -158,14 +158,7 @@
                             <com.androidex.capbox.ui.view.TypeFaceText
                                 android:id="@+id/main_tv_maxtemp"
                                 style="@style/fragment_lock_data"
-                                android:text="@string/main_max_temp" />
-
-                            <com.androidex.capbox.ui.view.TypeFaceText
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/main_min_temp2"
-                                android:textColor="@color/white"
-                                android:textSize="@dimen/temp_page_maxmin_textsize" />
+                                android:text="@string/setting_tv_highesttemp" />
 
                         </LinearLayout>
 
@@ -181,11 +174,8 @@
                             <com.androidex.capbox.ui.view.TypeFaceText
                                 android:id="@+id/main_tv_mintemp"
                                 style="@style/fragment_lock_data"
-                                android:text="@string/main_min_temp" />
+                                android:text="@string/setting_tv_alowesttemp" />
 
-                            <com.androidex.capbox.ui.view.TypeFaceText
-                                style="@style/fragment_lock_unit"
-                                android:text="@string/main_min_temp2" />
                         </LinearLayout>
 
                         <LinearLayout

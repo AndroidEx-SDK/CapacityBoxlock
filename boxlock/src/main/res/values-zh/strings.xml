@@ -15,10 +15,8 @@
     <string name="user_device">FF:FF:FF:FF:FF</string>
     <string name="current_temp">当前温度</string>
     <string name="main_max_temp1">最高:</string>
-    <string name="main_max_temp">0</string>
     <string name="main_max_temp2">℃</string>
     <string name="main_min_temp1">最低:</string>
-    <string name="main_min_temp">26.6</string>
     <string name="main_min_temp2">℃</string>
     <string name="main_max_hum1">最高:</string>
     <string name="main_max_hum">90.25</string>
@@ -108,7 +106,8 @@
     <string name="setting_tv_open">开启</string>
     <string name="setting_tv_close">关闭</string>
     <string name="setting_tv_temp">温度报警标准</string>
-    <string name="setting_tv_call_temp">37.5℃</string>
+    <string name="setting_tv_alowesttemp">0℃</string>
+    <string name="setting_tv_highesttemp">80℃</string>
     <string name="setting_tv_cry">踢被子报警</string>
     <string name="setting_tv_Nolocation">箱体位置未知</string>
     <string name="setting_tv_real">体温计模式</string>

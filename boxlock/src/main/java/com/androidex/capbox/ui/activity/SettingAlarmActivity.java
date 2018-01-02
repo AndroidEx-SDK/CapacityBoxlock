@@ -10,6 +10,7 @@ import android.widget.ToggleButton;
 
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
+import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.ui.view.TypeFaceText;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Dialog;
@@ -17,8 +18,12 @@ import com.androidex.capbox.utils.Dialog;
 import butterknife.Bind;
 import butterknife.OnClick;
 
+import static com.androidex.capbox.data.cache.SharedPreTool.HIGHEST_TEMP;
+import static com.androidex.capbox.data.cache.SharedPreTool.LOWEST_TEMP;
+
 /**
  * 箱体的报警设置页面
+ *
  * @author liyp
  * @editTime 2017/10/10
  */
@@ -47,6 +52,8 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
 
     @Override
     public void initData(Bundle savedInstanceState) {
+        tv_lowestTemp.setText(String.format("%s℃", SharedPreTool.getInstance(context).getStringData(LOWEST_TEMP, "0")));
+        tv_highestTemp.setText(String.format("%s℃", SharedPreTool.getInstance(context).getStringData(HIGHEST_TEMP, "80")));
     }
 
     @Override
@@ -71,11 +78,16 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
                 Dialog.showAlertDialog(context, "请设置最高温度", new Dialog.DialogDataListener() {
                     @Override
                     public void confirm(String data) {
-                        if (data != null) {
+                        if (data != null && data != "") {
                             highestTemp = Float.parseFloat(data);
+                            if (highestTemp <= lowestTemp) {
+                                CommonKit.showErrorShort(context, "最高温度不得低于最低温度");
+                                highestTemp = 80;
+                            }
                         } else {
                             highestTemp = 80;
                         }
+                        SharedPreTool.getInstance(context).setStringData(HIGHEST_TEMP, highestTemp + "");
                         tv_highestTemp.setText(String.format("%s℃", highestTemp));
                         Log.e(TAG, "设置最高温度为：" + highestTemp);
                     }
@@ -90,11 +102,16 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
                 Dialog.showAlertDialog(context, getResources().getString(R.string.setting_tv_lowtemp), new Dialog.DialogDataListener() {
                     @Override
                     public void confirm(String data) {
-                        if (data != null) {
+                        if (data != null && data != "") {
                             lowestTemp = Float.parseFloat(data);
+                            if (lowestTemp >= highestTemp) {
+                                CommonKit.showErrorShort(context, "最低温度不得高于最高温度");
+                                lowestTemp = 0;
+                            }
                         } else {
                             lowestTemp = 0;
                         }
+                        SharedPreTool.getInstance(context).setStringData(LOWEST_TEMP, lowestTemp + "");
                         tv_lowestTemp.setText(String.format("%s℃", lowestTemp));
                         Log.e(TAG, "设置最低温度为：" + lowestTemp);
                     }

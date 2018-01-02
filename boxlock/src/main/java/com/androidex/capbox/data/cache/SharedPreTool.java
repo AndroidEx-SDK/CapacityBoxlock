@@ -29,6 +29,10 @@ public class SharedPreTool {
     public static final String IS_REGISTED = "isregist"; //是否提交审核，提交后，遭到拒绝与未提交一样
     public static final String DEFAULT_MAC = "default_mac"; //默认设备的mac
 
+    public static final String LOWEST_TEMP = "lowest_temp"; //最低温度
+    public static final String HIGHEST_TEMP = "highest_temp"; //最高温度
+
+
 
     private SharedPreTool(Context context) {
         sharedPreferences = context.getSharedPreferences(Constants.SP.SP_NAME, Context.MODE_PRIVATE);

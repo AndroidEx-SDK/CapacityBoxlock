@@ -75,7 +75,8 @@
     <string name="setting_tv_open">open</string>
     <string name="setting_tv_close">close</string>
     <string name="setting_tv_temp">Fever Alarm</string>
-    <string name="setting_tv_call_temp">38℃ above</string>
+    <string name="setting_tv_alowesttemp">0℃ above</string>
+    <string name="setting_tv_highesttemp">80℃ above</string>
     <string name="setting_tv_cry">Kicking alarm</string>
     <string name="setting_tv_fever">Fever alarm</string>
     <string name="setting_tv_cold_proof">Cold dressing alarm</string>
