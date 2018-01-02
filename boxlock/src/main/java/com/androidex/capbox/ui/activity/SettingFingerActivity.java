@@ -16,11 +16,11 @@ import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.widget.SecondTitleBar;
 import com.androidex.capbox.utils.CommonKit;
-import com.androidex.capbox.utils.Constants;
 
 import butterknife.Bind;
 import butterknife.OnClick;
 
+import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_CLEARFINGER;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
@@ -104,7 +104,7 @@ public class SettingFingerActivity extends BaseActivity {
         intentFilter.addAction(BLE_CONN_SUCCESS_ALLCONNECTED);
         intentFilter.addAction(BLE_CONN_FAIL);
         intentFilter.addAction(BLE_CONN_DIS);
-        intentFilter.addAction(Constants.BLE.ACTION_CLEARFINGER);//清除指纹
+        intentFilter.addAction(ACTION_CLEARFINGER);//清除指纹
         dataBroadcast = new DataBroadcast();
         context.registerReceiver(dataBroadcast, intentFilter);
     }
@@ -209,7 +209,7 @@ public class SettingFingerActivity extends BaseActivity {
                     CommonKit.showErrorShort(mContext, "蓝牙已断开");
                     break;
 
-                case Constants.BLE.ACTION_CLEARFINGER://清除指纹
+                case ACTION_CLEARFINGER://清除指纹
                     Log.e(TAG, "收到清除指纹");
                     switch (b[2]) {
                         case (byte) 0x00://成功
@@ -219,6 +219,8 @@ public class SettingFingerActivity extends BaseActivity {
                             CommonKit.showErrorShort(mContext, "清除失败");
                             break;
                     }
+                    tv_possessorFinger.setText("0");
+                    tv_becomeFinger.setText("0");
                     break;
             }
         }
