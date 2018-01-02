@@ -18,8 +18,8 @@ import com.androidex.capbox.utils.Dialog;
 import butterknife.Bind;
 import butterknife.OnClick;
 
-import static com.androidex.capbox.data.cache.SharedPreTool.HIGHEST_TEMP;
-import static com.androidex.capbox.data.cache.SharedPreTool.LOWEST_TEMP;
+import static com.androidex.boxlib.cache.SharedPreTool.HIGHEST_TEMP;
+import static com.androidex.boxlib.cache.SharedPreTool.LOWEST_TEMP;
 
 /**
  * 箱体的报警设置页面

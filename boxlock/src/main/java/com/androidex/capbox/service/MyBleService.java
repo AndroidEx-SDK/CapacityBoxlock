@@ -53,6 +53,11 @@ public class MyBleService extends BleService {
         }
     }
 
+    @Override
+    protected void h() {
+        SystemUtil.startPlayerRaw(getContext());
+    }
+
     /**
      * 连续三次超出阈值会回调这里，1s更新一次信号强度
      */

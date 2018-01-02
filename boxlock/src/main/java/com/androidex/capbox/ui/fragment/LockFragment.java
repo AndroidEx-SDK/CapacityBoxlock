@@ -50,6 +50,8 @@ import butterknife.Bind;
 import okhttp3.Headers;
 import okhttp3.Request;
 
+import static com.androidex.boxlib.cache.SharedPreTool.HIGHEST_TEMP;
+import static com.androidex.boxlib.cache.SharedPreTool.LOWEST_TEMP;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_END_TAST;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_HEART;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_OPEN_SUCCED;
@@ -69,8 +71,6 @@ import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ELECTRIC_QUANTITY;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_HUM;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_TEMP;
-import static com.androidex.capbox.data.cache.SharedPreTool.HIGHEST_TEMP;
-import static com.androidex.capbox.data.cache.SharedPreTool.LOWEST_TEMP;
 
 public class LockFragment extends BaseFragment implements OnClickListener {
     private final static String TAG = "LockFragment";
