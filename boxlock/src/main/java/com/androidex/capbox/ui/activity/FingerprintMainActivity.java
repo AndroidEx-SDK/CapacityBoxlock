@@ -1,5 +1,6 @@
 package com.androidex.capbox.ui.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +16,9 @@ import com.androidex.capbox.core.FingerprintUtil;
 import com.androidex.capbox.core.KeyguardLockScreenManager;
 import com.androidex.capbox.utils.CommonKit;
 
+/**
+ * 调用手机指纹验证，验证成功后即可开启APP
+ */
 public class FingerprintMainActivity extends BaseActivity {
     private FingerprintCore mFingerprintCore;
     private KeyguardLockScreenManager mKeyguardLockScreenManager;
@@ -79,7 +83,7 @@ public class FingerprintMainActivity extends BaseActivity {
         if (!mKeyguardLockScreenManager.isOpenLockScreenPwd()) {
             CommonKit.showMsgShort(context, getString(R.string.fingerprint_not_set_unlock_screen_pws));
             //FingerprintUtil.openFingerPrintSettingPage(this);//开启系统设置界面
-            WelcomeActivity.lauch(context);
+            LoginActivity.lauch(context);
             return;
         }
         mKeyguardLockScreenManager.showAuthenticationScreen(this);
@@ -122,7 +126,7 @@ public class FingerprintMainActivity extends BaseActivity {
         @Override
         public void onAuthenticateSuccess() {
             CommonKit.showMsgShort(context, getString(R.string.fingerprint_recognition_success));
-            WelcomeActivity.lauch(context);
+            LoginActivity.lauch(context);
         }
 
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -153,7 +157,7 @@ public class FingerprintMainActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == KeyguardLockScreenManager.REQUEST_CODE_CONFIRM_DEVICE_CREDENTIALS) {
             if (resultCode == RESULT_OK) {
-                WelcomeActivity.lauch(context);
+                LoginActivity.lauch(context);
                 CommonKit.showMsgShort(context, getString(R.string.sys_pwd_recognition_success));
             } else {
                 CommonKit.showMsgShort(context, getString(R.string.sys_pwd_recognition_failed));
@@ -178,5 +182,9 @@ public class FingerprintMainActivity extends BaseActivity {
     @Override
     public void onClick(View view) {
 
+    }
+
+    public static void lauch(Activity activity) {
+        CommonKit.startActivity(activity, FingerprintMainActivity.class, null, true);
     }
 }

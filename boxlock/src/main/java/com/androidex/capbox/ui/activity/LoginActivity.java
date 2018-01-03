@@ -44,6 +44,12 @@ public class LoginActivity extends UserBaseActivity {
 
     @Override
     public void initData(Bundle savedInstanceState) {
+        String phone = SharedPreTool.getInstance(context).getStringData(SharedPreTool.PHONE, null);
+        String md5Pwd = SharedPreTool.getInstance(context).getStringData(SharedPreTool.PASSWORD, null);
+        if (phone != null && md5Pwd != null) {
+            automaticLogin(phone, md5Pwd);//自动登录
+            return;
+        }
         initTitleBar();
         getAuthCode();
         cb_automatic_login.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -89,6 +95,38 @@ public class LoginActivity extends UserBaseActivity {
                 break;
             default:
                 break;
+        }
+    }
+
+    /**
+     * 自动登录
+     * @param phone
+     * @param md5Pwd
+     */
+    private void automaticLogin(final String phone, final String md5Pwd) {
+        boolean boolData = SharedPreTool.getInstance(context).getBoolData(SharedPreTool.AUTOMATIC_LOGIN, false);
+        if (boolData) {
+            getAuthCode(new CallDataBackAction() {
+                @Override
+                public void action(String authcode) {
+                    if (authcode != null) {
+                        userLogin(phone, md5Pwd, authcode, new CallBackAction() {
+                            @Override
+                            public void action() {
+                                MainActivity.lauch(context);
+                                if (callBackAction != null) {
+                                    callBackAction.action();
+                                    callBackAction = null;
+                                }
+                                return;
+                            }
+                        });
+                    } else {
+                        CommonKit.showErrorShort(context, "自动登录失败");
+                        LoginActivity.lauch(context);
+                    }
+                }
+            });
         }
     }
 
