@@ -482,7 +482,6 @@ public class BoxListFragment extends BaseFragment {
                             showProgress("刷新失败");
                             break;
                         default:
-                            disProgress();
                             if (model.info != null) {
                                 CommonKit.showErrorShort(context, model.info);
                             }
@@ -496,6 +495,7 @@ public class BoxListFragment extends BaseFragment {
             @Override
             public void onFailure(int statusCode, Request request, Exception e) {
                 super.onFailure(statusCode, request, e);
+                disProgress();
                 if (context!=null){
                     showProgress("刷新列表失败");
                 }
