@@ -380,6 +380,10 @@ public class BoxDetailActivity extends BaseActivity {
                 MyBleService.get().recover(mac);
                 break;
             case R.id.tv_startCarryScort://启动/结束携行押运
+                if (becomeFinger1.trim().isEmpty() || becomeFinger1.equals("null") || possessorFinger1.trim().isEmpty() || possessorFinger1.equals("null")) {
+                    CommonKit.showErrorShort(context, "请先配置箱体");
+                    return;
+                }
                 if (status == 2) {
                     MyBleService.get().endTask(mac);
                 } else {
