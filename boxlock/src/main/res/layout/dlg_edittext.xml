@@ -26,6 +26,7 @@
         android:layout_marginTop="@dimen/marginPadding16"
         android:background="@drawable/sel_bg_shape_blue_radius_5"
         android:gravity="center"
+        android:digits="1234567890.+-"
         android:inputType="number|numberDecimal"
         android:textColor="@color/black" />
 
