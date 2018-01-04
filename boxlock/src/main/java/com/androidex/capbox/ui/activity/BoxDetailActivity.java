@@ -51,7 +51,7 @@ import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_OPEN_MONITOR
  * 配置箱体,箱体详情
  */
 public class BoxDetailActivity extends BaseActivity {
-    private static final String TAG = BoxDetailActivity.class.getSimpleName();
+    private static final String TAG = "BoxDetailActivity";
     @Bind(R.id.tv_carryNum)
     TextView tv_carryNum;
     @Bind(R.id.tv_heartbeatRate)
@@ -111,7 +111,7 @@ public class BoxDetailActivity extends BaseActivity {
         initBroadCast();
         initTitleBar();
 
-        if (mac!=null){
+        if (mac != null) {
             if (MyBleService.get().getConnectDevice(mac) == null) {
                 if (mac != null) {
                     BleService.get().connectionDevice(context, mac);
@@ -363,10 +363,14 @@ public class BoxDetailActivity extends BaseActivity {
                 break;
             case R.id.ll_settingFinger://设置指纹
                 Bundle bundle1 = new Bundle();
-                if (becomeFinger1 != null) {
+                if (becomeFinger1.trim().isEmpty() || becomeFinger1 == "null") {
+                    bundle1.putString("becomeNum", "0");
+                } else {
                     bundle1.putString("becomeNum", "3");
                 }
-                if (possessorFinger1 != null) {
+                if (possessorFinger1.trim().isEmpty() || possessorFinger1 != "null") {
+                    bundle1.putString("possessorNum", "0");
+                } else {
                     bundle1.putString("possessorNum", "3");
                 }
                 bundle1.putString("mac", mac);
@@ -488,7 +492,6 @@ public class BoxDetailActivity extends BaseActivity {
                 case Activity.RESULT_OK:
                     police = data.getStringExtra("police");//报警开关
                     //policeDiatance = data.getIntExtra("policeDiatance", 0);//报警距离
-
                     dismountPolice = data.getStringExtra("dismountPolice");//防拆报警开关
                     highestTemp = data.getFloatExtra("highestTemp", 80);   //最高温
                     lowestTemp = data.getFloatExtra("lowestTemp", 0);     //最低温
