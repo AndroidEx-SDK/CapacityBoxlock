@@ -2,10 +2,15 @@ package com.androidex.capbox.base;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewCompat;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -28,6 +33,21 @@ import com.androidex.capbox.utils.SystemUtil;
 
 import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
+
+import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_HEART;
+import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_OPEN_SUCCED;
+import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_STARTS;
+import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_TEMP_UPDATE;
+import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
+import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
+import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_RSSI_FAIL;
+import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_RSSI_SUCCED;
+import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
+import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCONNECTED;
+import static com.androidex.boxlib.utils.BleConstants.BLE.BLUTOOTH_OFF;
+import static com.androidex.boxlib.utils.BleConstants.BLE.BLUTOOTH_ON;
+import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
+import static com.androidex.capbox.utils.Constants.BASE.ACTION_TEMP_OUT;
 
 /**
  * @author liyp
@@ -68,8 +88,47 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
             ButterKnife.bind(this);
         }
         setListener();
+        initBleBroadCast();
         initData(savedInstanceState);
     }
+
+    /**
+     * 初始化蓝牙广播
+     */
+    private void initBleBroadCast() {
+        Log.e("BaseActivity", "--注册蓝牙广播");
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BLE_CONN_SUCCESS);
+        intentFilter.addAction(BLE_CONN_SUCCESS_ALLCONNECTED);
+        intentFilter.addAction(BLE_CONN_FAIL);
+        intentFilter.addAction(BLE_CONN_DIS);
+        intentFilter.addAction(ACTION_LOCK_STARTS);
+        intentFilter.addAction(ACTION_TEMP_UPDATE);
+        intentFilter.addAction(BLE_CONN_RSSI_SUCCED);
+        intentFilter.addAction(BLE_CONN_RSSI_FAIL);
+        intentFilter.addAction(ACTION_HEART);
+        intentFilter.addAction(BLUTOOTH_OFF);//手机蓝牙关闭
+        intentFilter.addAction(BLUTOOTH_ON);//手机蓝牙关闭
+        intentFilter.addAction(ACTION_LOCK_OPEN_SUCCED);
+        intentFilter.addAction(ACTION_TEMP_OUT);//温度超范围
+        registerReceiver(baseBroad, intentFilter);
+    }
+
+    BroadcastReceiver baseBroad = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            switch (intent.getAction()){
+                case BLE_CONN_DIS://蓝牙异常断开
+
+
+                    break;
+                case ACTION_TEMP_OUT://温度超范围
+                    String deviceMac = intent.getStringExtra(BLECONSTANTS_ADDRESS);
+                    showTempOutAlarmDialog("Box"+deviceMac.substring(deviceMac.length()-2));
+                    break;
+            }
+        }
+    };
 
     public abstract int getLayoutId();
 
@@ -208,6 +267,25 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
     }
 
     /**
+     * 温度超范围报警Dialog显示
+     */
+    private void showTempOutAlarmDialog(String deviceName) {
+        //就一个确定按钮
+        mLostAlarmDialog = Dialog.showRadioDialog(context, deviceName
+                + getResources().getString(R.string.itemfragment_dialog_temp_out), new Dialog.DialogClickListener() {
+            @Override
+            public void confirm() {
+                closeLostAlarm();
+            }
+
+            @Override
+            public void cancel() {
+
+            }
+        });
+    }
+
+    /**
      * 显示等待框
      *
      * @param msg
@@ -325,6 +403,6 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(baseBroad);
     }
-
 }

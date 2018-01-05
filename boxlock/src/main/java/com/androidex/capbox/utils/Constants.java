@@ -12,6 +12,9 @@ import com.androidex.boxlib.utils.BleConstants;
  */
 public class Constants extends BleConstants{
 
+    public static class BASE{
+        public static final String ACTION_TEMP_OUT = "ACTION_TEMP_OUT";
+    }
     /**
      * 应用配置
      */

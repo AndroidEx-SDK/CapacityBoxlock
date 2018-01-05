@@ -9,6 +9,7 @@ import com.androidex.capbox.utils.SystemUtil;
 
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
+import static com.androidex.capbox.utils.Constants.BASE.ACTION_TEMP_OUT;
 import static com.baidu.mapapi.BMapManager.getContext;
 
 /**
@@ -19,6 +20,7 @@ import static com.baidu.mapapi.BMapManager.getContext;
 
 public class MyBleService extends BleService {
     public static final String TAG = "MyBleService";
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -45,17 +47,12 @@ public class MyBleService extends BleService {
                 sendBroadcast(intent);
                 SystemUtil.startPlayerRaw(getContext());
             }
-        }else{
+        } else {
             Intent intent = new Intent(BLE_CONN_DIS);
             intent.putExtra(BLECONSTANTS_ADDRESS, address);
             sendBroadcast(intent);
             SystemUtil.startPlayerRaw(getContext());
         }
-    }
-
-    @Override
-    public void tempPolice() {
-        SystemUtil.startPlayerRaw(getContext());
     }
 
     /**
@@ -71,6 +68,26 @@ public class MyBleService extends BleService {
      */
     @Override
     public void inOfScopeRssi() {
+        SystemUtil.stopPlayRaw();
+    }
+
+    /**
+     * 温度超范围报警
+     */
+    @Override
+    public void outOfScopeTempPolice(String address) {
+        Log.e(TAG,"发送广播，温度超范围报警");
+        Intent intent = new Intent(ACTION_TEMP_OUT);
+        intent.putExtra(BLECONSTANTS_ADDRESS, address);
+        sendBroadcast(intent);
+        SystemUtil.startPlayerRaw(getContext());
+    }
+
+    /**
+     * 温度又恢复到范围内
+     */
+    @Override
+    public void inOfScopeTempPolice(String address) {
         SystemUtil.stopPlayRaw();
     }
 

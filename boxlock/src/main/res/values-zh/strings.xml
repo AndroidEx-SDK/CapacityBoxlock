@@ -278,7 +278,8 @@
     <string name="itemfragment_dialog_fever">停止高烧提醒</string>
     <string name="itemfragment_dialog_cold">停止防寒穿衣提醒</string>
     <string name="itemfragment_dialog_kick">停止踢被子提醒</string>
-    <string name="itemfragment_dialog_lost">已经离开安全距离。</string>
+    <string name="itemfragment_dialog_lost">已经离开安全距离</string>
+    <string name="itemfragment_dialog_temp_out">温度超范围</string>
 
     <!-- SettingFragment.java -->
     <string name="setting_tv_above">以上</string>

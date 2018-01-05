@@ -117,8 +117,8 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     @Bind(R.id.main_tv_minhum)
     TextView minhum;
 
-    private Timer timer_rssi = new Timer();// 设计定时器
-    private TimerTask task_sendrssi;// 心跳任务
+    private Timer timerHeart = new Timer();// 设计定时器
+    private TimerTask taskSendHeart;// 心跳任务
     private Timer timer_location = new Timer();// 设计定时器
     private TimerTask timer_getlocation;
     private String address = null;
@@ -527,17 +527,17 @@ public class LockFragment extends BaseFragment implements OnClickListener {
      */
     private void startHeart() {
         stopHeart();
-        if (task_sendrssi == null) {
-            task_sendrssi = new TimerTask() {
+        if (taskSendHeart == null) {
+            taskSendHeart = new TimerTask() {
                 @Override
                 public void run() {// 通过消息更新
                     MyBleService.get().sentHeartBeat(address);
                 }
             };
-            if (timer_rssi == null) {
-                timer_rssi = new Timer();
+            if (timerHeart == null) {
+                timerHeart = new Timer();
             }
-            timer_rssi.schedule(task_sendrssi, 1000, 5000);// 执行心跳包任务
+            timerHeart.schedule(taskSendHeart, 1000, 5000);// 执行心跳包任务
         }
     }
 
@@ -545,12 +545,12 @@ public class LockFragment extends BaseFragment implements OnClickListener {
      * 停止心跳
      */
     private void stopHeart() {
-        if (task_sendrssi != null) {
-            task_sendrssi.cancel();
-            timer_rssi.cancel();
-            timer_rssi = null;
+        if (taskSendHeart != null) {
+            taskSendHeart.cancel();
+            timerHeart.cancel();
+            timerHeart = null;
             Log.i("LockFragment", "停止心跳");
-            task_sendrssi = null;
+            taskSendHeart = null;
         }
     }
 
