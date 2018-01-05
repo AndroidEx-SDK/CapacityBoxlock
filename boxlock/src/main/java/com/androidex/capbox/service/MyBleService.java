@@ -54,7 +54,7 @@ public class MyBleService extends BleService {
     }
 
     @Override
-    protected void h() {
+    public void tempPolice() {
         SystemUtil.startPlayerRaw(getContext());
     }
 
