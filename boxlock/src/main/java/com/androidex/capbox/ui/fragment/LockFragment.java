@@ -117,8 +117,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     @Bind(R.id.main_tv_minhum)
     TextView minhum;
 
-    private Timer timerHeart = new Timer();// 设计定时器
-    private TimerTask taskSendHeart;// 心跳任务
     private Timer timer_location = new Timer();// 设计定时器
     private TimerTask timer_getlocation;
     private String address = null;
@@ -137,7 +135,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         address = bundle.getString("mac");
         uuid = bundle.getString("uuid");
         deviceName = bundle.getString("name");
-        Log.e(TAG, "mac=" + address);
         if (uuid != null) getLocation(true);
         initView();
         initMap();
@@ -155,7 +152,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     CommonKit.showMsgShort(context, "设备已连接");
                     BleService.get().enableNotify(address);
                     updateBleView(View.GONE, View.VISIBLE);
-                    startHeart();
                 }
             }
         }
@@ -245,7 +241,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.main_bt_ble_close://连接状态，点击关闭
-                stopHeart();
                 ServiceBean device = MyBleService.get().getConnectDevice(address);
                 if (device != null) {
                     device.setActiveDisConnect(true);
@@ -522,38 +517,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         });
     }
 
-    /**
-     * 开始心跳
-     */
-    private void startHeart() {
-        stopHeart();
-        if (taskSendHeart == null) {
-            taskSendHeart = new TimerTask() {
-                @Override
-                public void run() {// 通过消息更新
-                    MyBleService.get().sentHeartBeat(address);
-                }
-            };
-            if (timerHeart == null) {
-                timerHeart = new Timer();
-            }
-            timerHeart.schedule(taskSendHeart, 1000, 5000);// 执行心跳包任务
-        }
-    }
-
-    /**
-     * 停止心跳
-     */
-    private void stopHeart() {
-        if (taskSendHeart != null) {
-            taskSendHeart.cancel();
-            timerHeart.cancel();
-            timerHeart = null;
-            Log.i("LockFragment", "停止心跳");
-            taskSendHeart = null;
-        }
-    }
-
     BroadcastReceiver dataUpdateRecevice = new BroadcastReceiver() {
 
         @Override
@@ -568,13 +531,11 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     BleService.get().enableNotify(address);
                     CommonKit.showMsgShort(context, "设备连接成功");
                     updateBleView(View.GONE, View.VISIBLE);
-                    startHeart();
                     disProgress();
                     break;
 
                 case BLE_CONN_DIS://断开连接
                     Log.e(TAG, "断开连接");
-                    stopHeart();
                     updateBleView(View.VISIBLE, View.GONE);
                     setLostAlarm(deviceName);//防丢报警设置
                     break;
@@ -582,7 +543,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                 case BLUTOOTH_OFF:
                     Log.e(TAG, "手机蓝牙断开");
                     CommonKit.showErrorShort(context, "手机蓝牙断开");
-                    stopHeart();
                     ServiceBean device = MyBleService.get().getConnectDevice(address);
                     if (device != null) {
                         device.setActiveDisConnect(true);
@@ -682,7 +642,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     public void onDestroy() {
         super.onDestroy();
         getLocation(false);
-        stopHeart();
         mSearch.destroy();
         context.unregisterReceiver(dataUpdateRecevice);
     }
