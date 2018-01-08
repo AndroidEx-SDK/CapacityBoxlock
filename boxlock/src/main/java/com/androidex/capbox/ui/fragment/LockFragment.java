@@ -196,6 +196,9 @@ public class LockFragment extends BaseFragment implements OnClickListener {
 
     private void initView() {
         tv_deviceMac.setText(address);
+        if(deviceName.equals("Box")){
+            deviceName=deviceName+address.substring(address.length()-2);
+        }
         name.setText(deviceName);
         if (address == null || address.equals("")) {
             tv_deviceMac.setText("FF:FF:FF:FF:FF:FF");

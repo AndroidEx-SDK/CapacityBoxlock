@@ -365,7 +365,11 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                             mylist.clear();
                             for (BoxDeviceModel.device device : model.devicelist) {
                                 Map<String, String> map = new HashMap<>();
-                                map.put("name", device.boxName);
+                                if(device.boxName.equals("Box")){
+                                    map.put("name", "Box"+device.mac.substring(device.mac.length()-2));
+                                }else {
+                                    map.put("name", device.boxName);
+                                }
                                 map.put("uuid", device.uuid);
                                 map.put("mac", device.mac);
                                 map.put("deviceStatus", "" + device.deviceStatus);

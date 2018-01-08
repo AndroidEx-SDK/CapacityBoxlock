@@ -189,6 +189,9 @@ public class LockActivity extends BaseActivity implements OnClickListener {
 
     private void initView() {
         tv_deviceMac.setText(address);
+        if(deviceName.equals("Box")){
+            deviceName=deviceName+address.substring(address.length()-2);
+        }
         name.setText(deviceName);
         String lowestTemp = SharedPreTool.getInstance(context).getStringData(LOWEST_TEMP, "0");
         String highestTemp = SharedPreTool.getInstance(context).getStringData(HIGHEST_TEMP, "80");

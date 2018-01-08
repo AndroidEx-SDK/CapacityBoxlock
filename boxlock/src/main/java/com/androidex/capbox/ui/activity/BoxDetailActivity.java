@@ -110,7 +110,6 @@ public class BoxDetailActivity extends BaseActivity {
         mac = getIntent().getStringExtra("mac");
         initBroadCast();
         initTitleBar();
-
         if (mac != null) {
             if (MyBleService.get().getConnectDevice(mac) == null) {
                 if (mac != null) {
@@ -127,6 +126,9 @@ public class BoxDetailActivity extends BaseActivity {
             tv_mac.setText(mac);
         }
         if (name != null) {
+            if(name.equals("Box")){
+                name=name+mac.substring(mac.length()-2);
+            }
             tv_name.setText(name);
         }
         if (uuid != null) {
@@ -433,7 +435,6 @@ public class BoxDetailActivity extends BaseActivity {
                             switch (model.code) {
                                 case Constants.API.API_OK:
                                     CommonKit.showOkShort(context, "配置成功");
-
                                     break;
                                 case Constants.API.API_FAIL:
                                     if (model.info != null) {

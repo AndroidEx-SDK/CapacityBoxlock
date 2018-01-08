@@ -2,6 +2,7 @@ package com.androidex.capbox.ui.adapter;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -38,6 +39,7 @@ import static com.androidex.capbox.R.id.tv_status;
 
 /**
  * 已绑定设备的适配器
+ *
  * @author liyp
  * @editTime 2017/9/30
  */
@@ -121,10 +123,16 @@ public class BoxListAdapter extends BaseAdapter {
         String isOnLine = mContentList.get(position).get("isOnLine");
         String deviceStatus = mContentList.get(position).get("deviceStatus");
         if (name == null || name.equals("")) {
-            holder.deviceName.setText("Box");
+            holder.deviceName.setText("Box" + mac.substring(mac.length() - 2));
         } else {
             if (name.contains(LockFragment.boxName)) {
-                name = name.replace(LockFragment.boxName, "");
+                if (name.trim().equals("AndroidExBox")) {
+                    name = "Box" + mac.substring(mac.length() - 2);
+                } else {
+                    name = name.replace(LockFragment.boxName, "");
+                }
+            } else if (name.trim().equals("Box")) {
+                name = name + mac.substring(mac.length() - 2);
             }
             holder.deviceName.setText(name);
         }

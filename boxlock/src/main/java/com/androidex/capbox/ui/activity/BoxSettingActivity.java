@@ -31,12 +31,13 @@ public class BoxSettingActivity extends BaseActivity {
 
     @OnClick({
             R.id.tv_confirm,
+            R.id.tv_cancle,
     })
     public void clickEvent(View view) {
         switch (view.getId()) {
             case R.id.tv_confirm://配置箱体
                 String name = et_name.getText().toString().trim();
-                if (name != null) {
+                if (name != null&&!name.isEmpty()&&!name.equals("")) {
                     Intent intent = new Intent();
                     intent.putExtra("name", name);
                     setResult(Activity.RESULT_OK, intent);
@@ -45,7 +46,7 @@ public class BoxSettingActivity extends BaseActivity {
                     CommonKit.showErrorShort(context, "昵称不可为空");
                 }
                 break;
-            case R.id.tv_cancle://配置箱体
+            case R.id.tv_cancle://取消设置
                 CommonKit.finishActivity(this);
                 break;
 
