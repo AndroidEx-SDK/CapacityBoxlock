@@ -544,7 +544,6 @@ public class BoxListFragment extends BaseFragment {
                     startGetUUID(false, null);
                     disProgress();
                     mDeviceListAdapter.setTextHint(-1, "");
-                    setLostAlarm("");//防丢报警设置
                     break;
 
                 case Constants.BLE.ACTION_UUID:

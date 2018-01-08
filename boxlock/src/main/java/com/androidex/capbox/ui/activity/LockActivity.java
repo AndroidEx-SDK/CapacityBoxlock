@@ -112,8 +112,6 @@ public class LockActivity extends BaseActivity implements OnClickListener {
     @Bind(R.id.main_tv_minhum)
     TextView minhum;
 
-    private Timer timer_rssi = new Timer();// 设计定时器
-    private TimerTask task_sendrssi;// 心跳任务
     private Timer timer_location = new Timer();// 设计定时器
     private TimerTask timer_getlocation;
     private String address = null;
@@ -145,7 +143,6 @@ public class LockActivity extends BaseActivity implements OnClickListener {
                 CommonKit.showMsgShort(context, "设备已连接");
                 BleService.get().enableNotify(address);
                 updateBleView(View.GONE, View.VISIBLE);
-                startHeart();
             }
         }
     }
@@ -211,7 +208,6 @@ public class LockActivity extends BaseActivity implements OnClickListener {
                 CommonKit.finishActivity(context);
                 break;
             case R.id.main_bt_ble_close://连接状态，点击关闭
-                stopHeart();
                 ServiceBean device = MyBleService.get().getConnectDevice(address);
                 if (device != null) {
                     device.setActiveDisConnect(true);
@@ -424,37 +420,7 @@ public class LockActivity extends BaseActivity implements OnClickListener {
         });
     }
 
-    private void startHeart() {
-        stopHeart();
-        if (task_sendrssi == null) {
-            task_sendrssi = new TimerTask() {
-                @Override
-                public void run() {// 通过消息更新
-                    //sendMessage(REFRESH_RSSI);
-                    MyBleService.get().sentHeartBeat(address);
-                }
-            };
-            if (timer_rssi == null) {
-                timer_rssi = new Timer();
-            }
-            timer_rssi.schedule(task_sendrssi, 1000, 5000);// 执行心跳包任务
-        }
-    }
-
-    private void stopHeart() {
-        if (task_sendrssi != null) {
-            task_sendrssi.cancel();
-            timer_rssi.cancel();
-            timer_rssi = null;
-            Log.i("LockFragment", "停止心跳");
-            task_sendrssi = null;
-        }
-    }
-
     BroadcastReceiver dataUpdateRecevice = new BroadcastReceiver() {
-
-        private int t = 0;
-        private int q = 0;
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -471,20 +437,16 @@ public class LockActivity extends BaseActivity implements OnClickListener {
                     disProgress();
                     BleService.get().enableNotify(address);
                     updateBleView(View.GONE, View.VISIBLE);
-                    startHeart();
                     break;
 
                 case BLE_CONN_DIS://断开连接
                     Log.e("LockFragment", "断开连接");
-                    stopHeart();
                     updateBleView(View.VISIBLE, View.GONE);
-                    setLostAlarm(deviceName);//防丢报警设置
                     break;
 
                 case BLUTOOTH_OFF:
                     Log.e(TAG, "手机蓝牙断开");
                     CommonKit.showErrorShort(context, "手机蓝牙断开");
-                    stopHeart();
                     ServiceBean device = MyBleService.get().getConnectDevice(address);
                     if (device != null) {
                         device.setActiveDisConnect(true);
@@ -534,9 +496,9 @@ public class LockActivity extends BaseActivity implements OnClickListener {
                 //收到心跳//0xFB 0x31 0x00 0x1B
                 //          0x31 0x6A 0x40 0x66 0x00 0x4B 0x37 0x00 0xFE
                 case ACTION_HEART:
-                    current_temp.setText(intent.getStringExtra(BLECONSTANTS_TEMP)!=null?intent.getStringExtra(BLECONSTANTS_TEMP):"");
-                    current_hum.setText(intent.getStringExtra(BLECONSTANTS_HUM)!=null?intent.getStringExtra(BLECONSTANTS_HUM):"");
-                    tv_electric_quantity.setText(intent.getStringExtra(BLECONSTANTS_ELECTRIC_QUANTITY)!=null?intent.getStringExtra(BLECONSTANTS_ELECTRIC_QUANTITY):"");
+                    current_temp.setText(intent.getStringExtra(BLECONSTANTS_TEMP) != null ? intent.getStringExtra(BLECONSTANTS_TEMP) : "");
+                    current_hum.setText(intent.getStringExtra(BLECONSTANTS_HUM) != null ? intent.getStringExtra(BLECONSTANTS_HUM) : "");
+                    tv_electric_quantity.setText(intent.getStringExtra(BLECONSTANTS_ELECTRIC_QUANTITY) != null ? intent.getStringExtra(BLECONSTANTS_ELECTRIC_QUANTITY) : "");
                     break;
                 default:
                     break;
@@ -588,7 +550,6 @@ public class LockActivity extends BaseActivity implements OnClickListener {
     public void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-        stopHeart();
         getLocation(false);
         mSearch.destroy();
         context.unregisterReceiver(dataUpdateRecevice);

@@ -59,6 +59,7 @@ import static com.androidex.capbox.utils.Constants.BASE.ACTION_TEMP_OUT;
  * @editor
  */
 public abstract class BaseActivity extends FragmentActivity implements View.OnClickListener {
+    private final static String TAG = "BaseActivity";
     protected Activity context;
     private android.app.Dialog dialog;
     private android.app.Dialog mLostAlarmDialog;//防丢弹框Dialog
@@ -117,13 +118,13 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
     BroadcastReceiver baseBroad = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            String deviceMac = intent.getStringExtra(BLECONSTANTS_ADDRESS);
             switch (intent.getAction()){
                 case BLE_CONN_DIS://蓝牙异常断开
-
-
+                    Log.e(TAG,"蓝牙异常断开");
+                    setLostAlarm("Box"+deviceMac.substring(deviceMac.length()-2));//蓝牙异常断开弹窗
                     break;
                 case ACTION_TEMP_OUT://温度超范围
-                    String deviceMac = intent.getStringExtra(BLECONSTANTS_ADDRESS);
                     showTempOutAlarmDialog("Box"+deviceMac.substring(deviceMac.length()-2));
                     break;
             }

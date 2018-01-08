@@ -585,7 +585,6 @@ public class BoxDetailActivity extends BaseActivity {
                 case BLE_CONN_DIS:
                     tv_connect_starts.setText("点击连接");
                     Log.d(TAG, "断开连接=");
-                    setLostAlarm("");//防丢报警设置
                     break;
                 case ACTION_RECOVER://恢复出厂
                     Log.e(TAG, "恢复出厂");

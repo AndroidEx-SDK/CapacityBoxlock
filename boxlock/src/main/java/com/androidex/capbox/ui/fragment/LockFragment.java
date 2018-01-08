@@ -141,14 +141,11 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         initBleBroadCast();
         if (address != null) {
             if (MyBleService.get().getConnectDevice(address) == null) {
-                Log.e(TAG, "开始扫描蓝牙设备1");
                 scanLeDevice();
             } else {
                 if (MyBleService.get().getConnectDevice(address).isActiveDisConnect()) {
-                    Log.e(TAG, "开始扫描蓝牙设备2");
                     scanLeDevice();
                 } else {
-                    Log.e(TAG, "已连接 address=" + address);
                     CommonKit.showMsgShort(context, "设备已连接");
                     BleService.get().enableNotify(address);
                     updateBleView(View.GONE, View.VISIBLE);
@@ -537,7 +534,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                 case BLE_CONN_DIS://断开连接
                     Log.e(TAG, "断开连接");
                     updateBleView(View.VISIBLE, View.GONE);
-                    setLostAlarm(deviceName);//防丢报警设置
                     break;
 
                 case BLUTOOTH_OFF:
