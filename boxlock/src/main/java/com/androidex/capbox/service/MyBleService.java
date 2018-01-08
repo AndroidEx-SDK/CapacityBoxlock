@@ -9,6 +9,7 @@ import com.androidex.capbox.utils.SystemUtil;
 
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
+import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ISACTIVEDisConnect;
 import static com.androidex.capbox.utils.Constants.BASE.ACTION_TEMP_OUT;
 import static com.baidu.mapapi.BMapManager.getContext;
 
@@ -41,18 +42,29 @@ public class MyBleService extends BleService {
         ServiceBean device = getConnectDevice(address);
         if (device != null) {
             device.setStopGetRssi();
-            if (!device.isActiveDisConnect()) {//判断是否是主动断开，true就不报警,在主动断开的时候就要设置该值为true
-                Intent intent = new Intent(BLE_CONN_DIS);
-                intent.putExtra(BLECONSTANTS_ADDRESS, address);
-                sendBroadcast(intent);
-                SystemUtil.startPlayerRaw(getContext());
+            if (device.isActiveDisConnect()) {//判断是否是主动断开，true就不报警,在主动断开的时候就要设置该值为true
+                sendDisconnectMessage(address, true);
+            } else {
+                sendDisconnectMessage(address, false);
             }
         } else {
-            Intent intent = new Intent(BLE_CONN_DIS);
-            intent.putExtra(BLECONSTANTS_ADDRESS, address);
-            sendBroadcast(intent);
-            SystemUtil.startPlayerRaw(getContext());
+            sendDisconnectMessage(address, false);
         }
+    }
+
+    /**
+     * 断开连接时发送消息通知
+     *
+     * @param address
+     * @param isActive
+     */
+    private void sendDisconnectMessage(String address, boolean isActive) {
+        Intent intent = new Intent(BLE_CONN_DIS);
+        intent.putExtra(BLECONSTANTS_ADDRESS, address);
+        intent.putExtra(BLECONSTANTS_ISACTIVEDisConnect, isActive);
+        sendBroadcast(intent);
+        if (!isActive)//非主动断开时，报警
+            SystemUtil.startPlayerRaw(getContext());
     }
 
     /**
@@ -76,7 +88,7 @@ public class MyBleService extends BleService {
      */
     @Override
     public void outOfScopeTempPolice(String address) {
-        Log.e(TAG,"发送广播，温度超范围报警");
+        Log.e(TAG, "发送广播，温度超范围报警");
         Intent intent = new Intent(ACTION_TEMP_OUT);
         intent.putExtra(BLECONSTANTS_ADDRESS, address);
         sendBroadcast(intent);

@@ -47,6 +47,7 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCO
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLUTOOTH_OFF;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLUTOOTH_ON;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
+import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ISACTIVEDisConnect;
 import static com.androidex.capbox.utils.Constants.BASE.ACTION_TEMP_OUT;
 
 /**
@@ -121,8 +122,10 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
             String deviceMac = intent.getStringExtra(BLECONSTANTS_ADDRESS);
             switch (intent.getAction()){
                 case BLE_CONN_DIS://蓝牙异常断开
-                    Log.e(TAG,"蓝牙异常断开");
-                    setLostAlarm("Box"+deviceMac.substring(deviceMac.length()-2));//蓝牙异常断开弹窗
+                    boolean isActiveDisConnect = intent.getBooleanExtra(BLECONSTANTS_ISACTIVEDisConnect, false);
+                    if (!isActiveDisConnect){
+                        setLostAlarm("Box"+deviceMac.substring(deviceMac.length()-2));//蓝牙异常断开弹窗
+                    }
                     break;
                 case ACTION_TEMP_OUT://温度超范围
                     showTempOutAlarmDialog("Box"+deviceMac.substring(deviceMac.length()-2));

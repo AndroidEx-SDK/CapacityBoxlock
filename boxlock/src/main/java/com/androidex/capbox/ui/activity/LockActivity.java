@@ -189,8 +189,8 @@ public class LockActivity extends BaseActivity implements OnClickListener {
 
     private void initView() {
         tv_deviceMac.setText(address);
-        if(deviceName.equals("Box")){
-            deviceName=deviceName+address.substring(address.length()-2);
+        if (deviceName.equals("Box")) {
+            deviceName = deviceName + address.substring(address.length() - 2);
         }
         name.setText(deviceName);
         String lowestTemp = SharedPreTool.getInstance(context).getStringData(LOWEST_TEMP, "0");
@@ -228,17 +228,17 @@ public class LockActivity extends BaseActivity implements OnClickListener {
                 break;
 
             case R.id.tv_boxConfig:
-                Bundle bundle = new Bundle();
-                bundle.putString("name", deviceName);
-                bundle.putString("mac", address);
-                bundle.putString("uuid", uuid);
-                BoxDetailActivity.lauch(context, bundle);
+                CommonKit.finishActivity(context);
                 break;
             default:
                 break;
         }
     }
 
+    /**
+     * 定时获取定位信息
+     * @param flag
+     */
     private void getLocation(boolean flag) {
         if (flag) {
             timer_getlocation = new TimerTask() {
