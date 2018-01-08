@@ -317,20 +317,24 @@ public class BoxDetailActivity extends BaseActivity {
                 break;
             case R.id.rl_boxset:
                 if (isCarry()) return;//判断是否处于不可配置状态
+                if (isConnectBle()) return;//判断是否连接蓝牙
                 BoxSettingActivity.lauch(context);
                 break;
             case R.id.oneKeyConfig://一键配置
                 if (isCarry()) return;//判断是否处于不可配置状态
+                if (isConnectBle()) return;//判断是否连接蓝牙
                 MyBleService.get().startBoxConfig(mac);
                 break;
             case R.id.setting_carryPersonNum://携行设备
                 if (isCarry()) return;//判断是否处于不可配置状态
+                if (isConnectBle()) return;//判断是否连接蓝牙
                 Bundle bundle = new Bundle();
                 bundle.putString("uuid", uuid);
                 WatchListActivity.lauch(context, bundle);
                 break;
             case R.id.ll_heartbeatRate://心跳更新频率
                 if (isCarry()) return;//判断是否处于不可配置状态
+                if (isConnectBle()) return;//判断是否连接蓝牙
                 Dialog.showAlertDialog(context, "请设置心跳更新频率", new Dialog.DialogDataListener() {
                     @Override
                     public void confirm(String data) {
@@ -351,6 +355,7 @@ public class BoxDetailActivity extends BaseActivity {
                 break;
             case R.id.setting_Location://定位更新频率
                 if (isCarry()) return;//判断是否处于不可配置状态
+                if (isConnectBle()) return;//判断是否连接蓝牙
                 Dialog.showAlertDialog(context, "请设置定位更新频率", new Dialog.DialogDataListener() {
                     @Override
                     public void confirm(String data) {
@@ -371,6 +376,7 @@ public class BoxDetailActivity extends BaseActivity {
                 break;
             case R.id.ll_settingFinger://设置指纹
                 if (isCarry()) return;//判断是否处于不可配置状态
+                if (isConnectBle()) return;//判断是否连接蓝牙
                 Bundle bundle1 = new Bundle();
                 if (becomeFinger1.trim().isEmpty() || becomeFinger1 == "null") {
                     bundle1.putString("becomeNum", "0");
@@ -387,7 +393,21 @@ public class BoxDetailActivity extends BaseActivity {
                 break;
             case R.id.setting_factory_settings://恢复出厂
                 if (isCarry()) return;//判断是否处于不可配置状态
+                if (isConnectBle()) return;//判断是否连接蓝牙
                 MyBleService.get().recover(mac);
+                break;
+            case R.id.ll_settingAlarm://报警设置
+                if (isCarry()) return;//判断是否处于不可配置状态
+                if (isConnectBle()) return;//判断是否连接蓝牙
+                SettingAlarmActivity.lauch(context, Constants.CODE.REQUESTCODE_SET_ALARM);
+                break;
+            case R.id.ll_settinglock://开锁设置
+                if (isCarry()) return;//判断是否处于不可配置状态
+                if (isConnectBle()) return;//判断是否连接蓝牙
+                SettingLockActivity.lauch(context, Constants.CODE.REQUESTCODE_SET_LOCK);
+                break;
+            case R.id.tv_connect_starts:
+                BleService.get().connectionDevice(context, mac);
                 break;
             case R.id.tv_startCarryScort://启动/结束携行押运
                 if (becomeFinger1.trim().isEmpty() || becomeFinger1.equals("null") || possessorFinger1.trim().isEmpty() || possessorFinger1.equals("null")) {
@@ -400,20 +420,18 @@ public class BoxDetailActivity extends BaseActivity {
                     MyBleService.get().startEscort(mac);
                 }
                 break;
-            case R.id.ll_settingAlarm://报警设置
-                if (isCarry()) return;//判断是否处于不可配置状态
-                SettingAlarmActivity.lauch(context, Constants.CODE.REQUESTCODE_SET_ALARM);
-                break;
-            case R.id.ll_settinglock:
-                if (isCarry()) return;//判断是否处于不可配置状态
-                SettingLockActivity.lauch(context, Constants.CODE.REQUESTCODE_SET_LOCK);
-                break;
-            case R.id.tv_connect_starts:
-                BleService.get().connectionDevice(context, mac);
-                break;
             default:
                 break;
         }
+    }
+
+    private boolean isConnectBle() {
+        if (MyBleService.get().getConnectDevice(mac) == null) {
+            CommonKit.showErrorShort(context, getResources().getString(R.string.setting_tv_ble_disconnect));
+            BleService.get().connectionDevice(context, mac);
+            return true;
+        }
+        return false;
     }
 
     /**

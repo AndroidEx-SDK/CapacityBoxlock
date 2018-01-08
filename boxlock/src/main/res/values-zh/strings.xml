@@ -285,7 +285,7 @@
     <string name="setting_tv_above">以上</string>
     <string name="setting_dialog_title">温度报警</string>
     <string name="setting_tv_ujuicer_alarm_ok">防丢报警设置成功。</string>
-    <string name="setting_tv_ble_disconnect">蓝牙未连接</string>
+    <string name="setting_tv_ble_disconnect">蓝牙未连接,正在尝试重新连接</string>
     <string name="setting_tv_below">以下</string>
     <string name="setting_dialog_title1">湿度报警</string>
     <string name="setting_tv_Indicator">温度指示灯</string>
