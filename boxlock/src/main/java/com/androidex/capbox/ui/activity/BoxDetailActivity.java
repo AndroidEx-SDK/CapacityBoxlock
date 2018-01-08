@@ -214,9 +214,10 @@ public class BoxDetailActivity extends BaseActivity {
                             becomeFinger1 = model.data.becomeFinger1;
                             becomeFinger2 = model.data.becomeFinger2;
                             becomeFinger3 = model.data.becomeFinger3;
-                            possessorFinger1 = model.data.possessorFinger1;
+                            possessorFinger1 = model.data.possessorFinger1;//possessorFinger1
                             possessorFinger2 = model.data.possessorFinger2;
                             possessorFinger3 = model.data.possessorFinger3;
+                            //Log.d(TAG, model.toString());
                             break;
 
                         case Constants.API.API_FAIL:
@@ -368,7 +369,7 @@ public class BoxDetailActivity extends BaseActivity {
                 } else {
                     bundle1.putString("becomeNum", "3");
                 }
-                if (possessorFinger1.trim().isEmpty() || possessorFinger1 != "null") {
+                if (possessorFinger1.trim().isEmpty() || possessorFinger1 == "null") {
                     bundle1.putString("possessorNum", "0");
                 } else {
                     bundle1.putString("possessorNum", "3");
@@ -432,6 +433,7 @@ public class BoxDetailActivity extends BaseActivity {
                             switch (model.code) {
                                 case Constants.API.API_OK:
                                     CommonKit.showOkShort(context, "配置成功");
+
                                     break;
                                 case Constants.API.API_FAIL:
                                     if (model.info != null) {

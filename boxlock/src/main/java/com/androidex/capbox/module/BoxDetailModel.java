@@ -56,6 +56,34 @@ public class BoxDetailModel extends BaseModel{
         public String dismountPolice;
         public String become;
 
+        @Override
+        public String toString() {
+            return "Data{" +
+                    "boxName='" + boxName + '\'' +
+                    ", deviceStatus=" + deviceStatus +
+                    ", longitude='" + longitude + '\'' +
+                    ", latitude='" + latitude + '\'' +
+                    ", elevation='" + elevation + '\'' +
+                    ", isDefault=" + isDefault +
+                    ", possessorFinger1='" + possessorFinger1 + '\'' +
+                    ", possessorFinger2='" + possessorFinger2 + '\'' +
+                    ", possessorFinger3='" + possessorFinger3 + '\'' +
+                    ", becomeFinger1='" + becomeFinger1 + '\'' +
+                    ", becomeFinger2='" + becomeFinger2 + '\'' +
+                    ", becomeFinger3='" + becomeFinger3 + '\'' +
+                    ", unlocking='" + unlocking + '\'' +
+                    ", unlockingMode='" + unlockingMode + '\'' +
+                    ", carryPersonNum=" + carryPersonNum +
+                    ", police='" + police + '\'' +
+                    ", policeDiatance=" + policeDiatance +
+                    ", heartbeatRate=" + heartbeatRate +
+                    ", locationRate=" + locationRate +
+                    ", highestTemp=" + highestTemp +
+                    ", lowestTemp=" + lowestTemp +
+                    ", dismountPolice='" + dismountPolice + '\'' +
+                    ", become='" + become + '\'' +
+                    '}';
+        }
     }
 
     @Override
