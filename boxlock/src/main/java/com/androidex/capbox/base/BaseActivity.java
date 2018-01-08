@@ -120,15 +120,15 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
         @Override
         public void onReceive(Context context, Intent intent) {
             String deviceMac = intent.getStringExtra(BLECONSTANTS_ADDRESS);
-            switch (intent.getAction()){
+            switch (intent.getAction()) {
                 case BLE_CONN_DIS://蓝牙异常断开
                     boolean isActiveDisConnect = intent.getBooleanExtra(BLECONSTANTS_ISACTIVEDisConnect, false);
-                    if (!isActiveDisConnect){
-                        setLostAlarm("Box"+deviceMac.substring(deviceMac.length()-2));//蓝牙异常断开弹窗
+                    if (!isActiveDisConnect) {
+                        setLostAlarm("Box" + deviceMac.substring(deviceMac.length() - 2));//蓝牙异常断开弹窗
                     }
                     break;
                 case ACTION_TEMP_OUT://温度超范围
-                    showTempOutAlarmDialog("Box"+deviceMac.substring(deviceMac.length()-2));
+                    showTempOutAlarmDialog("Box" + deviceMac.substring(deviceMac.length() - 2));
                     break;
             }
         }
@@ -178,6 +178,13 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
 
     protected void postSticky(Object event) {
         EventBus.getDefault().postSticky(event);
+    }
+
+    protected void Logd(String tag, String msg) {
+        Log.d(tag, msg);
+    }
+    protected void Loge(String tag, String msg) {
+        Log.e(tag, msg);
     }
 
     public String getToken() {

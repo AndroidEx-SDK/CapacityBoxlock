@@ -200,6 +200,13 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         EventBus.getDefault().postSticky(event);
     }
 
+    protected void Logd(String tag, String msg) {
+        Log.d(tag, msg);
+    }
+    protected void Loge(String tag, String msg) {
+        Log.e(tag, msg);
+    }
+
     protected String getToken() {
         String token = SharedPreTool.getInstance(context).getStringData(SharedPreTool.TOKEN, null);
         return token;
