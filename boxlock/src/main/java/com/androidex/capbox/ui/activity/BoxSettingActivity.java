@@ -28,7 +28,6 @@ public class BoxSettingActivity extends BaseActivity {
 
     }
 
-
     @OnClick({
             R.id.tv_confirm,
             R.id.tv_cancle,

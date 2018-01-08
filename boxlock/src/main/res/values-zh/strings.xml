@@ -330,6 +330,7 @@
     <string name="hint_lowestTemp_commit">请设置最低温度(0°-60°)</string>
     <string name="hint_dismountPolice_commit">请开启破拆报警</string>
     <string name="hint_become_commit">请开启无线静默</string>
+    <string name="hint_not_config">携行状态无法进行配置</string>
     <string name="hint_password_input">请输入6-32位的密码</string>
     <string name="hint_authcode_input">验证码不正确</string>
     <string name="hint_cardid_input">身份证号码非法</string>

@@ -126,8 +126,8 @@ public class BoxDetailActivity extends BaseActivity {
             tv_mac.setText(mac);
         }
         if (name != null) {
-            if(name.equals("Box")){
-                name=name+mac.substring(mac.length()-2);
+            if (name.equals("Box")) {
+                name = name + mac.substring(mac.length() - 2);
             }
             tv_name.setText(name);
         }
@@ -316,17 +316,21 @@ public class BoxDetailActivity extends BaseActivity {
                 }
                 break;
             case R.id.rl_boxset:
+                if (isCarry()) return;//判断是否处于不可配置状态
                 BoxSettingActivity.lauch(context);
                 break;
             case R.id.oneKeyConfig://一键配置
+                if (isCarry()) return;//判断是否处于不可配置状态
                 MyBleService.get().startBoxConfig(mac);
                 break;
             case R.id.setting_carryPersonNum://携行设备
+                if (isCarry()) return;//判断是否处于不可配置状态
                 Bundle bundle = new Bundle();
                 bundle.putString("uuid", uuid);
                 WatchListActivity.lauch(context, bundle);
                 break;
             case R.id.ll_heartbeatRate://心跳更新频率
+                if (isCarry()) return;//判断是否处于不可配置状态
                 Dialog.showAlertDialog(context, "请设置心跳更新频率", new Dialog.DialogDataListener() {
                     @Override
                     public void confirm(String data) {
@@ -346,6 +350,7 @@ public class BoxDetailActivity extends BaseActivity {
                 });
                 break;
             case R.id.setting_Location://定位更新频率
+                if (isCarry()) return;//判断是否处于不可配置状态
                 Dialog.showAlertDialog(context, "请设置定位更新频率", new Dialog.DialogDataListener() {
                     @Override
                     public void confirm(String data) {
@@ -365,6 +370,7 @@ public class BoxDetailActivity extends BaseActivity {
                 });
                 break;
             case R.id.ll_settingFinger://设置指纹
+                if (isCarry()) return;//判断是否处于不可配置状态
                 Bundle bundle1 = new Bundle();
                 if (becomeFinger1.trim().isEmpty() || becomeFinger1 == "null") {
                     bundle1.putString("becomeNum", "0");
@@ -380,6 +386,7 @@ public class BoxDetailActivity extends BaseActivity {
                 SettingFingerActivity.lauch(context, bundle1);
                 break;
             case R.id.setting_factory_settings://恢复出厂
+                if (isCarry()) return;//判断是否处于不可配置状态
                 MyBleService.get().recover(mac);
                 break;
             case R.id.tv_startCarryScort://启动/结束携行押运
@@ -394,9 +401,11 @@ public class BoxDetailActivity extends BaseActivity {
                 }
                 break;
             case R.id.ll_settingAlarm://报警设置
+                if (isCarry()) return;//判断是否处于不可配置状态
                 SettingAlarmActivity.lauch(context, Constants.CODE.REQUESTCODE_SET_ALARM);
                 break;
             case R.id.ll_settinglock:
+                if (isCarry()) return;//判断是否处于不可配置状态
                 SettingLockActivity.lauch(context, Constants.CODE.REQUESTCODE_SET_LOCK);
                 break;
             case R.id.tv_connect_starts:
@@ -405,6 +414,19 @@ public class BoxDetailActivity extends BaseActivity {
             default:
                 break;
         }
+    }
+
+    /**
+     * 判断是否处于携行押运
+     *
+     * @return
+     */
+    private boolean isCarry() {
+        if (status == 2) {//押运状态
+            CommonKit.showMsgShort(context, getString(R.string.hint_not_config));
+            return true;
+        }
+        return false;
     }
 
     /**
