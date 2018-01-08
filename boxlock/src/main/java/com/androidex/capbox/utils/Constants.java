@@ -74,6 +74,7 @@ public class Constants extends BleConstants{
         public static final int TAG_EVENT_USER_LOGIN = TAG_BASE_EVENT + 1;        //用户登录状态发生改变
         public static final int TAG_EVENT_USER_INFO_CHANGE = TAG_BASE_EVENT + 2;        //用户信息改变
         public static final int TAG_EVENT_BOX_BIND_CHANGE = TAG_BASE_EVENT + 3;        //绑定箱体数量发生变化
+        public static final int TAG_EVENT_BOX_RELIEVE_BIND = TAG_BASE_EVENT + 4;        //解除绑定
 
     }
 

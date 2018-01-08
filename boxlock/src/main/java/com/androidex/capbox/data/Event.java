@@ -35,6 +35,17 @@ public class Event {
     }
 
     /**
+     * 解除绑定箱体
+     */
+    public static class BoxRelieveBind extends BaseEvent {
+
+        @Override
+        int getCode() {
+            return Constants.EVENT.TAG_EVENT_BOX_RELIEVE_BIND;
+        }
+    }
+
+    /**
      * 用户信息改变
      */
     public static class UserInfoChangeEvent extends BaseEvent {

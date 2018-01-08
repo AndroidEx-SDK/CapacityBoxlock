@@ -2,7 +2,6 @@ package com.androidex.capbox.ui.adapter;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,6 +12,8 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.androidex.boxlib.modules.ServiceBean;
+import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.MainActivity;
 import com.androidex.capbox.R;
 import com.androidex.capbox.data.Event;
@@ -20,8 +21,6 @@ import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.module.BaseModel;
-import com.androidex.boxlib.modules.ServiceBean;
-import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.fragment.LockFragment;
 import com.androidex.capbox.ui.view.TypeFaceText;
@@ -235,7 +234,7 @@ public class BoxListAdapter extends BaseAdapter {
                                         device.setActiveDisConnect(true);
                                         BleService.get().disConnectDevice(mac);
                                     }
-                                    EventBus.getDefault().postSticky(new Event.BoxBindChange());
+                                    EventBus.getDefault().postSticky(new Event.BoxRelieveBind());
                                     break;
                                 case Constants.API.API_FAIL:
                                     CommonKit.showErrorShort(mContext, "解绑失败");

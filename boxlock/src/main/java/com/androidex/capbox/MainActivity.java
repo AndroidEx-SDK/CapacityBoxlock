@@ -88,7 +88,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     public void initData(Bundle savedInstanceState) {
         registerEventBusSticky();
         username = SharedPreTool.getInstance(context).getStringData(SharedPreTool.PHONE, null);
-        boxlist();
+        boxlist(true);
     }
 
     @Override
@@ -229,6 +229,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
         }
     }
 
+
     private BoomMenuButton initBmb() {
         bmb.clearBuilders();
         switch (mylist.size()) {
@@ -353,7 +354,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     /**
      * 获取设备列表
      */
-    public void boxlist() {
+    public void boxlist(final boolean isBind) {
         NetApi.boxlist(getToken(), ((MainActivity) context).username, new ResultCallBack<BoxDeviceModel>() {
             @Override
             public void onSuccess(int statusCode, Headers headers, BoxDeviceModel model) {
@@ -365,9 +366,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                             mylist.clear();
                             for (BoxDeviceModel.device device : model.devicelist) {
                                 Map<String, String> map = new HashMap<>();
-                                if(device.boxName.equals("Box")){
-                                    map.put("name", "Box"+device.mac.substring(device.mac.length()-2));
-                                }else {
+                                if (device.boxName.equals("Box")) {
+                                    map.put("name", "Box" + device.mac.substring(device.mac.length() - 2));
+                                } else {
                                     map.put("name", device.boxName);
                                 }
                                 map.put("uuid", device.uuid);
@@ -398,7 +399,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                             break;
                     }
                 }
-                initPager();
+                if (isBind) {
+                    initPager();
+                }
                 initBmb();
             }
 
@@ -425,7 +428,16 @@ public class MainActivity extends BaseActivity implements OnClickListener {
      * @param event
      */
     public void onEvent(Event.BoxBindChange event) {
-        boxlist();    //刷新数据
+        boxlist(true);    //刷新数据
+    }
+
+    /**
+     * 解除绑定时触发
+     *
+     * @param event
+     */
+    public void onEvent(Event.BoxRelieveBind event) {
+        boxlist(false);
     }
 
     /**
