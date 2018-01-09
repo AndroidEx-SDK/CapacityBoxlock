@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -23,5 +24,21 @@
         android:textColor="@color/loading_text_color"
         android:textSize="@dimen/font_size_small"
         android:visibility="gone" />
+
+    <com.androidex.capbox.ui.view.CircleTextProgressbar
+        android:id="@+id/customCountDownView"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/marginPadding16"
+        android:gravity="center"
+        android:text="3s"
+        android:textColor="@color/Gray_80"
+        android:textSize="12sp"
+        app:in_circle_color="@color/blue"
+        />
+    <!--app:circleColor="@color/Gray_e8"
+        app:inCircleColors="@color/Gray_e8"
+        app:outLineColor="@color/Gray_e8" -->
 
 </RelativeLayout>

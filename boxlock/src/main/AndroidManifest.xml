@@ -58,7 +58,7 @@
             android:value="fc51UqGugQUOwzhBuan3UHSZ1MUERHXz" />
 
         <activity
-            android:name="com.androidex.capbox.ui.activity.WelcomeActivity"
+            android:name="com.androidex.capbox.ui.activity.SplashActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

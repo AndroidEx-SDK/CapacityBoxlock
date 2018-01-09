@@ -22,4 +22,8 @@
         <attr name="rightText" format="string" />
         <attr name="rightRes" format="reference" />
     </declare-styleable>
+
+    <declare-styleable name="CircleTextProgressbar">
+        <attr name="in_circle_color" format="color" />
+    </declare-styleable>
 </resources>
