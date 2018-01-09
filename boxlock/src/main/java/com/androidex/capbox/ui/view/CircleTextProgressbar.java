@@ -37,7 +37,7 @@ public class CircleTextProgressbar extends TextView {
     private int outLineWidth = 2;
 
     /**
-     * 内部圆的颜色。
+     * 颜色值的集合
      */
     private ColorStateList inCircleColors = ColorStateList.valueOf(Color.TRANSPARENT);
     /**
@@ -129,6 +129,8 @@ public class CircleTextProgressbar extends TextView {
         else
             inCircleColors = ColorStateList.valueOf(Color.TRANSPARENT);
         circleColor = inCircleColors.getColorForState(getDrawableState(), Color.TRANSPARENT);
+        outLineColor = inCircleColors.getColorForState(getDrawableState(), 1);
+        progressLineColor = inCircleColors.getColorForState(getDrawableState(), 2);
         typedArray.recycle();
     }
 

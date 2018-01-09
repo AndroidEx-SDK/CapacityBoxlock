@@ -35,10 +35,11 @@
         android:text="3s"
         android:textColor="@color/Gray_80"
         android:textSize="12sp"
-        app:in_circle_color="@color/blue"
+        app:in_circle_color="@color/Gray_e8"
+        app:outLineColor="@color/Gray_80"
+        app:progressLineColor="@color/progessbar"
         />
     <!--app:circleColor="@color/Gray_e8"
-        app:inCircleColors="@color/Gray_e8"
         app:outLineColor="@color/Gray_e8" -->
 
 </RelativeLayout>

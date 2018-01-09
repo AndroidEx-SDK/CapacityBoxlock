@@ -59,6 +59,7 @@
 
     <!-- dialog填充色 -->
     <color name="dark_red">#E61441</color>
+    <color name="progessbar">#7e88c3</color>
     <color name="Gray_80">#808080</color>
     <color name="Gray_e8">#e8e8e8</color>
     <color name="Gray_e6">#e6e6e6</color>

@@ -25,5 +25,8 @@
 
     <declare-styleable name="CircleTextProgressbar">
         <attr name="in_circle_color" format="color" />
+        <attr name="outLineColor" format="color" />
+        <attr name="progressLineColor" format="color" />
+
     </declare-styleable>
 </resources>
