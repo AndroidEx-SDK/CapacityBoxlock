@@ -76,12 +76,12 @@ public class BoxDetailActivity extends BaseActivity {
     private String mac;//箱体的mac
     private String uuid;//箱体的UUID
     private String police = "A";//报警开启A和关闭B
-    private String possessorFinger1 = null;//所有人指纹信息或ID
-    private String possessorFinger2 = null;//所有人指纹信息或ID
-    private String possessorFinger3 = null;//所有人指纹信息或ID
-    private String becomeFinger1 = null;////静默模式功能的指纹
-    private String becomeFinger2 = null;////静默模式功能的指纹
-    private String becomeFinger3 = null;////静默模式功能的指纹
+    private String possessorFinger1 = "";//所有人指纹信息或ID
+    private String possessorFinger2 = "";//所有人指纹信息或ID
+    private String possessorFinger3 = "";//所有人指纹信息或ID
+    private String becomeFinger1 = "";////静默模式功能的指纹
+    private String becomeFinger2 = "";////静默模式功能的指纹
+    private String becomeFinger3 = "";////静默模式功能的指纹
     private String unlocking = "A";//开锁次数，多次有效A，一次有效B
     private String unlockingMode = "C";//开锁方式设定: 指纹开锁A，腕表开锁B 同时开锁 C
     private String dismountPolice = "A";  //破拆报警的开启A和关闭B
@@ -184,7 +184,7 @@ public class BoxDetailActivity extends BaseActivity {
                         case Constants.API.API_OK:
                             status = model.data.deviceStatus;
                             unlocking = model.data.unlocking;//一次有效多次有效
-                            unlockingMode = model.data.unlockingMode;//一次有效多次有效
+                            unlockingMode = model.data.unlockingMode;//开锁方式
                             carryPersonNum = model.data.carryPersonNum;//携行人员数量
                             if (carryPersonNum == 0) {
                                 carryPersonNum = 1;
@@ -219,7 +219,7 @@ public class BoxDetailActivity extends BaseActivity {
                             possessorFinger1 = model.data.possessorFinger1;//possessorFinger1
                             possessorFinger2 = model.data.possessorFinger2;
                             possessorFinger3 = model.data.possessorFinger3;
-                            //Log.d(TAG, model.toString());
+                            Log.d(TAG, model.toString());
                             break;
 
                         case Constants.API.API_FAIL:
@@ -270,49 +270,36 @@ public class BoxDetailActivity extends BaseActivity {
                 } else if (name == null || name.equals("")) {
                     CommonKit.showErrorShort(context, getString(R.string.hint_boxname_commit));
                     return;
-                } else if (possessorFinger1 == null || possessorFinger1.equals("")) {
+                } else if (possessorFinger1 == null) {
                     CommonKit.showErrorShort(context, getString(R.string.hint_possessorFinger_commit));
                     return;
-                } else if (possessorFinger2 == null || possessorFinger2.equals("")) {
+                } else if (possessorFinger2 == null) {
                     CommonKit.showErrorShort(context, getString(R.string.hint_possessorFinger_commit));
                     return;
-                } else if (possessorFinger3 == null || possessorFinger3.equals("")) {
+                } else if (possessorFinger3 == null) {
                     CommonKit.showErrorShort(context, getString(R.string.hint_possessorFinger_commit));
                     return;
-                } else if (becomeFinger1 == null || becomeFinger1.equals("")) {
+                } else if (becomeFinger1 == null) {
                     CommonKit.showErrorShort(context, getString(R.string.hint_becomeFinger_commit));
                     return;
-                } else if (becomeFinger2 == null || becomeFinger2.equals("")) {
+                } else if (becomeFinger2 == null) {
                     CommonKit.showErrorShort(context, getString(R.string.hint_becomeFinger_commit));
                     return;
-                } else if (becomeFinger3 == null || becomeFinger3.equals("")) {
+                } else if (becomeFinger3 == null) {
                     CommonKit.showErrorShort(context, getString(R.string.hint_becomeFinger_commit));
-                    return;
-                } else if (unlocking == null || unlocking.equals("")) {
-                    CommonKit.showErrorShort(context, getString(R.string.hint_unlocking_commit));
-                    return;
-                } else if (unlockingMode == null || unlockingMode.equals("")) {
-                    CommonKit.showErrorShort(context, getString(R.string.hint_unlockingmode_commit));
                     return;
                 } else if (carryPersonNum == 0) {
                     CommonKit.showErrorShort(context, getString(R.string.hint_carryPersonNum_commit));
                     return;
-                } else if (police == null || police.equals("")) {
-                    CommonKit.showErrorShort(context, getString(R.string.hint_police_commit));
                 } else if (heartbeatRate <= 30 || heartbeatRate > 120) {
                     CommonKit.showErrorShort(context, getString(R.string.hint_heartbeatRate_commit));
                     return;
                 } else if (locationRate < 60 || locationRate > 300) {
                     CommonKit.showErrorShort(context, getString(R.string.hint_locationRate_commit));
                     return;
-                } else if (dismountPolice == null || dismountPolice.equals("")) {
-                    CommonKit.showErrorShort(context, getString(R.string.hint_dismountPolice_commit));
-                    return;
-                } else if (become == null || become.equals("")) {
-                    CommonKit.showErrorShort(context, getString(R.string.hint_become_commit));
-                    return;
                 } else {
-                    boxConfig();
+                    initDefaultData();//过滤某些参数，如果值为空的时候，配置默认值
+                    boxConfig();//配置箱体
                 }
                 break;
             case R.id.rl_boxset:
@@ -425,6 +412,31 @@ public class BoxDetailActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 过滤某些参数，如果值为空的时候，配置默认值
+     */
+    private void initDefaultData() {
+        if (unlocking == null || unlocking.equals("")) {//开锁次数
+            unlocking = "A";
+        }
+        if (unlockingMode == null || unlockingMode.equals("")) {//开锁方式
+            unlockingMode = "C";
+        }
+        if (police == null || police.equals("")) {//报警方式
+            police = "A";
+        }
+        if (dismountPolice == null || dismountPolice.equals("")) {
+            dismountPolice = "A";
+        }
+        if (become == null || become.equals("")) {
+            become = "A";
+        }
+    }
+
+    /**
+     * 过滤蓝牙连接
+     * @return
+     */
     private boolean isConnectBle() {
         if (MyBleService.get().getConnectDevice(mac) == null) {
             CommonKit.showErrorShort(context, getResources().getString(R.string.setting_tv_ble_disconnect));
