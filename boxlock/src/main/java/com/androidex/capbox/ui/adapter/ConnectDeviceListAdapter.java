@@ -8,16 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.androidex.capbox.R;
 import com.androidex.capbox.ui.fragment.LockFragment;
 import com.androidex.capbox.ui.view.TypeFaceText;
 
 import java.util.List;
-
-import static com.androidex.capbox.R.id.tv_status;
 
 /**
  * 已绑定设备的适配器
@@ -40,18 +36,6 @@ public class ConnectDeviceListAdapter extends BaseAdapter {
         mListener = listener;
     }
 
-    /**
-     * 根据位置从数据集中移除一条数据 并更新listview
-     *
-     * @param position
-     */
-    public void removeItem(int position) {
-        if (position >= 0 && position < mContentList.size()) {
-            mContentList.remove(position);
-            notifyDataSetChanged();
-        }
-    }
-
     @Override
     public int getCount() {
         return mContentList.size();
@@ -71,7 +55,7 @@ public class ConnectDeviceListAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.listitem_device, null);
+            convertView = mInflater.inflate(R.layout.item_devicelist, null);
             if (holder == null) {
                 holder = new ViewHolder();
             }
@@ -81,9 +65,6 @@ public class ConnectDeviceListAdapter extends BaseAdapter {
             holder.normalItemContentLayout = convertView.findViewById(R.id.rl_normal);
             holder.deviceName = (TypeFaceText) convertView.findViewById(R.id.device_name);
             holder.device_address = (TypeFaceText) convertView.findViewById(R.id.device_address);
-            holder.iv_online = (ImageView) convertView.findViewById(R.id.iv_online);
-            holder.tv_status = (TypeFaceText) convertView.findViewById(tv_status);
-            holder.modify = (TypeFaceText) convertView.findViewById(R.id.tv_modify);
 
             ViewGroup.LayoutParams lp = holder.normalItemContentLayout.getLayoutParams();
 
@@ -96,6 +77,8 @@ public class ConnectDeviceListAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+        holder.normalItemContentLayout.setOnClickListener(mListener);
+        holder.normalItemContentLayout.setTag(position);
         final String mac = mContentList.get(position).getAddress();
         String name = mContentList.get(position).getName();
         if (name == null || name.equals("")) {
@@ -115,15 +98,6 @@ public class ConnectDeviceListAdapter extends BaseAdapter {
         if (mac != null) {
             holder.device_address.setText(mac);
         }
-
-        // 设置监听事件
-        holder.modify.setOnClickListener(new View.OnClickListener() {//修改
-
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
         return convertView;
     }
 
@@ -131,9 +105,6 @@ public class ConnectDeviceListAdapter extends BaseAdapter {
         private View normalItemContentLayout;
         public TypeFaceText deviceName;
         public TypeFaceText device_address;
-        public ImageView iv_online;
-        public TypeFaceText tv_status;
-        private TextView modify;
     }
 
     public abstract static class IClick implements View.OnClickListener {

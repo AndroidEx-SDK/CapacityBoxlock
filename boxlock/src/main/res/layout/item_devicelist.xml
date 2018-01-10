@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/hsv"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:scrollbars="none">
+
+    <RelativeLayout
+        android:id="@+id/rl_normal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.androidex.capbox.ui.view.TypeFaceText
+            android:id="@+id/device_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/marginPadding16"
+            android:layout_marginTop="@dimen/marginPadding16"
+            android:lines="1"
+            android:text="Box"
+            android:textColor="@color/white"
+            android:textSize="@dimen/size16" />
+
+        <com.androidex.capbox.ui.view.TypeFaceText
+            android:id="@+id/device_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/device_name"
+            android:layout_below="@id/device_name"
+            android:layout_marginBottom="@dimen/marginPadding16"
+            android:layout_marginRight="@dimen/marginPadding16"
+            android:layout_marginTop="@dimen/marginPadding10"
+            android:textColor="@color/white"
+            android:textSize="@dimen/size14" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tv_line_height"
+            android:layout_below="@+id/device_address"
+            android:background="@color/line_color" />
+
+    </RelativeLayout>
+    <!-- 左侧滑操作后的显示出的操作按钮层 -->
+</HorizontalScrollView>

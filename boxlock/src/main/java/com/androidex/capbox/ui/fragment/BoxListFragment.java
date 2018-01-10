@@ -27,7 +27,6 @@ import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseFragment;
 import com.androidex.capbox.data.Event;
 import com.androidex.capbox.data.net.NetApi;
-import com.androidex.capbox.data.net.base.L;
 import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.module.BaseModel;
 import com.androidex.capbox.module.BoxDeviceModel;
@@ -464,11 +463,11 @@ public class BoxListFragment extends BaseFragment {
                                 mylist.add(map);
                             }
                             if (model.devicelist.size() > 0) {
-                                L.e(TAG + "刷新列表");
+                                Logd(TAG, "刷新列表");
                                 boxListAdapter.notifyDataSetChanged();
                             } else {
                                 CommonKit.showErrorShort(context, "请绑定箱体");
-                                L.e(TAG + "刷新列表无数据");
+                                Logd(TAG, "刷新列表无数据");
                             }
                             showProgress("刷新完成");
                             break;
@@ -496,7 +495,7 @@ public class BoxListFragment extends BaseFragment {
             public void onFailure(int statusCode, Request request, Exception e) {
                 super.onFailure(statusCode, request, e);
                 disProgress();
-                if (context!=null){
+                if (context != null) {
                     showProgress("刷新列表失败");
                 }
                 disProgress();
@@ -529,7 +528,7 @@ public class BoxListFragment extends BaseFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             String mac = intent.getStringExtra(BLECONSTANTS_ADDRESS);
-            Log.e(TAG,"mac="+mac+" action="+intent.getAction());
+            Log.e(TAG, "mac=" + mac + " action=" + intent.getAction());
             switch (intent.getAction()) {
                 case BLE_CONN_SUCCESS://连接成功
                 case BLE_CONN_SUCCESS_ALLCONNECTED://重复连接
