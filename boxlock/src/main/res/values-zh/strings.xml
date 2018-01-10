@@ -29,6 +29,7 @@
     <string name="main_temp_type3">室温</string>
     <string name="main_tv_watchlist">携行腕表</string>
     <string name="main_tv_boxlist">携行箱</string>
+    <string name="main_tv_connectlist">已连接设备</string>
     <string name="main_tv_find">查找设备</string>
     <string name="main_tv_setting">我</string>
 

@@ -74,7 +74,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.androidex.capbox.MainActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.androidex.capbox.ui.activity.TypeOfAlarm"
@@ -82,7 +82,8 @@
         <activity
             android:name="com.androidex.capbox.ui.activity.AboutActivity"
             android:screenOrientation="portrait" />
-        <activity android:name="com.androidex.capbox.ui.activity.AuthentiCationActivity" />
+        <activity android:name="com.androidex.capbox.ui.activity.AuthentiCationActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.androidex.capbox.ui.activity.CameraActivity"
             android:screenOrientation="landscape" /> <!-- landscape -->
@@ -97,6 +98,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.androidex.capbox.ui.activity.LoginActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.acker.simplezxing.activity.CaptureActivity"
@@ -133,6 +135,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.androidex.capbox.ui.activity.LockActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.androidex.capbox.ui.activity.ConnectDeviceListActivity"
             android:screenOrientation="portrait" />
 
         <service android:name="com.androidex.capbox.service.MyBleService"></service>

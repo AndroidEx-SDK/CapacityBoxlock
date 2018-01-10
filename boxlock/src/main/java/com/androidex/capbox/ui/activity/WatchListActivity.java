@@ -161,7 +161,6 @@ public class WatchListActivity extends BaseActivity {
         CommonKit.startActivityForResult(activity, WatchListActivity.class, bundle, Constants.CODE.REQUESTCODE_ADD_DEVICE);
     }
 
-
     @Override
     public void onClick(View v) {
 
