@@ -68,7 +68,7 @@ public class MyBleService extends BleService {
             if (!isActive)//非主动断开时，报警
                 SystemUtil.startPlayerRaw(getContext());
         } else {
-            Log.d(TAG,"已关闭报警开关");
+            Log.d(TAG, "已关闭报警开关");
         }
     }
 
@@ -93,11 +93,15 @@ public class MyBleService extends BleService {
      */
     @Override
     public void outOfScopeTempPolice(String address) {
-        Log.e(TAG, "发送广播，温度超范围报警");
-        Intent intent = new Intent(ACTION_TEMP_OUT);
-        intent.putExtra(BLECONSTANTS_ADDRESS, address);
-        sendBroadcast(intent);
-        SystemUtil.startPlayerRaw(getContext());
+        if (SharedPreTool.getInstance(this).getBoolData(SharedPreTool.IS_POLICE, true)) {
+            Log.e(TAG, "发送广播，温度超范围报警");
+            Intent intent = new Intent(ACTION_TEMP_OUT);
+            intent.putExtra(BLECONSTANTS_ADDRESS, address);
+            sendBroadcast(intent);
+            SystemUtil.startPlayerRaw(getContext());
+        } else {
+            Log.d(TAG, "已关闭报警开关");
+        }
     }
 
     /**
