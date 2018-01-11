@@ -10,11 +10,9 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
-import com.androidex.boxlib.service.BleService;
 import com.androidex.boxlib.utils.Byte2HexUtil;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
@@ -31,7 +29,6 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCONNECTED;
-import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
 
 /**
@@ -149,15 +146,14 @@ public class ConnectDeviceListActivity extends BaseActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            String mac = intent.getStringExtra(BLECONSTANTS_ADDRESS);
-            Log.e(TAG, "mac=" + mac + " action=" + intent.getAction());
             switch (intent.getAction()) {
                 case BLE_CONN_SUCCESS://连接成功
                 case BLE_CONN_SUCCESS_ALLCONNECTED://重复连接
-                    BleService.get().enableNotify(mac);
+                    getConnectDeviceList();
                     break;
 
                 case BLE_CONN_DIS://断开连接
+                    getConnectDeviceList();
                     break;
 
                 case Constants.BLE.ACTION_UUID:

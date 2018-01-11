@@ -27,6 +27,7 @@ import com.androidex.capbox.module.BaseModel;
 import com.androidex.capbox.module.LocationModel;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.activity.BoxDetailActivity;
+import com.androidex.capbox.ui.activity.ConnectDeviceListActivity;
 import com.androidex.capbox.ui.view.TitlePopup;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
@@ -222,8 +223,8 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     case 0:
                         showEndCarryAffirm();//显示确认结束弹窗
                         break;
-                    case 1:
-
+                   case 1:
+                        ConnectDeviceListActivity.lauch(context);
                         break;
                     case 2:
 
