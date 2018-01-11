@@ -3,9 +3,9 @@ package com.androidex.capbox.service;
 import android.content.Intent;
 import android.util.Log;
 
+import com.androidex.boxlib.cache.SharedPreTool;
 import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.boxlib.service.BleService;
-import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.utils.SystemUtil;
 
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
@@ -77,7 +77,11 @@ public class MyBleService extends BleService {
      */
     @Override
     public void outOfScopeRssi() {
-        SystemUtil.startPlayerRaw(getContext());
+        if (SharedPreTool.getInstance(this).getBoolData(SharedPreTool.IS_POLICE, true)) {
+            SystemUtil.startPlayerRaw(getContext());
+        }else {
+            Log.d(TAG, "已关闭报警开关");
+        }
     }
 
     /**

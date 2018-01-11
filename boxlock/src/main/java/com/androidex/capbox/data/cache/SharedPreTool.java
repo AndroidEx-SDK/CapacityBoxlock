@@ -28,7 +28,6 @@ public class SharedPreTool {
     public static final String NEED_GUIDE = "need_guide"; //是否需要引导
     public static final String IS_REGISTED = "isregist"; //是否提交审核，提交后，遭到拒绝与未提交一样
     public static final String DEFAULT_MAC = "default_mac"; //默认设备的mac
-    public static final String IS_POLICE = "is_police"; //开启和关闭报警开关。true为打开
 
 
     private SharedPreTool(Context context) {
