@@ -9,6 +9,7 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseFragment;
@@ -17,6 +18,7 @@ import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.activity.ConnectDeviceListActivity;
 import com.androidex.capbox.ui.activity.SettingActivity;
 import com.androidex.capbox.ui.activity.TypeOfAlarm;
+import com.androidex.capbox.utils.CommonKit;
 
 import butterknife.Bind;
 
@@ -32,10 +34,20 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
     TextView tv_username;
     @Bind(R.id.setting_distance)
     Spinner setting_distance;
+    @Bind(R.id.tb_alarm)
+    ToggleButton tb_alarm;
+
+    private boolean isToast = false;
 
     @Override
     public void initData() {
         initView();
+        isToast = false;
+        if (SharedPreTool.getInstance(context).getBoolData(SharedPreTool.IS_POLICE, true)) {
+            tb_alarm.setChecked(true);
+        } else {
+            tb_alarm.setChecked(false);
+        }
     }
 
     @Override
@@ -43,6 +55,7 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
         tv_setting.setOnClickListener(this);
         setting_alarm.setOnClickListener(this);
         ll_connectDevice.setOnClickListener(this);
+        tb_alarm.setOnCheckedChangeListener(this);
     }
 
     /**
@@ -130,12 +143,22 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
         switch (compoundButton.getId()) {
             case R.id.tb_alarm://报警开关
+                Loge(TAG, "alarm开关  " + isChecked);
                 if (isChecked) {
                     //选中
-
+                    SharedPreTool.getInstance(context).setBoolData(SharedPreTool.IS_POLICE, true);
                 } else {
                     //未选中
-
+                    SharedPreTool.getInstance(context).setBoolData(SharedPreTool.IS_POLICE, false);
+                    if (!isToast){
+                        isToast = true;
+                        return;
+                    }
+                }
+                if (SharedPreTool.getInstance(context).getBoolData(SharedPreTool.IS_POLICE, true)) {
+                    CommonKit.showOkShort(context, "打开报警开关成功");
+                } else {
+                    CommonKit.showOkShort(context, "关闭报警开关成功");
                 }
                 break;
         }
@@ -145,6 +168,5 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
     public int getLayoutId() {
         return R.layout.fragment_memain;
     }
-
 
 }

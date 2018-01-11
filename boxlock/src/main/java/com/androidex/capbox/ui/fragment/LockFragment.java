@@ -197,8 +197,8 @@ public class LockFragment extends BaseFragment implements OnClickListener {
 
     private void initView() {
         tv_deviceMac.setText(address);
-        if(deviceName.equals("Box")){
-            deviceName=deviceName+address.substring(address.length()-2);
+        if (deviceName.equals("Box")) {
+            deviceName = deviceName + address.substring(address.length() - 2);
         }
         name.setText(deviceName);
         if (address == null || address.equals("")) {
@@ -223,7 +223,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     case 0:
                         showEndCarryAffirm();//显示确认结束弹窗
                         break;
-                   case 1:
+                    case 1:
                         ConnectDeviceListActivity.lauch(context);
                         break;
                     case 2:
@@ -582,9 +582,9 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     break;
 
                 case ACTION_HEART://温度、湿度、电量
-                    current_temp.setText(intent.getStringExtra(BLECONSTANTS_TEMP)!=null?intent.getStringExtra(BLECONSTANTS_TEMP):"");
-                    current_hum.setText(intent.getStringExtra(BLECONSTANTS_HUM)!=null?intent.getStringExtra(BLECONSTANTS_HUM):"");
-                    tv_electric_quantity.setText(intent.getStringExtra(BLECONSTANTS_ELECTRIC_QUANTITY)!=null?intent.getStringExtra(BLECONSTANTS_ELECTRIC_QUANTITY):"");
+                    current_temp.setText(intent.getStringExtra(BLECONSTANTS_TEMP) != null ? intent.getStringExtra(BLECONSTANTS_TEMP) : "");
+                    current_hum.setText(intent.getStringExtra(BLECONSTANTS_HUM) != null ? intent.getStringExtra(BLECONSTANTS_HUM) : "");
+                    tv_electric_quantity.setText(intent.getStringExtra(BLECONSTANTS_ELECTRIC_QUANTITY) != null ? intent.getStringExtra(BLECONSTANTS_ELECTRIC_QUANTITY) : "");
                     break;
 
                 case ACTION_END_TAST://结束携行押运
