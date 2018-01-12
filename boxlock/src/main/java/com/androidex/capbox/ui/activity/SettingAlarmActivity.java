@@ -33,12 +33,18 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
     TypeFaceText tv_lowestTemp;
     @Bind(R.id.tv_highestTemp)
     TypeFaceText tv_highestTemp;
-    @Bind(R.id.tb_tempPolice)
-    ToggleButton tb_tempPolice;
-    @Bind(R.id.tb_humidityPolice)
-    ToggleButton tb_humidityPolice;
-    @Bind(R.id.tb_distancePolice)
-    ToggleButton tb_distancePolice;
+    @Bind(R.id.tb_police)
+    ToggleButton tb_police;
+    @Bind(R.id.tb_tamperAlarm)
+    ToggleButton tb_tamperAlarm;
+    @Bind(R.id.tb_becomeAlarm)
+    ToggleButton tb_becomeAlarm;
+    @Bind(R.id.tb_tempAlarm)
+    ToggleButton tb_tempAlarm;
+    @Bind(R.id.tb_humAlarm)
+    ToggleButton tb_humAlarm;
+    @Bind(R.id.tb_distanceAlarm)
+    ToggleButton tb_distanceAlarm;
 
     private static final String TAG = "SettingAlarmActivity";
     private String police = "A";//报警开启A和关闭B
@@ -58,7 +64,12 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
 
     @Override
     public void setListener() {
-
+        tb_police.setOnCheckedChangeListener(this);
+        tb_tamperAlarm.setOnCheckedChangeListener(this);
+        tb_becomeAlarm.setOnCheckedChangeListener(this);
+        tb_tempAlarm.setOnCheckedChangeListener(this);
+        tb_humAlarm.setOnCheckedChangeListener(this);
+        tb_distanceAlarm.setOnCheckedChangeListener(this);
     }
 
 
@@ -143,7 +154,7 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
         switch (compoundButton.getId()) {
-            case R.id.tb_alarm://报警开关
+            case R.id.tb_police://报警开关
                 if (isChecked) {
                     //选中
                     police = "A";
@@ -152,9 +163,8 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
                     police = "B";
                 }
                 Log.e(TAG, "police = " + police);
-
                 break;
-            case R.id.tb_alarm_demolition://防拆报警开关
+            case R.id.tb_tamperAlarm://防拆报警开关
                 if (isChecked) {
                     dismountPolice = "A";
                     //选中
@@ -165,7 +175,7 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
                     Log.e(TAG, "防拆报警B");
                 }
                 break;
-            case R.id.tb_become://静默开关
+            case R.id.tb_becomeAlarm://静默开关
                 if (isChecked) {
                     become = "A";
                     //选中
@@ -176,7 +186,7 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
                     //未选中
                 }
                 break;
-            case R.id.tb_tempPolice://温度报警开关
+            case R.id.tb_tempAlarm://温度报警开关
                 if (isChecked) {
                     tempPolice = "A";
                     //选中
@@ -187,7 +197,7 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
                     //未选中
                 }
                 break;
-            case R.id.tb_humidityPolice://湿度报警开关
+            case R.id.tb_humAlarm://湿度报警开关
                 if (isChecked) {
                     humidityPolice = "A";
                     //选中
@@ -198,7 +208,7 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
                     //未选中
                 }
                 break;
-            case R.id.tb_distancePolice://报警距离开关
+            case R.id.tb_distanceAlarm://报警距离开关
                 if (isChecked) {
                     distancePolice = "A";
                     //选中

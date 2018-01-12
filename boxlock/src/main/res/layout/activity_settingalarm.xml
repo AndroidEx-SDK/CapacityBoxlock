@@ -44,7 +44,7 @@
                     android:textSize="@dimen/setting_tv" />
 
                 <ToggleButton
-                    android:id="@+id/tb_alarm"
+                    android:id="@+id/tb_police"
                     android:layout_width="@dimen/marginPadding120"
                     android:layout_height="@dimen/marginPadding35"
                     android:layout_marginRight="@dimen/marginPadding16"
@@ -77,7 +77,7 @@
                     android:textSize="@dimen/setting_tv" />
 
                 <ToggleButton
-                    android:id="@+id/tb_alarm_demolition"
+                    android:id="@+id/tb_tamperAlarm"
                     android:layout_width="@dimen/marginPadding120"
                     android:layout_height="@dimen/marginPadding35"
                     android:layout_marginRight="@dimen/marginPadding16"
@@ -112,7 +112,7 @@
                     android:textSize="@dimen/setting_tv" />
 
                 <ToggleButton
-                    android:id="@+id/tb_become"
+                    android:id="@+id/tb_becomeAlarm"
                     android:layout_width="@dimen/marginPadding120"
                     android:layout_height="@dimen/marginPadding35"
                     android:layout_marginRight="@dimen/marginPadding16"
@@ -145,7 +145,7 @@
                     android:textSize="@dimen/setting_tv" />
 
                 <ToggleButton
-                    android:id="@+id/tb_tempPolice"
+                    android:id="@+id/tb_tempAlarm"
                     android:layout_width="@dimen/marginPadding120"
                     android:layout_height="@dimen/marginPadding35"
                     android:layout_marginRight="@dimen/marginPadding16"
@@ -178,7 +178,7 @@
                     android:textSize="@dimen/setting_tv" />
 
                 <ToggleButton
-                    android:id="@+id/tb_humidityPolice"
+                    android:id="@+id/tb_humAlarm"
                     android:layout_width="@dimen/marginPadding120"
                     android:layout_height="@dimen/marginPadding35"
                     android:layout_marginRight="@dimen/marginPadding16"
@@ -212,7 +212,7 @@
                     android:textSize="@dimen/setting_tv" />
 
                 <ToggleButton
-                    android:id="@+id/tb_distancePolice"
+                    android:id="@+id/tb_distanceAlarm"
                     android:layout_width="@dimen/marginPadding120"
                     android:layout_height="@dimen/marginPadding35"
                     android:layout_marginRight="@dimen/marginPadding16"
