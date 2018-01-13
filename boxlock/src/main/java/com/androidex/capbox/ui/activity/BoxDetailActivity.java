@@ -8,7 +8,9 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.R;
@@ -70,6 +72,8 @@ public class BoxDetailActivity extends BaseActivity {
     TextView tv_startCarryScort;
     @Bind(R.id.tv_connect_starts)
     TextView tv_connect_starts;
+    @Bind(R.id.tb_becomeAlarm)
+    ToggleButton tb_becomeAlarm;
 
     private String username;//所有人的电话
     private String name;//箱体的名字
@@ -110,6 +114,7 @@ public class BoxDetailActivity extends BaseActivity {
         mac = getIntent().getStringExtra("mac");
         initBroadCast();
         initTitleBar();
+        initCheckedButton();//初始化静默开关的View;
         if (mac != null) {
             if (MyBleService.get().getConnectDevice(mac) == null) {
                 if (mac != null) {
@@ -171,6 +176,23 @@ public class BoxDetailActivity extends BaseActivity {
         });
     }
 
+    public void initCheckedButton() {
+        tb_becomeAlarm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked) {
+                    become = "A";
+                    //选中
+                    Log.e(TAG, "静默开关A");
+                } else {
+                    become = "B";
+                    Log.e(TAG, "静默开关B");
+                    //未选中
+                }
+            }
+        });
+    }
+
     /**
      * 获取箱体详细信息
      */
@@ -203,6 +225,11 @@ public class BoxDetailActivity extends BaseActivity {
                             lowestTemp = model.data.lowestTemp;//最低温
                             dismountPolice = model.data.dismountPolice;//破拆报警的开启A和关闭B
                             become = model.data.become;//静默开启A 关闭B
+                            if (become.equals("A")){
+                                tb_becomeAlarm.setChecked(true);
+                            }else {
+                                tb_becomeAlarm.setChecked(false);
+                            }
                             tv_carryNum.setText(String.format("%d人", carryPersonNum));
                             tv_heartbeatRate.setText(String.format("%ds/次", heartbeatRate));
                             tv_locationRate.setText(String.format("%ds/次", locationRate));
@@ -317,6 +344,7 @@ public class BoxDetailActivity extends BaseActivity {
                 if (isConnectBle()) return;//判断是否连接蓝牙
                 Bundle bundle = new Bundle();
                 bundle.putString("uuid", uuid);
+                bundle.putString("mac", mac);
                 WatchListActivity.lauch(context, bundle);
                 break;
             case R.id.ll_heartbeatRate://心跳更新频率
@@ -386,7 +414,10 @@ public class BoxDetailActivity extends BaseActivity {
             case R.id.ll_settingAlarm://报警设置
                 if (isCarry()) return;//判断是否处于不可配置状态
                 if (isConnectBle()) return;//判断是否连接蓝牙
-                SettingAlarmActivity.lauch(context, Constants.CODE.REQUESTCODE_SET_ALARM);
+                Bundle bundle3 = new Bundle();
+                bundle3.putString("mac", mac);
+                bundle3.putString("uuid", uuid);
+                SettingAlarmActivity.lauch(context, bundle3, Constants.CODE.REQUESTCODE_SET_ALARM);
                 break;
             case R.id.ll_settinglock://开锁设置
                 if (isCarry()) return;//判断是否处于不可配置状态
@@ -435,6 +466,7 @@ public class BoxDetailActivity extends BaseActivity {
 
     /**
      * 过滤蓝牙连接
+     *
      * @return
      */
     private boolean isConnectBle() {
@@ -550,14 +582,11 @@ public class BoxDetailActivity extends BaseActivity {
             switch (resultCode) {
                 case Activity.RESULT_OK:
                     police = data.getStringExtra("police");//报警开关
-                    //policeDiatance = data.getIntExtra("policeDiatance", 0);//报警距离
                     dismountPolice = data.getStringExtra("dismountPolice");//防拆报警开关
                     highestTemp = data.getFloatExtra("highestTemp", 80);   //最高温
                     lowestTemp = data.getFloatExtra("lowestTemp", 0);     //最低温
-                    become = data.getStringExtra("become");             //静默开关
                     tempPolice = data.getStringExtra("tempPolice");     //温度报警开关
                     humidityPolice = data.getStringExtra("humidityPolice");//湿度报警开关
-                    distancePolice = data.getStringExtra("distancePolice");//距离报警开关
                     Log.d(TAG, "police=" + police + " policeDiatance=" + policeDiatance +
                             " dismountPolice" + dismountPolice + " highestTemp=" +
                             highestTemp + "lowestTemp=" + lowestTemp +

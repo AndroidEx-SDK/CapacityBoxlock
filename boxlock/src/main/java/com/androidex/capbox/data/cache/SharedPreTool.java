@@ -88,32 +88,6 @@ public class SharedPreTool {
     }
 
     /**
-     * 保存对象
-     *
-     * @param obj
-     */
-    public void saveObj(Object obj) {
-        saveObj(obj, null);
-    }
-
-
-    /**
-     * 保存对象
-     *
-     * @param obj
-     * @param tag 对象标识
-     */
-    public void saveObj(Object obj, String tag) {
-        try {
-            String key = getKey(obj.getClass(), tag);
-            editor.putString(key, JSON.toJSONString(obj));
-            editor.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * 获取保存的对象
      *
      * @param clazz
@@ -139,6 +113,32 @@ public class SharedPreTool {
             return (T) JSON.parseObject(value, clazz);
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    /**
+     * 保存对象
+     *
+     * @param obj
+     */
+    public void saveObj(Object obj) {
+        saveObj(obj, null);
+    }
+
+
+    /**
+     * 保存对象
+     *
+     * @param obj
+     * @param tag 对象标识
+     */
+    public void saveObj(Object obj, String tag) {
+        try {
+            String key = getKey(obj.getClass(), tag);
+            editor.putString(key, JSON.toJSONString(obj));
+            editor.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

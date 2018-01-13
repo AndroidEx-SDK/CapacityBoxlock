@@ -3,7 +3,7 @@ package com.androidex.capbox.service;
 import android.content.Intent;
 import android.util.Log;
 
-import com.androidex.boxlib.cache.SharedPreTool;
+import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.utils.SystemUtil;
@@ -54,6 +54,23 @@ public class MyBleService extends BleService {
     }
 
     /**
+     * 连接上设备后调用
+     *
+     * @param address
+     */
+    @Override
+    protected void initDevice(String address) {
+        ServiceBean connectDevice = MyBleService.get().getConnectDevice(address);
+        ServiceBean device = SharedPreTool.getInstance(this).getObj(ServiceBean.class, address);
+        connectDevice.setPolice(device.isPolice());
+        connectDevice.setTamperAlarm(device.isTamperAlarm());
+        connectDevice.setTempAlarm(device.isTempAlarm());
+        connectDevice.setHumAlarm(device.isHumAlarm());
+
+
+    }
+
+    /**
      * 断开连接时发送消息通知
      *
      * @param address
@@ -79,7 +96,7 @@ public class MyBleService extends BleService {
     public void outOfScopeRssi() {
         if (SharedPreTool.getInstance(this).getBoolData(SharedPreTool.IS_POLICE, true)) {
             SystemUtil.startPlayerRaw(getContext());
-        }else {
+        } else {
             Log.d(TAG, "已关闭报警开关");
         }
     }
