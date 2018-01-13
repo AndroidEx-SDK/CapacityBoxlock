@@ -325,7 +325,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         TextView tv = (TextView) dialog.findViewById(R.id.msg);
         tv.setText(msg);
         if (!dialog.isShowing()) {
-            dialog.setCancelable(false);
+            dialog.setCancelable(true);
             dialog.show();
         }
     }

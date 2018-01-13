@@ -19,7 +19,6 @@ public class DialogUtils {
 		dialog.setContentView(main);
 		TextView tv=(TextView)main.findViewById(R.id.msg);
 		tv.setText(msg);
-		dialog.setCancelable(false);
 		return dialog;
 	}
 

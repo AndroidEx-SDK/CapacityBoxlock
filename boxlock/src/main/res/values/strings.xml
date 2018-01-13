@@ -19,7 +19,7 @@
     <string name="user_binding">device:</string>
     <string name="user_device">FF:FF:FF:FF:FF</string>
     <string name="main_max_temp1">highest:</string>
-    <string name="main_max_temp">35.5</string>
+    <string name="main_max_temp"></string>
     <string name="main_max_temp2">℃</string>
     <string name="main_min_temp1">lowest:</string>
     <string name="main_min_temp">0</string>

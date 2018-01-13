@@ -72,7 +72,6 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
         tb_distanceAlarm.setOnCheckedChangeListener(this);
     }
 
-
     @Override
     public void onClick(View view) {
 
@@ -219,7 +218,11 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
                     //未选中
                 }
                 break;
+            default:
+                break;
         }
+        //SharedPreTool.getInstance(context).saveObj(, mac);
+
     }
 
     public static void lauch(Activity activity, int requestCode) {
