@@ -73,14 +73,15 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
         if (mac != null) {
             connectDevice = MyBleService.get().getConnectDevice(mac);
         }
-        if (uuid != null) {
-            getBoxDetail();
-        }
-        if (connectDevice != null) {
+        if (SharedPreTool.getInstance(context).getObj(ServiceBean.class, mac) != null) {
+            tb_police.setChecked(true ? connectDevice.isPolice() : !connectDevice.isPolice());
+            tb_tamperAlarm.setChecked(true ? connectDevice.isTamperAlarm() : !connectDevice.isTamperAlarm());
             tb_tempAlarm.setChecked(true ? connectDevice.isTempAlarm() : !connectDevice.isTempAlarm());
-            tb_humAlarm.setChecked(false ? connectDevice.isHumAlarm() : !connectDevice.isHumAlarm());
+            tb_humAlarm.setChecked(true ? connectDevice.isHumAlarm() : !connectDevice.isHumAlarm());
         } else {
-            SharedPreTool.getInstance(context).getObj(ServiceBean.class, mac);
+            if (uuid != null) {
+                getBoxDetail();
+            }
         }
     }
 
@@ -169,6 +170,8 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
         }
     }
 
+    private boolean isCloseAll = true;
+
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
         if (isConnectBle()) return;//判断是否连接蓝牙
@@ -177,21 +180,23 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
                 if (isChecked) {
                     //选中
                     police = "A";
+                    connectDevice.setPolice(true);
                 } else {
                     //未选中
                     police = "B";
+                    connectDevice.setPolice(false);
+                    tb_tamperAlarm.setChecked(isChecked);
+                    tb_tempAlarm.setChecked(isChecked);
+                    tb_humAlarm.setChecked(isChecked);
                 }
-                tb_tamperAlarm.setChecked(isChecked);
-                tb_tempAlarm.setChecked(isChecked);
-                tb_humAlarm.setChecked(isChecked);
                 Log.e(TAG, "police = " + police);
-                connectDevice.setPolice(false ? police.equals("B") : !police.equals("B"));
                 break;
             case R.id.tb_tamperAlarm://防拆报警开关
                 if (isChecked) {
                     dismountPolice = "A";
                     //选中
                     Log.e(TAG, "防拆报警A");
+                    tb_police.setChecked(true);
                     connectDevice.setTamperAlarm(true);
                 } else {
                     //未选中
@@ -199,25 +204,26 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
                     Log.e(TAG, "防拆报警B");
                     connectDevice.setTamperAlarm(false);
                 }
-                connectDevice.setTamperAlarm(false ? dismountPolice.equals("B") : !dismountPolice.equals("B"));
                 break;
             case R.id.tb_tempAlarm://温度报警开关
                 if (isChecked) {
                     tempPolice = "A";
                     //选中
                     Log.e(TAG, "温度报警开关A");
+                    tb_police.setChecked(true);
                     connectDevice.setTempAlarm(true);
                 } else {
                     //未选中
                     tempPolice = "B";
                     Log.e(TAG, "温度报警开关B");
+                    connectDevice.setTempAlarm(false);
                 }
-                connectDevice.setTempAlarm(false ? tempPolice.equals("B") : !tempPolice.equals("B"));
                 break;
             case R.id.tb_humAlarm://湿度报警开关
                 if (isChecked) {
                     humidityPolice = "A";
                     Log.e(TAG, "湿度报警开关A");
+                    tb_police.setChecked(true);
                 } else {
                     humidityPolice = "B";
                     Log.e(TAG, "湿度报警开关B");
@@ -228,7 +234,12 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
                 break;
         }
         if (connectDevice != null) {
+            Log.e(TAG, "connectDevice isn't null,存储设备对象");
             SharedPreTool.getInstance(context).saveObj(connectDevice, mac);
+            ServiceBean obj = SharedPreTool.getInstance(context).getObj(ServiceBean.class, mac);
+            Log.e(TAG, obj.toString());
+        } else {
+            Log.e(TAG, "connectDevice is null");
         }
     }
 
@@ -267,7 +278,10 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
 
                             tb_police.setChecked(false ? police.equals("B") : !police.equals("B"));
                             tb_tamperAlarm.setChecked(false ? dismountPolice.equals("B") : !dismountPolice.equals("B"));
+                            tb_tempAlarm.setChecked(false ? police.equals("B") : !police.equals("B"));
+                            tb_humAlarm.setChecked(false ? police.equals("B") : !police.equals("B"));
 
+                            Loge(TAG, "data=" + model.data.toString());
                             break;
 
                         case Constants.API.API_FAIL:

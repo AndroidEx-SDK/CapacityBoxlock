@@ -63,14 +63,20 @@ public class MyBleService extends BleService {
         ServiceBean connectDevice = MyBleService.get().getConnectDevice(address);
         if (connectDevice == null) {
             Log.e(TAG, "connectDevice is null");
-        } else Log.e(TAG, "connectDevice isn't null");
+        } else {
+            Log.e(TAG, "connectDevice isn't null");
+            Log.e(TAG, connectDevice.toString());
+        }
         ServiceBean device = SharedPreTool.getInstance(this).getObj(ServiceBean.class, address);
         if (device != null) {
+            Log.e(TAG, "device isn't null");
+            Log.e(TAG, "device====" + device.toString());
             connectDevice.setPolice(device.isPolice());
             connectDevice.setTamperAlarm(device.isTamperAlarm());
             connectDevice.setTempAlarm(device.isTempAlarm());
             connectDevice.setHumAlarm(device.isHumAlarm());
-        }else {
+            Log.e(TAG, "转换后设备参数" + connectDevice.toString());
+        } else {
             Log.e(TAG, "device is null");
         }
     }

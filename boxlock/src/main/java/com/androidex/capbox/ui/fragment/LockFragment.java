@@ -129,7 +129,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     private String elevation;
     private GeoCoder mSearch;
     private TitlePopup titlePopup;
-    
+
     @Override
     public void initData() {
         Bundle bundle = getArguments();
@@ -429,7 +429,12 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     Thread.sleep(5000);
                     Loge(TAG, "检测是否连接");
                     if (BleService.get().getConnectDevice(address) == null) {
-                        showProgress("正在重连设备");
+                        context.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showProgress("正在重连设备");
+                            }
+                        });
                         BleService.get().connectionDevice(context, address);
                     }
                 } catch (InterruptedException e) {
