@@ -61,6 +61,39 @@
                 android:background="@color/line_color" />
             <!-- 破拆报警 -->
             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/adduser_ll_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/marginPadding16">
+
+                <com.androidex.capbox.ui.view.TypeFaceText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/setting_tv_padding_left"
+                    android:text="@string/setting_tv_distancePolice"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/size16" />
+
+                <ToggleButton
+                    android:id="@+id/tb_distanceAlarm"
+                    android:layout_width="@dimen/marginPadding120"
+                    android:layout_height="@dimen/marginPadding35"
+                    android:layout_marginRight="@dimen/marginPadding16"
+                    android:background="@drawable/thumbs"
+                    android:checked="true"
+                    android:textOff="  "
+                    android:textOn="  " />
+
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tv_line_height"
+                android:background="@color/line_color" />
+            <!-- 破拆报警 -->
+            <LinearLayout
                 android:id="@+id/setting_alarm_demolition"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/adduser_ll_height"

@@ -45,6 +45,8 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
     TypeFaceText tv_highestTemp;
     @Bind(R.id.tb_police)
     ToggleButton tb_police;
+    @Bind(R.id.tb_distanceAlarm)
+    ToggleButton tb_distanceAlarm;
     @Bind(R.id.tb_tamperAlarm)
     ToggleButton tb_tamperAlarm;
     @Bind(R.id.tb_tempAlarm)
@@ -75,6 +77,7 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
         }
         if (SharedPreTool.getInstance(context).getObj(ServiceBean.class, mac) != null) {
             tb_police.setChecked(true ? connectDevice.isPolice() : !connectDevice.isPolice());
+            tb_distanceAlarm.setChecked(true ? connectDevice.isDistanceAlarm() : !connectDevice.isDistanceAlarm());
             tb_tamperAlarm.setChecked(true ? connectDevice.isTamperAlarm() : !connectDevice.isTamperAlarm());
             tb_tempAlarm.setChecked(true ? connectDevice.isTempAlarm() : !connectDevice.isTempAlarm());
             tb_humAlarm.setChecked(true ? connectDevice.isHumAlarm() : !connectDevice.isHumAlarm());
@@ -88,6 +91,7 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
     @Override
     public void setListener() {
         tb_police.setOnCheckedChangeListener(this);
+        tb_distanceAlarm.setOnCheckedChangeListener(this);
         tb_tamperAlarm.setOnCheckedChangeListener(this);
         tb_tempAlarm.setOnCheckedChangeListener(this);
         tb_humAlarm.setOnCheckedChangeListener(this);
@@ -185,21 +189,30 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
                     //未选中
                     police = "B";
                     connectDevice.setPolice(false);
+                    tb_distanceAlarm.setChecked(isChecked);
                     tb_tamperAlarm.setChecked(isChecked);
                     tb_tempAlarm.setChecked(isChecked);
                     tb_humAlarm.setChecked(isChecked);
                 }
-                Log.e(TAG, "police = " + police);
+                break;
+            case R.id.tb_distanceAlarm://距离报警开关
+                if (isChecked) {
+                    distancePolice = "A";
+                    Log.e(TAG, "防拆报警A");
+                    tb_police.setChecked(true);
+                } else {
+                    distancePolice = "B";
+                    Log.e(TAG, "防拆报警B");
+                }
+                connectDevice.setDistanceAlarm(false ? distancePolice.equals("B") : !distancePolice.equals("B"));
                 break;
             case R.id.tb_tamperAlarm://防拆报警开关
                 if (isChecked) {
                     dismountPolice = "A";
-                    //选中
                     Log.e(TAG, "防拆报警A");
                     tb_police.setChecked(true);
                     connectDevice.setTamperAlarm(true);
                 } else {
-                    //未选中
                     dismountPolice = "B";
                     Log.e(TAG, "防拆报警B");
                     connectDevice.setTamperAlarm(false);
@@ -208,12 +221,10 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
             case R.id.tb_tempAlarm://温度报警开关
                 if (isChecked) {
                     tempPolice = "A";
-                    //选中
                     Log.e(TAG, "温度报警开关A");
                     tb_police.setChecked(true);
                     connectDevice.setTempAlarm(true);
                 } else {
-                    //未选中
                     tempPolice = "B";
                     Log.e(TAG, "温度报警开关B");
                     connectDevice.setTempAlarm(false);
@@ -278,6 +289,7 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
 
                             tb_police.setChecked(false ? police.equals("B") : !police.equals("B"));
                             tb_tamperAlarm.setChecked(false ? dismountPolice.equals("B") : !dismountPolice.equals("B"));
+                            tb_distanceAlarm.setChecked(false ? police.equals("B") : !police.equals("B"));
                             tb_tempAlarm.setChecked(false ? police.equals("B") : !police.equals("B"));
                             tb_humAlarm.setChecked(false ? police.equals("B") : !police.equals("B"));
 

@@ -61,17 +61,12 @@ public class MyBleService extends BleService {
     @Override
     protected void initDevice(String address) {
         ServiceBean connectDevice = MyBleService.get().getConnectDevice(address);
-        if (connectDevice == null) {
-            Log.e(TAG, "connectDevice is null");
-        } else {
-            Log.e(TAG, "connectDevice isn't null");
-            Log.e(TAG, connectDevice.toString());
-        }
+        if (connectDevice == null) return;
         ServiceBean device = SharedPreTool.getInstance(this).getObj(ServiceBean.class, address);
         if (device != null) {
-            Log.e(TAG, "device isn't null");
             Log.e(TAG, "device====" + device.toString());
             connectDevice.setPolice(device.isPolice());
+            connectDevice.setDistanceAlarm(device.isDistanceAlarm());
             connectDevice.setTamperAlarm(device.isTamperAlarm());
             connectDevice.setTempAlarm(device.isTempAlarm());
             connectDevice.setHumAlarm(device.isHumAlarm());
@@ -89,12 +84,25 @@ public class MyBleService extends BleService {
      */
     private void sendDisconnectMessage(String address, boolean isActive) {
         if (SharedPreTool.getInstance(this).getBoolData(SharedPreTool.IS_POLICE, true)) {
-            Intent intent = new Intent(BLE_CONN_DIS);
-            intent.putExtra(BLECONSTANTS_ADDRESS, address);
-            intent.putExtra(BLECONSTANTS_ISACTIVEDisConnect, isActive);
-            sendBroadcast(intent);
-            if (!isActive)//非主动断开时，报警
+            ServiceBean device = SharedPreTool.getInstance(this).getObj(ServiceBean.class, address);
+            if (device != null && device.isPolice() && !isActive) {//非主动断开时，报警
+                Intent intent = new Intent(BLE_CONN_DIS);
+                intent.putExtra(BLECONSTANTS_ADDRESS, address);
+                intent.putExtra(BLECONSTANTS_ISACTIVEDisConnect, isActive);
+                sendBroadcast(intent);
                 SystemUtil.startPlayerRaw(getContext());
+            } else {
+                ServiceBean connectDevice = MyBleService.get().getConnectDevice(address);
+                if (connectDevice != null && connectDevice.isPolice() && !isActive) {//非主动断开时，报警
+                    Intent intent = new Intent(BLE_CONN_DIS);
+                    intent.putExtra(BLECONSTANTS_ADDRESS, address);
+                    intent.putExtra(BLECONSTANTS_ISACTIVEDisConnect, isActive);
+                    sendBroadcast(intent);
+                    SystemUtil.startPlayerRaw(getContext());
+                } else {
+                    Log.d(TAG, "已关闭单个箱子报警开关");
+                }
+            }
         } else {
             Log.d(TAG, "已关闭报警开关");
         }
@@ -104,9 +112,19 @@ public class MyBleService extends BleService {
      * 连续三次超出阈值会回调这里，1s更新一次信号强度
      */
     @Override
-    public void outOfScopeRssi() {
+    public void outOfScopeRssi(String address) {
         if (SharedPreTool.getInstance(this).getBoolData(SharedPreTool.IS_POLICE, true)) {
-            SystemUtil.startPlayerRaw(getContext());
+            ServiceBean device = SharedPreTool.getInstance(this).getObj(ServiceBean.class, address);
+            if (device != null && device.isDistanceAlarm()) {//非主动断开时，报警
+                SystemUtil.startPlayerRaw(getContext());
+            } else {
+                ServiceBean connectDevice = MyBleService.get().getConnectDevice(address);
+                if (connectDevice != null && connectDevice.isDistanceAlarm()) {//非主动断开时，报警
+                    SystemUtil.startPlayerRaw(getContext());
+                } else {
+                    Log.d(TAG, "已关闭单个箱子距离报警开关");
+                }
+            }
         } else {
             Log.d(TAG, "已关闭报警开关");
         }
@@ -116,7 +134,7 @@ public class MyBleService extends BleService {
      * 超出阈值调用报警后，又恢复到阈值范围内，停止报警回调
      */
     @Override
-    public void inOfScopeRssi() {
+    public void inOfScopeRssi(String address) {
         SystemUtil.stopPlayRaw();
     }
 
@@ -126,11 +144,25 @@ public class MyBleService extends BleService {
     @Override
     public void outOfScopeTempPolice(String address) {
         if (SharedPreTool.getInstance(this).getBoolData(SharedPreTool.IS_POLICE, true)) {
-            Log.e(TAG, "发送广播，温度超范围报警");
-            Intent intent = new Intent(ACTION_TEMP_OUT);
-            intent.putExtra(BLECONSTANTS_ADDRESS, address);
-            sendBroadcast(intent);
-            SystemUtil.startPlayerRaw(getContext());
+            ServiceBean device = SharedPreTool.getInstance(this).getObj(ServiceBean.class, address);
+            if (device != null && device.isTempAlarm()) {//非主动断开时，报警
+                Log.e(TAG, "发送广播，温度超范围报警");
+                Intent intent = new Intent(ACTION_TEMP_OUT);
+                intent.putExtra(BLECONSTANTS_ADDRESS, address);
+                sendBroadcast(intent);
+                SystemUtil.startPlayerRaw(getContext());
+            } else {
+                ServiceBean connectDevice = MyBleService.get().getConnectDevice(address);
+                if (connectDevice != null && connectDevice.isTempAlarm()) {//非主动断开时，报警
+                    Log.e(TAG, "发送广播，温度超范围报警");
+                    Intent intent = new Intent(ACTION_TEMP_OUT);
+                    intent.putExtra(BLECONSTANTS_ADDRESS, address);
+                    sendBroadcast(intent);
+                    SystemUtil.startPlayerRaw(getContext());
+                } else {
+                    Log.d(TAG, "已关闭单个箱子温度报警开关");
+                }
+            }
         } else {
             Log.d(TAG, "已关闭报警开关");
         }

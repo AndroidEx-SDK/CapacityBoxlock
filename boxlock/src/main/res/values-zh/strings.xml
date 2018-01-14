@@ -91,13 +91,13 @@
     <string name="setting_tv_lowtemp">设置最低温度</string>
     <string name="setting_tv_hightemp">设置最高温度</string>
     <string name="setting_tv_silence">静默开关</string>
-    <string name="setting_tv_tempPolice">温度报警开关</string>
-    <string name="setting_tv_humidityPolice">湿度报警开关</string>
-    <string name="setting_tv_distancePolice">距离报警开关</string>
+    <string name="setting_tv_distancePolice">距离报警</string>
+    <string name="setting_tv_alarm_demolition">防拆报警</string>
+    <string name="setting_tv_tempPolice">温度报警</string>
+    <string name="setting_tv_humidityPolice">湿度报警</string>
     <string name="setting_tv_fingerprint_unlock">静默模式指纹开锁</string>
     <string name="setting_tv_factory_settings">恢复出厂设置</string>
     <string name="setting_tv_wristband_factory_setings">重置腕表</string>
-    <string name="setting_tv_alarm_demolition">防拆报警</string>
     <string name="setting_tv_wristband">腕表配置</string>
     <string name="setting_tv_box">配置</string>
     <string name="setting_tv_boxConfig">密运箱配置</string>
