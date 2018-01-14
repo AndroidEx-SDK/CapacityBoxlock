@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -130,9 +129,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     private String elevation;
     private GeoCoder mSearch;
     private TitlePopup titlePopup;
-    private Handler handler = new Handler();
-    private Runnable runnable;
-
+    
     @Override
     public void initData() {
         Bundle bundle = getArguments();
