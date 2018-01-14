@@ -79,8 +79,8 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
         if (connectDevice != null) {
             tb_tempAlarm.setChecked(true ? connectDevice.isTempAlarm() : !connectDevice.isTempAlarm());
             tb_humAlarm.setChecked(false ? connectDevice.isHumAlarm() : !connectDevice.isHumAlarm());
-        }else {
-            SharedPreTool.getInstance(context).getObj(ServiceBean.class,mac);
+        } else {
+            SharedPreTool.getInstance(context).getObj(ServiceBean.class, mac);
         }
     }
 
@@ -177,16 +177,13 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
                 if (isChecked) {
                     //选中
                     police = "A";
-                    tb_tamperAlarm.setChecked(true);
-                    tb_tempAlarm.setChecked(true);
-                    tb_humAlarm.setChecked(true);
                 } else {
                     //未选中
                     police = "B";
-                    tb_tamperAlarm.setChecked(false);
-                    tb_tempAlarm.setChecked(false);
-                    tb_humAlarm.setChecked(false);
                 }
+                tb_tamperAlarm.setChecked(isChecked);
+                tb_tempAlarm.setChecked(isChecked);
+                tb_humAlarm.setChecked(isChecked);
                 Log.e(TAG, "police = " + police);
                 connectDevice.setPolice(false ? police.equals("B") : !police.equals("B"));
                 break;

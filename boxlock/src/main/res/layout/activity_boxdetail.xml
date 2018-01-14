@@ -315,6 +315,12 @@
                     android:textOff=" "
                     android:textOn=" " />
             </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tv_line_height"
+                android:background="@color/line_color" />
+
             <!-- 恢复出厂设置 -->
             <LinearLayout
                 android:id="@+id/setting_factory_settings"

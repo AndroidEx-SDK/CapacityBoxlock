@@ -319,6 +319,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
      * @param msg
      */
     protected void showProgress(String msg) {
+        disProgress();
         if (dialog == null) {
             dialog = DialogUtils.createDialog(context, msg);
         }

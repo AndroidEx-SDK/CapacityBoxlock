@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -129,6 +130,8 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     private String elevation;
     private GeoCoder mSearch;
     private TitlePopup titlePopup;
+    private Handler handler = new Handler();
+    private Runnable runnable;
 
     @Override
     public void initData() {
@@ -144,13 +147,9 @@ public class LockFragment extends BaseFragment implements OnClickListener {
             if (MyBleService.get().getConnectDevice(address) == null) {
                 scanLeDevice();
             } else {
-                if (MyBleService.get().getConnectDevice(address).isActiveDisConnect()) {
-                    scanLeDevice();
-                } else {
-                    CommonKit.showMsgShort(context, "设备已连接");
-                    BleService.get().enableNotify(address);
-                    updateBleView(View.GONE, View.VISIBLE);
-                }
+                CommonKit.showMsgShort(context, "设备已连接");
+                BleService.get().enableNotify(address);
+                updateBleView(View.GONE, View.VISIBLE);
             }
         }
     }
@@ -251,7 +250,13 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                 break;
 
             case R.id.main_bt_ble://蓝牙未连接，点击连接
-                scanLeDevice();
+                if (MyBleService.get().getConnectDevice(address) == null) {
+                    scanLeDevice();
+                } else {
+                    CommonKit.showMsgShort(context, "设备已连接");
+                    BleService.get().enableNotify(address);
+                    updateBleView(View.GONE, View.VISIBLE);
+                }
                 break;
 
             case R.id.iv_lock:
@@ -383,16 +388,19 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                 if (device.getMac().equals(address)) {
                     isScanDevice = true;
                     Log.e(TAG, "搜索到设备...");
-                    CommonKit.showOkShort(context, "搜索到设备...");
+                    showProgress("搜索到设备...");
                     stopScanLe();
+                    showProgress("正在连接设备");
                     BleService.get().connectionDevice(context, address);
+                    detectionIsConnect();
+
                 }
             }
 
             @Override
             public void onScannerStop() {
                 showProgress("扫描结束...");
-                Log.e(TAG, "扫描结束");
+                Loge(TAG, "扫描结束");
                 disProgress();
                 if (!isScanDevice) {
                     CommonKit.showErrorShort(context, "未搜索到设备");
@@ -410,6 +418,30 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                 }
             }
         });
+    }
+
+    /**
+     * 检测是否连接成功，不成功再连接一次
+     */
+    private void detectionIsConnect() {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Loge(TAG, "开始睡眠");
+                    Thread.sleep(5000);
+                    Loge(TAG, "检测是否连接");
+                    if (BleService.get().getConnectDevice(address) == null) {
+                        showProgress("正在重连设备");
+                        BleService.get().connectionDevice(context, address);
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        Loge(TAG, "开启新线程");
+        new Thread(runnable).start();
     }
 
     private void stopScanLe() {
@@ -494,8 +526,8 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     if (model.error == 0) {
                         String str_lat = new String(Base64.decode(model.y, Base64.DEFAULT));
                         String str_lon = new String(Base64.decode(model.x, Base64.DEFAULT));
-                        Log.e("Base64", "Base64--lat-->" + str_lat);
-                        Log.e("Base64", "Base64--lon-->" + str_lon);
+                        Logd(TAG, "Base64--lat-->" + str_lat);
+                        Logd(TAG, "Base64--lon-->" + str_lon);
                         if (!str_lat.equals("0") && !str_lat.equals("") && !str_lon.equals("0") && !str_lon.equals("")) {
                             getAddress(str_lat, str_lon);
                         } else {
@@ -530,18 +562,19 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                 case BLE_CONN_SUCCESS:
                 case BLE_CONN_SUCCESS_ALLCONNECTED:
                     BleService.get().enableNotify(address);
-                    CommonKit.showMsgShort(context, "设备连接成功");
+                    disProgress();
+                    showProgress("设备连接成功");
                     updateBleView(View.GONE, View.VISIBLE);
                     disProgress();
                     break;
 
                 case BLE_CONN_DIS://断开连接
-                    Log.e(TAG, "断开连接");
+                    Loge(TAG, "断开连接");
                     updateBleView(View.VISIBLE, View.GONE);
                     break;
 
                 case BLUTOOTH_OFF:
-                    Log.e(TAG, "手机蓝牙断开");
+                    Logd(TAG, "手机蓝牙断开");
                     CommonKit.showErrorShort(context, "手机蓝牙断开");
                     ServiceBean device = MyBleService.get().getConnectDevice(address);
                     if (device != null) {
@@ -551,7 +584,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     updateBleView(View.VISIBLE, View.GONE);
                     break;
                 case BLUTOOTH_ON:
-                    Log.e(TAG, "手机蓝牙开启");
+                    Logd(TAG, "手机蓝牙开启");
                     CommonKit.showOkShort(context, "手机蓝牙开启");
                     scanLeDevice();
                     break;

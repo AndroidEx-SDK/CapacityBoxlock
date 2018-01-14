@@ -265,7 +265,7 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/marginPadding16">
+                            android:layout_marginTop="@dimen/marginPadding8">
 
                             <com.androidex.capbox.ui.view.TypeFaceText
                                 style="@style/fragment_lock_name"
