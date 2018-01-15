@@ -11,6 +11,8 @@ import com.androidex.capbox.utils.SystemUtil;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ISACTIVEDisConnect;
+import static com.androidex.capbox.utils.Constants.BASE.ACTION_RSSI_IN;
+import static com.androidex.capbox.utils.Constants.BASE.ACTION_RSSI_OUT;
 import static com.androidex.capbox.utils.Constants.BASE.ACTION_TEMP_OUT;
 import static com.baidu.mapapi.BMapManager.getContext;
 
@@ -115,11 +117,17 @@ public class MyBleService extends BleService {
     public void outOfScopeRssi(String address) {
         if (SharedPreTool.getInstance(this).getBoolData(SharedPreTool.IS_POLICE, true)) {
             ServiceBean device = SharedPreTool.getInstance(this).getObj(ServiceBean.class, address);
-            if (device != null && device.isDistanceAlarm()) {//非主动断开时，报警
+            if (device != null && device.isDistanceAlarm()) {//信号弱，报警
+                Intent intent = new Intent(ACTION_RSSI_OUT);
+                intent.putExtra(BLECONSTANTS_ADDRESS, address);
+                sendBroadcast(intent);
                 SystemUtil.startPlayerRaw(getContext());
             } else {
                 ServiceBean connectDevice = MyBleService.get().getConnectDevice(address);
-                if (connectDevice != null && connectDevice.isDistanceAlarm()) {//非主动断开时，报警
+                if (connectDevice != null && connectDevice.isDistanceAlarm()) {//信号弱，报警
+                    Intent intent = new Intent(ACTION_RSSI_OUT);
+                    intent.putExtra(BLECONSTANTS_ADDRESS, address);
+                    sendBroadcast(intent);
                     SystemUtil.startPlayerRaw(getContext());
                 } else {
                     Log.d(TAG, "已关闭单个箱子距离报警开关");
@@ -135,6 +143,9 @@ public class MyBleService extends BleService {
      */
     @Override
     public void inOfScopeRssi(String address) {
+        Intent intent = new Intent(ACTION_RSSI_IN);
+        intent.putExtra(BLECONSTANTS_ADDRESS, address);
+        sendBroadcast(intent);
         SystemUtil.stopPlayRaw();
     }
 

@@ -281,6 +281,7 @@
     <string name="itemfragment_dialog_kick">停止踢被子提醒</string>
     <string name="itemfragment_dialog_lost">已经离开安全距离</string>
     <string name="itemfragment_dialog_temp_out">温度超范围</string>
+    <string name="itemfragment_dialog_rssi_out">距离超范围</string>
 
     <!-- SettingFragment.java -->
     <string name="setting_tv_above">以上</string>

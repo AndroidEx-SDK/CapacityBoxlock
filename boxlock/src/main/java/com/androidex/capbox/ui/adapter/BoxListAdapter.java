@@ -142,7 +142,13 @@ public class BoxListAdapter extends BaseAdapter {
         holder.normalItemContentLayout.setOnClickListener(mListener);
         holder.normalItemContentLayout.setTag(position);
         holder.iv_online.setTag(position);
-        if (isOnLine != null) {
+        if (isOnLine != null) {/**
+         {"code":0,"devicelist":[
+         {"boxName":"Box66","deviceStatus":"1","isDefault":"0",
+         "isOnLine":1,"lat":"22.619786","lon":"114.083282","mac":"B0:91:22:69:41:66","uuid":"B09122694166000000008DD041190000"},
+         {"boxName":"Box6E","deviceStatus":"1","isDefault":"0",
+         "isOnLine":1,"lat":"22.625753","lon":"114.081701","mac":"B0:91:22:69:43:6E","uuid":"B0912269436E0000000013D143190000"}]}
+         */
             if (isOnLine.equals("0")) {
                 holder.iv_online.setImageResource(R.mipmap.ic_on_line);
                 holder.tv_status.setTextColor(mContext.getResources().getColor(R.color.blue_online));
@@ -234,6 +240,7 @@ public class BoxListAdapter extends BaseAdapter {
                                         device.setActiveDisConnect(true);
                                         BleService.get().disConnectDevice(mac);
                                     }
+                                    SharedPreTool.getInstance(mContext).remove(mac);
                                     EventBus.getDefault().postSticky(new Event.BoxRelieveBind());
                                     break;
                                 case Constants.API.API_FAIL:

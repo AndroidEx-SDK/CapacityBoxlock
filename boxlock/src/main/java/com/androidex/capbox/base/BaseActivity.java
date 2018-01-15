@@ -17,7 +17,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.androidex.capbox.BuildConfig;
 import com.androidex.capbox.MyApplication;
 import com.androidex.capbox.R;
 import com.androidex.capbox.data.Event;
@@ -48,6 +47,8 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.BLUTOOTH_OFF;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLUTOOTH_ON;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ISACTIVEDisConnect;
+import static com.androidex.capbox.utils.Constants.BASE.ACTION_RSSI_IN;
+import static com.androidex.capbox.utils.Constants.BASE.ACTION_RSSI_OUT;
 import static com.androidex.capbox.utils.Constants.BASE.ACTION_TEMP_OUT;
 
 /**
@@ -113,12 +114,14 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
         intentFilter.addAction(BLUTOOTH_ON);//手机蓝牙关闭
         intentFilter.addAction(ACTION_LOCK_OPEN_SUCCED);
         intentFilter.addAction(ACTION_TEMP_OUT);//温度超范围
+        intentFilter.addAction(ACTION_RSSI_OUT);//信号值超出范围内
+        intentFilter.addAction(ACTION_RSSI_IN);//信号值回到范围内
         registerReceiver(baseBroad, intentFilter);
     }
 
     BroadcastReceiver baseBroad = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(Context mContext, Intent intent) {
             String deviceMac = intent.getStringExtra(BLECONSTANTS_ADDRESS);
             switch (intent.getAction()) {
                 case BLE_CONN_DIS://蓝牙异常断开
@@ -128,7 +131,16 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
                     }
                     break;
                 case ACTION_TEMP_OUT://温度超范围
-                    showTempOutAlarmDialog("Box" + deviceMac.substring(deviceMac.length() - 2));
+                    showLostAlarmDialog("Box" + deviceMac.substring(deviceMac.length() - 2), getResources().getString(R.string.itemfragment_dialog_temp_out));
+                    SystemUtil.startVibrate(context, true);//true:循环震动，false:震动一次
+                    break;
+
+                case ACTION_RSSI_OUT:
+                    showLostAlarmDialog("Box" + deviceMac.substring(deviceMac.length() - 2), getResources().getString(R.string.itemfragment_dialog_rssi_out));
+                    SystemUtil.startVibrate(context, true);//true:循环震动，false:震动一次
+                    break;
+                case ACTION_RSSI_IN:
+                    closeLostAlarm();
                     break;
             }
         }
@@ -183,6 +195,7 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
     protected void Logd(String tag, String msg) {
         Log.d(tag, msg);
     }
+
     protected void Loge(String tag, String msg) {
         Log.e(tag, msg);
     }
@@ -242,7 +255,7 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
      * 设置防丢报警方式
      */
     protected void setLostAlarm(String deviceName) {
-        showLostAlarmDialog(deviceName);
+        showLostAlarmDialog(deviceName, getResources().getString(R.string.itemfragment_dialog_lost));
         SystemUtil.startVibrate(context, true);//true:循环震动，false:震动一次
     }
 
@@ -251,7 +264,6 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
      */
     protected void closeLostAlarm() {
         SystemUtil.stopVibrate(context);//停止震动
-        //SystemUtil.stopPlayMediaPlayer();//停止铃声
         SystemUtil.stopPlayRaw();//停止铃声zx
         if (mLostAlarmDialog != null && mLostAlarmDialog.isShowing()) {
             mLostAlarmDialog.dismiss();
@@ -261,29 +273,10 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
     /**
      * 防丢报警Dialog显示
      */
-    private void showLostAlarmDialog(String deviceName) {
+    private void showLostAlarmDialog(String deviceName, String message) {
         //就一个确定按钮
         mLostAlarmDialog = Dialog.showRadioDialog(context, deviceName
-                + getResources().getString(R.string.itemfragment_dialog_lost), new Dialog.DialogClickListener() {
-            @Override
-            public void confirm() {
-                closeLostAlarm();
-            }
-
-            @Override
-            public void cancel() {
-
-            }
-        });
-    }
-
-    /**
-     * 温度超范围报警Dialog显示
-     */
-    private void showTempOutAlarmDialog(String deviceName) {
-        //就一个确定按钮
-        mLostAlarmDialog = Dialog.showRadioDialog(context, deviceName
-                + getResources().getString(R.string.itemfragment_dialog_temp_out), new Dialog.DialogClickListener() {
+                + message, new Dialog.DialogClickListener() {
             @Override
             public void confirm() {
                 closeLostAlarm();
@@ -399,16 +392,12 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
         if (!mBtAdapter.isEnabled()) {
             mBtAdapter.enable();
         }
-
-        if (!BuildConfig.DEBUG) {
-        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (!BuildConfig.DEBUG) {
-        }
+        closeLostAlarm();
     }
 
     @Override

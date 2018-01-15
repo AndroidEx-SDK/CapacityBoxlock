@@ -14,6 +14,8 @@ public class Constants extends BleConstants{
 
     public static class BASE{
         public static final String ACTION_TEMP_OUT = "ACTION_TEMP_OUT";
+        public static final String ACTION_RSSI_OUT = "ACTION_RSSI_OUT";
+        public static final String ACTION_RSSI_IN = "ACTION_RSSI_IN";
     }
     /**
      * 应用配置
