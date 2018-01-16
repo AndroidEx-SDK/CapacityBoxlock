@@ -1,30 +1,36 @@
 package com.androidex.capbox.ui.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 
 import com.androidex.capbox.R;
+import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.ui.view.ZItem;
 
-public class LockScreenActivity extends Activity {
+public class LockScreenActivity extends BaseActivity {
+    public static String TAG = "LockScreenActivity";
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.e("LockScreenActivity", "我启动了");
-        super.onCreate(savedInstanceState);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |               //这个在锁屏状态下
-                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
-                | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
-                | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON          //这个是点亮屏幕
-//                        | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD      //这个是透过锁屏界面，相当与解锁，但实质没有
-//                        | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);      //这个是保持屏幕常亮。
-        setContentView(R.layout.activity_lock_screen);
+    public int getLayoutId() {
+        return R.layout.activity_lock_screen;
+    }
+
+    @Override
+    public void initData(Bundle savedInstanceState) {
+        Log.e(TAG, "我启动了");
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |   //这个在锁屏状态下
+                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON                    //这个是点亮屏幕
+                | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD                //这个是透过锁屏界面，相当与解锁，但实质没有
+                | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);                //这个是保持屏幕常亮。
         initData();
+    }
+
+    @Override
+    public void setListener() {
+
     }
 
     public void initData() {
@@ -50,5 +56,10 @@ public class LockScreenActivity extends Activity {
     @Override
     public void onBackPressed() {
         return;
+    }
+
+    @Override
+    public void onClick(View view) {
+
     }
 }

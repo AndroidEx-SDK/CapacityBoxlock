@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/lockscreen"
     android:orientation="vertical">
 
     <com.androidex.capbox.ui.view.ZItem
@@ -13,6 +14,7 @@
         android:layout_marginBottom="@dimen/marginPadding45"
         android:background="@color/Gray_e6"
         android:gravity="center"
+        android:alpha="0.35"
         android:text="TextView">
 
         <TextView

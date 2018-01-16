@@ -3,9 +3,10 @@ package com.androidex.capbox.service;
 import android.content.Intent;
 import android.util.Log;
 
-import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.boxlib.service.BleService;
+import com.androidex.capbox.data.cache.SharedPreTool;
+import com.androidex.capbox.ui.activity.LockScreenActivity;
 import com.androidex.capbox.utils.SystemUtil;
 
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
@@ -28,7 +29,8 @@ public class MyBleService extends BleService {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d("BleService", "MyBleService 启动");
+        Log.d(TAG, "MyBleService 启动");
+        setLockScreenActivity(LockScreenActivity.class);//设置锁屏界面的Activity
     }
 
     /**
