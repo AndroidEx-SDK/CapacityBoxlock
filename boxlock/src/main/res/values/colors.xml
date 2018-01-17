@@ -35,7 +35,7 @@
     <color name="gray_9">#999999</color>
     <color name="blue_online">#089DE8</color>
     <!-- 暗灰色 -->
-    <color name="dimgrey">#696969</color>
+    <color name="gray_69">#696969</color>
     <!-- 灰色 -->
     <color name="gray">#7F7F7F</color>
     <!-- 花白色 -->
@@ -61,6 +61,7 @@
     <color name="dark_red">#E61441</color>
     <color name="progessbar">#7e88c3</color>
     <color name="Gray_80">#808080</color>
+    <color name="Gray_66">#666666</color>
     <color name="Gray_e8">#e8e8e8</color>
     <color name="Gray_e6">#e6e6e6</color>
     <color name="Gray_e5">#e5e5e5</color>

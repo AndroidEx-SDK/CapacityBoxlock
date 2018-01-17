@@ -3,24 +3,28 @@
     android:id="@+id/activity_fingerprint_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/fingerprint_guide"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:paddingRight="@dimen/activity_horizontal_margin">
-
-    <ImageView
-        android:id="@+id/fingerprint_guide"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:src="@mipmap/fingerprint_normal" />
 
     <TextView
         android:id="@+id/fingerprint_guide_tip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/marginPadding120"
+        android:layout_weight="1"
+        android:gravity="bottom"
         android:text="@string/fingerprint_recognition_start"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/black"
+        android:textSize="24sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/marginPadding138"
+        android:layout_marginTop="@dimen/marginPadding5"
+        android:text="@string/fingerprint_recognition_hint"
+        android:textColor="@color/Gray_66"
         android:textSize="18sp" />
 
 </LinearLayout>

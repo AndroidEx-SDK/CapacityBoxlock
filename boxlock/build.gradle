@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.3"
     defaultConfig {
         applicationId "com.androidex.capbox"
         minSdkVersion 19
-        targetSdkVersion 22
+        targetSdkVersion 26
         versionCode 1
         versionName "0.1.3"
         multiDexEnabled true
@@ -35,18 +35,17 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:support-v4:25.3.1'
-    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:support-v4:26.0.0-alpha1'
+    compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
+    compile 'com.android.support:recyclerview-v7:26.0.0-alpha1'
     compile 'org.jsoup:jsoup:1.8.3'
     testCompile 'junit:junit:4.12'
     compile files('libs/fastjson-1.1.28.jar')
     compile 'com.squareup.okhttp3:okhttp:3.8.1'
     compile 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
-    //为okhttp3使用封装的cookie
-    compile 'com.acker:simplezxing:1.5'
+    compile 'com.acker:simplezxing:1.5'//为okhttp3使用封装的cookie
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'io.github.lizhangqu:coreprogress:1.0.2'
     compile 'de.greenrobot:eventbus:2.4.0'
-    /*APP更新*/
     compile project(':boommenu')
 }

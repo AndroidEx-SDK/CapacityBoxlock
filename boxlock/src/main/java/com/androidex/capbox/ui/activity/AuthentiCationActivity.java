@@ -52,7 +52,6 @@ public class AuthentiCationActivity extends BaseActivity {
     @Bind(R.id.tv_register)
     TextView tv_register;
 
-
     OkHttpClient mOkHttpClient;
     private String mPhotoPath;
     private static final int UPDATE_TEXTVIEW = 1;

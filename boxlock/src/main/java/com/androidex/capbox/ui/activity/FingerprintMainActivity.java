@@ -6,7 +6,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.androidex.capbox.R;
@@ -22,7 +21,6 @@ import com.androidex.capbox.utils.CommonKit;
 public class FingerprintMainActivity extends BaseActivity {
     private FingerprintCore mFingerprintCore;
     private KeyguardLockScreenManager mKeyguardLockScreenManager;
-    private ImageView mFingerGuideImg;
     private TextView mFingerGuideTxt;
 
     @Override
@@ -30,6 +28,7 @@ public class FingerprintMainActivity extends BaseActivity {
         return R.layout.activity_fingerprint_main;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void initData(Bundle savedInstanceState) {
         if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
@@ -57,7 +56,6 @@ public class FingerprintMainActivity extends BaseActivity {
     }
 
     private void initViews() {
-        mFingerGuideImg = (ImageView) findViewById(R.id.fingerprint_guide);
         mFingerGuideTxt = (TextView) findViewById(R.id.fingerprint_guide_tip);
     }
 
@@ -100,9 +98,8 @@ public class FingerprintMainActivity extends BaseActivity {
                 FingerprintUtil.openFingerPrintSettingPage(this);
                 return;
             }
-            CommonKit.showMsgShort(context, getString(R.string.fingerprint_recognition_tip));
-            mFingerGuideTxt.setText(R.string.fingerprint_recognition_tip);
-            mFingerGuideImg.setImageResource(R.mipmap.fingerprint_guide);
+            CommonKit.showMsgShort(context, getString(R.string.fingerprint_recognition_start));
+            mFingerGuideTxt.setText(R.string.fingerprint_recognition_start);
             if (mFingerprintCore.isAuthenticating()) {
                 CommonKit.showMsgShort(context, getString(R.string.fingerprint_recognition_authenticating));
             } else {
@@ -110,14 +107,13 @@ public class FingerprintMainActivity extends BaseActivity {
             }
         } else {
             CommonKit.showMsgShort(context, getString(R.string.fingerprint_recognition_not_support));
-            mFingerGuideTxt.setText(R.string.fingerprint_recognition_tip);
+            mFingerGuideTxt.setText(R.string.fingerprint_recognition_start);
             startFingerprintRecognitionUnlockScreen();
         }
     }
 
     private void resetGuideViewState() {
         mFingerGuideTxt.setText(R.string.fingerprint_recognition_start);
-        mFingerGuideImg.setImageResource(R.mipmap.fingerprint_normal);
     }
 
     int error = 0;
