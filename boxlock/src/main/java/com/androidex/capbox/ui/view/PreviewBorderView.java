@@ -72,8 +72,6 @@ public class PreviewBorderView extends SurfaceView implements SurfaceHolder.Call
         } finally {
             a.recycle();
         }
-
-
     }
 
     /**
@@ -84,6 +82,7 @@ public class PreviewBorderView extends SurfaceView implements SurfaceHolder.Call
         this.mHolder.addCallback(this);
         this.mHolder.setFormat(PixelFormat.TRANSPARENT);
         setZOrderOnTop(true);
+        setZOrderMediaOverlay(true);
         this.mPaint = new Paint();
         this.mPaint.setAntiAlias(true);
         this.mPaint.setColor(Color.WHITE);
@@ -93,6 +92,7 @@ public class PreviewBorderView extends SurfaceView implements SurfaceHolder.Call
         this.mPaintLine.setColor(tipTextColor);
         this.mPaintLine.setStrokeWidth(3.0F);
         setKeepScreenOn(true);
+
     }
 
     /**

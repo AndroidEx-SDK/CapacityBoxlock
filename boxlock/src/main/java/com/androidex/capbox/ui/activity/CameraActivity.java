@@ -124,6 +124,10 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 
     @Override
     protected void onResume() {

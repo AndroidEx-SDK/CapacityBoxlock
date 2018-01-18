@@ -6,7 +6,6 @@
     android:background="@mipmap/lockscreen"
     android:orientation="vertical">
 
-
     <com.androidex.capbox.ui.view.ZItem
         android:id="@+id/textView1"
         android:layout_width="match_parent"
@@ -35,11 +34,14 @@
 
     </com.androidex.capbox.ui.view.ZItem>
 
-    <com.androidex.capbox.ui.widget.recyclerview.QTRecyclerView
+    <com.androidex.capbox.ui.view.CustomRecyclerView
         android:id="@+id/qtRecyclerView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/textView1"
-        app:recyclerScrollbarNone="true"
-        app:recyclerScrollbarStyle="outsideOverlay" />
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        app:recyclerBackgroundColor="@android:color/transparent"
+        app:recyclerPadding="0dp"
+        app:recyclerScrollbarNone="true" />
 </RelativeLayout>

@@ -1,4 +1,4 @@
-package com.androidex.capbox.ui.widget.recyclerview;
+package com.androidex.capbox.ui.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -21,6 +21,9 @@ import android.widget.TextView;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.imageloader.RecyclerPauseOnScrollListener;
 import com.androidex.capbox.base.imageloader.UILKit;
+import com.androidex.capbox.ui.widget.recyclerview.HorizontalDividerItemDecoration;
+import com.androidex.capbox.ui.widget.recyclerview.QTRecyclerAdapter;
+import com.androidex.capbox.ui.widget.recyclerview.QTScrollCallback;
 import com.androidex.capbox.utils.CommonKit;
 
 import java.util.List;
@@ -33,7 +36,7 @@ import java.util.List;
  * @editTime
  * @editor
  */
-public class QTRecyclerView extends FrameLayout implements SwipeRefreshLayout.OnRefreshListener {
+public class CustomRecyclerView extends FrameLayout implements SwipeRefreshLayout.OnRefreshListener {
 
     public static final int LOAD_MORE_ITEM_SLOP = 2;
     View loadingView;
@@ -79,19 +82,19 @@ public class QTRecyclerView extends FrameLayout implements SwipeRefreshLayout.On
     public static final int STATE_ERROR = 0x4;
     private int displayState = STATE_LOADING;
 
-    public QTRecyclerView(Context context) {
+    public CustomRecyclerView(Context context) {
         super(context);
         initAttrs(context, null);
         initViews();
     }
 
-    public QTRecyclerView(Context context, AttributeSet attrs) {
+    public CustomRecyclerView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initAttrs(context, attrs);
         initViews();
     }
 
-    public QTRecyclerView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CustomRecyclerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initAttrs(context, attrs);
         initViews();
@@ -99,20 +102,20 @@ public class QTRecyclerView extends FrameLayout implements SwipeRefreshLayout.On
 
 
     private void initAttrs(Context ctx, AttributeSet attr) {
-        TypedArray ta = ctx.obtainStyledAttributes(attr, R.styleable.QTRecyclerView);
+        TypedArray ta = ctx.obtainStyledAttributes(attr, R.styleable.CustomRecyclerView);
 
-        backgroundColor = ta.getColor(R.styleable.QTRecyclerView_recyclerBackgroundColor, Color.WHITE);
-        padding = (int) ta.getDimension(R.styleable.QTRecyclerView_recyclerPadding, -1.0f);
-        paddingLeft = (int) ta.getDimension(R.styleable.QTRecyclerView_recyclerPaddingLeft, 0.0f);
-        paddingRight = (int) ta.getDimension(R.styleable.QTRecyclerView_recyclerPaddingRight, 0.0f);
-        paddingTop = (int) ta.getDimension(R.styleable.QTRecyclerView_recyclerPaddingTop, 0.0f);
-        paddingBottom = (int) ta.getDimension(R.styleable.QTRecyclerView_recyclerPaddingBottom, 0.0f);
-        scrollbarStyle = ta.getInt(R.styleable.QTRecyclerView_recyclerScrollbarStyle, 2);
-        clipToPadding = ta.getBoolean(R.styleable.QTRecyclerView_recyclerClipToPadding, false);
-        scrollbarNone = ta.getBoolean(R.styleable.QTRecyclerView_recyclerScrollbarNone, false);
-        loadingLayoutId = ta.getResourceId(R.styleable.QTRecyclerView_loadingLayoutId, R.layout.view_qt_rec_loading_view);
-        emptyLayoutId = ta.getResourceId(R.styleable.QTRecyclerView_emptyLayoutId, R.layout.view_qt_rec_empty_view);
-        errorLayoutId = ta.getResourceId(R.styleable.QTRecyclerView_errorLayoutId, R.layout.view_qt_rec_error_view);
+        backgroundColor = ta.getColor(R.styleable.CustomRecyclerView_recyclerBackgroundColor, Color.TRANSPARENT);
+        padding = (int) ta.getDimension(R.styleable.CustomRecyclerView_recyclerPadding, -1.0f);
+        paddingLeft = (int) ta.getDimension(R.styleable.CustomRecyclerView_recyclerPaddingLeft, 0.0f);
+        paddingRight = (int) ta.getDimension(R.styleable.CustomRecyclerView_recyclerPaddingRight, 0.0f);
+        paddingTop = (int) ta.getDimension(R.styleable.CustomRecyclerView_recyclerPaddingTop, 0.0f);
+        paddingBottom = (int) ta.getDimension(R.styleable.CustomRecyclerView_recyclerPaddingBottom, 0.0f);
+        scrollbarStyle = ta.getInt(R.styleable.CustomRecyclerView_recyclerScrollbarStyle, 2);
+        clipToPadding = ta.getBoolean(R.styleable.CustomRecyclerView_recyclerClipToPadding, false);
+        scrollbarNone = ta.getBoolean(R.styleable.CustomRecyclerView_recyclerScrollbarNone, false);
+        loadingLayoutId = ta.getResourceId(R.styleable.CustomRecyclerView_loadingLayoutId, R.layout.view_qt_rec_loading_view);
+        emptyLayoutId = ta.getResourceId(R.styleable.CustomRecyclerView_emptyLayoutId, R.layout.view_qt_rec_empty_view);
+        errorLayoutId = ta.getResourceId(R.styleable.CustomRecyclerView_errorLayoutId, R.layout.view_qt_rec_error_view);
 
         ta.recycle();
     }
@@ -162,19 +165,19 @@ public class QTRecyclerView extends FrameLayout implements SwipeRefreshLayout.On
         setDisplayState(STATE_LOADING);
     }
 
-    public QTRecyclerView setErrorView(int errorResId) {
+    public CustomRecyclerView setErrorView(int errorResId) {
         errorViewStub.setLayoutResource(errorResId);
         errorView = errorViewStub.inflate();
         return this;
     }
 
-    public QTRecyclerView setEmptyView(int emptyResId) {
+    public CustomRecyclerView setEmptyView(int emptyResId) {
         emptyViewStub.setLayoutResource(emptyResId);
         emptyView = emptyViewStub.inflate();
         return this;
     }
 
-    public QTRecyclerView setLoadingView(int loadingResId) {
+    public CustomRecyclerView setLoadingView(int loadingResId) {
         loadingViewStub.setLayoutResource(loadingResId);
         loadingView = loadingViewStub.inflate();
         return this;
@@ -224,7 +227,7 @@ public class QTRecyclerView extends FrameLayout implements SwipeRefreshLayout.On
         }
     }
 
-    public QTRecyclerView setPage(int currentPage, int totalPage) {
+    public CustomRecyclerView setPage(int currentPage, int totalPage) {
         this.currentPage = currentPage;
         this.totalPage = totalPage;
         return this;
@@ -249,7 +252,7 @@ public class QTRecyclerView extends FrameLayout implements SwipeRefreshLayout.On
     }
 
 
-    public QTRecyclerView setAdapter(final RecyclerView.Adapter adapter) {
+    public CustomRecyclerView setAdapter(final RecyclerView.Adapter adapter) {
         if (adapter == null) {
             //Logger.e("adapter can not be null");
             return this;
@@ -599,7 +602,7 @@ public class QTRecyclerView extends FrameLayout implements SwipeRefreshLayout.On
         return null;
     }
 
-    public QTRecyclerView addItemDecoration(RecyclerView.ItemDecoration decor) {
+    public CustomRecyclerView addItemDecoration(RecyclerView.ItemDecoration decor) {
         recyclerView.addItemDecoration(decor);
         return this;
     }
@@ -637,7 +640,7 @@ public class QTRecyclerView extends FrameLayout implements SwipeRefreshLayout.On
         return qtRecyclerAdapter;
     }
 
-    public QTRecyclerView setOnRefreshAndLoadMoreListener(OnRefreshAndLoadMoreListener onRefreshAndLoadMoreListener) {
+    public CustomRecyclerView setOnRefreshAndLoadMoreListener(OnRefreshAndLoadMoreListener onRefreshAndLoadMoreListener) {
         this.onRefreshAndLoadMoreListener = onRefreshAndLoadMoreListener;
         swipeRefreshLayout.setEnabled(true);
         return this;
@@ -647,12 +650,12 @@ public class QTRecyclerView extends FrameLayout implements SwipeRefreshLayout.On
         return onRefreshAndLoadMoreListener;
     }
 
-    public QTRecyclerView setItemAnimator(RecyclerView.ItemAnimator animator) {
+    public CustomRecyclerView setItemAnimator(RecyclerView.ItemAnimator animator) {
         recyclerView.setItemAnimator(animator);
         return this;
     }
 
-    public QTRecyclerView setLayoutManager(RecyclerView.LayoutManager layoutManager) {
+    public CustomRecyclerView setLayoutManager(RecyclerView.LayoutManager layoutManager) {
         if (layoutManager == null) {
             throw new IllegalArgumentException("LayoutManager can not be null.");
         }
@@ -670,18 +673,18 @@ public class QTRecyclerView extends FrameLayout implements SwipeRefreshLayout.On
         return this;
     }
 
-    public QTRecyclerView setHasFixedSize(boolean hasFixedSize) {
+    public CustomRecyclerView setHasFixedSize(boolean hasFixedSize) {
         recyclerView.setHasFixedSize(hasFixedSize);
         return this;
     }
 
-    public QTRecyclerView defaultNoDivider() {
+    public CustomRecyclerView defaultNoDivider() {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
         return this;
     }
 
-    public QTRecyclerView defaultUseDivider(Context context) {
+    public CustomRecyclerView defaultUseDivider(Context context) {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(context)
@@ -692,7 +695,7 @@ public class QTRecyclerView extends FrameLayout implements SwipeRefreshLayout.On
         return this;
     }
 
-    public QTRecyclerView defaultUseDivider12(Context context) {
+    public CustomRecyclerView defaultUseDivider12(Context context) {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(context)
@@ -704,26 +707,26 @@ public class QTRecyclerView extends FrameLayout implements SwipeRefreshLayout.On
     }
 
 
-    public QTRecyclerView setRefreshEnable(boolean enable) {
+    public CustomRecyclerView setRefreshEnable(boolean enable) {
         swipeRefreshLayout.setEnabled(enable);
         return this;
     }
 
-    public QTRecyclerView verticalLayoutManager(Context context) {
+    public CustomRecyclerView verticalLayoutManager(Context context) {
         LinearLayoutManager manager = new LinearLayoutManager(context);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         setLayoutManager(manager);
         return this;
     }
 
-    public QTRecyclerView horizontalLayoutManager(Context context) {
+    public CustomRecyclerView horizontalLayoutManager(Context context) {
         LinearLayoutManager manager = new LinearLayoutManager(context);
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
         setLayoutManager(manager);
         return this;
     }
 
-    public QTRecyclerView gridLayoutManager(Context context, int spanCount) {
+    public CustomRecyclerView gridLayoutManager(Context context, int spanCount) {
         GridLayoutManager manager = new GridLayoutManager(context, spanCount);
         setLayoutManager(manager);
         return this;
@@ -734,7 +737,7 @@ public class QTRecyclerView extends FrameLayout implements SwipeRefreshLayout.On
      *
      * @return
      */
-    public QTRecyclerView ImageLoaderPauseOnScroll() {
+    public CustomRecyclerView ImageLoaderPauseOnScroll() {
         RecyclerPauseOnScrollListener listener = new RecyclerPauseOnScrollListener(UILKit.getLoader());
         recyclerView.addOnScrollListener(listener);
         return this;
@@ -776,7 +779,7 @@ public class QTRecyclerView extends FrameLayout implements SwipeRefreshLayout.On
      * @param emptyText
      * @return
      */
-    public QTRecyclerView setEmptyViewDefault(int emptyIcon, String emptyText) {
+    public CustomRecyclerView setEmptyViewDefault(int emptyIcon, String emptyText) {
         ImageView iv_empty_emotion = (ImageView) emptyView.findViewById(R.id.iv_empty_emotion);
         TextView tv_empty_message = (TextView) emptyView.findViewById(R.id.tv_empty_message);
 

@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.androidex.capbox.MainActivity;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.data.net.NetApi;
@@ -14,7 +13,7 @@ import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.module.BoxDeviceModel;
 import com.androidex.capbox.ui.adapter.BindDeviceAdapter;
 import com.androidex.capbox.ui.view.ZItem;
-import com.androidex.capbox.ui.widget.recyclerview.QTRecyclerView;
+import com.androidex.capbox.ui.view.CustomRecyclerView;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
 
@@ -27,22 +26,26 @@ public class LockScreenActivity extends BaseActivity {
     @Bind(R.id.textView1)
     ZItem xitem;
     @Bind(R.id.qtRecyclerView)
-    QTRecyclerView qtRecyclerView;
+    CustomRecyclerView qtRecyclerView;
     private BindDeviceAdapter adapter;
 
     @Override
     public void initData(Bundle savedInstanceState) {
         Log.e(TAG, "锁屏界面启动");
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |   //这个在锁屏状态下
-                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON                    //这个是点亮屏幕
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED    //这个在锁屏状态下
+                //| WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON                    //这个是点亮屏幕
                 | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD                //这个是透过锁屏界面，相当与解锁，但实质没有
                 | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);                //这个是保持屏幕常亮。
         initData();
+        initRecyclerView();
+        boxlist();
+    }
 
+    private void initRecyclerView() {
         adapter = new BindDeviceAdapter(context);
-        qtRecyclerView.verticalLayoutManager(context).defaultNoDivider();
+        qtRecyclerView.horizontalLayoutManager(context).defaultNoDivider();
         qtRecyclerView.setAdapter(adapter);
-        qtRecyclerView.setOnRefreshAndLoadMoreListener(new QTRecyclerView.OnRefreshAndLoadMoreListener() {
+        qtRecyclerView.setOnRefreshAndLoadMoreListener(new CustomRecyclerView.OnRefreshAndLoadMoreListener() {
             @Override
             public void onRefresh() {
                 boxlist();
@@ -53,7 +56,6 @@ public class LockScreenActivity extends BaseActivity {
 
             }
         });
-
     }
 
 
@@ -80,7 +82,7 @@ public class LockScreenActivity extends BaseActivity {
      * 获取设备列表
      */
     public void boxlist() {
-        NetApi.boxlist(getToken(), ((MainActivity) context).username, new ResultCallBack<BoxDeviceModel>() {
+        NetApi.boxlist(getToken(), getUserName(), new ResultCallBack<BoxDeviceModel>() {
             @Override
             public void onSuccess(int statusCode, Headers headers, BoxDeviceModel model) {
                 super.onSuccess(statusCode, headers, model);
@@ -92,7 +94,7 @@ public class LockScreenActivity extends BaseActivity {
                                     adapter.setData(model.devicelist);
                                 }
                             }
-                            Logd(TAG, "刷新列表无");
+                            Logd(TAG, "刷新列表");
                             break;
                         case Constants.API.API_FAIL:
                             CommonKit.showErrorShort(context, "账号在其他地方登录");
