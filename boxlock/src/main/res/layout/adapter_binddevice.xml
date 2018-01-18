@@ -4,24 +4,31 @@
     android:layout_height="wrap_content"
     android:background="@null"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/marginPadding10"
+    android:paddingRight="@dimen/marginPadding10">
 
     <ImageView
         android:id="@+id/iv_lock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="@dimen/marginPadding5"
         android:src="@mipmap/lock_close" />
 
     <ImageView
         android:id="@+id/iv_connect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/marginPadding10"
+        android:padding="@dimen/marginPadding5"
         android:src="@mipmap/starts_connect" />
 
     <TextView
         android:id="@+id/tv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/marginPadding10"
         android:text="Box66"
-        android:textColor="@color/black" />
+        android:textSize="@dimen/size12"
+        android:textColor="@color/Gray_cc" />
 </LinearLayout>

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
@@ -285,6 +286,12 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
             @Override
             public void cancel() {
 
+            }
+        });
+        mLostAlarmDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                closeLostAlarm();
             }
         });
     }

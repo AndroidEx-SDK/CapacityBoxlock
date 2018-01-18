@@ -65,6 +65,7 @@
     <color name="Gray_e8">#e8e8e8</color>
     <color name="Gray_e6">#e6e6e6</color>
     <color name="Gray_e5">#e5e5e5</color>
+    <color name="Gray_cc">#cccccc</color>
     <color name="dialogColor">#f0ffffff</color>
     <color name="dialogTxtColor">#0048fc</color>
     <color name="tab_text_color_checked">#e61441</color>
