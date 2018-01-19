@@ -23,11 +23,6 @@ public class FingerprintMainActivity extends BaseActivity {
     private KeyguardLockScreenManager mKeyguardLockScreenManager;
     private TextView mFingerGuideTxt;
 
-    @Override
-    public int getLayoutId() {
-        return R.layout.activity_fingerprint_main;
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -182,5 +177,10 @@ public class FingerprintMainActivity extends BaseActivity {
 
     public static void lauch(Activity activity) {
         CommonKit.startActivity(activity, FingerprintMainActivity.class, null, true);
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_fingerprint_main;
     }
 }

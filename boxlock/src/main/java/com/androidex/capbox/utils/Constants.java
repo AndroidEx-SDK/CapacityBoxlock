@@ -74,9 +74,13 @@ public class Constants extends BleConstants{
     public static class EVENT {
         public static final int TAG_BASE_EVENT = 1000;
         public static final int TAG_EVENT_USER_LOGIN = TAG_BASE_EVENT + 1;        //用户登录状态发生改变
-        public static final int TAG_EVENT_USER_INFO_CHANGE = TAG_BASE_EVENT + 2;        //用户信息改变
+        public static final int TAG_EVENT_USER_INFO_CHANGE = TAG_BASE_EVENT + 2;       //用户信息改变
         public static final int TAG_EVENT_BOX_BIND_CHANGE = TAG_BASE_EVENT + 3;        //绑定箱体数量发生变化
-        public static final int TAG_EVENT_BOX_RELIEVE_BIND = TAG_BASE_EVENT + 4;        //解除绑定
+        public static final int TAG_EVENT_BOX_RELIEVE_BIND = TAG_BASE_EVENT + 4;       //解除绑定
+        public static final int TAG_EVENT_BOX_BLE_CONNECTED = TAG_BASE_EVENT + 5;      //蓝牙连接
+        public static final int TAG_EVENT_BOX_BLE_DISCONNECTED = TAG_BASE_EVENT + 6;   //蓝牙断开
+        public static final int TAG_EVENT_BOX_LOCK_OPEN = TAG_BASE_EVENT + 7;          //锁打开
+        public static final int TAG_EVENT_BOX_LOCK_CLOSE = TAG_BASE_EVENT + 8;         //锁关闭
 
     }
 

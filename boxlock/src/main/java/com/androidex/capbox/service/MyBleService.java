@@ -89,20 +89,24 @@ public class MyBleService extends BleService {
     private void sendDisconnectMessage(String address, boolean isActive) {
         if (SharedPreTool.getInstance(this).getBoolData(SharedPreTool.IS_POLICE, true)) {
             ServiceBean device = SharedPreTool.getInstance(this).getObj(ServiceBean.class, address);
-            if (device != null && device.isPolice() && !isActive) {//非主动断开时，报警
+            if (device != null && device.isPolice()) {//非主动断开时，报警
                 Intent intent = new Intent(BLE_CONN_DIS);
                 intent.putExtra(BLECONSTANTS_ADDRESS, address);
                 intent.putExtra(BLECONSTANTS_ISACTIVEDisConnect, isActive);
                 sendBroadcast(intent);
-                SystemUtil.startPlayerRaw(getContext());
+                if (!isActive) {
+                    SystemUtil.startPlayerRaw(getContext());
+                }
             } else {
                 ServiceBean connectDevice = MyBleService.get().getConnectDevice(address);
-                if (connectDevice != null && connectDevice.isPolice() && !isActive) {//非主动断开时，报警
+                if (connectDevice != null && connectDevice.isPolice()) {//非主动断开时，报警
                     Intent intent = new Intent(BLE_CONN_DIS);
                     intent.putExtra(BLECONSTANTS_ADDRESS, address);
                     intent.putExtra(BLECONSTANTS_ISACTIVEDisConnect, isActive);
                     sendBroadcast(intent);
-                    SystemUtil.startPlayerRaw(getContext());
+                    if (!isActive) {
+                        SystemUtil.startPlayerRaw(getContext());
+                    }
                 } else {
                     Log.d(TAG, "已关闭单个箱子报警开关");
                 }

@@ -46,6 +46,69 @@ public class Event {
     }
 
     /**
+     * 蓝牙连接
+     */
+    public static class BleConnected extends BaseEvent {
+        String address;
+
+        public BleConnected(String address) {
+            this.address = address;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        @Override
+        int getCode() {
+            return Constants.EVENT.TAG_EVENT_BOX_BLE_CONNECTED;
+        }
+    }
+
+    /**
+     * 蓝牙断开
+     */
+    public static class BleDisConnected extends BaseEvent {
+        String address;
+
+        public BleDisConnected(String address) {
+            this.address = address;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        @Override
+        int getCode() {
+            return Constants.EVENT.TAG_EVENT_BOX_BLE_DISCONNECTED;
+        }
+    }
+
+    /**
+     * 锁打开
+     */
+    public static class LockOpen extends BaseEvent {
+
+        @Override
+        int getCode() {
+            return Constants.EVENT.TAG_EVENT_BOX_LOCK_OPEN;
+        }
+    }
+
+    /**
+     * 锁关闭
+     */
+    public static class LockClose extends BaseEvent {
+
+        @Override
+        int getCode() {
+            return Constants.EVENT.TAG_EVENT_BOX_LOCK_CLOSE;
+        }
+    }
+
+
+    /**
      * 用户信息改变
      */
     public static class UserInfoChangeEvent extends BaseEvent {

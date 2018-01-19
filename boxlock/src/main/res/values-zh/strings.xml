@@ -235,17 +235,13 @@
     <!-- BLEDeviceActivity.java -->
     <string name="bledevice_toast1">当前用户已绑定一个设备！</string>
     <string name="bledevice_toast2">创建用户后点击绑定设备！</string>
-    <string name="bledevice_toast3">箱子已经连接</string>
+    <string name="bledevice_toast3">设备已经连接</string>
+    <string name="bledevice_toast7">设备未连接</string>
     <string name="bledevice_toast_hand">手环已经连接</string>
-    <string name="bledevice_toast4">已经断开连接</string>
+    <string name="bracelet_bindfail">手环未连接</string>
+    <string name="bledevice_toast4">断开连接</string>
     <string name="bledevice_toast5">同步设备时间成功</string>
     <string name="bledevice_toast6">同步设备时间失败</string>
-
-    <!-- HistoryListActivity.java -->
-    <string name="historylist_fever">发烧情况：已退烧</string>
-
-    <!-- MainActivity.java -->
-    <string name="main_exit">再按一次返回键退出程序</string>
 
     <!-- TypeOfAlarm.java -->
     <string name="typeofalarm_shake">震动</string>
@@ -269,16 +265,12 @@
 
     <!-- LockFragment.java -->
     <string name="itemfragment_ble_toast">请先创建用户！</string>
-    <string name="itemfragment_username">宝贝</string>
-    <string name="itemfragment_exceed">温度超出测量范围!</string>
+     <string name="itemfragment_exceed">温度超出测量范围!</string>
     <string name="itemfragment_toast1">已断开</string>
     <string name="itemfragment_toast2">已主动断开</string>
     <string name="itemfragment_toast3">请先绑定设备</string>
     <string name="itemfragment_toast4">未搜索到设备</string>
     <string name="itemfragment_toast5">请重新连接设备</string>
-    <string name="itemfragment_dialog_fever">停止高烧提醒</string>
-    <string name="itemfragment_dialog_cold">停止防寒穿衣提醒</string>
-    <string name="itemfragment_dialog_kick">停止踢被子提醒</string>
     <string name="itemfragment_dialog_lost">已经离开安全距离</string>
     <string name="itemfragment_dialog_temp_out">温度超范围</string>
     <string name="itemfragment_dialog_rssi_out">距离超范围</string>
@@ -299,12 +291,6 @@
     <string name="app_label">指南针</string>
     <string name="getting_location">正在获取经纬度...</string>
     <string name="cannot_get_location">无法获取经纬度</string>
-    <string name="location_north">北纬 %s</string>
-    <string name="location_south">南纬 %sS</string>
-    <string name="location_east">东经 %s</string>
-    <string name="location_west">西经 %s</string>
-
-    <string name="bracelet_bindfail">手环未连接</string>
 
     <string name="label_login">登录</string>
     <string name="label_automatic_login">自动登录</string>

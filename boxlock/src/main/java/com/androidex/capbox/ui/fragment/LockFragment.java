@@ -390,7 +390,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     showProgress("正在连接设备");
                     BleService.get().connectionDevice(context, address);
                     detectionIsConnect();
-
                 }
             }
 
