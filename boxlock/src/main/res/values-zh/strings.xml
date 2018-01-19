@@ -240,8 +240,10 @@
     <string name="bledevice_toast_hand">手环已经连接</string>
     <string name="bracelet_bindfail">手环未连接</string>
     <string name="bledevice_toast4">断开连接</string>
+    <string name="bledevice_toast8">连接超时，请确定设备正常</string>
     <string name="bledevice_toast5">同步设备时间成功</string>
     <string name="bledevice_toast6">同步设备时间失败</string>
+    <string name="bledevice_toast9">手机蓝牙断开</string>
 
     <!-- TypeOfAlarm.java -->
     <string name="typeofalarm_shake">震动</string>

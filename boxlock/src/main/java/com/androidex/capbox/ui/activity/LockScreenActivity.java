@@ -265,14 +265,14 @@ public class LockScreenActivity extends BaseActivity {
                     }
                     CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast4));
                     break;
+                case BLE_CONN_FAIL://连接失败
+                    disProgress();
+                    CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast8));
+                    break;
                 case BLUTOOTH_OFF:
                     Logd(TAG, "手机蓝牙断开");
-                    CommonKit.showErrorShort(context, "手机蓝牙断开");
-                    ServiceBean device = MyBleService.get().getConnectDevice(address);
-                    if (device != null) {
-                        device.setActiveDisConnect(true);
-                    }
-                    MyBleService.get().disConnectDevice(address);
+                    CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast9));
+                    MyBleService.get().disConnectDeviceALL();
                     //刷新数据
                     if (devicelist != null) {
                         adapter.setData(devicelist);

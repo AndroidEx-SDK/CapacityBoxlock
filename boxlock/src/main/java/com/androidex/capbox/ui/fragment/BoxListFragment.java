@@ -567,9 +567,9 @@ public class BoxListFragment extends BaseFragment {
                     }
                     break;
 
-                case Constants.BLE.BLE_CONN_FAIL:
+                case BLE_CONN_FAIL://连接失败
                     disProgress();
-                    CommonKit.showErrorLong(context, "连接失败");
+                    CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast8));
                     break;
 
                 default:

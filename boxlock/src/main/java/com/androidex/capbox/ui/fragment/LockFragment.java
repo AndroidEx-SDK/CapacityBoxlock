@@ -564,16 +564,19 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                 case BLE_CONN_SUCCESS_ALLCONNECTED:
                     BleService.get().enableNotify(address);
                     disProgress();
-                    showProgress("设备连接成功");
                     updateBleView(View.GONE, View.VISIBLE);
-                    disProgress();
+                    CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast3));
                     break;
 
                 case BLE_CONN_DIS://断开连接
                     Loge(TAG, "断开连接");
+                    CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast4));
                     updateBleView(View.VISIBLE, View.GONE);
                     break;
-
+                case BLE_CONN_FAIL://连接失败
+                    disProgress();
+                    CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast8));
+                    break;
                 case BLUTOOTH_OFF:
                     Logd(TAG, "手机蓝牙断开");
                     CommonKit.showErrorShort(context, "手机蓝牙断开");
