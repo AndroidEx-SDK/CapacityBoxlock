@@ -344,8 +344,7 @@ public class LockScreenActivity extends BaseActivity {
             switch (msg.what) {
                 case 1:
                     tv_time.setText(CalendarUtil.getInstance().getNowRecordTime()); //更新时间
-                    tv_date.setText(CalendarUtil.getInstance().getNowTime("MM月dd日") + " " + CalendarUtil.getInstance().getNowTimeForDay()[3]); //更新时间
-
+                    tv_date.setText(CalendarUtil.getInstance().getNowTime("MM月dd日") + " " + CalendarUtil.getInstance().getWeek()); //更新时间
                     break;
                 default:
                     break;

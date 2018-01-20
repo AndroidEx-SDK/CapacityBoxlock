@@ -23,7 +23,7 @@
             android:id="@+id/tv_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/marginPadding16"
+            android:layout_marginLeft="@dimen/marginPadding12"
             android:textSize="@dimen/size12" />
     </LinearLayout>
 
