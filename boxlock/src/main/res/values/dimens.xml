@@ -139,6 +139,7 @@
     <dimen name="marginPadding120">120dp</dimen>
     <dimen name="marginPadding76">57dp</dimen>
     <dimen name="marginPadding66">49.5dp</dimen>
+    <dimen name="marginPadding55">55dp</dimen>
     <dimen name="marginPadding50">50dp</dimen>
     <dimen name="marginPadding48">48dp</dimen>
     <dimen name="marginPadding45">45dp</dimen>
@@ -208,5 +209,6 @@
     <dimen name="size16">16sp</dimen>
     <dimen name="size18">18sp</dimen>
     <dimen name="size20">20sp</dimen>
+    <dimen name="size36">36sp</dimen>
 
 </resources>

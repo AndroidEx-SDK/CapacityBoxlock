@@ -1,9 +1,11 @@
 package com.androidex.capbox.utils;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -14,11 +16,11 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
 
-import com.androidex.capbox.MainActivity;
 import com.androidex.capbox.R;
 import com.androidex.capbox.data.net.base.L;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Random;
 
 public class SystemUtil {
@@ -89,11 +91,11 @@ public class SystemUtil {
      * Android 手机震动功能实现2
      *
      * @param activity 调用该方法的Activity实例
-     * @param pattern  自定义震动模式。数组中数字的含义依次是[静止时长，震动时长，静止时长，震动时长。。。]时长的单位是毫秒
+     * @param //  自定义震动模式。数组中数字的含义依次是[静止时长，震动时长，静止时长，震动时长。。。]时长的单位是毫秒
      * @param isRepeat 是否反复震动，如果是true，反复震动，如果是false，只震动一次
      */
     public static void startVibrate(final Activity activity, boolean isRepeat) {
-        long[] pattern = {100, 400, 100, 400};   // 自定义震动模式 。数组中数字的含义依次是[静止时长，震动时长，静止时长，震动时长。。。]时长的单位是毫秒
+        long[] pattern = {2000, 1000, 1000, 2000};   // 自定义震动模式 。数组中数字的含义依次是[静止时长，震动时长，静止时长，震动时长。。。]时长的单位是毫秒
         Vibrator vib = (Vibrator) activity.getSystemService(Service.VIBRATOR_SERVICE);
         vib.vibrate(pattern, isRepeat ? 2 : -1);//2：一直重复、	1：震动一次后一直小震动、 -1 震动一次
     }
@@ -108,6 +110,28 @@ public class SystemUtil {
         if (vib != null) {
             vib.cancel();
         }
+    }
+
+    /**
+     * 判断一个服务是否存在
+     * @param context
+     * @param className
+     * @return
+     */
+    public static boolean isServiceExisted(Context context, String className) {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> serviceList = activityManager.getRunningServices(Integer.MAX_VALUE);
+        if(!(serviceList.size() > 0)) {
+            return false;
+        }
+        for(int i = 0; i < serviceList.size(); i++) {
+            ActivityManager.RunningServiceInfo serviceInfo = serviceList.get(i);
+            ComponentName serviceName = serviceInfo.service;
+            if(serviceName.getClassName().equals(className)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -131,7 +155,7 @@ public class SystemUtil {
      * 手机响铃功能实现方法2
      *
      * @param context
-     * @param uri     指定路径
+     * @param uriStr     指定路径
      */
     public static void startPlayMediaPlayer(Context context, String uriStr) {
         // 使用来电铃声的铃声路径

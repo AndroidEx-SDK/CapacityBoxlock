@@ -5,9 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.boxlib.service.BleService;
@@ -21,6 +25,7 @@ import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.adapter.BindDeviceAdapter;
 import com.androidex.capbox.ui.view.CustomRecyclerView;
 import com.androidex.capbox.ui.view.ZItem;
+import com.androidex.capbox.utils.CalendarUtil;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
 
@@ -51,20 +56,29 @@ import static com.androidex.capbox.utils.Constants.BASE.ACTION_TEMP_OUT;
 
 public class LockScreenActivity extends BaseActivity {
     public static String TAG = "LockScreenActivity";
+    @Bind(R.id.tv_time)
+    TextView tv_time;
+    @Bind(R.id.tv_date)
+    TextView tv_date;
     @Bind(R.id.textView1)
     ZItem xitem;
     @Bind(R.id.qtRecyclerView)
     CustomRecyclerView qtRecyclerView;
+    @Bind(R.id.rl_lockscreen)
+    RelativeLayout rl_lockscreen;
+
     private BindDeviceAdapter adapter;
     private List<BoxDeviceModel.device> devicelist;
+    private TimeThread timeThread;
 
     @Override
     public void initData(Bundle savedInstanceState) {
         Log.e(TAG, "锁屏界面启动");
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED    //这个在锁屏状态下
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED   //这个在锁屏状态下
                 //| WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON                    //这个是点亮屏幕
-                | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD                //这个是透过锁屏界面，相当与解锁，但实质没有
-                | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);                //这个是保持屏幕常亮。
+                //| WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD                //这个是透过锁屏界面，相当与解锁，但实质没有
+                //| WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON                  //这个是保持屏幕常亮。
+        );
         initData();
         registerEventBusSticky();//注册Event
         initBleBroadCast();
@@ -114,6 +128,8 @@ public class LockScreenActivity extends BaseActivity {
     }
 
     public void initData() {
+        timeThread = new TimeThread();
+        timeThread.start();
         xitem.setZItemListener(new ZItem.ZItemListener() {
 
             @Override
@@ -176,11 +192,13 @@ public class LockScreenActivity extends BaseActivity {
     }
 
     @OnClick({
-
+            R.id.rl_lockscreen
     })
     public void clickEvent(View view) {
         switch (view.getId()) {
-
+            case R.id.rl_lockscreen:
+                Logd(TAG, "锁屏界面主页面被点击");
+                break;
         }
     }
 
@@ -318,17 +336,54 @@ public class LockScreenActivity extends BaseActivity {
 
     }
 
+    //在主线程里面处理消息并更新UI界面
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 1:
+                    tv_time.setText(CalendarUtil.getInstance().getNowRecordTime()); //更新时间
+                    tv_date.setText(CalendarUtil.getInstance().getNowTime("MM月dd日") + " " + CalendarUtil.getInstance().getNowTimeForDay()[3]); //更新时间
+
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+    class TimeThread extends Thread {
+        @Override
+        public void run() {
+            do {
+                try {
+                    Thread.sleep(1000);
+                    Message msg = Message.obtain();
+                    msg.what = 1;  //消息(一个整型值)
+                    mHandler.sendMessage(msg);// 每隔1秒发送一个msg给mHandler
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } while (true);
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(lockScreenReceiver);
         unregisterEventBus();
         Loge(TAG, "锁屏界面退出");
+        mHandler.removeMessages(1);
+        if (timeThread != null && timeThread.isAlive()) {
+            timeThread.interrupt();
+            timeThread = null;
+        }
     }
 
     @Override
     public int getLayoutId() {
         return R.layout.activity_lock_screen;
     }
-
 }

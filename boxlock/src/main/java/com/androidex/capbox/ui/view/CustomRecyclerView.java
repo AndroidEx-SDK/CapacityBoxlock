@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewStub;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.androidex.capbox.R;
@@ -134,9 +135,10 @@ public class CustomRecyclerView extends FrameLayout implements SwipeRefreshLayou
         setLoadingView(loadingLayoutId);
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        LinearLayout ll_recyclerview = (LinearLayout) findViewById(R.id.ll_recyclerview);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
-        contentView = swipeRefreshLayout;
+        contentView = ll_recyclerview;
         swipeRefreshLayout.setEnabled(false);
         swipeRefreshLayout.setColorSchemeResources(
                 android.R.color.holo_blue_light,
@@ -144,7 +146,7 @@ public class CustomRecyclerView extends FrameLayout implements SwipeRefreshLayou
                 android.R.color.holo_green_light,
                 android.R.color.holo_red_light,
                 android.R.color.holo_orange_light);
-        swipeRefreshLayout.setOnRefreshListener(this);
+        //swipeRefreshLayout.setOnRefreshListener(this);
         recyclerView.addOnScrollListener(processMoreListener);
         if (padding != -1) {
             recyclerView.setPadding(padding, padding, padding, padding);

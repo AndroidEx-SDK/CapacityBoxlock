@@ -25,12 +25,28 @@ import static com.baidu.mapapi.BMapManager.getContext;
 
 public class MyBleService extends BleService {
     public static final String TAG = "MyBleService";
+    private static BleService service;
 
     @Override
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "MyBleService 启动");
         setLockScreenActivity(LockScreenActivity.class);//设置锁屏界面的Activity
+    }
+
+    /**
+     * @return
+     */
+    public static BleService getInstance() {
+        try {
+            service = get();
+        } catch (NullPointerException e) {
+            Log.e(TAG, e.toString());
+            service = new MyBleService();
+            Intent bleServer = new Intent(getContext(), MyBleService.class);
+            getContext().startService(bleServer);
+        }
+        return service;
     }
 
     /**

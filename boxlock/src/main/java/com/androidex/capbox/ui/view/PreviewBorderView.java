@@ -92,7 +92,7 @@ public class PreviewBorderView extends SurfaceView implements SurfaceHolder.Call
         this.mPaintLine.setColor(tipTextColor);
         this.mPaintLine.setStrokeWidth(3.0F);
         setKeepScreenOn(true);
-
+        setZOrderMediaOverlay(true);
     }
 
     /**

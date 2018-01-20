@@ -1,10 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rl_lockscreen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/lockscreen"
     android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/marginPadding16"
+        android:layout_marginTop="@dimen/marginPadding55">
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/size36" />
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/marginPadding16"
+            android:textSize="@dimen/size12" />
+    </LinearLayout>
 
     <com.androidex.capbox.ui.view.ZItem
         android:id="@+id/textView1"
@@ -36,12 +57,12 @@
 
     <com.androidex.capbox.ui.view.CustomRecyclerView
         android:id="@+id/qtRecyclerView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@id/textView1"
-        android:layout_centerHorizontal="true"
         android:layout_centerInParent="true"
         app:recyclerBackgroundColor="@android:color/transparent"
         app:recyclerPadding="0dp"
         app:recyclerScrollbarNone="true" />
+
 </RelativeLayout>
