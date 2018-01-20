@@ -22,6 +22,8 @@ import com.androidex.capbox.utils.CommonKit;
 
 import butterknife.Bind;
 
+import static com.androidex.boxlib.cache.SharedPreTool.IS_OPEN_LOCKSCREEN;
+
 public class MeMainFragment extends BaseFragment implements CompoundButton.OnCheckedChangeListener {
     private static String TAG = "MeMainFragment";
     @Bind(R.id.settint_bt_user)
@@ -36,17 +38,26 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
     Spinner setting_distance;
     @Bind(R.id.tb_alarm)
     ToggleButton tb_alarm;
+@Bind(R.id.tb_lockscreen)
+    ToggleButton tb_lockscreen;
 
     private boolean isToast = false;
+    private boolean isToast_lockscreen = false;
 
     @Override
     public void initData() {
         initView();
         isToast = false;
+        isToast_lockscreen = false;
         if (SharedPreTool.getInstance(context).getBoolData(SharedPreTool.IS_POLICE, true)) {
             tb_alarm.setChecked(true);
         } else {
             tb_alarm.setChecked(false);
+        }
+        if (SharedPreTool.getInstance(context).getBoolData(IS_OPEN_LOCKSCREEN, true)) {
+            tb_lockscreen.setChecked(true);
+        } else {
+            tb_lockscreen.setChecked(false);
         }
     }
 
@@ -56,6 +67,7 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
         setting_alarm.setOnClickListener(this);
         ll_connectDevice.setOnClickListener(this);
         tb_alarm.setOnCheckedChangeListener(this);
+        tb_lockscreen.setOnCheckedChangeListener(this);
     }
 
     /**
@@ -145,12 +157,10 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
             case R.id.tb_alarm://报警开关
                 Loge(TAG, "alarm开关  " + isChecked);
                 if (isChecked) {
-                    //选中
                     SharedPreTool.getInstance(context).setBoolData(SharedPreTool.IS_POLICE, true);
                 } else {
-                    //未选中
                     SharedPreTool.getInstance(context).setBoolData(SharedPreTool.IS_POLICE, false);
-                    if (!isToast){
+                    if (!isToast) {
                         isToast = true;
                         return;
                     }
@@ -159,6 +169,23 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
                     CommonKit.showOkShort(context, "打开报警开关成功");
                 } else {
                     CommonKit.showOkShort(context, "关闭报警开关成功");
+                }
+                break;
+            case R.id.tb_lockscreen://锁屏开关
+                Loge(TAG, "alarm开关  " + isChecked);
+                if (isChecked) {
+                    SharedPreTool.getInstance(context).setBoolData(IS_OPEN_LOCKSCREEN, true);
+                } else {
+                    SharedPreTool.getInstance(context).setBoolData(IS_OPEN_LOCKSCREEN, false);
+                    if (!isToast_lockscreen) {
+                        isToast_lockscreen = true;
+                        return;
+                    }
+                }
+                if (SharedPreTool.getInstance(context).getBoolData(IS_OPEN_LOCKSCREEN, true)) {
+                    CommonKit.showOkShort(context, "锁屏开关打开");
+                } else {
+                    CommonKit.showOkShort(context, "锁屏功能关闭");
                 }
                 break;
         }

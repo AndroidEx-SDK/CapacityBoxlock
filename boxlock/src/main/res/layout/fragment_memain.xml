@@ -126,6 +126,36 @@
                     android:textOn=" " />
 
             </LinearLayout>
+            <!-- 锁屏开关 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tv_line_height"
+                android:background="@color/line_color" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/adduser_ll_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/marginPadding16">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/setting_tv_lockscreen"
+                    android:textColor="@color/white" />
+
+                <ToggleButton
+                    android:id="@+id/tb_lockscreen"
+                    android:layout_width="@dimen/marginPadding120"
+                    android:layout_height="@dimen/marginPadding35"
+                    android:layout_marginRight="@dimen/marginPadding16"
+                    android:background="@drawable/thumbs"
+                    android:checked="true"
+                    android:textOff=" "
+                    android:textOn=" " />
+
+            </LinearLayout>
 
             <TextView
                 android:layout_width="match_parent"

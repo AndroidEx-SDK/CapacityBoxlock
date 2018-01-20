@@ -88,6 +88,7 @@
     <string name="setting_tv_temperature2">最高温度</string>
     <string name="setting_tv_alarm">报警设置</string>
     <string name="setting_tv_openalarm">报警开关</string>
+    <string name="setting_tv_lockscreen">锁屏开关</string>
     <string name="setting_tv_lowtemp">设置最低温度</string>
     <string name="setting_tv_hightemp">设置最高温度</string>
     <string name="setting_tv_silence">静默开关</string>

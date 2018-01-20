@@ -221,7 +221,6 @@ public class LockScreenActivity extends BaseActivity {
                     }
                 }
                 disProgress();
-                //scanLeDeviceList(true);
             }
 
             @Override
@@ -233,7 +232,6 @@ public class LockScreenActivity extends BaseActivity {
                 }
                 disProgress();
                 CommonKit.showErrorShort(context, "网络连接异常");
-                //scanLeDeviceList(true);
             }
 
             @Override
@@ -273,7 +271,6 @@ public class LockScreenActivity extends BaseActivity {
                     Logd(TAG, "手机蓝牙断开");
                     CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast9));
                     MyBleService.get().disConnectDeviceALL();
-                    //刷新数据
                     if (devicelist != null) {
                         adapter.setData(devicelist);
                     }
@@ -281,7 +278,6 @@ public class LockScreenActivity extends BaseActivity {
                 case BLUTOOTH_ON:
                     Logd(TAG, "手机蓝牙开启");
                     CommonKit.showOkShort(context, "手机蓝牙开启");
-                    //scanLeDevice();
                     break;
                 case ACTION_LOCK_OPEN_SUCCED:
                     CommonKit.showOkShort(context, "开锁成功");

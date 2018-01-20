@@ -26,6 +26,7 @@ import com.androidex.capbox.MainActivity;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseFragment;
 import com.androidex.capbox.data.Event;
+import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.module.BaseModel;
@@ -56,6 +57,7 @@ import okhttp3.Request;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static com.androidex.boxlib.cache.SharedPreTool.IS_BIND_NUM;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
@@ -106,19 +108,17 @@ public class BoxListFragment extends BaseFragment {
     }
 
     private void initTitleBar() {
-        //扫描
         thirdtitlebar.getLeftBtn().setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {//扫描
                 Intent intent = new Intent(context, CaptureActivity.class);
                 startActivityForResult(intent, CaptureActivity.REQ_CODE);// ,//Activity.RESULT_FIRST_USER
             }
         });
         thirdtitlebar.setRightRes(R.drawable.device_search);
-        //搜索
         thirdtitlebar.getRightIv().setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {//搜索
                 boxlist();
                 scanLeDeviceList(true);
             }
@@ -462,6 +462,7 @@ public class BoxListFragment extends BaseFragment {
                                 map.put("isOnLine", "" + device.isOnLine);
                                 mylist.add(map);
                             }
+                            SharedPreTool.getInstance(context).setIntData(IS_BIND_NUM, model.devicelist.size());
                             if (model.devicelist.size() > 0) {
                                 Logd(TAG, "刷新列表");
                                 boxListAdapter.notifyDataSetChanged();
