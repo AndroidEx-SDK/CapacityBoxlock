@@ -318,6 +318,10 @@ public class RegisterActivity extends UserBaseActivity {
         if (TextUtils.isEmpty(phone)) {
             return;
         }
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
         NetApi.getCheckResult(getToken(), phone, new ResultCallBack<ResultModel>() {
 
             @Override

@@ -328,6 +328,10 @@ public class LockActivity extends BaseActivity implements OnClickListener {
      * @param uuid
      */
     private void boxlocation(String uuid) {
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
         NetApi.getboxLocation(getToken(), getUserName(), uuid,
                 new ResultCallBack<LocationModel>() {
                     @Override
@@ -391,6 +395,10 @@ public class LockActivity extends BaseActivity implements OnClickListener {
      * @param longitude
      */
     public void getBaiduLocation(String latitude, String longitude) {
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
         NetApi.getLocation(latitude, longitude, new ResultCallBack<BaiduModel>() {
             @Override
             public void onSuccess(int statusCode, Headers headers, BaiduModel model) {

@@ -273,6 +273,10 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
      * 获取箱体详细信息
      */
     public void getBoxDetail() {
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
         NetApi.boxDetail(getToken(), username, uuid, new ResultCallBack<BoxDetailModel>() {
             @Override
             public void onSuccess(int statusCode, Headers headers, BoxDetailModel model) {

@@ -197,6 +197,10 @@ public class BoxDetailActivity extends BaseActivity {
      * 获取箱体详细信息
      */
     public void getBoxDetail() {
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
         NetApi.boxDetail(getToken(), username, uuid, new ResultCallBack<BoxDetailModel>() {
             @Override
             public void onSuccess(int statusCode, Headers headers, BoxDetailModel model) {
@@ -737,6 +741,10 @@ public class BoxDetailActivity extends BaseActivity {
      * 启动携行押运
      */
     public void startEscort() {
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
         NetApi.startEscort(getToken(), username, uuid, new ResultCallBack<BaseModel>() {
             @Override
             public void onSuccess(int statusCode, Headers headers, BaseModel model) {
@@ -769,6 +777,10 @@ public class BoxDetailActivity extends BaseActivity {
      * 结束携行
      */
     private void endTask() {
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
         NetApi.endTask(getToken(), getUserName(), uuid, new ResultCallBack<BaseModel>() {
             @Override
             public void onSuccess(int statusCode, Headers headers, BaseModel model) {

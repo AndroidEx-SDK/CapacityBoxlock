@@ -393,6 +393,10 @@ public class BoxListFragment extends BaseFragment {
      * @param uuid
      */
     public void bindBox(String uuid) {
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
         NetApi.boxBind(getToken(), ((MainActivity) context).username, uuid, new ResultCallBack<BaseModel>() {
             @Override
             public void onSuccess(int statusCode, Headers headers, BaseModel model) {
@@ -444,6 +448,10 @@ public class BoxListFragment extends BaseFragment {
      * 获取设备列表
      */
     public void boxlist() {
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
         NetApi.boxlist(getToken(), ((MainActivity) context).username, new ResultCallBack<BoxDeviceModel>() {
             @Override
             public void onSuccess(int statusCode, Headers headers, BoxDeviceModel model) {

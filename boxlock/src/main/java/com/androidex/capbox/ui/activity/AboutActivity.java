@@ -59,6 +59,10 @@ public class AboutActivity extends BaseActivity {
      * 检测版本号，包括APP的，箱体的，腕表的
      */
     public void checkVersion() {
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
         NetApi.checkVersion(getToken(), MainActivity.username, new ResultCallBack<CheckVersionModel>() {
             @Override
             public void onStart() {

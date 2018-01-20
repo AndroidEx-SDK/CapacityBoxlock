@@ -46,6 +46,10 @@ public abstract class UserBaseActivity extends BaseActivity {
      * @param callback
      */
     protected void userLogin(final String userName, final String md5Pwd, String authcode, final boolean secret, final CallBackAction callback) {
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
         NetApi.userLogin(userName, md5Pwd, authcode, new ResultCallBack<LoginModel>() {
 
             @Override
@@ -108,6 +112,10 @@ public abstract class UserBaseActivity extends BaseActivity {
      * @param md5Pwd   密码
      */
     protected void userRegister(final String username, String name, String cardId, final String md5Pwd, String authcode, final CallBackAction callback) {
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
         NetApi.userRegister(username, name, cardId, md5Pwd, authcode, new ResultCallBack<LoginModel>() {
             @Override
             public void onStart() {
@@ -164,6 +172,10 @@ public abstract class UserBaseActivity extends BaseActivity {
     }
 
     protected void getAuthCode(final CallDataBackAction callDataBackAction) {
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
         NetApi.getAuthCode("no", "", new ResultCallBack<AuthCodeModel>() {
             @Override
             public void onSuccess(int statusCode, Headers headers, AuthCodeModel model) {

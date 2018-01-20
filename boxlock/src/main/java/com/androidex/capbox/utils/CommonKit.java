@@ -474,7 +474,20 @@ public class CommonKit {
                 Environment.MEDIA_MOUNTED);
     }
 
-
+    /**
+     * 判断是否有网络连接
+     * @param context
+     * @return
+     */
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = cm.getActiveNetworkInfo();
+        if (info != null) {
+            return info.isAvailable();
+        }
+        return false;
+    }
     /**
      * 获取当前连接的网络类型
      *
@@ -843,18 +856,6 @@ public class CommonKit {
             return -1;
         }
         return fileLength / 1024.0f;
-    }
-
-
-    //------------------
-    public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo info = cm.getActiveNetworkInfo();
-        if (info != null) {
-            return info.isAvailable();
-        }
-        return false;
     }
 
     /**

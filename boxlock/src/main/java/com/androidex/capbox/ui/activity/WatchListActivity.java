@@ -109,6 +109,10 @@ public class WatchListActivity extends BaseActivity {
      * 获取设备列表
      */
     public void watchlist() {
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
         NetApi.watchlist(getToken(), getUserName(), uuid, new ResultCallBack<DeviceWatchModel>() {
             @Override
             public void onSuccess(int statusCode, Headers headers, DeviceWatchModel model) {

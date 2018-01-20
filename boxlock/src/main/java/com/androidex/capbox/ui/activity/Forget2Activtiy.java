@@ -31,6 +31,10 @@ public class Forget2Activtiy extends RegisterActivity {
 
     @Override
     protected void regist(String phone, String name, String cardId, String password, String authcode) {
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
         NetApi.forgetPassword(getToken(), phone, CommonKit.getMd5Password(password), name, cardId, authcode, new ResultCallBack<BaseModel>() {
 
             @Override

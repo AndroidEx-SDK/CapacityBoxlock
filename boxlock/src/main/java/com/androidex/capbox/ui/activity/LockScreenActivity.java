@@ -206,6 +206,10 @@ public class LockScreenActivity extends BaseActivity {
      * 获取设备列表
      */
     public void boxlist() {
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
         NetApi.boxlist(getToken(), getUserName(), new ResultCallBack<BoxDeviceModel>() {
 
             @Override

@@ -63,6 +63,10 @@ public class SettingActivity extends UserBaseActivity {
                 break;
             case R.id.tv_logout:
                 if (username != null) {
+                    if (!CommonKit.isNetworkAvailable(context)) {
+                        CommonKit.showErrorShort(context, "设备未连接网络");
+                        return;
+                    }
                     NetApi.userLogout(getToken(), username, new ResultCallBack<BaseModel>() {
                         @Override
                         public void onSuccess(int statusCode, Headers headers, BaseModel model) {
@@ -95,6 +99,10 @@ public class SettingActivity extends UserBaseActivity {
                 break;
             case R.id.tv_logoff:
                 if (username != null) {
+                    if (!CommonKit.isNetworkAvailable(context)) {
+                        CommonKit.showErrorShort(context, "设备未连接网络");
+                        return;
+                    }
                     NetApi.userLogoff(getToken(), username, new ResultCallBack<BaseModel>() {
                         @Override
                         public void onSuccess(int statusCode, Headers headers, BaseModel model) {
@@ -136,6 +144,10 @@ public class SettingActivity extends UserBaseActivity {
      * 检测版本号，包括APP的，箱体的，腕表的
      */
     public void checkVersion() {
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
         NetApi.checkVersion(getToken(), MainActivity.username, new ResultCallBack<CheckVersionModel>() {
             @Override
             public void onStart() {
@@ -188,6 +200,10 @@ public class SettingActivity extends UserBaseActivity {
      * @param appFireName
      */
     public void downloadAppApk(final String appFireName) {
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
         final String SDCard = Environment.getExternalStorageDirectory() + "/androidex";
         Log.v("downloadFile", "File path: " + SDCard);
         NetApi.downloadAppApk(getToken(), SDCard, appFireName, new ResultCallBack() {

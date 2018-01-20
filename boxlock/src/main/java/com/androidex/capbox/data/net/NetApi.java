@@ -190,7 +190,6 @@ public class NetApi {
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
 
-
     /**
      * 解除绑定腕表
      * token
@@ -210,7 +209,6 @@ public class NetApi {
         String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_RELIEVEWATCHBIND);
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
-
 
     /**
      * 获取箱体设备列表

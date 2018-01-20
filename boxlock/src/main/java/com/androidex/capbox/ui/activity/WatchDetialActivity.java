@@ -138,6 +138,10 @@ public class WatchDetialActivity extends BaseActivity {
 //        *carryFinger3:’fffffff’,                //携行人员指纹信息或id3
 //        *carryCall:’13545457676’,             //携行人手机号
 //        *become:’A’
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
         NetApi.watchConfig(getToken(), username, uuid, mac,
                 carryName, carryCardId, carryFinger1, carryFinger2,
                 carryFinger3, carryCall, become,

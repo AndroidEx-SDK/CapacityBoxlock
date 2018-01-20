@@ -300,6 +300,10 @@ public class LockFragment extends BaseFragment implements OnClickListener {
      * 结束携行
      */
     private void endTask() {
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
         NetApi.endTask(getToken(), getUserName(), uuid, new ResultCallBack<BaseModel>() {
             @Override
             public void onSuccess(int statusCode, Headers headers, BaseModel model) {
@@ -456,6 +460,10 @@ public class LockFragment extends BaseFragment implements OnClickListener {
      * @param uuid
      */
     private void boxlocation(String uuid) {
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
         NetApi.getboxLocation(getToken(), ((MainActivity) getActivity()).username, uuid,
                 new ResultCallBack<LocationModel>() {
                     @Override
@@ -519,6 +527,10 @@ public class LockFragment extends BaseFragment implements OnClickListener {
      * @param longitude
      */
     public void getBaiduLocation(String latitude, String longitude) {
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
         NetApi.getLocation(latitude, longitude, new ResultCallBack<BaiduModel>() {
             @Override
             public void onSuccess(int statusCode, Headers headers, BaiduModel model) {

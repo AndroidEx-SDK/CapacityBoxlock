@@ -221,6 +221,10 @@ public class BoxListAdapter extends BaseAdapter {
                     CommonKit.showErrorShort(mContext, "账号异常");
                     token = "";
                 }
+                if (!CommonKit.isNetworkAvailable(mContext)) {
+                    CommonKit.showErrorShort(mContext, "设备未连接网络");
+                    return;
+                }
                 NetApi.relieveBoxBind(token, ((MainActivity) mContext).username, uuid, mac, new ResultCallBack<BaseModel>() {
                     @Override
                     public void onStart() {

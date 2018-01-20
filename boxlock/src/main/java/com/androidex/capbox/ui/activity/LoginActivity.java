@@ -100,6 +100,7 @@ public class LoginActivity extends UserBaseActivity {
 
     /**
      * 自动登录
+     *
      * @param phone
      * @param md5Pwd
      */

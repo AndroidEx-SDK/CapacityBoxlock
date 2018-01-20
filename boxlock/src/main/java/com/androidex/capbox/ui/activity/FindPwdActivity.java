@@ -134,6 +134,10 @@ public class FindPwdActivity extends UserBaseActivity {
             return;
         }
 
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
         NetApi.forgetPassword(getToken(),phone, CommonKit.getMd5Password(newPassword), name, cardId,"", new ResultCallBack<BaseModel>() {
 
             @Override
