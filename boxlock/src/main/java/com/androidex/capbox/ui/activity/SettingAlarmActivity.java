@@ -29,7 +29,6 @@ import okhttp3.Request;
 
 import static com.androidex.boxlib.cache.SharedPreTool.HIGHEST_TEMP;
 import static com.androidex.boxlib.cache.SharedPreTool.LOWEST_TEMP;
-import static com.androidex.capbox.MainActivity.username;
 
 /**
  * 箱体的报警设置页面
@@ -277,7 +276,7 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
             CommonKit.showErrorShort(context, "设备未连接网络");
             return;
         }
-        NetApi.boxDetail(getToken(), username, uuid, new ResultCallBack<BoxDetailModel>() {
+        NetApi.boxDetail(getToken(), getUserName(), uuid, new ResultCallBack<BoxDetailModel>() {
             @Override
             public void onSuccess(int statusCode, Headers headers, BoxDetailModel model) {
                 super.onSuccess(statusCode, headers, model);

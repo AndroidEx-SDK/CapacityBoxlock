@@ -13,14 +13,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.androidex.capbox.MainActivity;
+import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseFragment;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.L;
 import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.module.DeviceWatchModel;
-import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.activity.WatchDetialActivity;
 import com.androidex.capbox.ui.adapter.WatchListAdapter;
@@ -201,7 +200,7 @@ public class WatchListFragment extends BaseFragment {
             CommonKit.showErrorShort(context, "设备未连接网络");
             return;
         }
-        NetApi.watchlist(getToken(), ((MainActivity) context).username, new ResultCallBack<DeviceWatchModel>() {
+        NetApi.watchlist(getToken(), getUserName(), new ResultCallBack<DeviceWatchModel>() {
             @Override
             public void onSuccess(int statusCode, Headers headers, DeviceWatchModel model) {
                 super.onSuccess(statusCode, headers, model);

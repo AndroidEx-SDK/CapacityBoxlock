@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.androidex.capbox.MainActivity;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.UserBaseActivity;
 import com.androidex.capbox.data.Event;
@@ -148,7 +147,7 @@ public class SettingActivity extends UserBaseActivity {
             CommonKit.showErrorShort(context, "设备未连接网络");
             return;
         }
-        NetApi.checkVersion(getToken(), MainActivity.username, new ResultCallBack<CheckVersionModel>() {
+        NetApi.checkVersion(getToken(), getUserName(), new ResultCallBack<CheckVersionModel>() {
             @Override
             public void onStart() {
                 super.onStart();

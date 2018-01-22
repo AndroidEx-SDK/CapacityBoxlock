@@ -82,7 +82,8 @@
         <activity
             android:name="com.androidex.capbox.ui.activity.AboutActivity"
             android:screenOrientation="portrait" />
-        <activity android:name="com.androidex.capbox.ui.activity.AuthentiCationActivity"
+        <activity
+            android:name="com.androidex.capbox.ui.activity.AuthentiCationActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.androidex.capbox.ui.activity.CameraActivity"
@@ -150,7 +151,7 @@
                 <action android:name="com.baidu.location.service_v2.2"></action>
             </intent-filter>
         </service>
-
+        <!--锁屏界面-->
         <activity
             android:name="com.androidex.capbox.ui.activity.LockScreenActivity"
             android:excludeFromRecents="true"
@@ -161,6 +162,15 @@
             android:taskAffinity="com.androidex.capbox"
             android:theme="@style/LockScreenBase"></activity>
 
+        <!--桌面插件-->
+        <receiver android:name=".provider.MainWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="hand_update" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/provider_widget" />
+        </receiver>
     </application>
-
 </manifest>

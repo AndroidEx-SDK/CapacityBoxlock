@@ -22,7 +22,6 @@ import com.acker.simplezxing.activity.CaptureActivity;
 import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.boxlib.service.BleService;
 import com.androidex.boxlib.utils.Byte2HexUtil;
-import com.androidex.capbox.MainActivity;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseFragment;
 import com.androidex.capbox.data.Event;
@@ -397,7 +396,7 @@ public class BoxListFragment extends BaseFragment {
             CommonKit.showErrorShort(context, "设备未连接网络");
             return;
         }
-        NetApi.boxBind(getToken(), ((MainActivity) context).username, uuid, new ResultCallBack<BaseModel>() {
+        NetApi.boxBind(getToken(), getUserName(), uuid, new ResultCallBack<BaseModel>() {
             @Override
             public void onSuccess(int statusCode, Headers headers, BaseModel model) {
                 super.onSuccess(statusCode, headers, model);
@@ -452,7 +451,7 @@ public class BoxListFragment extends BaseFragment {
             CommonKit.showErrorShort(context, "设备未连接网络");
             return;
         }
-        NetApi.boxlist(getToken(), ((MainActivity) context).username, new ResultCallBack<BoxDeviceModel>() {
+        NetApi.boxlist(getToken(), getUserName(), new ResultCallBack<BoxDeviceModel>() {
             @Override
             public void onSuccess(int statusCode, Headers headers, BoxDeviceModel model) {
                 super.onSuccess(statusCode, headers, model);

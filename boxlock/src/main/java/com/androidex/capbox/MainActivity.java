@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.data.Event;
-import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.L;
 import com.androidex.capbox.data.net.base.ResultCallBack;
@@ -78,7 +77,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     private FragmentManager fragmentManager;
     private FragmentTransaction transaction;
     private int currIndex = 0;
-    public static String username;
     private Fragment mainFragment;
     private Fragment lockFragment;
     private static List<Map<String, String>> mylist = new ArrayList<>();
@@ -87,7 +85,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     @Override
     public void initData(Bundle savedInstanceState) {
         registerEventBusSticky();
-        username = SharedPreTool.getInstance(context).getStringData(SharedPreTool.PHONE, null);
         boxlist(true);
     }
 
@@ -355,7 +352,11 @@ public class MainActivity extends BaseActivity implements OnClickListener {
      * 获取设备列表
      */
     public void boxlist(final boolean isBind) {
-        NetApi.boxlist(getToken(), ((MainActivity) context).username, new ResultCallBack<BoxDeviceModel>() {
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
+        NetApi.boxlist(getToken(), getUserName(), new ResultCallBack<BoxDeviceModel>() {
             @Override
             public void onSuccess(int statusCode, Headers headers, BoxDeviceModel model) {
                 super.onSuccess(statusCode, headers, model);
@@ -446,7 +447,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
      * @param event
      */
     public void onEvent(Event.UserLoginEvent event) {
-        finish();    //退出主界面
+        CommonKit.finishActivity(context);
     }
 
     @Override

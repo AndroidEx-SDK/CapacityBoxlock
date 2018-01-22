@@ -41,7 +41,6 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCONNECTED;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
-import static com.androidex.capbox.MainActivity.username;
 import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_ADD_DEVICE;
 
 /**
@@ -142,7 +141,7 @@ public class WatchDetialActivity extends BaseActivity {
             CommonKit.showErrorShort(context, "设备未连接网络");
             return;
         }
-        NetApi.watchConfig(getToken(), username, uuid, mac,
+        NetApi.watchConfig(getToken(), getUserName(), uuid, mac,
                 carryName, carryCardId, carryFinger1, carryFinger2,
                 carryFinger3, carryCall, become,
                 new ResultCallBack<BaseModel>() {

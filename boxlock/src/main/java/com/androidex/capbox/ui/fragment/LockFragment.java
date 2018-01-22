@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.boxlib.service.BleService;
-import com.androidex.capbox.MainActivity;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseFragment;
 import com.androidex.capbox.data.cache.SharedPreTool;
@@ -464,7 +463,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
             CommonKit.showErrorShort(context, "设备未连接网络");
             return;
         }
-        NetApi.getboxLocation(getToken(), ((MainActivity) getActivity()).username, uuid,
+        NetApi.getboxLocation(getToken(), getUserName(), uuid,
                 new ResultCallBack<LocationModel>() {
                     @Override
                     public void onSuccess(int statusCode, Headers headers, LocationModel model) {

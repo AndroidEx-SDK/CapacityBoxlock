@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.androidex.capbox.MyApplication;
 import com.androidex.capbox.R;
-import com.androidex.capbox.data.Event;
 import com.androidex.capbox.data.cache.CacheManage;
 import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.module.UserModel;
@@ -211,9 +210,10 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
     public String getToken() {
         String token = SharedPreTool.getInstance(context).getStringData(SharedPreTool.TOKEN, null);
         if (token == null) {
-            CommonKit.showErrorShort(context, "账号异常");
+            CommonKit.showErrorShort(context, "账号未登录");
             LoginActivity.lauch(context);
-            postSticky(new Event.UserLoginEvent());
+            Loge("token is null");
+            //postSticky(new Event.UserLoginEvent());
             return "";
         }
         return token;
@@ -226,9 +226,10 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
     public String getUserName() {
         String username = SharedPreTool.getInstance(context).getStringData(SharedPreTool.PHONE, null);
         if (username == null) {
-            CommonKit.showErrorShort(context, "账号异常");
+            CommonKit.showErrorShort(context, "账号未登录");
             LoginActivity.lauch(context);
-            postSticky(new Event.UserLoginEvent());
+            Loge("username is null");
+            //postSticky(new Event.UserLoginEvent());
             return "";
         }
         return username;
@@ -413,6 +414,7 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(baseBroad);
+        if (baseBroad != null)
+            unregisterReceiver(baseBroad);
     }
 }

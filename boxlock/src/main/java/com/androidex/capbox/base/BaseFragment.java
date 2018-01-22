@@ -135,8 +135,8 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
             String deviceMac = intent.getStringExtra(BLECONSTANTS_ADDRESS);
             switch (intent.getAction()) {
                 case BLE_CONN_DIS://蓝牙异常断开
-                   // Log.e(TAG, "蓝牙异常断开");
-                   // setLostAlarm("Box" + deviceMac.substring(deviceMac.length() - 2));//蓝牙异常断开弹窗
+                    // Log.e(TAG, "蓝牙异常断开");
+                    // setLostAlarm("Box" + deviceMac.substring(deviceMac.length() - 2));//蓝牙异常断开弹窗
                     break;
                 case ACTION_TEMP_OUT://温度超范围
                     //showTempOutAlarmDialog("Box" + deviceMac.substring(deviceMac.length() - 2));
@@ -202,6 +202,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     protected void Logd(String tag, String msg) {
         Log.d(tag, msg);
     }
+
     protected void Loge(String tag, String msg) {
         Log.e(tag, msg);
     }
@@ -322,7 +323,8 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     @Override
     public void onDestroy() {
         super.onDestroy();
-        context.unregisterReceiver(baseBroad);
+        if (baseBroad != null && context != null)
+            context.unregisterReceiver(baseBroad);
     }
 
     @Override

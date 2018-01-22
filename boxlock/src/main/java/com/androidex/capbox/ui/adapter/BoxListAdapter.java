@@ -14,8 +14,8 @@ import android.widget.TextView;
 
 import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.boxlib.service.BleService;
-import com.androidex.capbox.MainActivity;
 import com.androidex.capbox.R;
+import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.data.Event;
 import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
@@ -225,7 +225,7 @@ public class BoxListAdapter extends BaseAdapter {
                     CommonKit.showErrorShort(mContext, "设备未连接网络");
                     return;
                 }
-                NetApi.relieveBoxBind(token, ((MainActivity) mContext).username, uuid, mac, new ResultCallBack<BaseModel>() {
+                NetApi.relieveBoxBind(token, ((BaseActivity) mContext).getUserName(), uuid, mac, new ResultCallBack<BaseModel>() {
                     @Override
                     public void onStart() {
                         super.onStart();

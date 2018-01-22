@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.androidex.capbox.MainActivity;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.data.net.NetApi;
@@ -63,7 +62,7 @@ public class AboutActivity extends BaseActivity {
             CommonKit.showErrorShort(context, "设备未连接网络");
             return;
         }
-        NetApi.checkVersion(getToken(), MainActivity.username, new ResultCallBack<CheckVersionModel>() {
+        NetApi.checkVersion(getToken(), getUserName(), new ResultCallBack<CheckVersionModel>() {
             @Override
             public void onStart() {
                 super.onStart();

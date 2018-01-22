@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.androidex.capbox.MainActivity;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseFragment;
 import com.androidex.capbox.data.net.NetApi;
@@ -232,7 +231,7 @@ public class MapFragment extends BaseFragment {
      * "mac":"B0:91:22:69:42:0A","uuid":"B0912269420A0000000070D042190000"}]}
      */
     public void boxlist() {
-        NetApi.boxlist(getToken(), ((MainActivity) context).username, new ResultCallBack<BoxDeviceModel>() {
+        NetApi.boxlist(getToken(), getUserName(), new ResultCallBack<BoxDeviceModel>() {
             @Override
             public void onSuccess(int statusCode, Headers headers, BoxDeviceModel model) {
                 super.onSuccess(statusCode, headers, model);
