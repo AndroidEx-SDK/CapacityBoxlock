@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.UserBaseActivity;
@@ -17,6 +18,7 @@ import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.module.BaseModel;
 import com.androidex.capbox.ui.widget.SecondTitleBar;
+import com.androidex.capbox.utils.CalendarUtil;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
 
@@ -39,7 +41,6 @@ import okhttp3.Request;
  * @editor
  */
 public class FindPwdActivity extends UserBaseActivity {
-
     @Bind(R.id.rl_title)
     SecondTitleBar rl_title;
     @Bind(R.id.et_phone)
@@ -100,7 +101,39 @@ public class FindPwdActivity extends UserBaseActivity {
     public void clickEvent(View view) {
         switch (view.getId()) {
             case R.id.tv_findPwd:
-                findPwd();
+                String phone = et_phone.getText().toString().trim();
+                String name = et_name.getText().toString().trim();
+                String cardId = et_cardID.getText().toString().trim();
+                String newPassword = et_password.getText().toString().trim();
+                String passwordConfirm = et_passwordConfirm.getText().toString().trim();
+
+                if (!Pattern.compile(Constants.REGEX.REGEX_MOBILE).matcher(phone).matches()) {
+                    CommonKit.focusView(et_phone);
+                    CommonKit.showErrorShort(context, getString(R.string.hint_phone_input));
+                    return;
+                } else if (!Pattern.compile(Constants.REGEX.REGEX_PASSWORD).matcher(newPassword).matches()) {
+                    CommonKit.focusView(et_password);
+                    CommonKit.showErrorShort(context, getString(R.string.hint_password_input));
+                    return;
+                } else if (!Pattern.compile(Constants.REGEX.REGEX_CHINESE).matcher(name).matches()) {
+                    CommonKit.focusView(et_name);
+                    CommonKit.showErrorShort(context, getString(R.string.hint_name_input));
+                    return;
+                } else if (!CalendarUtil.is18ByteIdCardComplex(cardId)) {
+                    CommonKit.focusView(et_cardID);
+                    CommonKit.showErrorShort(context, getString(R.string.hint_cardid_input));
+                    return;
+                } else if (TextUtils.isEmpty(passwordConfirm)) {
+                    Toast.makeText(context, "确认密码不能为空", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (!TextUtils.equals(newPassword, passwordConfirm)) {//检查密码一致性
+                    CommonKit.focusView(et_password);
+                    CommonKit.showErrorShort(context, getString(R.string.hint_password_not_equal));
+                    et_passwordConfirm.setText("");
+                    return;
+                } else {
+                    findPwd(phone, newPassword, name, cardId);
+                }
                 break;
         }
     }
@@ -108,37 +141,12 @@ public class FindPwdActivity extends UserBaseActivity {
     /**
      * 找回密码
      */
-    private void findPwd() {
-        String phone = et_phone.getText().toString().trim();
-        String name = et_name.getText().toString().trim();
-        String cardId = et_cardID.getText().toString().trim();
-        String newPassword = et_password.getText().toString().trim();
-        String passwordConfirm = et_passwordConfirm.getText().toString().trim();
-
-        if (!Pattern.compile(Constants.REGEX.REGEX_PHONE).matcher(phone).matches()) {
-            CommonKit.focusView(et_phone);
-            CommonKit.showErrorShort(context, getString(R.string.hint_phone_input));
-            return;
-        }
-        if (!Pattern.compile(Constants.REGEX.REGEX_PASSWORD).matcher(newPassword).matches()) {
-            CommonKit.focusView(et_password);
-            CommonKit.showErrorShort(context, getString(R.string.hint_password_input));
-            return;
-        }
-
-        //检查密码一致性
-        if (!TextUtils.equals(newPassword, passwordConfirm)) {
-            CommonKit.focusView(et_password);
-            CommonKit.showErrorShort(context, getString(R.string.hint_password_not_equal));
-            et_passwordConfirm.setText("");
-            return;
-        }
-
+    private void findPwd(String phone, String newPassword, String name, String cardId) {
         if (!CommonKit.isNetworkAvailable(context)) {
             CommonKit.showErrorShort(context, "设备未连接网络");
             return;
         }
-        NetApi.forgetPassword(getToken(),phone, CommonKit.getMd5Password(newPassword), name, cardId,"", new ResultCallBack<BaseModel>() {
+        NetApi.forgetPassword(getToken(), phone, CommonKit.getMd5Password(newPassword), name, cardId, "", new ResultCallBack<BaseModel>() {
 
             @Override
             public void onStart() {
@@ -196,6 +204,8 @@ public class FindPwdActivity extends UserBaseActivity {
         } else {
             tv_findPwd.setEnabled(true);
         }
+
+
     }
 
     /**

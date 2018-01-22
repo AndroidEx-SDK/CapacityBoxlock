@@ -605,7 +605,7 @@ public class NetApi {
      * 获取APP安装包的下载路径
      *
      * @param token
-     * @param path APK的安装路径
+     * @param path        APK的安装路径
      * @param appFileName
      * @param callBack
      */

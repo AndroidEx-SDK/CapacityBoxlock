@@ -21,6 +21,7 @@ import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.module.ResultModel;
 import com.androidex.capbox.ui.widget.SecondTitleBar;
+import com.androidex.capbox.utils.CalendarUtil;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
 
@@ -262,7 +263,7 @@ public class RegisterActivity extends UserBaseActivity {
                     CommonKit.focusView(et_name);
                     CommonKit.showErrorShort(context, getString(R.string.hint_name_input));
                     return;
-                } else if (!Pattern.compile(Constants.REGEX.CARDID).matcher(cardId).matches()) {
+                } else if (!CalendarUtil.is18ByteIdCardComplex(cardId)) {
                     CommonKit.focusView(et_cardID);
                     CommonKit.showErrorShort(context, getString(R.string.hint_cardid_input));
                     return;
@@ -279,7 +280,7 @@ public class RegisterActivity extends UserBaseActivity {
                     CommonKit.showErrorShort(context, getString(R.string.hint_authcode_input));
                     return;
                 } else {
-                    regist(phone, name, cardId, password,input_authcode);
+                    regist(phone, name, cardId, password, input_authcode);
                 }
                 break;
             case R.id.tv_getCaptcha:
@@ -299,11 +300,11 @@ public class RegisterActivity extends UserBaseActivity {
     /**
      * 提交审核
      */
-    protected void regist(String phone, String name, String cardId, String password,String authcode) {
+    protected void regist(String phone, String name, String cardId, String password, String authcode) {
         //对密码进行MD5加密
         final String md5Pwd = CommonKit.getMd5Password(password);
         /****第一种****/
-        userRegister(phone, name, cardId, md5Pwd, authcode,new CallBackAction() {
+        userRegister(phone, name, cardId, md5Pwd, authcode, new CallBackAction() {
 
             @Override
             public void action() {
