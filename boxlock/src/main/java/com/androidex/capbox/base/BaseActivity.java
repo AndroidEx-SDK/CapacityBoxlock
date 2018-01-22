@@ -51,6 +51,7 @@ import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_
 import static com.androidex.capbox.utils.Constants.BASE.ACTION_RSSI_IN;
 import static com.androidex.capbox.utils.Constants.BASE.ACTION_RSSI_OUT;
 import static com.androidex.capbox.utils.Constants.BASE.ACTION_TEMP_OUT;
+import static com.androidex.capbox.utils.Constants.PARAM.SYSTEM_STOP_SHAKING;
 
 /**
  * @author liyp
@@ -117,6 +118,7 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
         intentFilter.addAction(ACTION_TEMP_OUT);//温度超范围
         intentFilter.addAction(ACTION_RSSI_OUT);//信号值超出范围内
         intentFilter.addAction(ACTION_RSSI_IN);//信号值回到范围内
+        intentFilter.addAction(SYSTEM_STOP_SHAKING);//停止震动
         registerReceiver(baseBroad, intentFilter);
     }
 
@@ -128,7 +130,6 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
                 case BLE_CONN_DIS://蓝牙异常断开
                     boolean isActiveDisConnect = intent.getBooleanExtra(BLECONSTANTS_ISACTIVEDisConnect, false);
                     if (!isActiveDisConnect) {
-                        RLog.e("开始震动111");
                         setLostAlarm("Box" + deviceMac.substring(deviceMac.length() - 2));//蓝牙异常断开弹窗
                     }
                     break;
@@ -142,6 +143,9 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
                     SystemUtil.startVibrate(context, true);//true:循环震动，false:震动一次
                     break;
                 case ACTION_RSSI_IN:
+                    closeLostAlarm();
+                    break;
+                case SYSTEM_STOP_SHAKING://停止震动
                     closeLostAlarm();
                     break;
                 default:
@@ -200,7 +204,7 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
         RLog.d(msg);
     }
 
-    protected void Loge( String msg) {
+    protected void Loge(String msg) {
         RLog.e(msg);
     }
 
@@ -259,7 +263,6 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
      * 设置防丢报警方式
      */
     protected void setLostAlarm(String deviceName) {
-        RLog.e("开始震动");
         showLostAlarmDialog(deviceName, getResources().getString(R.string.itemfragment_dialog_lost));
         SystemUtil.startVibrate(context, true);//true:循环震动，false:震动一次
     }
@@ -284,7 +287,9 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
                 + message, new Dialog.DialogClickListener() {
             @Override
             public void confirm() {
-                closeLostAlarm();
+                Intent intent = new Intent(SYSTEM_STOP_SHAKING);
+                sendBroadcast(intent);
+                // closeLostAlarm();
             }
 
             @Override

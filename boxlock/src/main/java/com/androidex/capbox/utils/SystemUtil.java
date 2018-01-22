@@ -106,10 +106,8 @@ public class SystemUtil {
      * @param activity
      */
     public static void stopVibrate(Activity activity) {
-        RLog.e("停止震动");
         Vibrator vib = (Vibrator) activity.getSystemService(Service.VIBRATOR_SERVICE);
         if (vib != null) {
-            Log.e("liyp_", "停止震动--");
             vib.cancel();
         }
     }

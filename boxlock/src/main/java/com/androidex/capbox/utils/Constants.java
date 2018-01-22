@@ -44,6 +44,7 @@ public class Constants extends BleConstants{
      */
     public static class PARAM {
         public static final String CACHE_KEY_CUR_LOGIN_USER = "curLoginedUser"; //当前登陆用户
+        public static final String SYSTEM_STOP_SHAKING = "SYSTEM_STOP_SHAKING"; //停止震动
 
     }
 
