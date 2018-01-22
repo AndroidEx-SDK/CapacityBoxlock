@@ -39,7 +39,6 @@ public class LoginActivity extends UserBaseActivity {
     @Bind(R.id.cb_automatic_login)
     CheckBox cb_automatic_login;
 
-    private static final String TAG = "LoginActivity";
     static UserBaseActivity.CallBackAction callBackAction;
 
     @Override
