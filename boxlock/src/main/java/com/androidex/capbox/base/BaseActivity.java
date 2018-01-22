@@ -28,6 +28,7 @@ import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
 import com.androidex.capbox.utils.Dialog;
 import com.androidex.capbox.utils.DialogUtils;
+import com.androidex.capbox.utils.RLog;
 import com.androidex.capbox.utils.SystemUtil;
 
 import butterknife.ButterKnife;
@@ -127,6 +128,7 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
                 case BLE_CONN_DIS://蓝牙异常断开
                     boolean isActiveDisConnect = intent.getBooleanExtra(BLECONSTANTS_ISACTIVEDisConnect, false);
                     if (!isActiveDisConnect) {
+                        RLog.e("开始震动111");
                         setLostAlarm("Box" + deviceMac.substring(deviceMac.length() - 2));//蓝牙异常断开弹窗
                     }
                     break;
@@ -141,6 +143,8 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
                     break;
                 case ACTION_RSSI_IN:
                     closeLostAlarm();
+                    break;
+                default:
                     break;
             }
         }
@@ -192,12 +196,12 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
         EventBus.getDefault().postSticky(event);
     }
 
-    protected void Logd(String tag, String msg) {
-        Log.d(tag, msg);
+    protected void Logd(String msg) {
+        RLog.d(msg);
     }
 
-    protected void Loge(String tag, String msg) {
-        Log.e(tag, msg);
+    protected void Loge( String msg) {
+        RLog.e(msg);
     }
 
     public String getToken() {
@@ -255,6 +259,7 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
      * 设置防丢报警方式
      */
     protected void setLostAlarm(String deviceName) {
+        RLog.e("开始震动");
         showLostAlarmDialog(deviceName, getResources().getString(R.string.itemfragment_dialog_lost));
         SystemUtil.startVibrate(context, true);//true:循环震动，false:震动一次
     }

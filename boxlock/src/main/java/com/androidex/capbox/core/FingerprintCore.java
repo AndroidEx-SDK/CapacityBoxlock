@@ -9,7 +9,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import com.androidex.capbox.utils.FPLog;
+import com.androidex.capbox.utils.RLog;
 
 import java.lang.ref.WeakReference;
 
@@ -55,7 +55,6 @@ public class FingerprintCore {
     public FingerprintCore(Context context) {
         mFingerprintManager = getFingerprintManager(context);
         isSupport = (mFingerprintManager != null && isHardwareDetected());
-        FPLog.log("fingerprint isSupport: " + isSupport);
         initCryptoObject();
     }
 
@@ -69,7 +68,7 @@ public class FingerprintCore {
                 }
             });
         } catch (Throwable throwable) {
-            FPLog.log("create cryptoObject failed!");
+            RLog.e("create cryptoObject failed!");
         }
     }
 
@@ -103,12 +102,12 @@ public class FingerprintCore {
 
     private void notifyStartAuthenticateResult(boolean isSuccess, String exceptionMsg) {
         if (isSuccess) {
-            FPLog.log("start authenticate...");
+            RLog.d("start authenticate...");
             if (mFpResultListener.get() != null) {
                 mFpResultListener.get().onStartAuthenticateResult(true);
             }
         } else {
-            FPLog.log("startListening, Exception" + exceptionMsg);
+            RLog.e("startListening, Exception" + exceptionMsg);
             if (mFpResultListener.get() != null) {
                 mFpResultListener.get().onStartAuthenticateResult(false);
             }
@@ -116,21 +115,21 @@ public class FingerprintCore {
     }
 
     private void notifyAuthenticationSucceeded() {
-        FPLog.log("onAuthenticationSucceeded");
+        RLog.d("onAuthenticationSucceeded");
         if (null != mFpResultListener && null != mFpResultListener.get()) {
             mFpResultListener.get().onAuthenticateSuccess();
         }
     }
 
     private void notifyAuthenticationError(int errMsgId, CharSequence errString) {
-        FPLog.log("onAuthenticationError, errId:" + errMsgId + ", err:" + errString + ", retry after 30 seconds");
+        RLog.e("onAuthenticationError, errId:" + errMsgId + ", err:" + errString + ", retry after 30 seconds");
         if (null != mFpResultListener && null != mFpResultListener.get()) {
             mFpResultListener.get().onAuthenticateError(errMsgId);
         }
     }
 
     private void notifyAuthenticationFailed(int msgId, String errString) {
-        FPLog.log("onAuthenticationFailed, msdId: " +  msgId + " errString: " + errString);
+        RLog.e("onAuthenticationFailed, msdId: " +  msgId + " errString: " + errString);
         if (null != mFpResultListener && null != mFpResultListener.get()) {
             mFpResultListener.get().onAuthenticateFailed(msgId);
         }
@@ -175,7 +174,7 @@ public class FingerprintCore {
 
     public void cancelAuthenticate() {
         if (mCancellationSignal != null && mState != CANCEL) {
-            FPLog.log("cancelAuthenticate...");
+            RLog.d("cancelAuthenticate...");
             mState = CANCEL;
             mCancellationSignal.cancel();
             mCancellationSignal = null;
@@ -184,7 +183,7 @@ public class FingerprintCore {
 
     private void onFailedRetry(int msgId) {
         mFailedTimes++;
-        FPLog.log("on failed retry time " + mFailedTimes);
+        RLog.e("on failed retry time " + mFailedTimes);
         cancelAuthenticate();
         mHandler.removeCallbacks(mFailedRetryRunnable);
         mHandler.postDelayed(mFailedRetryRunnable, 300); // 每次重试间隔一会儿再启动
@@ -232,7 +231,7 @@ public class FingerprintCore {
         try {
             fingerprintManager = (FingerprintManager) context.getSystemService(Context.FINGERPRINT_SERVICE);
         } catch (Throwable e) {
-            FPLog.log("have not class FingerprintManager");
+            RLog.e("have not class FingerprintManager");
         }
         return fingerprintManager;
     }

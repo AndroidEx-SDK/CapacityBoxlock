@@ -197,7 +197,7 @@ public class LockScreenActivity extends BaseActivity {
     public void clickEvent(View view) {
         switch (view.getId()) {
             case R.id.rl_lockscreen:
-                Logd(TAG, "锁屏界面主页面被点击");
+                Logd("锁屏界面主页面被点击");
                 break;
         }
     }
@@ -224,7 +224,7 @@ public class LockScreenActivity extends BaseActivity {
                                     adapter.setData(model.devicelist);
                                 }
                             }
-                            Logd(TAG, "刷新列表");
+                            Logd("刷新列表");
                             break;
                         case Constants.API.API_FAIL:
                             CommonKit.showErrorShort(context, "账号在其他地方登录");
@@ -280,17 +280,17 @@ public class LockScreenActivity extends BaseActivity {
                     CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast3));
                     break;
                 case BLE_CONN_DIS://蓝牙断开
+                    CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast4));
                     if (devicelist != null) {
                         adapter.setData(devicelist);
                     }
-                    CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast4));
                     break;
                 case BLE_CONN_FAIL://连接失败
                     disProgress();
                     CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast8));
                     break;
                 case BLUTOOTH_OFF:
-                    Logd(TAG, "手机蓝牙断开");
+                    Logd("手机蓝牙断开");
                     CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast9));
                     MyBleService.get().disConnectDeviceALL();
                     if (devicelist != null) {
@@ -298,7 +298,7 @@ public class LockScreenActivity extends BaseActivity {
                     }
                     break;
                 case BLUTOOTH_ON:
-                    Logd(TAG, "手机蓝牙开启");
+                    Logd("手机蓝牙开启");
                     CommonKit.showOkShort(context, "手机蓝牙开启");
                     break;
                 case ACTION_LOCK_OPEN_SUCCED:
@@ -361,10 +361,10 @@ public class LockScreenActivity extends BaseActivity {
         public void run() {
             do {
                 try {
-                    Thread.sleep(1000);
                     Message msg = Message.obtain();
                     msg.what = 1;  //消息(一个整型值)
                     mHandler.sendMessage(msg);// 每隔1秒发送一个msg给mHandler
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -377,7 +377,6 @@ public class LockScreenActivity extends BaseActivity {
         super.onDestroy();
         unregisterReceiver(lockScreenReceiver);
         unregisterEventBus();
-        Loge(TAG, "锁屏界面退出");
         mHandler.removeMessages(1);
         if (timeThread != null && timeThread.isAlive()) {
             timeThread.interrupt();

@@ -52,7 +52,7 @@ public class ConnectDeviceListActivity extends BaseActivity {
     @Override
     public void initData(Bundle savedInstanceState) {
         allConnectDevice = MyBleService.get().getAllConnectDevice();
-        Loge(TAG, "connected device size=" + allConnectDevice.size());
+        Loge("connected device size=" + allConnectDevice.size());
         initTitleBar();
         iniRefreshView();
         initListView();
@@ -110,7 +110,7 @@ public class ConnectDeviceListActivity extends BaseActivity {
         // 初始化蓝牙adapter
         if (!mBtAdapter.isEnabled()) {
             mBtAdapter.enable();//打开蓝牙
-            Logd(TAG, "打开蓝牙");
+            Logd("打开蓝牙");
         }
     }
 
@@ -163,7 +163,7 @@ public class ConnectDeviceListActivity extends BaseActivity {
                         byte[] b_uuid = new byte[b.length - 4];
                         System.arraycopy(b, 4, b_uuid, 0, b.length - 4);
                         String uuid = Byte2HexUtil.byte2Hex(b_uuid).trim();
-                        Loge(TAG, "uuid=" + uuid);
+                        Loge("uuid=" + uuid);
                         if (uuid != null) {
                             showProgress("正在绑定...");
                         }

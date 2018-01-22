@@ -75,11 +75,11 @@ public class FingerprintMainActivity extends BaseActivity {
         //判断是否设置锁屏密码或指纹，没有设置直接进入欢迎界面
         if (!mKeyguardLockScreenManager.isOpenLockScreenPwd()) {
             CommonKit.showMsgShort(context, getString(R.string.fingerprint_not_set_unlock_screen_pws));
-            Loge("FingerprintMainActivity","无锁屏密码");
+            Loge("无锁屏密码");
             LoginActivity.lauch(context);
             return;
         }else {
-            Loge("FingerprintMainActivity","有锁屏密码");
+            Loge("有锁屏密码");
         }
         mKeyguardLockScreenManager.showAuthenticationScreen(this);
     }

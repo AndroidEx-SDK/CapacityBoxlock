@@ -297,7 +297,6 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
                             tb_tempAlarm.setChecked(false ? police.equals("B") : !police.equals("B"));
                             tb_humAlarm.setChecked(false ? police.equals("B") : !police.equals("B"));
 
-                            Loge(TAG, "data=" + model.data.toString());
                             break;
 
                         case Constants.API.API_FAIL:

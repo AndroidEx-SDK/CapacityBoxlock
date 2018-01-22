@@ -29,7 +29,6 @@ import com.androidex.capbox.ui.activity.LoginActivity;
 import com.androidex.capbox.utils.BuildConfig;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
-import com.androidex.capbox.utils.Dialog;
 import com.androidex.capbox.utils.DialogUtils;
 import com.androidex.capbox.utils.SystemUtil;
 
@@ -232,14 +231,6 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     }
 
     /**
-     * 设置防丢报警方式
-     */
-    protected void setLostAlarm(String deviceName) {
-        showLostAlarmDialog(deviceName);
-        SystemUtil.startVibrate(context, true);//true:循环震动，false:震动一次
-    }
-
-    /**
      * 停止显示报警dialog
      */
     protected void closeLostAlarm() {
@@ -249,44 +240,6 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         if (mLostAlarmDialog != null && mLostAlarmDialog.isShowing()) {
             mLostAlarmDialog.dismiss();
         }
-    }
-
-    /**
-     * 防丢报警Dialog显示
-     */
-    private void showLostAlarmDialog(String deviceName) {
-        //就一个确定按钮
-        mLostAlarmDialog = Dialog.showRadioDialog(context, deviceName
-                + getResources().getString(R.string.itemfragment_dialog_lost), new Dialog.DialogClickListener() {
-            @Override
-            public void confirm() {
-                closeLostAlarm();
-            }
-
-            @Override
-            public void cancel() {
-
-            }
-        });
-    }
-
-    /**
-     * 温度超范围报警Dialog显示
-     */
-    private void showTempOutAlarmDialog(String deviceName) {
-        //就一个确定按钮
-        mLostAlarmDialog = Dialog.showRadioDialog(context, deviceName
-                + getResources().getString(R.string.itemfragment_dialog_temp_out), new Dialog.DialogClickListener() {
-            @Override
-            public void confirm() {
-                closeLostAlarm();
-            }
-
-            @Override
-            public void cancel() {
-
-            }
-        });
     }
 
     /**

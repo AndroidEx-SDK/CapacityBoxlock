@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
-import com.androidex.capbox.utils.FPLog;
+import com.androidex.capbox.utils.RLog;
 
 /**
  * Created by popfisher on 2016/11/8.
@@ -38,7 +38,7 @@ public class KeyguardLockScreenManager {
         try {
             keyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
         } catch (Throwable throwable) {
-            FPLog.log("getKeyguardManager exception");
+            RLog.e("getKeyguardManager exception");
         }
         return keyguardManager;
     }
