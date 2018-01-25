@@ -177,8 +177,6 @@
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="com.androidex.capbox.provider.ACTION_UPDATE_ALL" />
-                <action android:name="com.androidex.capbox.provider.CLICK_BLE_CONNECTED" />
-                <action android:name="com.androidex.capbox.provider.CLICK_LOCK_OPEN" />
                 <action android:name="BLE_CONN_SUCCESS" />
                 <action android:name="BLE_CONN_SUCCESS_ALLCONNECTED" />
                 <action android:name="BLE_CONN_FAIL" />
