@@ -151,6 +151,16 @@
                 <action android:name="com.baidu.location.service_v2.2"></action>
             </intent-filter>
         </service>
+        <!-- 用来发送 通知桌面部件更新 -->
+        <service
+            android:name=".service.WidgetService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS">
+            <intent-filter>
+
+                <action android:name="android.appwidget.action.APP_WIDGET_SERVICE" />
+            </intent-filter>
+        </service>
         <!--锁屏界面-->
         <activity
             android:name="com.androidex.capbox.ui.activity.LockScreenActivity"
@@ -163,10 +173,19 @@
             android:theme="@style/LockScreenBase"></activity>
 
         <!--桌面插件-->
-        <receiver android:name=".provider.MainWidgetProvider">
+        <receiver android:name=".provider.WidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="hand_update" />
+                <action android:name="com.androidex.capbox.provider.ACTION_UPDATE_ALL" />
+                <action android:name="com.androidex.capbox.provider.CLICK_BLE_CONNECTED" />
+                <action android:name="com.androidex.capbox.provider.CLICK_LOCK_OPEN" />
+                <action android:name="BLE_CONN_SUCCESS" />
+                <action android:name="BLE_CONN_SUCCESS_ALLCONNECTED" />
+                <action android:name="BLE_CONN_FAIL" />
+                <action android:name="BLE_CONN_DIS" />
+                <action android:name="BLUTOOTH_OFF" />
+                <action android:name="BLUTOOTH_ON" />
+                <action android:name="ACTION_LOCK_STARTS" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"

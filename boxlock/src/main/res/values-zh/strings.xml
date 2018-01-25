@@ -9,7 +9,7 @@
     <string name="corporate_name">西安中仪动控信息科技有限公司</string>
     <!-- fragment_lock -->
     <string name="main_title_tv">智能监控</string>
-    <string name="user_name0">昵称：</string>
+    <string name="user_name0">名称：</string>
     <string name="user_name">箱子</string>
     <string name="user_binding">设备：</string>
     <string name="user_device">FF:FF:FF:FF:FF</string>
@@ -305,6 +305,7 @@
     <string name="label_register">提交审核</string>
     <string name="label_user_login">用户登录</string>
     <string name="label_box_name">箱体昵称</string>
+    <string name="label_device_list">设备列表</string>
     <string name="label_user_login_account">手机号码</string>
     <string name="hint_phone_input">请输入11位手机号</string>
     <string name="hint_uuid_commit">箱体uuid为空</string>
