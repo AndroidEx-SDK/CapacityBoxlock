@@ -1,6 +1,7 @@
 package com.androidex.capbox.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -35,6 +36,7 @@ import okhttp3.Headers;
 import okhttp3.Request;
 
 import static com.androidex.capbox.R.id.tv_status;
+import static com.androidex.capbox.provider.WidgetProvider.ACTION_UPDATE_ALL;
 
 /**
  * 已绑定设备的适配器
@@ -246,6 +248,7 @@ public class BoxListAdapter extends BaseAdapter {
                                     }
                                     SharedPreTool.getInstance(mContext).remove(mac);
                                     EventBus.getDefault().postSticky(new Event.BoxRelieveBind());
+                                    mContext.sendBroadcast(new Intent(ACTION_UPDATE_ALL));//发送广播给桌面插件，更新列表
                                     break;
                                 case Constants.API.API_FAIL:
                                     CommonKit.showErrorShort(mContext, "解绑失败");

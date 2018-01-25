@@ -63,6 +63,7 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCONNECTED;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
+import static com.androidex.capbox.provider.WidgetProvider.ACTION_UPDATE_ALL;
 
 /**
  * 箱体列表
@@ -189,12 +190,10 @@ public class BoxListFragment extends BaseFragment {
                     case R.id.tv_connect:
                         ServiceBean device = MyBleService.get().getConnectDevice(mDeviceListAdapter.getDevice(position).getAddress());
                         if (device != null) {
-                            Log.d(TAG, "断开连接");
                             mDeviceListAdapter.setTextHint(-1, "");//刷新列表的提醒显示
                             device.setActiveDisConnect(true);
                             MyBleService.get().disConnectDevice(mDeviceListAdapter.getDevice(position).getAddress());
                         } else {
-                            Log.d(TAG, "开始绑定2");
                             stopScanLe();
                             showProgress(getResources().getString(R.string.device_connect));
                             MyBleService.get().connectionDevice(context, mDeviceListAdapter.getDevice(position).getAddress());
@@ -210,7 +209,6 @@ public class BoxListFragment extends BaseFragment {
         listview_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Log.d(TAG, "开始绑定1");
                 stopScanLe();
                 showProgress(getResources().getString(R.string.device_connect));
                 BleService.get().connectionDevice(context, mDeviceListAdapter.getDevice(position).getAddress());
@@ -408,6 +406,7 @@ public class BoxListFragment extends BaseFragment {
                             CommonKit.showOkShort(context, getString(R.string.hint_bind_ok));
                             boxlist();//返回成功后刷新列表
                             postSticky(new Event.BoxBindChange());
+                            context.sendBroadcast(new Intent(ACTION_UPDATE_ALL));
                             break;
                         case Constants.API.API_NOPERMMISION:
                             showProgress("该设备已被绑定");
