@@ -267,7 +267,6 @@ public class BoxListAdapter extends BaseAdapter {
                                     break;
                             }
                         }
-
                     }
 
                     @Override

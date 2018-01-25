@@ -39,7 +39,6 @@ public class WidgetService extends RemoteViewsService {
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        RLog.e("WidgetService onGetViewFactory");
         return new ListRemoteViewsFactory(this.getApplicationContext(), intent);
     }
 
@@ -48,7 +47,7 @@ public class WidgetService extends RemoteViewsService {
         // TODO Auto-generated method stub
         super.onCreate();
         context = this;
-        RLog.e("WidgetService 服务启动");
+        RLog.e("WidgetService start");
     }
 
 
@@ -73,7 +72,6 @@ public class WidgetService extends RemoteViewsService {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        RLog.e("WidgetService onStartCommand");
         return START_STICKY;
     }
 
@@ -137,7 +135,6 @@ public class WidgetService extends RemoteViewsService {
         }
 
         private Intent getIntent(String action, int position, String address) {
-            RLog.e("子布局发送广播");
             Intent intent = new Intent();
             intent.putExtra(EXTRA_ITEM_CLICK, action);
             intent.putExtra(EXTRA_ITEM_POSITION, position);

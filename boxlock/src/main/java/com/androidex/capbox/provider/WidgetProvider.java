@@ -14,13 +14,10 @@ import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.MainActivity;
 import com.androidex.capbox.R;
-import com.androidex.capbox.data.Event;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.service.WidgetService;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.RLog;
-
-import de.greenrobot.event.EventBus;
 
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_OPEN_SUCCED;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_STARTS;
@@ -53,7 +50,6 @@ public class WidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
-        RLog.e("onUpdate");
         for (int i = 0; i < appWidgetIds.length; i++) {
             // 把这个Widget绑定到RemoteViewsService
             Intent intent = new Intent(context, WidgetService.class);
@@ -99,33 +95,29 @@ public class WidgetProvider extends AppWidgetProvider {
             case ACTION_UPDATE_ALL:
                 RemoteViews remoteView = new RemoteViews(context.getPackageName(), R.layout.provider_widget);
                 remoteView.setOnClickPendingIntent(R.id.ll_layout, getPendingIntentStartActivity(context));
-
                 WidgetService.boxlist();
-                //appWidgetManager.notifyAppWidgetViewDataChanged(appIds, R.id.myListView);
-                RLog.e("发送更新数据指令");
                 appWidgetManager.updateAppWidget(appIds, remoteView);
                 break;
             case ACTION_CLICK:
-                RLog.e("listview被点击了");
                 int position = intent.getIntExtra(EXTRA_ITEM_POSITION, -1);
                 String address = intent.getStringExtra(EXTRA_ITEM_ADDRESS);
                 String click_sign = intent.getStringExtra(EXTRA_ITEM_CLICK);
+                if (click_sign == null) return;
                 switch (click_sign) {
                     case CLICK_BLE_CONNECTED:
-                        RLog.e("接收到蓝牙点击广播");
                         if (address == null) return;
                         ServiceBean device = BleService.get().getConnectDevice(address);
                         if (device == null) {
+                            RLog.e("开始连接");
                             BleService.get().connectionDevice(context, address);
-                            EventBus.getDefault().postSticky(new Event.BleConnected(address));
                         } else {
+                            RLog.e("断开连接");
                             device.setActiveDisConnect(true);
                             MyBleService.get().disConnectDevice(address);
                         }
                         break;
 
                     case CLICK_LOCK_OPEN:
-                        RLog.e("接收到点击开锁广播");
                         if (address == null) return;
                         if (BleService.get().getConnectDevice(address) == null) {
                             CommonKit.showErrorShort(context, context.getResources().getString(R.string.bledevice_toast7));
@@ -214,7 +206,6 @@ public class WidgetProvider extends AppWidgetProvider {
     @Override
     public void onEnabled(Context context) {
         // 在第一个 widget 被创建时，开启服务
-        RLog.e("onEnabled");
         super.onEnabled(context);
     }
 
