@@ -42,7 +42,11 @@ public class WidgetProvider extends AppWidgetProvider {
 
     public static final String EXTRA_ITEM_POSITION = "position";
     public static final String EXTRA_ITEM_ADDRESS = "address";
+    public static final String EXTRA_BOX_UUID = "uuid";
+    public static final String EXTRA_BOX_NAME = "name";
     public static final String EXTRA_ITEM_CLICK = "com.androidex.capbox.provider.EXTRA_ITEM_CLICK";
+
+
 
     /**
      * 每次窗口小部件被点击更新都调用一次该方法// 每次 widget 被创建时，对应的将widget的id添加到set中
@@ -115,6 +119,7 @@ public class WidgetProvider extends AppWidgetProvider {
                             device.setActiveDisConnect(true);
                             MyBleService.get().disConnectDevice(address);
                         }
+                        appWidgetManager.notifyAppWidgetViewDataChanged(appIds, R.id.myListView);
                         break;
 
                     case CLICK_LOCK_OPEN:
@@ -124,6 +129,7 @@ public class WidgetProvider extends AppWidgetProvider {
                         } else {
                             BleService.get().openLock(address);
                         }
+                        appWidgetManager.notifyAppWidgetViewDataChanged(appIds, R.id.myListView);
                         break;
                     default:
                         break;
@@ -167,7 +173,6 @@ public class WidgetProvider extends AppWidgetProvider {
             default:
                 break;
         }
-
     }
 
     /**

@@ -43,6 +43,10 @@ import butterknife.Bind;
 import okhttp3.Headers;
 import okhttp3.Request;
 
+import static com.androidex.capbox.provider.WidgetProvider.EXTRA_BOX_NAME;
+import static com.androidex.capbox.provider.WidgetProvider.EXTRA_BOX_UUID;
+import static com.androidex.capbox.provider.WidgetProvider.EXTRA_ITEM_ADDRESS;
+import static com.androidex.capbox.provider.WidgetProvider.EXTRA_ITEM_POSITION;
 import static com.androidex.capbox.ui.fragment.LockFragment.boxName;
 
 public class MainActivity extends BaseActivity implements OnClickListener {
@@ -85,7 +89,23 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     @Override
     public void initData(Bundle savedInstanceState) {
         registerEventBusSticky();
-        boxlist(true);
+        if (getIntent().getStringExtra(EXTRA_ITEM_ADDRESS) != null) {
+            initPager(true);
+            currIndex = 2;
+            initImage();
+            Bundle bundle = new Bundle();
+            bundle.putString(EXTRA_ITEM_ADDRESS, getIntent().getStringExtra(EXTRA_ITEM_ADDRESS));//这里的values就是我们要传的值
+            bundle.putString(EXTRA_BOX_NAME, getIntent().getStringExtra(EXTRA_BOX_NAME));//这里的values就是我们要传的值
+            bundle.putString(EXTRA_BOX_UUID, getIntent().getStringExtra(EXTRA_BOX_UUID));//这里的values就是我们要传的值
+            main_index = getIntent().getIntExtra(EXTRA_ITEM_POSITION, -1);
+            lockFragment = new LockFragment();
+            lockFragment.setArguments(bundle);
+            transaction = fragmentManager.beginTransaction();
+            transaction.replace(R.id.content, lockFragment);
+            transaction.commit();
+        } else {
+            boxlist(true);
+        }
     }
 
     @Override
@@ -96,12 +116,13 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     /**
      * 初始化fragment
      */
-    private void initPager() {
+    private void initPager(boolean isWidget) {
         homepage_tab1.setOnClickListener(this);
         homepage_tab2.setOnClickListener(this);
         homepage_tab3.setOnClickListener(this);
         homepage_tab4.setOnClickListener(this);
         fragmentManager = getSupportFragmentManager();
+        if (isWidget) return;
         if (mylist.size() == 0) {
             currIndex = 0;
             initImage();
@@ -113,9 +134,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
             currIndex = 2;
             initImage();
             Bundle bundle = new Bundle();
-            bundle.putString("mac", mylist.get(0).get("mac"));
-            bundle.putString("name", mylist.get(0).get("name"));
-            bundle.putString("uuid", mylist.get(0).get("uuid"));
+            bundle.putString(EXTRA_ITEM_ADDRESS, mylist.get(0).get(EXTRA_ITEM_ADDRESS));
+            bundle.putString(EXTRA_BOX_NAME, mylist.get(0).get(EXTRA_BOX_NAME));
+            bundle.putString(EXTRA_BOX_UUID, mylist.get(0).get(EXTRA_BOX_UUID));
             lockFragment = new LockFragment();
             lockFragment.setArguments(bundle);
             transaction = fragmentManager.beginTransaction();
@@ -303,9 +324,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                                     main_index = index;
                                     initImage();
                                     Bundle bundle = new Bundle();
-                                    bundle.putString("mac", mylist.get(index).get("mac"));//这里的values就是我们要传的值
-                                    bundle.putString("name", mylist.get(index).get("name"));//这里的values就是我们要传的值
-                                    bundle.putString("uuid", mylist.get(index).get("uuid"));//这里的values就是我们要传的值
+                                    bundle.putString(EXTRA_ITEM_ADDRESS, mylist.get(index).get(EXTRA_ITEM_ADDRESS));//这里的values就是我们要传的值
+                                    bundle.putString(EXTRA_BOX_NAME, mylist.get(index).get(EXTRA_BOX_NAME));//这里的values就是我们要传的值
+                                    bundle.putString(EXTRA_BOX_UUID, mylist.get(index).get(EXTRA_BOX_UUID));//这里的values就是我们要传的值
                                     lockFragment = new LockFragment();
                                     lockFragment.setArguments(bundle);
                                     transaction = fragmentManager.beginTransaction();
@@ -332,7 +353,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
     private static String getext(int i) {
         if (mylist.size() > 0) {
-            return mylist.get(i).get("name");
+            return mylist.get(i).get(EXTRA_BOX_NAME);
         } else return boxName;
     }
 
@@ -368,12 +389,12 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                             for (BoxDeviceModel.device device : model.devicelist) {
                                 Map<String, String> map = new HashMap<>();
                                 if (device.boxName.equals("Box")) {
-                                    map.put("name", "Box" + device.mac.substring(device.mac.length() - 2));
+                                    map.put(EXTRA_BOX_NAME, "Box" + device.mac.substring(device.mac.length() - 2));
                                 } else {
-                                    map.put("name", device.boxName);
+                                    map.put(EXTRA_BOX_NAME, device.boxName);
                                 }
-                                map.put("uuid", device.uuid);
-                                map.put("mac", device.mac);
+                                map.put(EXTRA_BOX_UUID, device.uuid);
+                                map.put(EXTRA_ITEM_ADDRESS, device.mac);
                                 map.put("deviceStatus", "" + device.deviceStatus);
                                 map.put("isdefault", "" + device.isDefault);
                                 map.put("isOnLine", "" + device.isOnLine);
@@ -401,7 +422,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                     }
                 }
                 if (isBind) {
-                    initPager();
+                    initPager(false);
                 }
                 initBmb();
             }
@@ -411,7 +432,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                 super.onFailure(statusCode, request, e);
                 dismissSpinnerDlg(true);
                 CommonKit.showErrorShort(context, getString(R.string.label_intnet_fail));
-                initPager();
+                initPager(false);
                 initBmb();
             }
 
