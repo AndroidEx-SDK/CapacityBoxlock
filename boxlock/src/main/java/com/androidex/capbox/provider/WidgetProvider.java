@@ -78,8 +78,7 @@ public class WidgetProvider extends AppWidgetProvider {
             final Intent refreshIntent = new Intent(context, WidgetProvider.class);
             refreshIntent.setAction(ACTION_UPDATE_ALL);
             final PendingIntent refreshPendingIntent = PendingIntent.getBroadcast(context, 0, refreshIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            remoteViews.setOnClickPendingIntent(R.id.tv_title,
-                    refreshPendingIntent);
+            remoteViews.setOnClickPendingIntent(R.id.tv_title, refreshPendingIntent);
 
             appWidgetManager.updateAppWidget(appWidgetIds[i], remoteViews);
         }
@@ -95,12 +94,12 @@ public class WidgetProvider extends AppWidgetProvider {
     private void updateAllAppWidgets(Context context, AppWidgetManager appWidgetManager, Intent intent) {
         // TODO:可以在这里做更多的逻辑操作，比如：数据处理、网络请求等。然后去显示数据
         RLog.e("action=" + intent.getAction());
+        int[] appIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, WidgetProvider.class));
         switch (intent.getAction()) {
             case ACTION_UPDATE_ALL:
                 RemoteViews remoteView = new RemoteViews(context.getPackageName(), R.layout.provider_widget);
                 remoteView.setOnClickPendingIntent(R.id.ll_layout, getPendingIntentStartActivity(context));
 
-                int[] appIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, WidgetProvider.class));
                 WidgetService.boxlist();
                 //appWidgetManager.notifyAppWidgetViewDataChanged(appIds, R.id.myListView);
                 RLog.e("发送更新数据指令");
@@ -108,38 +107,46 @@ public class WidgetProvider extends AppWidgetProvider {
                 break;
             case ACTION_CLICK:
                 RLog.e("listview被点击了");
-                break;
-            case CLICK_BLE_CONNECTED:
-                RLog.e("接收到蓝牙点击广播");
+                int position = intent.getIntExtra(EXTRA_ITEM_POSITION, -1);
                 String address = intent.getStringExtra(EXTRA_ITEM_ADDRESS);
-                if (address == null) return;
-                ServiceBean device = BleService.get().getConnectDevice(address);
-                if (device == null) {
-                    BleService.get().connectionDevice(context, address);
-                    EventBus.getDefault().postSticky(new Event.BleConnected(address));
-                } else {
-                    device.setActiveDisConnect(true);
-                    MyBleService.get().disConnectDevice(address);
-                }
-                break;
-            case CLICK_LOCK_OPEN:
-                String address1 = intent.getStringExtra(EXTRA_ITEM_ADDRESS);
-                if (address1 == null) return;
-                if (BleService.get().getConnectDevice(address1) == null) {
-                    CommonKit.showErrorShort(context, context.getResources().getString(R.string.bledevice_toast7));
-                } else {
-                    BleService.get().openLock(address1);
+                String click_sign = intent.getStringExtra(EXTRA_ITEM_CLICK);
+                switch (click_sign) {
+                    case CLICK_BLE_CONNECTED:
+                        RLog.e("接收到蓝牙点击广播");
+                        if (address == null) return;
+                        ServiceBean device = BleService.get().getConnectDevice(address);
+                        if (device == null) {
+                            BleService.get().connectionDevice(context, address);
+                            EventBus.getDefault().postSticky(new Event.BleConnected(address));
+                        } else {
+                            device.setActiveDisConnect(true);
+                            MyBleService.get().disConnectDevice(address);
+                        }
+                        break;
+
+                    case CLICK_LOCK_OPEN:
+                        RLog.e("接收到点击开锁广播");
+                        if (address == null) return;
+                        if (BleService.get().getConnectDevice(address) == null) {
+                            CommonKit.showErrorShort(context, context.getResources().getString(R.string.bledevice_toast7));
+                        } else {
+                            BleService.get().openLock(address);
+                        }
+                        break;
+                    default:
+                        break;
                 }
                 break;
             case BLE_CONN_SUCCESS://重复连接
             case BLE_CONN_SUCCESS_ALLCONNECTED://重复连接
                 BleService.get().enableNotify(intent.getStringExtra(EXTRA_ITEM_ADDRESS));
                 CommonKit.showOkShort(context, context.getResources().getString(R.string.bledevice_toast3));
-                context.sendBroadcast(new Intent(ACTION_UPDATE_ALL));
+                appWidgetManager.notifyAppWidgetViewDataChanged(appIds, R.id.myListView);
                 break;
             case BLE_CONN_DIS://蓝牙断开
                 CommonKit.showOkShort(context, context.getResources().getString(R.string.bledevice_toast4));
-                context.sendBroadcast(new Intent(ACTION_UPDATE_ALL));
+                appWidgetManager.notifyAppWidgetViewDataChanged(appIds, R.id.myListView);
+                //context.sendBroadcast(new Intent(ACTION_UPDATE_ALL));
                 break;
             case BLE_CONN_FAIL://连接失败
                 CommonKit.showOkShort(context, context.getResources().getString(R.string.bledevice_toast8));
@@ -147,7 +154,7 @@ public class WidgetProvider extends AppWidgetProvider {
             case BLUTOOTH_OFF:
                 CommonKit.showOkShort(context, context.getResources().getString(R.string.bledevice_toast9));
                 MyBleService.get().disConnectDeviceALL();
-                context.sendBroadcast(new Intent(ACTION_UPDATE_ALL));
+                appWidgetManager.notifyAppWidgetViewDataChanged(appIds, R.id.myListView);
                 break;
             case BLUTOOTH_ON:
                 CommonKit.showOkShort(context, "手机蓝牙开启");

@@ -25,6 +25,7 @@ import okhttp3.Request;
 import static com.androidex.capbox.provider.WidgetProvider.CLICK_BLE_CONNECTED;
 import static com.androidex.capbox.provider.WidgetProvider.CLICK_LOCK_OPEN;
 import static com.androidex.capbox.provider.WidgetProvider.EXTRA_ITEM_ADDRESS;
+import static com.androidex.capbox.provider.WidgetProvider.EXTRA_ITEM_CLICK;
 import static com.androidex.capbox.provider.WidgetProvider.EXTRA_ITEM_POSITION;
 
 /**
@@ -128,16 +129,17 @@ public class WidgetService extends RemoteViewsService {
             rv.setOnClickFillInIntent(R.id.iv_lock, getIntent(CLICK_LOCK_OPEN, position, device.getMac()));
 
             if (BleService.get().getConnectDevice(device.getMac()) == null) {
-                rv.setImageViewResource(R.id.iv_connect, R.mipmap.starts_connect);
+                rv.setImageViewResource(R.id.iv_connect, R.mipmap.starts_connect2);
             } else {
-                rv.setImageViewResource(R.id.iv_connect, R.mipmap.starts_disconnect);
+                rv.setImageViewResource(R.id.iv_connect, R.mipmap.starts_disconnect2);
             }
             return rv;
         }
 
         private Intent getIntent(String action, int position, String address) {
             RLog.e("子布局发送广播");
-            Intent intent = new Intent(action);
+            Intent intent = new Intent();
+            intent.putExtra(EXTRA_ITEM_CLICK, action);
             intent.putExtra(EXTRA_ITEM_POSITION, position);
             intent.putExtra(EXTRA_ITEM_ADDRESS, address);
             intent.putExtras(intent);
@@ -208,8 +210,7 @@ public class WidgetService extends RemoteViewsService {
                                     mWidgetItems = model.devicelist;
                                 }
                             }
-                            AppWidgetManager.getInstance(context)
-                                    .notifyAppWidgetViewDataChanged(mAppWidgetId, R.id.myListView);
+                            AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(mAppWidgetId, R.id.myListView);
                             RLog.d("刷新列表");
                             break;
                         case Constants.API.API_FAIL:
