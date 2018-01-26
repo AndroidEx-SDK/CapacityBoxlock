@@ -135,6 +135,29 @@ public class SystemUtil {
         return false;
     }
 
+    public static boolean isAppRunning(Context context) {
+        String packageName = context.getPackageName();
+        String topActivityClassName = getTopActivityName(context);
+        RLog.e("class name =" + topActivityClassName);
+        if (packageName != null && topActivityClassName != null && topActivityClassName.startsWith(packageName)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static String getTopActivityName(Context context) {
+        String topActivityClassName = null;
+        ActivityManager activityManager =
+                (ActivityManager) (context.getSystemService(android.content.Context.ACTIVITY_SERVICE));
+        List<ActivityManager.RunningTaskInfo> runningTaskInfos = activityManager.getRunningTasks(1);
+        if (runningTaskInfos != null) {
+            ComponentName f = runningTaskInfos.get(0).topActivity;
+            topActivityClassName = f.getClassName();
+        }
+        return topActivityClassName;
+    }
+
     /**
      * Android 一个简单手机响铃功能实现方法，播放默认铃声（短信提示音，响一声）
      * 该方法的参数，传递Activity的引用即可。当然，在静音模式下，是无法播放的。

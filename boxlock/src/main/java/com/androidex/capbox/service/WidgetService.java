@@ -1,6 +1,5 @@
 package com.androidex.capbox.service;
 
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +7,6 @@ import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.androidex.boxlib.service.BleService;
-import com.androidex.capbox.MainActivity;
 import com.androidex.capbox.R;
 import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
@@ -26,6 +24,7 @@ import okhttp3.Request;
 
 import static com.androidex.capbox.provider.WidgetProvider.CLICK_BLE_CONNECTED;
 import static com.androidex.capbox.provider.WidgetProvider.CLICK_LOCK_OPEN;
+import static com.androidex.capbox.provider.WidgetProvider.CLICK_OPEN_MAINACTIVITY;
 import static com.androidex.capbox.provider.WidgetProvider.EXTRA_BOX_NAME;
 import static com.androidex.capbox.provider.WidgetProvider.EXTRA_BOX_UUID;
 import static com.androidex.capbox.provider.WidgetProvider.EXTRA_ITEM_ADDRESS;
@@ -127,7 +126,7 @@ public class WidgetService extends RemoteViewsService {
             rv.setTextViewText(R.id.tv_name, device.getDeviceName());
             rv.setTextViewText(R.id.tv_address, device.getMac());
 
-            rv.setOnClickPendingIntent(R.id.rl_device, getPendingIntentStartActivity(device.getDeviceName(), device.getMac(), device.getUuid(), position));
+            rv.setOnClickFillInIntent(R.id.rl_device, getPendingIntentStartActivity(device.getDeviceName(), device.getMac(), device.getUuid(), position));
             rv.setOnClickFillInIntent(R.id.iv_connect, getIntent(CLICK_BLE_CONNECTED, position, device.getMac()));
             rv.setOnClickFillInIntent(R.id.iv_lock, getIntent(CLICK_LOCK_OPEN, position, device.getMac()));
 
@@ -165,15 +164,14 @@ public class WidgetService extends RemoteViewsService {
          * @param position
          * @return
          */
-        private PendingIntent getPendingIntentStartActivity(String name, String address, String uuid, int position) {
+        private Intent getPendingIntentStartActivity(String name, String address, String uuid, int position) {
             Intent intent = new Intent();
-            intent.setClass(context, MainActivity.class);
+            intent.putExtra(EXTRA_ITEM_CLICK, CLICK_OPEN_MAINACTIVITY);
             intent.putExtra(EXTRA_BOX_NAME, name);
             intent.putExtra(EXTRA_BOX_UUID, uuid);
             intent.putExtra(EXTRA_ITEM_ADDRESS, address);
             intent.putExtra(EXTRA_ITEM_POSITION, position);
-            PendingIntent pi = PendingIntent.getActivity(context, 0, intent, 0);
-            return pi;
+            return intent;
         }
 
         @Override

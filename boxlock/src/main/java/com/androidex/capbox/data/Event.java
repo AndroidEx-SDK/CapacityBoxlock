@@ -66,6 +66,56 @@ public class Event {
     }
 
     /**
+     * 监控设备变更
+     */
+    public static class UpdateMonitorDevice extends BaseEvent {
+        String address;
+        String name;
+        String uuid;
+        int position;
+
+        public UpdateMonitorDevice() {
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getUuid() {
+            return uuid;
+        }
+
+        public void setUuid(String uuid) {
+            this.uuid = uuid;
+        }
+
+        public int getPosition() {
+            return position;
+        }
+
+        public void setPosition(int position) {
+            this.position = position;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        @Override
+        int getCode() {
+            return Constants.EVENT.TAG_EVENT_BOX_BLE_CONNECTED;
+        }
+    }
+
+    /**
      * 蓝牙断开
      */
     public static class BleDisConnected extends BaseEvent {

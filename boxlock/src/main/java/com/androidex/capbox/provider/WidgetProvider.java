@@ -14,10 +14,13 @@ import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.MainActivity;
 import com.androidex.capbox.R;
+import com.androidex.capbox.data.Event;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.service.WidgetService;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.RLog;
+
+import de.greenrobot.event.EventBus;
 
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_OPEN_SUCCED;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_STARTS;
@@ -39,14 +42,13 @@ public class WidgetProvider extends AppWidgetProvider {
 
     public static final String CLICK_BLE_CONNECTED = "com.androidex.capbox.provider.CLICK_BLE_CONNECTED";
     public static final String CLICK_LOCK_OPEN = "com.androidex.capbox.provider.CLICK_LOCK_OPEN";
+    public static final String CLICK_OPEN_MAINACTIVITY = "com.androidex.capbox.provider.CLICK_OPEN_MAINACTIVITY";
 
     public static final String EXTRA_ITEM_POSITION = "position";
     public static final String EXTRA_ITEM_ADDRESS = "address";
     public static final String EXTRA_BOX_UUID = "uuid";
     public static final String EXTRA_BOX_NAME = "name";
     public static final String EXTRA_ITEM_CLICK = "com.androidex.capbox.provider.EXTRA_ITEM_CLICK";
-
-
 
     /**
      * 每次窗口小部件被点击更新都调用一次该方法// 每次 widget 被创建时，对应的将widget的id添加到set中
@@ -130,6 +132,25 @@ public class WidgetProvider extends AppWidgetProvider {
                             BleService.get().openLock(address);
                         }
                         appWidgetManager.notifyAppWidgetViewDataChanged(appIds, R.id.myListView);
+                        break;
+                    case CLICK_OPEN_MAINACTIVITY:
+                        Intent intent1 = new Intent();
+                        ComponentName componentName = new ComponentName("com.androidex.capbox", "com.androidex.capbox.MainActivity");
+                        intent1.putExtra(EXTRA_BOX_NAME, intent.getStringExtra(EXTRA_BOX_NAME));
+                        intent1.putExtra(EXTRA_BOX_UUID, intent.getStringExtra(EXTRA_BOX_UUID));
+                        intent1.putExtra(EXTRA_ITEM_ADDRESS, address);
+                        intent1.putExtra(EXTRA_ITEM_POSITION, position);
+                        intent1.setFlags(intent1.FLAG_ACTIVITY_NEW_TASK);
+                        intent1.setComponent(componentName);
+                        context.startActivity(intent1);
+
+                        RLog.e("name=" + intent.getStringExtra(EXTRA_BOX_NAME) + "address=" + address);
+                        Event.UpdateMonitorDevice monitorDevice = new Event.UpdateMonitorDevice();
+                        monitorDevice.setAddress(address);
+                        monitorDevice.setPosition(position);
+                        monitorDevice.setName(intent.getStringExtra(EXTRA_BOX_NAME));
+                        monitorDevice.setUuid(intent.getStringExtra(EXTRA_BOX_UUID));
+                        EventBus.getDefault().postSticky(monitorDevice);
                         break;
                     default:
                         break;
