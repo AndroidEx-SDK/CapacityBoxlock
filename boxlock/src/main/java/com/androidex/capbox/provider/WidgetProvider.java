@@ -31,6 +31,9 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCO
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLUTOOTH_OFF;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLUTOOTH_ON;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
+import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
 
 /**
  * Created by daiyiming on 2016/11/28.
@@ -45,9 +48,6 @@ public class WidgetProvider extends AppWidgetProvider {
     public static final String CLICK_OPEN_MAINACTIVITY = "com.androidex.capbox.provider.CLICK_OPEN_MAINACTIVITY";
 
     public static final String EXTRA_ITEM_POSITION = "position";
-    public static final String EXTRA_ITEM_ADDRESS = "address";
-    public static final String EXTRA_BOX_UUID = "uuid";
-    public static final String EXTRA_BOX_NAME = "name";
     public static final String EXTRA_ITEM_CLICK = "com.androidex.capbox.provider.EXTRA_ITEM_CLICK";
 
     /**

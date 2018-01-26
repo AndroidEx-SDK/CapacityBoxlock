@@ -25,11 +25,11 @@ import okhttp3.Request;
 import static com.androidex.capbox.provider.WidgetProvider.CLICK_BLE_CONNECTED;
 import static com.androidex.capbox.provider.WidgetProvider.CLICK_LOCK_OPEN;
 import static com.androidex.capbox.provider.WidgetProvider.CLICK_OPEN_MAINACTIVITY;
-import static com.androidex.capbox.provider.WidgetProvider.EXTRA_BOX_NAME;
-import static com.androidex.capbox.provider.WidgetProvider.EXTRA_BOX_UUID;
-import static com.androidex.capbox.provider.WidgetProvider.EXTRA_ITEM_ADDRESS;
 import static com.androidex.capbox.provider.WidgetProvider.EXTRA_ITEM_CLICK;
 import static com.androidex.capbox.provider.WidgetProvider.EXTRA_ITEM_POSITION;
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
+import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
 
 /**
  * 控制 桌面小部件 更新
@@ -123,6 +123,11 @@ public class WidgetService extends RemoteViewsService {
             RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.list_item_provider_widget);
             RLog.e("getViewAt mainPage refresh");
             BoxDeviceModel.device device = mWidgetItems.get(position);
+            if (device.getDeviceName().equals("Box")) {
+                device.setDeviceName(device.getDeviceName() + device.getMac().substring(device.getMac().length() - 2));
+            }else if (device.getDeviceName().contains("AndroidExBox")){
+                device.setDeviceName("Box"+device.getMac().substring(device.getMac().length() - 2));
+            }
             rv.setTextViewText(R.id.tv_name, device.getDeviceName());
             rv.setTextViewText(R.id.tv_address, device.getMac());
 

@@ -43,11 +43,11 @@ import butterknife.Bind;
 import okhttp3.Headers;
 import okhttp3.Request;
 
-import static com.androidex.capbox.provider.WidgetProvider.EXTRA_BOX_NAME;
-import static com.androidex.capbox.provider.WidgetProvider.EXTRA_BOX_UUID;
-import static com.androidex.capbox.provider.WidgetProvider.EXTRA_ITEM_ADDRESS;
 import static com.androidex.capbox.provider.WidgetProvider.EXTRA_ITEM_POSITION;
 import static com.androidex.capbox.ui.fragment.LockFragment.boxName;
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
+import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
 
 public class MainActivity extends BaseActivity implements OnClickListener {
     public static String TAG = "MainActivity";

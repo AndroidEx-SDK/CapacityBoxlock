@@ -45,6 +45,8 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCONNECTED;
 import static com.androidex.boxlib.utils.BleConstants.BLE.SCAN_PERIOD;
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
+import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
 
 /**
  * 搜索腕表列表
@@ -174,8 +176,8 @@ public class WatchListFragment extends BaseFragment {
                                     long arg3) {
                 // TODO Auto-generated method stub
                 Bundle bundle = new Bundle();
-                bundle.putString("name", mylist.get(position).get("name"));
-                bundle.putString("mac", mylist.get(position).get("mac"));
+                bundle.putString(EXTRA_BOX_NAME, mylist.get(position).get(EXTRA_BOX_NAME));
+                bundle.putString(EXTRA_ITEM_ADDRESS, mylist.get(position).get(EXTRA_ITEM_ADDRESS));
                 WatchDetialActivity.lauch(context, bundle);
             }
         });
@@ -209,8 +211,8 @@ public class WatchListFragment extends BaseFragment {
                         case Constants.API.API_OK:
                             for (DeviceWatchModel.device device : model.devicelist) {
                                 Map<String, String> map = new HashMap<>();
-                                map.put("name", "AndroidExWatch");
-                                map.put("mac", device.mac);
+                                map.put(EXTRA_BOX_NAME, "AndroidExWatch");
+                                map.put(EXTRA_ITEM_ADDRESS, device.mac);
                                 mylist.add(map);
                             }
                             if (model.devicelist.size() > 0) {

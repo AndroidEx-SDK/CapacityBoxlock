@@ -28,6 +28,10 @@ import butterknife.Bind;
 import okhttp3.Headers;
 import okhttp3.Request;
 
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
+import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
+
 public class WatchListActivity extends BaseActivity {
     @Bind(R.id.list)
     ListView listconnected;
@@ -48,7 +52,7 @@ public class WatchListActivity extends BaseActivity {
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        uuid = getIntent().getStringExtra("uuid");
+        uuid = getIntent().getStringExtra(EXTRA_BOX_UUID);
         initTitleBar();
         initListView();
         iniRefreshView();
@@ -80,8 +84,8 @@ public class WatchListActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> arg0, View view, int position,
                                     long arg3) {
                 Bundle bundle = new Bundle();
-                bundle.putString("mac", mylist.get(position).get("mac"));
-                bundle.putString("uuid", uuid);
+                bundle.putString(EXTRA_ITEM_ADDRESS, mylist.get(position).get(EXTRA_BOX_UUID));
+                bundle.putString(EXTRA_BOX_UUID, uuid);
                 WatchDetialActivity.lauch(context, bundle);
             }
         });
@@ -122,8 +126,8 @@ public class WatchListActivity extends BaseActivity {
                         case Constants.API.API_OK:
                             for (DeviceWatchModel.device device : model.devicelist) {
                                 Map<String, String> map = new HashMap<>();
-                                map.put("name", "AndroidExWatch");
-                                map.put("mac", device.mac);
+                                map.put(EXTRA_BOX_NAME, "AndroidExWatch");
+                                map.put(EXTRA_ITEM_ADDRESS, device.mac);
                                 mylist.add(map);
                             }
                             if (model.devicelist.size() > 0) {

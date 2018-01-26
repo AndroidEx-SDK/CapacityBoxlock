@@ -44,6 +44,11 @@ public class BindDeviceAdapter extends RecyclerAdapter<BoxDeviceModel.device, Bi
     public void onBindViewHolder(ViewHolder holder, int position) {
         final BoxDeviceModel.device item = getDataSource().get(position);
         // UILKit.loadHead(item.head, holder.iv_head);
+        if (item.boxName.equals("Box")) {
+            item.boxName = item.boxName + item.getMac().substring(item.getMac().length() - 2);
+        }else if (item.boxName.contains("AndroidExBox")){
+            item.boxName="Box"+item.getMac().substring(item.getMac().length() - 2);
+        }
         holder.tv_name.setText(item.boxName);
         holder.iv_lock.setImageResource(R.mipmap.lock_close);
         if (BleService.get().getConnectDevice(item.getMac()) == null) {

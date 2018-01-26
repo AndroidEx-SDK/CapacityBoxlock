@@ -64,6 +64,9 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCO
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
 import static com.androidex.capbox.provider.WidgetProvider.ACTION_UPDATE_ALL;
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
+import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
 
 /**
  * 箱体列表
@@ -163,15 +166,15 @@ public class BoxListFragment extends BaseFragment {
             public void listViewItemClick(int position, View v) {
                 switch (v.getId()) {
                     case R.id.rl_normal:
-                        if (MyBleService.get().getConnectDevice(mylist.get(position).get("mac")) != null) {
+                        if (MyBleService.get().getConnectDevice(mylist.get(position).get(EXTRA_ITEM_ADDRESS)) != null) {
                             Bundle bundle = new Bundle();
-                            bundle.putString("name", mylist.get(position).get("name"));
-                            bundle.putString("uuid", mylist.get(position).get("uuid"));
-                            bundle.putString("mac", mylist.get(position).get("mac"));
+                            bundle.putString(EXTRA_BOX_NAME, mylist.get(position).get(EXTRA_BOX_NAME));
+                            bundle.putString(EXTRA_BOX_UUID, mylist.get(position).get(EXTRA_BOX_UUID));
+                            bundle.putString(EXTRA_ITEM_ADDRESS, mylist.get(position).get(EXTRA_ITEM_ADDRESS));
                             BoxDetailActivity.lauch(getActivity(), bundle);
                         } else {
                             CommonKit.showOkShort(context, "开始扫描...");
-                            scanLeDevice(mylist.get(position).get("mac"), mylist.get(position).get("uuid"));//开始扫描
+                            scanLeDevice(mylist.get(position).get(EXTRA_ITEM_ADDRESS), mylist.get(position).get(EXTRA_BOX_UUID));//开始扫描
                         }
                         break;
                     default:
@@ -270,9 +273,9 @@ public class BoxListFragment extends BaseFragment {
                     synchronized (this) {
                         Log.d(TAG, "搜索到设备mScanning=" + mScanning);
                         Bundle bundle = new Bundle();
-                        bundle.putString("name", device.getName());
-                        bundle.putString("uuid", deviceUUID);
-                        bundle.putString("mac", address);
+                        bundle.putString(EXTRA_BOX_NAME, device.getName());
+                        bundle.putString(EXTRA_BOX_UUID, deviceUUID);
+                        bundle.putString(EXTRA_ITEM_ADDRESS, address);
                         BoxDetailActivity.lauch(getActivity(), bundle);
                     }
                 }
@@ -309,7 +312,7 @@ public class BoxListFragment extends BaseFragment {
      *
      * @param flag
      */
-    private void startGetUUID(boolean flag, final String mac) {
+    private void startGetUUID(boolean flag, final String address) {
         if (flag) {
             Log.e(TAG, "启动自动发送");
             startGetUUID(false, null);
@@ -317,8 +320,8 @@ public class BoxListFragment extends BaseFragment {
                 task_scanBle = new TimerTask() {
                     @Override
                     public void run() {
-                        if (mac != null) {
-                            MyBleService.get().getUUID(mac);
+                        if (address != null) {
+                            MyBleService.get().getUUID(address);
                         }
                     }
                 };
@@ -460,9 +463,9 @@ public class BoxListFragment extends BaseFragment {
                             mylist.clear();
                             for (BoxDeviceModel.device device : model.devicelist) {
                                 Map<String, String> map = new HashMap<>();
-                                map.put("name", device.boxName);
-                                map.put("uuid", device.uuid);
-                                map.put("mac", device.mac);
+                                map.put(EXTRA_BOX_NAME, device.boxName);
+                                map.put(EXTRA_BOX_UUID, device.uuid);
+                                map.put(EXTRA_ITEM_ADDRESS, device.mac);
                                 map.put("deviceStatus", "" + device.deviceStatus);
                                 map.put("isdefault", "" + device.isDefault);
                                 map.put("isOnLine", "" + device.isOnLine);
@@ -534,16 +537,16 @@ public class BoxListFragment extends BaseFragment {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            String mac = intent.getStringExtra(BLECONSTANTS_ADDRESS);
-            Log.e(TAG, "mac=" + mac + " action=" + intent.getAction());
+            String address = intent.getStringExtra(BLECONSTANTS_ADDRESS);
+            Log.e(TAG, "mac=" + address + " action=" + intent.getAction());
             switch (intent.getAction()) {
                 case BLE_CONN_SUCCESS://连接成功
                 case BLE_CONN_SUCCESS_ALLCONNECTED://重复连接
-                    BleService.get().enableNotify(mac);
+                    BleService.get().enableNotify(address);
                     disProgress();
                     showProgress("连接成功...");
                     Log.e(TAG, "开始获取UUID");
-                    startGetUUID(true, mac);
+                    startGetUUID(true, address);
                     break;
 
                 case BLE_CONN_DIS://断开连接
@@ -566,8 +569,8 @@ public class BoxListFragment extends BaseFragment {
                             bindBox(uuid.trim());
                         }
                     }
-                    MyBleService.get().getConnectDevice(mac).setActiveDisConnect(true);
-                    MyBleService.get().disConnectDevice(mac);
+                    MyBleService.get().getConnectDevice(address).setActiveDisConnect(true);
+                    MyBleService.get().disConnectDevice(address);
                     mDeviceListAdapter.setTextHint(-1, "");
                     if (!mScanning) {
                         scanLeDeviceList(true);
@@ -628,7 +631,7 @@ public class BoxListFragment extends BaseFragment {
                     if (mylist.size() > 0) {
                         boolean flag = true;
                         for (Map map : mylist) {
-                            if (device.getAddress().equals(map.get("mac"))) {
+                            if (device.getAddress().equals(map.get(EXTRA_ITEM_ADDRESS))) {
                                 flag = false;
                                 break;
                             }

@@ -71,9 +71,9 @@ import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ELECTRIC_QUANTITY;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_HUM;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_TEMP;
-import static com.androidex.capbox.provider.WidgetProvider.EXTRA_BOX_NAME;
-import static com.androidex.capbox.provider.WidgetProvider.EXTRA_BOX_UUID;
-import static com.androidex.capbox.provider.WidgetProvider.EXTRA_ITEM_ADDRESS;
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
+import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
 
 public class LockFragment extends BaseFragment implements OnClickListener {
     private final static String TAG = "LockFragment";
@@ -264,9 +264,9 @@ public class LockFragment extends BaseFragment implements OnClickListener {
 
             case R.id.tv_boxConfig:
                 Bundle bundle = new Bundle();
-                bundle.putString("name", deviceName);
-                bundle.putString("mac", address);
-                bundle.putString("uuid", uuid);
+                bundle.putString(EXTRA_BOX_NAME, deviceName);
+                bundle.putString(EXTRA_ITEM_ADDRESS, address);
+                bundle.putString(EXTRA_BOX_UUID, uuid);
                 BoxDetailActivity.lauch(getActivity(), bundle);
                 break;
             case R.id.iv_menu:

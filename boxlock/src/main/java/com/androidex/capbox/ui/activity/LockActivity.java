@@ -65,6 +65,9 @@ import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ELECTRIC_QUANTITY;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_HUM;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_TEMP;
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
+import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
 import static com.baidu.mapapi.BMapManager.getContext;
 
 public class LockActivity extends BaseActivity implements OnClickListener {
@@ -125,10 +128,10 @@ public class LockActivity extends BaseActivity implements OnClickListener {
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        address = getIntent().getStringExtra("mac");
-        uuid = getIntent().getStringExtra("uuid");
-        deviceName = getIntent().getStringExtra("name");
-        Log.e(TAG, "mac=" + address + "\nuuid=" + uuid + "\ndeviceName=" + deviceName);
+        address = getIntent().getStringExtra(EXTRA_ITEM_ADDRESS);
+        uuid = getIntent().getStringExtra(EXTRA_BOX_UUID);
+        deviceName = getIntent().getStringExtra(EXTRA_BOX_NAME);
+        Log.e(TAG, "address=" + address + "\nuuid=" + uuid + "\ndeviceName=" + deviceName);
         initView();
         initMap();
         initBleBroadCast();

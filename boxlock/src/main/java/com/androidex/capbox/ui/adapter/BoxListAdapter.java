@@ -37,6 +37,9 @@ import okhttp3.Request;
 
 import static com.androidex.capbox.R.id.tv_status;
 import static com.androidex.capbox.provider.WidgetProvider.ACTION_UPDATE_ALL;
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
+import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
 
 /**
  * 已绑定设备的适配器
@@ -118,9 +121,9 @@ public class BoxListAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        final String uuid = mContentList.get(position).get("uuid");
-        final String mac = mContentList.get(position).get("mac");
-        String name = mContentList.get(position).get("name");
+        final String uuid = mContentList.get(position).get(EXTRA_BOX_UUID);
+        final String mac = mContentList.get(position).get(EXTRA_ITEM_ADDRESS);
+        String name = mContentList.get(position).get(EXTRA_BOX_NAME);
         String isOnLine = mContentList.get(position).get("isOnLine");
         String deviceStatus = mContentList.get(position).get("deviceStatus");
         if (name == null || name.equals("")) {
