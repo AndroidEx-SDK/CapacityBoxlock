@@ -4,65 +4,70 @@
     android:id="@+id/rl_lockscreen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/lockscreen"
-    android:orientation="vertical">
+    android:background="@mipmap/lockscreen">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/marginPadding16"
-        android:layout_marginTop="@dimen/marginPadding55">
-
-        <TextView
-            android:id="@+id/tv_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/size36" />
-
-        <TextView
-            android:id="@+id/tv_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/marginPadding12"
-            android:textSize="@dimen/size12" />
-    </LinearLayout>
-
-    <com.androidex.capbox.ui.view.ZItem
-        android:id="@+id/textView1"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="end"
-        android:background="@null"
-        android:gravity="center"
-        android:paddingBottom="@dimen/marginPadding40"
-        android:text="TextView">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <ImageView
+        <LinearLayout
+            android:id="@+id/ll_alarm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/right_gray" />
+            android:layout_marginLeft="@dimen/marginPadding16"
+            android:layout_marginTop="@dimen/marginPadding55">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/right_lightgray" />
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/size36" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/right_white" />
+            <TextView
+                android:id="@+id/tv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginPadding12"
+                android:textSize="@dimen/size12" />
+        </LinearLayout>
 
-    </com.androidex.capbox.ui.view.ZItem>
+        <com.androidex.capbox.ui.view.CustomRecyclerView
+            android:id="@+id/qtRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/ll_alarm"
+            android:layout_weight="1"
+            app:recyclerBackgroundColor="@android:color/transparent"
+            app:recyclerPadding="0dp"
+            app:recyclerScrollbarNone="true" />
 
-    <com.androidex.capbox.ui.view.CustomRecyclerView
-        android:id="@+id/qtRecyclerView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/textView1"
-        android:layout_centerInParent="true"
-        app:recyclerBackgroundColor="@android:color/transparent"
-        app:recyclerPadding="0dp"
-        app:recyclerScrollbarNone="true" />
+        <com.androidex.capbox.ui.view.ZItem
+            android:id="@+id/textView1"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_below="@+id/qtRecyclerView"
+            android:layout_gravity="end"
+            android:background="@null"
+            android:gravity="center"
+            android:paddingBottom="@dimen/marginPadding40"
+            android:text="TextView">
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/right_gray" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/right_lightgray" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/right_white" />
+
+        </com.androidex.capbox.ui.view.ZItem>
+    </LinearLayout>
 </RelativeLayout>

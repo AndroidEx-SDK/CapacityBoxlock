@@ -780,7 +780,7 @@ public final class DiskLruCache implements Closeable {
         }
 
         /**
-         * Returns an unbuffered input stream to read the last committed value,
+         * Returns an unbuffered input stream to read the ic_screen_last committed value,
          * or null if no value has been committed.
          */
         public InputStream newInputStream(int index) throws IOException {
@@ -796,7 +796,7 @@ public final class DiskLruCache implements Closeable {
         }
 
         /**
-         * Returns the last committed value as a string, or null if no value
+         * Returns the ic_screen_last committed value as a string, or null if no value
          * has been committed.
          */
         public String getString(int index) throws IOException {

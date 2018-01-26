@@ -41,13 +41,13 @@ public class BindDeviceAdapter extends RecyclerAdapter<BoxDeviceModel.device, Bi
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         final BoxDeviceModel.device item = getDataSource().get(position);
         // UILKit.loadHead(item.head, holder.iv_head);
         if (item.boxName.equals("Box")) {
             item.boxName = item.boxName + item.getMac().substring(item.getMac().length() - 2);
-        }else if (item.boxName.contains("AndroidExBox")){
-            item.boxName="Box"+item.getMac().substring(item.getMac().length() - 2);
+        } else if (item.boxName.contains("AndroidExBox")) {
+            item.boxName = "Box" + item.getMac().substring(item.getMac().length() - 2);
         }
         holder.tv_name.setText(item.boxName);
         holder.iv_lock.setImageResource(R.mipmap.lock_close);
@@ -76,9 +76,34 @@ public class BindDeviceAdapter extends RecyclerAdapter<BoxDeviceModel.device, Bi
                 }
             }
         });
+        holder.iv_last.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (position == 0) {
+                    CommonKit.showOkShort(context, context.getResources().getString(R.string.bledevice_toast10));
+                }else {
+
+                }
+            }
+        });
+        holder.iv_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (position == 0) {
+                    CommonKit.showOkShort(context, context.getResources().getString(R.string.bledevice_toast11));
+
+                }else {
+
+                }
+            }
+        });
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
+        @Bind(R.id.iv_last)
+        ImageView iv_last;
+        @Bind(R.id.iv_next)
+        ImageView iv_next;
         @Bind(R.id.iv_lock)
         ImageView iv_lock;
         @Bind(R.id.iv_connect)
