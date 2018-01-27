@@ -95,8 +95,9 @@ public class WidgetProvider extends AppWidgetProvider {
     // 更新所有的 widget
     private void updateAllAppWidgets(Context context, AppWidgetManager appWidgetManager, Intent intent) {
         // TODO:可以在这里做更多的逻辑操作，比如：数据处理、网络请求等。然后去显示数据
-        RLog.e("action=" + intent.getAction());
         int[] appIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, WidgetProvider.class));
+        RLog.e("action=" + intent.getAction() + "插件个数=" + appIds.length);
+        if (appIds.length <= 0) return;
         switch (intent.getAction()) {
             case ACTION_UPDATE_ALL:
                 RemoteViews remoteView = new RemoteViews(context.getPackageName(), R.layout.provider_widget);
