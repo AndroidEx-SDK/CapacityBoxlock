@@ -14,6 +14,8 @@ import com.androidex.capbox.utils.Constants;
 import butterknife.Bind;
 import butterknife.OnClick;
 
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
+
 /**
  * @author liyp
  * @editTime 2017/10/25
@@ -38,7 +40,7 @@ public class BoxSettingActivity extends BaseActivity {
                 String name = et_name.getText().toString().trim();
                 if (name != null&&!name.isEmpty()&&!name.equals("")) {
                     Intent intent = new Intent();
-                    intent.putExtra("name", name);
+                    intent.putExtra(EXTRA_BOX_NAME, name);
                     setResult(Activity.RESULT_OK, intent);
                     CommonKit.finishActivity(this);
                 } else {

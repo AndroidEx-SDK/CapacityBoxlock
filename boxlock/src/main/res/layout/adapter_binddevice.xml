@@ -1,34 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@null"
-    android:gravity="center"
     android:orientation="vertical"
     android:paddingLeft="@dimen/marginPadding10"
     android:paddingRight="@dimen/marginPadding10">
 
-    <ImageView
-        android:id="@+id/iv_lock"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/marginPadding5"
-        android:src="@mipmap/lock_close" />
+        android:layout_weight="1">
 
-    <ImageView
-        android:id="@+id/iv_connect"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/marginPadding10"
-        android:padding="@dimen/marginPadding5"
-        android:src="@mipmap/starts_connect" />
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginPadding10"
+            android:text="Box66"
+            android:textColor="@color/white"
+            android:textSize="@dimen/size12" />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_name"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/marginPadding10"
-        android:text="Box66"
-        android:textSize="@dimen/size12"
-        android:textColor="@color/Gray_cc" />
+        android:gravity="center_horizontal">
+
+        <ImageView
+            android:id="@+id/iv_last"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/marginPadding5"
+            android:src="@mipmap/ic_screen_last" />
+
+        <ImageView
+            android:id="@+id/iv_lock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/marginPadding5"
+            android:src="@mipmap/lock_close" />
+
+        <ImageView
+            android:id="@+id/iv_connect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/marginPadding5"
+            android:src="@mipmap/starts_connect" />
+
+        <ImageView
+            android:id="@+id/iv_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/marginPadding5"
+            android:src="@mipmap/ic_screen_next" />
+    </LinearLayout>
+
+
 </LinearLayout>

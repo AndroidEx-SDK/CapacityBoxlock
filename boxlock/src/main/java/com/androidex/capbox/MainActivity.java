@@ -18,7 +18,6 @@ import android.widget.TextView;
 import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.data.Event;
 import com.androidex.capbox.data.net.NetApi;
-import com.androidex.capbox.data.net.base.L;
 import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.module.BoxDeviceModel;
 import com.androidex.capbox.ui.fragment.BoxListFragment;
@@ -28,6 +27,7 @@ import com.androidex.capbox.ui.fragment.MeMainFragment;
 import com.androidex.capbox.ui.fragment.WatchListFragment;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
+import com.androidex.capbox.utils.RLog;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
@@ -43,7 +43,11 @@ import butterknife.Bind;
 import okhttp3.Headers;
 import okhttp3.Request;
 
+import static com.androidex.capbox.provider.WidgetProvider.EXTRA_ITEM_POSITION;
 import static com.androidex.capbox.ui.fragment.LockFragment.boxName;
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
+import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
 
 public class MainActivity extends BaseActivity implements OnClickListener {
     public static String TAG = "MainActivity";
@@ -110,12 +114,19 @@ public class MainActivity extends BaseActivity implements OnClickListener {
             transaction.replace(R.id.content, mainFragment);
             transaction.commit();
         } else {
+            Bundle bundle = new Bundle();
             currIndex = 2;
             initImage();
-            Bundle bundle = new Bundle();
-            bundle.putString("mac", mylist.get(0).get("mac"));
-            bundle.putString("name", mylist.get(0).get("name"));
-            bundle.putString("uuid", mylist.get(0).get("uuid"));
+            if (getIntent().getStringExtra(EXTRA_ITEM_ADDRESS) != null) {//从桌面插件跳转过来
+                bundle.putString(EXTRA_ITEM_ADDRESS, getIntent().getStringExtra(EXTRA_ITEM_ADDRESS));//这里的values就是我们要传的值
+                bundle.putString(EXTRA_BOX_NAME, getIntent().getStringExtra(EXTRA_BOX_NAME));//这里的values就是我们要传的值
+                bundle.putString(EXTRA_BOX_UUID, getIntent().getStringExtra(EXTRA_BOX_UUID));//这里的values就是我们要传的值
+                main_index = getIntent().getIntExtra(EXTRA_ITEM_POSITION, -1);
+            } else {
+                bundle.putString(EXTRA_ITEM_ADDRESS, mylist.get(0).get(EXTRA_ITEM_ADDRESS));
+                bundle.putString(EXTRA_BOX_NAME, mylist.get(0).get(EXTRA_BOX_NAME));
+                bundle.putString(EXTRA_BOX_UUID, mylist.get(0).get(EXTRA_BOX_UUID));
+            }
             lockFragment = new LockFragment();
             lockFragment.setArguments(bundle);
             transaction = fragmentManager.beginTransaction();
@@ -303,9 +314,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                                     main_index = index;
                                     initImage();
                                     Bundle bundle = new Bundle();
-                                    bundle.putString("mac", mylist.get(index).get("mac"));//这里的values就是我们要传的值
-                                    bundle.putString("name", mylist.get(index).get("name"));//这里的values就是我们要传的值
-                                    bundle.putString("uuid", mylist.get(index).get("uuid"));//这里的values就是我们要传的值
+                                    bundle.putString(EXTRA_ITEM_ADDRESS, mylist.get(index).get(EXTRA_ITEM_ADDRESS));//这里的values就是我们要传的值
+                                    bundle.putString(EXTRA_BOX_NAME, mylist.get(index).get(EXTRA_BOX_NAME));//这里的values就是我们要传的值
+                                    bundle.putString(EXTRA_BOX_UUID, mylist.get(index).get(EXTRA_BOX_UUID));//这里的values就是我们要传的值
                                     lockFragment = new LockFragment();
                                     lockFragment.setArguments(bundle);
                                     transaction = fragmentManager.beginTransaction();
@@ -332,7 +343,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
     private static String getext(int i) {
         if (mylist.size() > 0) {
-            return mylist.get(i).get("name");
+            return mylist.get(i).get(EXTRA_BOX_NAME);
         } else return boxName;
     }
 
@@ -368,12 +379,12 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                             for (BoxDeviceModel.device device : model.devicelist) {
                                 Map<String, String> map = new HashMap<>();
                                 if (device.boxName.equals("Box")) {
-                                    map.put("name", "Box" + device.mac.substring(device.mac.length() - 2));
+                                    map.put(EXTRA_BOX_NAME, "Box" + device.mac.substring(device.mac.length() - 2));
                                 } else {
-                                    map.put("name", device.boxName);
+                                    map.put(EXTRA_BOX_NAME, device.boxName);
                                 }
-                                map.put("uuid", device.uuid);
-                                map.put("mac", device.mac);
+                                map.put(EXTRA_BOX_UUID, device.uuid);
+                                map.put(EXTRA_ITEM_ADDRESS, device.mac);
                                 map.put("deviceStatus", "" + device.deviceStatus);
                                 map.put("isdefault", "" + device.isDefault);
                                 map.put("isOnLine", "" + device.isOnLine);
@@ -381,10 +392,10 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                             }
                             if (model.devicelist.size() == 0) {
                                 CommonKit.showErrorShort(context, "未绑定任何设备");
-                                L.e(TAG + "刷新列表无数据");
+                                RLog.e(TAG + "刷新列表无数据");
                             } else {
 
-                                L.e(TAG + "绑定的设备数量为：" + mylist.size());
+                                RLog.e(TAG + "绑定的设备数量为：" + mylist.size());
                             }
                             break;
                         case Constants.API.API_FAIL:
@@ -448,6 +459,44 @@ public class MainActivity extends BaseActivity implements OnClickListener {
      */
     public void onEvent(Event.UserLoginEvent event) {
         CommonKit.finishActivity(context);
+    }
+
+    /**
+     * 监控设备变更
+     *
+     * @param event
+     */
+    public void onEvent(final Event.UpdateMonitorDevice event) {
+        event.getPosition();
+        if (currIndex == 2 && main_index == event.getPosition()) {
+            return;
+        } else {
+            currIndex = 2;
+            main_index = event.getPosition();
+            initImage();
+            final Bundle bundle = new Bundle();
+            bundle.putString(EXTRA_ITEM_ADDRESS, event.getAddress());//这里的values就是我们要传的值
+            bundle.putString(EXTRA_BOX_NAME, event.getName());//这里的values就是我们要传的值
+            bundle.putString(EXTRA_BOX_UUID, event.getUuid());//这里的values就是我们要传的值
+
+            lockFragment = new LockFragment();
+            lockFragment.setArguments(bundle);
+            transaction = fragmentManager.beginTransaction();
+            transaction.replace(R.id.content, lockFragment);
+            transaction.commitAllowingStateLoss();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        RLog.e("MainActivty  onStart");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        RLog.e("onResume");
     }
 
     @Override

@@ -29,6 +29,8 @@ import okhttp3.Request;
 
 import static com.androidex.boxlib.cache.SharedPreTool.HIGHEST_TEMP;
 import static com.androidex.boxlib.cache.SharedPreTool.LOWEST_TEMP;
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
+import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
 
 /**
  * 箱体的报警设置页面
@@ -69,8 +71,8 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
     public void initData(Bundle savedInstanceState) {
         tv_lowestTemp.setText(String.format("%s℃", SharedPreTool.getInstance(context).getStringData(LOWEST_TEMP, "0")));
         tv_highestTemp.setText(String.format("%s℃", SharedPreTool.getInstance(context).getStringData(HIGHEST_TEMP, "80")));
-        mac = getIntent().getStringExtra("mac");
-        uuid = getIntent().getStringExtra("uuid");
+        mac = getIntent().getStringExtra(EXTRA_ITEM_ADDRESS);
+        uuid = getIntent().getStringExtra(EXTRA_BOX_UUID);
         if (mac != null) {
             connectDevice = MyBleService.get().getConnectDevice(mac);
         }

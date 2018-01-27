@@ -9,8 +9,9 @@
         android:id="@+id/imageView1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scaleType="centerCrop"
         android:src="@mipmap/welcome" />
-    <!--android:scaleType="centerCrop"-->
+    <!---->
     <!--android:layout_centerInParent="true"-->
     <com.androidex.capbox.ui.view.TypeFaceText
         android:id="@+id/textView1"
@@ -37,8 +38,7 @@
         android:textSize="12sp"
         app:in_circle_color="@color/Gray_e8"
         app:outLineColor="@color/Gray_80"
-        app:progressLineColor="@color/progessbar"
-        />
+        app:progressLineColor="@color/progessbar" />
     <!--app:circleColor="@color/Gray_e8"
         app:outLineColor="@color/Gray_e8" -->
 

@@ -25,6 +25,7 @@ import com.androidex.capbox.ui.widget.SecondTitleBar;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
 import com.androidex.capbox.utils.Dialog;
+import com.androidex.capbox.utils.RLog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,6 +49,9 @@ import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
 import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_FINGER_SETTING;
 import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_OPEN_MONITOR;
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
+import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
 
 /**
  * 配置箱体,箱体详情
@@ -109,9 +113,9 @@ public class BoxDetailActivity extends BaseActivity {
     public void initData(Bundle savedInstanceState) {
         mContext = context;
         username = SharedPreTool.getInstance(context).getStringData(SharedPreTool.PHONE, null);
-        name = getIntent().getStringExtra("name");
-        uuid = getIntent().getStringExtra("uuid");
-        mac = getIntent().getStringExtra("mac");
+        name = getIntent().getStringExtra(EXTRA_BOX_NAME);
+        uuid = getIntent().getStringExtra(EXTRA_BOX_UUID);
+        mac = getIntent().getStringExtra(EXTRA_ITEM_ADDRESS);
         initBroadCast();
         initTitleBar();
         initCheckedButton();//初始化静默开关的View;
@@ -167,9 +171,9 @@ public class BoxDetailActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
-                bundle.putString("mac", mac);
-                bundle.putString("uuid", uuid);
-                bundle.putString("name", name);
+                bundle.putString(EXTRA_ITEM_ADDRESS, mac);
+                bundle.putString(EXTRA_BOX_UUID, uuid);
+                bundle.putString(EXTRA_BOX_NAME, name);
                 bundle.putInt("status", status);
                 LockActivity.lauch(context, bundle);
             }
@@ -347,8 +351,8 @@ public class BoxDetailActivity extends BaseActivity {
                 if (isCarry()) return;//判断是否处于不可配置状态
                 if (isConnectBle()) return;//判断是否连接蓝牙
                 Bundle bundle = new Bundle();
-                bundle.putString("uuid", uuid);
-                bundle.putString("mac", mac);
+                bundle.putString(EXTRA_BOX_UUID, uuid);
+                bundle.putString(EXTRA_ITEM_ADDRESS, mac);
                 WatchListActivity.lauch(context, bundle);
                 break;
             case R.id.ll_heartbeatRate://心跳更新频率
@@ -363,7 +367,7 @@ public class BoxDetailActivity extends BaseActivity {
                             heartbeatRate = 60;
                         }
                         tv_heartbeatRate.setText(String.format("%ds/次", heartbeatRate));
-                        Log.e(TAG, "设置的定位更新频率为：" + heartbeatRate);
+                        RLog.e("设置的定位更新频率为：" + heartbeatRate);
                     }
 
                     @Override
@@ -384,7 +388,7 @@ public class BoxDetailActivity extends BaseActivity {
                             locationRate = 60;
                         }
                         tv_locationRate.setText(String.format("%ds/次", locationRate));
-                        Log.e(TAG, "设置的定位更新频率为：" + locationRate);
+                        RLog.e("设置的定位更新频率为：" + locationRate);
                     }
 
                     @Override
@@ -407,7 +411,7 @@ public class BoxDetailActivity extends BaseActivity {
                 } else {
                     bundle1.putString("possessorNum", "3");
                 }
-                bundle1.putString("mac", mac);
+                bundle1.putString(EXTRA_ITEM_ADDRESS, mac);
                 SettingFingerActivity.lauch(context, bundle1);
                 break;
             case R.id.setting_factory_settings://恢复出厂
@@ -419,8 +423,8 @@ public class BoxDetailActivity extends BaseActivity {
                 if (isCarry()) return;//判断是否处于不可配置状态
                 if (isConnectBle()) return;//判断是否连接蓝牙
                 Bundle bundle3 = new Bundle();
-                bundle3.putString("mac", mac);
-                bundle3.putString("uuid", uuid);
+                bundle3.putString(EXTRA_ITEM_ADDRESS, mac);
+                bundle3.putString(EXTRA_BOX_UUID, uuid);
                 SettingAlarmActivity.lauch(context, bundle3, Constants.CODE.REQUESTCODE_SET_ALARM);
                 break;
             case R.id.ll_settinglock://开锁设置
@@ -567,7 +571,7 @@ public class BoxDetailActivity extends BaseActivity {
                     list_devicemac = data.getStringArrayListExtra("list_devicemac");
                     for (int i = 0; i < list_devicemac.size(); i++) {
                         HashMap<String, String> map = new HashMap<>();
-                        map.put("mac", list_devicemac.get(i));
+                        map.put(EXTRA_ITEM_ADDRESS, list_devicemac.get(i));
                         map.put("deviceType", "B");
                         mapArrayList.add(map);
                     }
@@ -614,7 +618,7 @@ public class BoxDetailActivity extends BaseActivity {
         } else if (requestCode == Constants.CODE.REQUESTCODE_SET_BOX) {//箱体设置
             switch (resultCode) {
                 case Activity.RESULT_OK:
-                    name = data.getStringExtra("name");//箱体昵称
+                    name = data.getStringExtra(EXTRA_BOX_NAME);//箱体昵称
                     Log.d(TAG, " name=" + name);
                     tv_name.setText(name);
                     break;

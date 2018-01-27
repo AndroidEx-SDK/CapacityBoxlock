@@ -42,6 +42,8 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCO
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
 import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_ADD_DEVICE;
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
+import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
 
 /**
  * 配置腕表页面
@@ -73,8 +75,8 @@ public class WatchDetialActivity extends BaseActivity {
     @Override
     public void initData(Bundle savedInstanceState) {
         mContext = context;
-        uuid = getIntent().getStringExtra("uuid");
-        mac = getIntent().getStringExtra("mac");
+        uuid = getIntent().getStringExtra(EXTRA_BOX_UUID);
+        mac = getIntent().getStringExtra(EXTRA_ITEM_ADDRESS);
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BLE_CONN_SUCCESS);
@@ -241,7 +243,7 @@ public class WatchDetialActivity extends BaseActivity {
                     list_devicemac = data.getStringArrayListExtra("list_devicemac");
                     for (int i = 0; i < list_devicemac.size(); i++) {
                         HashMap<String, String> map = new HashMap<>();
-                        map.put("mac", list_devicemac.get(i));
+                        map.put(EXTRA_ITEM_ADDRESS, list_devicemac.get(i));
                         map.put("deviceType", "B");
                         mapArrayList.add(map);
                     }

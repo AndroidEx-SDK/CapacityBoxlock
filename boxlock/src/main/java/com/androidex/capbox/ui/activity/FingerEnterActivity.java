@@ -32,6 +32,7 @@ import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
 import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_FINGER_BECOME;
 import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_FINGER_POSSESSOR;
+import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
 
 /**
  * @author liyp
@@ -84,7 +85,7 @@ public class FingerEnterActivity extends BaseActivity {
     @Override
     public void initData(Bundle savedInstanceState) {
         mContext = context;
-        mac = getIntent().getStringExtra("mac");
+        mac = getIntent().getStringExtra(EXTRA_ITEM_ADDRESS);
         initBroadCast();
         if (MyBleService.get().getConnectDevice(mac) != null) {
             if (code == REQUESTCODE_FINGER_POSSESSOR) {

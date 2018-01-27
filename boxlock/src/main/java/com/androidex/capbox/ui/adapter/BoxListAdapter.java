@@ -1,6 +1,7 @@
 package com.androidex.capbox.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -35,6 +36,10 @@ import okhttp3.Headers;
 import okhttp3.Request;
 
 import static com.androidex.capbox.R.id.tv_status;
+import static com.androidex.capbox.provider.WidgetProvider.ACTION_UPDATE_ALL;
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
+import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
 
 /**
  * 已绑定设备的适配器
@@ -116,9 +121,9 @@ public class BoxListAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        final String uuid = mContentList.get(position).get("uuid");
-        final String mac = mContentList.get(position).get("mac");
-        String name = mContentList.get(position).get("name");
+        final String uuid = mContentList.get(position).get(EXTRA_BOX_UUID);
+        final String mac = mContentList.get(position).get(EXTRA_ITEM_ADDRESS);
+        String name = mContentList.get(position).get(EXTRA_BOX_NAME);
         String isOnLine = mContentList.get(position).get("isOnLine");
         String deviceStatus = mContentList.get(position).get("deviceStatus");
         if (name == null || name.equals("")) {
@@ -246,6 +251,7 @@ public class BoxListAdapter extends BaseAdapter {
                                     }
                                     SharedPreTool.getInstance(mContext).remove(mac);
                                     EventBus.getDefault().postSticky(new Event.BoxRelieveBind());
+                                    mContext.sendBroadcast(new Intent(ACTION_UPDATE_ALL));//发送广播给桌面插件，更新列表
                                     break;
                                 case Constants.API.API_FAIL:
                                     CommonKit.showErrorShort(mContext, "解绑失败");
@@ -264,7 +270,6 @@ public class BoxListAdapter extends BaseAdapter {
                                     break;
                             }
                         }
-
                     }
 
                     @Override

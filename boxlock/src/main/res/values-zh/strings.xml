@@ -9,7 +9,7 @@
     <string name="corporate_name">西安中仪动控信息科技有限公司</string>
     <!-- fragment_lock -->
     <string name="main_title_tv">智能监控</string>
-    <string name="user_name0">昵称：</string>
+    <string name="user_name0">名称：</string>
     <string name="user_name">箱子</string>
     <string name="user_binding">设备：</string>
     <string name="user_device">FF:FF:FF:FF:FF</string>
@@ -245,6 +245,8 @@
     <string name="bledevice_toast5">同步设备时间成功</string>
     <string name="bledevice_toast6">同步设备时间失败</string>
     <string name="bledevice_toast9">手机蓝牙断开</string>
+    <string name="bledevice_toast10">已经是第一个</string>
+    <string name="bledevice_toast11">别扯了，已经到最后一个了</string>
 
     <!-- TypeOfAlarm.java -->
     <string name="typeofalarm_shake">震动</string>
@@ -305,6 +307,7 @@
     <string name="label_register">提交审核</string>
     <string name="label_user_login">用户登录</string>
     <string name="label_box_name">箱体昵称</string>
+    <string name="label_device_list">设备列表</string>
     <string name="label_user_login_account">手机号码</string>
     <string name="hint_phone_input">请输入11位手机号</string>
     <string name="hint_uuid_commit">箱体uuid为空</string>

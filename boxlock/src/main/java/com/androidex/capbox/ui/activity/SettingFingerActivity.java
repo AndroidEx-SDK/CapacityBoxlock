@@ -30,6 +30,7 @@ import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_
 import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_FINGER_BECOME;
 import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_FINGER_POSSESSOR;
 import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_FINGER_SETTING;
+import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
 
 /**
  * 配置箱体,箱体详情
@@ -56,7 +57,7 @@ public class SettingFingerActivity extends BaseActivity {
     @Override
     public void initData(Bundle savedInstanceState) {
         mContext = context;
-        mac = getIntent().getStringExtra("mac");
+        mac = getIntent().getStringExtra(EXTRA_ITEM_ADDRESS);
         String becomeNum = getIntent().getStringExtra("becomeNum");
         String possessorNum = getIntent().getStringExtra("possessorNum");
         initBroadCast();
@@ -82,12 +83,12 @@ public class SettingFingerActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.ll_becomeFinger://无线静默功能指纹信息
                 Bundle bundle = new Bundle();
-                bundle.putString("mac", mac);
+                bundle.putString(EXTRA_ITEM_ADDRESS, mac);
                 FingerEnterActivity.lauch(context, bundle, REQUESTCODE_FINGER_BECOME);
                 break;
             case R.id.ll_possessorFinger://所有人的指纹信息
                 Bundle bundle1 = new Bundle();
-                bundle1.putString("mac", mac);
+                bundle1.putString(EXTRA_ITEM_ADDRESS, mac);
                 FingerEnterActivity.lauch(context, bundle1, REQUESTCODE_FINGER_POSSESSOR);
                 break;
             case R.id.ll_clearFinger:
