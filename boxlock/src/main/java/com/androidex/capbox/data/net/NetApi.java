@@ -11,6 +11,7 @@ import com.androidex.capbox.module.BaiduModel;
 import com.androidex.capbox.module.BaseModel;
 import com.androidex.capbox.module.BoxDetailModel;
 import com.androidex.capbox.module.BoxDeviceModel;
+import com.androidex.capbox.module.BoxMovePathModel;
 import com.androidex.capbox.module.CheckVersionModel;
 import com.androidex.capbox.module.DeviceMacModel;
 import com.androidex.capbox.module.DeviceWatchModel;
@@ -223,6 +224,17 @@ public class NetApi {
                 .put("username", username);
 
         String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_BOXLIST);
+        new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
+    }
+
+    public static void movepath(String token, String username,String uuid, ResultCallBack<BoxMovePathModel> callBack){
+        Headers headers = new Headers.Builder()
+                .add("token", token)
+                .build();
+        RequestParams params = RequestParams.newInstance()
+                .put("username", username)
+                .put("uuid",uuid);
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_MOVEPATH);
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
 
