@@ -481,6 +481,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
             lockFragment = new LockFragment();
             lockFragment.setArguments(bundle);
+            if (fragmentManager == null) fragmentManager = getSupportFragmentManager();
             transaction = fragmentManager.beginTransaction();
             transaction.replace(R.id.content, lockFragment);
             transaction.commitAllowingStateLoss();

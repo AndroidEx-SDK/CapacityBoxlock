@@ -8,18 +8,33 @@
     android:paddingRight="@dimen/marginPadding10">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1">
+        android:layout_margin="@dimen/marginPadding10"
+        android:layout_marginLeft="@dimen/marginPadding16"
+        android:layout_weight="1"
+        android:gravity="center|bottom">
 
-        <TextView
-            android:id="@+id/tv_name"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/marginPadding10"
-            android:text="Box66"
-            android:textColor="@color/white"
-            android:textSize="@dimen/size12" />
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/box_small"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginPadding5"
+                android:text="Box66"
+                android:textColor="@color/white"
+                android:textSize="@dimen/size12" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
