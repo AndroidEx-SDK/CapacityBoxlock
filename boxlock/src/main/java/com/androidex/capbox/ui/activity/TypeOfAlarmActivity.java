@@ -47,7 +47,10 @@ public class TypeOfAlarmActivity extends BaseActivity {
     @OnClick({
             R.id.ll_temp,
             R.id.ll_distance,
-            R.id.ll_lost
+            R.id.ll_lost,
+            R.id.btn_lost,
+            R.id.btn_distance,
+            R.id.btn_temp
     })
     public void clickEvent(View view) {
         switch (view.getId()) {
@@ -71,6 +74,27 @@ public class TypeOfAlarmActivity extends BaseActivity {
                 AlertDialog ad2 = new AlertDialog.Builder(this).setTitle(getResources().getString(R.string.typeofalarm_type))
                         .setSingleChoiceItems(areas, OnClick2.getIndex(), OnClick2).create();
                 ad2.show();
+                break;
+            case R.id.btn_lost:
+                callType = 0;
+                RadioOnClick OnClick3 = new RadioOnClick(SharedPreTool.getInstance(this).getIntData(SP_LOST_TYPE, 0));
+                AlertDialog ad3 = new AlertDialog.Builder(this).setTitle(getResources().getString(R.string.typeofalarm_type))
+                        .setSingleChoiceItems(areas, OnClick3.getIndex(), OnClick3).create();
+                ad3.show();
+                break;
+            case R.id.btn_distance:
+                callType = 1;
+                RadioOnClick OnClick4 = new RadioOnClick(SharedPreTool.getInstance(this).getIntData(SP_DISTANCE_TYPE, 0));
+                AlertDialog ad4 = new AlertDialog.Builder(this).setTitle(getResources().getString(R.string.typeofalarm_type))
+                        .setSingleChoiceItems(areas, OnClick4.getIndex(), OnClick4).create();
+                ad4.show();
+                break;
+            case R.id.btn_temp:
+                callType = 2;
+                RadioOnClick OnClick5 = new RadioOnClick(SharedPreTool.getInstance(this).getIntData(SP_TEMP_TYPE, 0));
+                AlertDialog ad5 = new AlertDialog.Builder(this).setTitle(getResources().getString(R.string.typeofalarm_type))
+                        .setSingleChoiceItems(areas, OnClick5.getIndex(), OnClick5).create();
+                ad5.show();
                 break;
             default:
                 break;
