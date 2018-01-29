@@ -77,6 +77,7 @@ public class LockScreenActivity extends BaseActivity {
     private TimeThread timeThread;
     private PagerAdapter pagerAdapter;
     private boolean isfisrst = true;
+    private boolean isfisrst_next = true;
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -197,7 +198,11 @@ public class LockScreenActivity extends BaseActivity {
     public void onEvent(Event.NextPage event) {
         int currentItem = viewPager.getCurrentItem();
         if (currentItem >= list.size() - 1) {
-            CommonKit.showOkShort(context, context.getResources().getString(R.string.bledevice_toast11));
+            if (!isfisrst_next) {
+                CommonKit.showOkShort(context, context.getResources().getString(R.string.bledevice_toast11));
+            } else {
+                isfisrst_next = false;
+            }
         } else {
             viewPager.setCurrentItem(currentItem + 1);
         }
