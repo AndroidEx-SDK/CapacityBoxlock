@@ -7,7 +7,10 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -18,17 +21,20 @@ import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.data.Event;
+import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.module.BoxDeviceModel;
 import com.androidex.capbox.service.MyBleService;
-import com.androidex.capbox.ui.adapter.BindDeviceAdapter;
-import com.androidex.capbox.ui.view.CustomRecyclerView;
+import com.androidex.capbox.ui.fragment.ScreenItemFragment;
 import com.androidex.capbox.ui.view.ZItem;
 import com.androidex.capbox.utils.CalendarUtil;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
+import com.androidex.capbox.utils.PagerSwitchAnimation;
+import com.androidex.capbox.utils.RLog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -36,6 +42,7 @@ import butterknife.OnClick;
 import okhttp3.Headers;
 import okhttp3.Request;
 
+import static com.androidex.boxlib.cache.SharedPreTool.IS_BIND_NUM;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_HEART;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_OPEN_SUCCED;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_STARTS;
@@ -55,59 +62,51 @@ import static com.androidex.capbox.utils.Constants.BASE.ACTION_RSSI_OUT;
 import static com.androidex.capbox.utils.Constants.BASE.ACTION_TEMP_OUT;
 
 public class LockScreenActivity extends BaseActivity {
-    public static String TAG = "LockScreenActivity";
     @Bind(R.id.tv_time)
     TextView tv_time;
     @Bind(R.id.tv_date)
     TextView tv_date;
     @Bind(R.id.textView1)
     ZItem xitem;
-    @Bind(R.id.qtRecyclerView)
-    CustomRecyclerView qtRecyclerView;
     @Bind(R.id.rl_lockscreen)
     RelativeLayout rl_lockscreen;
+    @Bind(R.id.viewPager)
+    ViewPager viewPager;
 
-    private BindDeviceAdapter adapter;
-    private List<BoxDeviceModel.device> devicelist;
+    private List<Fragment> list = new ArrayList();
     private TimeThread timeThread;
+    private PagerAdapter pagerAdapter;
+    private boolean isfisrst = true;
+    private boolean isfisrst_next = true;
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        Log.e(TAG, "锁屏界面启动");
+        RLog.e("锁屏界面启动");
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED   //这个在锁屏状态下
                 //| WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON                    //这个是点亮屏幕
                 //| WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD                //这个是透过锁屏界面，相当与解锁，但实质没有
                 //| WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON                  //这个是保持屏幕常亮。
         );
-        initData();
         registerEventBusSticky();//注册Event
+        initData();
         initBleBroadCast();
-        initRecyclerView();
+        initViewPager();
         boxlist();
     }
 
-    private void initRecyclerView() {
-        adapter = new BindDeviceAdapter(context);
-        qtRecyclerView.horizontalLayoutManager(context).defaultNoDivider();
-        qtRecyclerView.setAdapter(adapter);
-        qtRecyclerView.setOnRefreshAndLoadMoreListener(new CustomRecyclerView.OnRefreshAndLoadMoreListener() {
-            @Override
-            public void onRefresh() {
-                boxlist();
-            }
-
-            @Override
-            public void onLoadMore(int page) {
-
-            }
-        });
+    private void initViewPager() {
+        //给viewPager添加动画
+        viewPager.setOffscreenPageLimit(1);//设置预加载item个数
+        viewPager.setPageTransformer(true, PagerSwitchAnimation.Instance().new MyPageTransformer());
+        pagerAdapter = new PagerAdapter(getSupportFragmentManager(), list);
+        RLog.e("--viewpager set adapter" + "" + list.size());
+        viewPager.setAdapter(pagerAdapter);
     }
 
     /**
      * 初始化蓝牙广播
      */
     private void initBleBroadCast() {
-        Log.e("BaseActivity", "--注册蓝牙广播");
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BLE_CONN_SUCCESS);
         intentFilter.addAction(BLE_CONN_SUCCESS_ALLCONNECTED);
@@ -173,7 +172,7 @@ public class LockScreenActivity extends BaseActivity {
      * @param event
      */
     public void onEvent(Event.BleConnected event) {
-        Log.e(TAG, "onEvent connect " + event.getAddress());
+        RLog.e("onEvent connect " + event.getAddress());
         BleService.get().connectionDevice(context, event.getAddress());
     }
 
@@ -183,12 +182,48 @@ public class LockScreenActivity extends BaseActivity {
      * @param event
      */
     public void onEvent(Event.BleDisConnected event) {
-        Log.e(TAG, "onEvent disconnect " + event.getAddress());
+        RLog.e("onEvent disconnect " + event.getAddress());
         ServiceBean device = MyBleService.get().getConnectDevice(event.getAddress());
         if (device != null) {
             device.setActiveDisConnect(true);
         }
         MyBleService.get().disConnectDevice(event.getAddress());
+    }
+
+    /**
+     * 切换下一页
+     *
+     * @param event
+     */
+    public void onEvent(Event.NextPage event) {
+        int currentItem = viewPager.getCurrentItem();
+        if (currentItem >= list.size() - 1) {
+            if (!isfisrst_next) {
+                CommonKit.showOkShort(context, context.getResources().getString(R.string.bledevice_toast11));
+            } else {
+                isfisrst_next = false;
+            }
+        } else {
+            viewPager.setCurrentItem(currentItem + 1);
+        }
+    }
+
+    /**
+     * 切换上一页
+     *
+     * @param event
+     */
+    public void onEvent(Event.PreviousPage event) {
+        int currentItem = viewPager.getCurrentItem();
+        if (currentItem > 0) {
+            viewPager.setCurrentItem(currentItem - 1);
+        } else {
+            if (!isfisrst) {
+                CommonKit.showOkShort(context, context.getResources().getString(R.string.bledevice_toast10));
+            } else {
+                isfisrst = false;
+            }
+        }
     }
 
     @OnClick({
@@ -219,12 +254,22 @@ public class LockScreenActivity extends BaseActivity {
                     switch (model.code) {
                         case Constants.API.API_OK:
                             if (model != null) {
+                                list.clear();
                                 if (model.devicelist != null && !model.devicelist.isEmpty()) {
-                                    devicelist = model.devicelist;
-                                    adapter.setData(model.devicelist);
+                                    //list = model.devicelist;
+                                    for (int i = 0; i < model.devicelist.size(); i++) {
+                                        RLog.e("fragment is has values");
+                                        ScreenItemFragment screenItemFragment = new ScreenItemFragment();
+                                        Bundle bundle = new Bundle();
+                                        bundle.putSerializable("item", model.devicelist.get(i));
+                                        screenItemFragment.setArguments(bundle);
+                                        list.add(screenItemFragment);
+                                    }
+                                    pagerAdapter.notifyDataSetChanged();
+                                    RLog.e("adapter set notifyDataSetChanged list.size=" + list.size());
                                 }
                             }
-                            Logd("刷新列表");
+                            Logd("锁屏 刷新列表");
                             break;
                         case Constants.API.API_FAIL:
                             CommonKit.showErrorShort(context, "账号在其他地方登录");
@@ -274,15 +319,15 @@ public class LockScreenActivity extends BaseActivity {
                 case BLE_CONN_SUCCESS_ALLCONNECTED://重复连接
                     BleService.get().enableNotify(address);
                     disProgress();
-                    if (devicelist != null) {
-                        adapter.setData(devicelist);
+                    if (list != null) {
+                        pagerAdapter.notifyDataSetChanged();
                     }
                     CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast3));
                     break;
                 case BLE_CONN_DIS://蓝牙断开
                     CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast4));
-                    if (devicelist != null) {
-                        adapter.setData(devicelist);
+                    if (list != null) {
+                        pagerAdapter.notifyDataSetChanged();
                     }
                     break;
                 case BLE_CONN_FAIL://连接失败
@@ -293,8 +338,8 @@ public class LockScreenActivity extends BaseActivity {
                     Logd("手机蓝牙断开");
                     CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast9));
                     MyBleService.get().disConnectDeviceALL();
-                    if (devicelist != null) {
-                        adapter.setData(devicelist);
+                    if (list != null) {
+                        pagerAdapter.notifyDataSetChanged();
                     }
                     break;
                 case BLUTOOTH_ON:
@@ -384,8 +429,63 @@ public class LockScreenActivity extends BaseActivity {
         }
     }
 
+    public class PagerAdapter extends FragmentStatePagerAdapter {
+        List<Fragment> list = new ArrayList();
+
+        public PagerAdapter(FragmentManager fm, List<Fragment> list) {
+            super(fm);
+            this.list = list;
+        }
+
+        /**
+         * 获得页面数量
+         *
+         * @return 返回实际的页面数量
+         */
+        @Override
+        public int getCount() {
+            RLog.e("get bind count = " + SharedPreTool.getInstance(context).getIntData(IS_BIND_NUM, 0));
+            RLog.e("get list size = " + list.size());
+            return list.size();
+        }
+
+        /**
+         * 获得指定序号的页面Fragment对象
+         *
+         * @param position
+         * @return
+         */
+        @Override
+        public Fragment getItem(int position) {
+            RLog.e("adapter getItem");
+            if (list.size() > 0) {
+                return list.get(position);
+            }
+            RLog.e("fragment is null ");
+            return null;
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            // if (object.getClass().getName().equals(ScreenItemFragment.class.getName())) {
+            RLog.e("切换 fargment=" + object.getClass().getName());
+            return POSITION_NONE;
+            //}
+            //RLog.e("父类的 fargment=" + object.getClass().getName());
+            //return super.getItemPosition(object);
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+            RLog.e("notify  is start " + getCount());
+            super.notifyDataSetChanged();
+        }
+    }
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_lock_screen;
     }
+
+
 }

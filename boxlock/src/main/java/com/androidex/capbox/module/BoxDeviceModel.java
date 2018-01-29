@@ -1,5 +1,6 @@
 package com.androidex.capbox.module;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ import java.util.List;
  * @editTime
  * @editor
  */
-public class BoxDeviceModel extends BaseModel {
+public class BoxDeviceModel extends BaseModel implements Serializable {
     /**
      * {code：0，
      * devicelist:[{
@@ -42,12 +43,11 @@ public class BoxDeviceModel extends BaseModel {
      * },
      * "devicelist":[]
      * }
-     *
      */
 
     public List<device> devicelist;
 
-    public class device {
+    public class device implements Serializable {
         public String deviceType;
         public String boxName;
         public String uuid;

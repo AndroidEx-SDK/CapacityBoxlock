@@ -10,17 +10,18 @@ import com.androidex.boxlib.utils.BleConstants;
  * @editTime
  * @editor
  */
-public class Constants extends BleConstants{
+public class Constants extends BleConstants {
 
     public static final String EXTRA_ITEM_ADDRESS = "address";
     public static final String EXTRA_BOX_UUID = "uuid";
     public static final String EXTRA_BOX_NAME = "name";
 
-    public static class BASE{
+    public static class BASE {
         public static final String ACTION_TEMP_OUT = "ACTION_TEMP_OUT";
         public static final String ACTION_RSSI_OUT = "ACTION_RSSI_OUT";
         public static final String ACTION_RSSI_IN = "ACTION_RSSI_IN";
     }
+
     /**
      * 应用配置
      */
@@ -86,6 +87,8 @@ public class Constants extends BleConstants{
         public static final int TAG_EVENT_BOX_BLE_DISCONNECTED = TAG_BASE_EVENT + 6;   //蓝牙断开
         public static final int TAG_EVENT_BOX_LOCK_OPEN = TAG_BASE_EVENT + 7;          //锁打开
         public static final int TAG_EVENT_BOX_LOCK_CLOSE = TAG_BASE_EVENT + 8;         //锁关闭
+        public static final int TAG_EVENT_FRAGMENT_NEXT_PAGE = TAG_BASE_EVENT + 9;     //切换下一页
+        public static final int TAG_EVENT_FRAGMENT_PREVIOUS_PAGE = TAG_BASE_EVENT + 10;//切换上一页
 
     }
 

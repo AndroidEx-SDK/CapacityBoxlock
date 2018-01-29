@@ -157,6 +157,28 @@ public class Event {
         }
     }
 
+    /**
+     * 切换下一页
+     */
+    public static class NextPage extends BaseEvent {
+
+        @Override
+        int getCode() {
+            return Constants.EVENT.TAG_EVENT_FRAGMENT_NEXT_PAGE;
+        }
+    }
+
+    /**
+     * 切换上一页
+     */
+    public static class PreviousPage extends BaseEvent {
+
+        @Override
+        int getCode() {
+            return Constants.EVENT.TAG_EVENT_FRAGMENT_PREVIOUS_PAGE;
+        }
+    }
+
 
     /**
      * 用户信息改变

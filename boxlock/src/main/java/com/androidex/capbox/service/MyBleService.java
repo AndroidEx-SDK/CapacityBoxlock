@@ -7,6 +7,7 @@ import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.ui.activity.LockScreenActivity;
+import com.androidex.capbox.utils.RLog;
 import com.androidex.capbox.utils.SystemUtil;
 
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
@@ -30,7 +31,7 @@ public class MyBleService extends BleService {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG, "MyBleService 启动");
+        RLog.e("MyBleService 启动");
         setLockScreenActivity(LockScreenActivity.class);//设置锁屏界面的Activity
     }
 
@@ -84,15 +85,15 @@ public class MyBleService extends BleService {
         if (connectDevice == null) return;
         ServiceBean device = SharedPreTool.getInstance(this).getObj(ServiceBean.class, address);
         if (device != null) {
-            Log.e(TAG, "device====" + device.toString());
+            RLog.e("device====" + device.toString());
             connectDevice.setPolice(device.isPolice());
             connectDevice.setDistanceAlarm(device.isDistanceAlarm());
             connectDevice.setTamperAlarm(device.isTamperAlarm());
             connectDevice.setTempAlarm(device.isTempAlarm());
             connectDevice.setHumAlarm(device.isHumAlarm());
-            Log.e(TAG, "转换后设备参数" + connectDevice.toString());
+            RLog.e("转换后设备参数" + connectDevice.toString());
         } else {
-            Log.e(TAG, "device is null");
+            RLog.e("device is null");
         }
     }
 
@@ -124,11 +125,11 @@ public class MyBleService extends BleService {
                         SystemUtil.startPlayerRaw(getContext());
                     }
                 } else {
-                    Log.d(TAG, "已关闭单个箱子报警开关");
+                    RLog.e( "已关闭单个箱子报警开关");
                 }
             }
         } else {
-            Log.d(TAG, "已关闭报警开关");
+            RLog.e("已关闭报警开关");
         }
     }
 
@@ -152,11 +153,11 @@ public class MyBleService extends BleService {
                     sendBroadcast(intent);
                     SystemUtil.startPlayerRaw(getContext());
                 } else {
-                    Log.d(TAG, "已关闭单个箱子距离报警开关");
+                    RLog.e( "已关闭单个箱子距离报警开关");
                 }
             }
         } else {
-            Log.d(TAG, "已关闭报警开关");
+            RLog.e( "已关闭报警开关");
         }
     }
 
@@ -179,7 +180,7 @@ public class MyBleService extends BleService {
         if (SharedPreTool.getInstance(this).getBoolData(SharedPreTool.IS_POLICE, true)) {
             ServiceBean device = SharedPreTool.getInstance(this).getObj(ServiceBean.class, address);
             if (device != null && device.isTempAlarm()) {//非主动断开时，报警
-                Log.e(TAG, "发送广播，温度超范围报警");
+                RLog.e("发送广播，温度超范围报警");
                 Intent intent = new Intent(ACTION_TEMP_OUT);
                 intent.putExtra(BLECONSTANTS_ADDRESS, address);
                 sendBroadcast(intent);
@@ -187,17 +188,17 @@ public class MyBleService extends BleService {
             } else {
                 ServiceBean connectDevice = MyBleService.get().getConnectDevice(address);
                 if (connectDevice != null && connectDevice.isTempAlarm()) {//非主动断开时，报警
-                    Log.e(TAG, "发送广播，温度超范围报警");
+                    RLog.e( "发送广播，温度超范围报警");
                     Intent intent = new Intent(ACTION_TEMP_OUT);
                     intent.putExtra(BLECONSTANTS_ADDRESS, address);
                     sendBroadcast(intent);
                     SystemUtil.startPlayerRaw(getContext());
                 } else {
-                    Log.d(TAG, "已关闭单个箱子温度报警开关");
+                    RLog.e( "已关闭单个箱子温度报警开关");
                 }
             }
         } else {
-            Log.d(TAG, "已关闭报警开关");
+            RLog.e("已关闭报警开关");
         }
     }
 

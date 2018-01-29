@@ -1,201 +1,108 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/background"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/relativeLayout1"
+    <com.androidex.capbox.ui.widget.SecondTitleBar
         android:layout_width="match_parent"
-        android:layout_height="@dimen/title_height"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/typeofalarm_btn_back"
-            android:layout_width="@dimen/title_button"
-            android:layout_height="@dimen/title_button"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/title_button_mar"
-            android:background="@drawable/back_button" />
-
-        <Button
-            android:id="@+id/typeofalarm_btn_ok"
-            android:layout_width="@dimen/title_button"
-            android:layout_height="@dimen/title_button"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/title_button_mar"
-            android:background="@drawable/ok_button" />
-
-        <com.androidex.capbox.ui.view.TypeFaceText
-            android:id="@+id/typeofalarm_title_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="@string/typeofalarm_title_tv"
-            android:textColor="@color/white"
-            android:textSize="@dimen/title_tv_size" />
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/blue" />
+        android:layout_height="wrap_content"
+        app:titleText="@string/setting_tv_mode" />
 
     <LinearLayout
-        android:id="@+id/RelativeLayout01"
+        android:id="@+id/ll_lost"
         android:layout_width="match_parent"
         android:layout_height="@dimen/typeofalarm_ll_height"
-        android:layout_below="@+id/TextView01"
         android:gravity="center_vertical">
 
-        <com.androidex.capbox.ui.view.TypeFaceText
-            android:id="@+id/TextView04"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:paddingLeft="@dimen/setting_tv_padding_left"
             android:text="@string/typeofalarm_tv_lost"
             android:textColor="@color/white"
-            android:textSize="@dimen/tyepofalarm_tv" />
+            android:textSize="@dimen/size14" />
 
         <Button
-            android:id="@+id/typeofalarm_btn_lost"
+            android:id="@+id/btn_lost"
             android:layout_width="@dimen/typeofalarm_btn_width"
             android:layout_height="@dimen/typeofalarm_btn_height"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/setting_tv_marginRight"
             android:background="@null"
-            android:gravity="center"
             android:text="@string/typeofalarm_tv_lost_type"
             android:textColor="@color/white"
-            android:textSize="@dimen/typeofalarm_btn_textSize" />
+            android:textSize="@dimen/size14" />
     </LinearLayout>
 
     <TextView
-        android:id="@+id/TextView05"
         android:layout_width="match_parent"
         android:layout_height="@dimen/tv_line_height"
-        android:layout_below="@+id/RelativeLayout01"
         android:background="@color/line_color" />
 
     <LinearLayout
-        android:id="@+id/RelativeLayout02"
+        android:id="@+id/ll_distance"
         android:layout_width="match_parent"
         android:layout_height="@dimen/typeofalarm_ll_height"
-        android:layout_below="@+id/TextView05"
         android:gravity="center_vertical">
 
-        <com.androidex.capbox.ui.view.TypeFaceText
-            android:id="@+id/TextView03"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
             android:layout_weight="1"
             android:paddingLeft="@dimen/setting_tv_padding_left"
-            android:text="@string/typeofalarm_tv_bells"
+            android:text="@string/typeofalarm_tv_distance"
             android:textColor="@color/white"
-            android:textSize="@dimen/tyepofalarm_tv" />
+            android:textSize="@dimen/size14" />
 
-
-        <ImageView
-            android:id="@+id/typeofalarm_btn_bells1"
-            android:layout_width="@dimen/marginPadding20"
-            android:layout_height="@dimen/marginPadding20"
-            android:layout_marginRight="@dimen/marginPadding30"
-            android:src="@mipmap/white_right" />
+        <Button
+            android:id="@+id/btn_distance"
+            android:layout_width="@dimen/typeofalarm_btn_width"
+            android:layout_height="@dimen/typeofalarm_btn_height"
+            android:layout_marginRight="@dimen/setting_tv_marginRight"
+            android:background="@null"
+            android:text="@string/typeofalarm_tv_lost_type"
+            android:textColor="@color/white"
+            android:textSize="@dimen/size14" />
     </LinearLayout>
 
     <TextView
-        android:id="@+id/TextView07"
         android:layout_width="match_parent"
         android:layout_height="@dimen/tv_line_height"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="@dimen/tv_distance"
         android:background="@color/line_color" />
 
     <LinearLayout
-        android:id="@+id/RelativeLayout03"
+        android:id="@+id/ll_temp"
         android:layout_width="match_parent"
         android:layout_height="@dimen/typeofalarm_ll_height"
         android:gravity="center_vertical">
 
-        <com.androidex.capbox.ui.view.TypeFaceText
+        <TextView
             android:id="@+id/TextView09"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
             android:layout_weight="1"
             android:paddingLeft="@dimen/setting_tv_padding_left"
             android:text="@string/typeofalarm_tv_fever"
             android:textColor="@color/white"
-            android:textSize="@dimen/tyepofalarm_tv" />
+            android:textSize="@dimen/size14" />
 
         <Button
-            android:id="@+id/typeofalarm_btn_fever"
+            android:id="@+id/btn_temp"
             android:layout_width="@dimen/typeofalarm_btn_width"
             android:layout_height="@dimen/typeofalarm_btn_height"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/setting_tv_marginRight"
             android:background="@null"
-            android:gravity="center"
-            android:text="@string/typeofalarm_tv_fever_type"
+            android:text="@string/typeofalarm_tv_lost_type"
             android:textColor="@color/white"
-            android:textSize="@dimen/typeofalarm_btn_textSize" />
+            android:textSize="@dimen/size14" />
     </LinearLayout>
 
     <TextView
-        android:id="@+id/TextView10"
         android:layout_width="match_parent"
         android:layout_height="@dimen/tv_line_height"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/RelativeLayout03"
         android:background="@color/line_color" />
 
-    <LinearLayout
-        android:id="@+id/RelativeLayout04"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/typeofalarm_ll_height"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/TextView10"
-        android:gravity="center_vertical">
-
-        <com.androidex.capbox.ui.view.TypeFaceText
-            android:id="@+id/TextView11"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_weight="1"
-            android:paddingLeft="@dimen/setting_tv_padding_left"
-            android:text="@string/typeofalarm_tv_bells"
-            android:textColor="@color/white"
-            android:textSize="@dimen/tyepofalarm_tv" />
-
-        <ImageView
-            android:id="@+id/typeofalarm_btn_bells2"
-            android:layout_width="@dimen/marginPadding20"
-            android:layout_height="@dimen/marginPadding20"
-            android:layout_marginRight="@dimen/marginPadding30"
-            android:src="@mipmap/white_right" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/TextView13"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/tv_line_height"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/RelativeLayout04"
-        android:background="@color/line_color" />
 
 </LinearLayout>
