@@ -45,6 +45,7 @@ import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.route.DrivingRouteLine;
 import com.baidu.mapapi.search.route.WalkingRouteLine;
+import com.baidu.mapapi.utils.DistanceUtil;
 
 import java.sql.Time;
 import java.util.ArrayList;
@@ -74,10 +75,14 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
     Button navigationButton;
     @Bind(R.id.routeplan_exit)
     Button routeplanButton;
+    @Bind(R.id.shock_box)
+    Button shockBox;
     private View markerDialog;
     private ProgressDialog progressDialog;
     private boolean isOverTime = false;
     private MapMode mapMode = MapMode.NORMAL;
+    private final int UPDATE_TIME = 60*1000;
+    private final int DELAY_TIME = 10*1000;
 
     //地图位置参数
     private BaiduMap mBaiduMap = null;
@@ -105,9 +110,12 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
                         LatLng start = new LatLng(location.getLatitude(),location.getLongitude());
                         LatLng end = marker.getPosition();
                         isOverTime = false;
+                        wrl = null;
+                        drl = null;
                         mMapUtils.RoutePlan(start,end);
                         progressDialog = ProgressDialog.show(context,null,"正在规划路线...");
                         progressDialog.setCanceledOnTouchOutside(false);
+                        mHandler.sendEmptyMessageDelayed(END_OVERTIME_WHAT,DELAY_TIME); //10s超时
                     }else{
                         CommonKit.showErrorShort(context,"未获取定位信息，请到开阔地带");
                     }
@@ -151,25 +159,18 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
                             public void run() {
                                 getBoxDevices();
                             }
-                        },0,1000*60);
+                        },UPDATE_TIME,UPDATE_TIME);
                     }
                     break;
                 case END_WALKING_WHAT:
                 case END_DRIVING_WHAT:
-                    if (wrl != null && drl != null) {
-                        if (progressDialog != null) {
-                            progressDialog.dismiss();
-                        }
-                        int wrlDistance = wrl.getDistance();
-                        if (wrlDistance > 1000) { //超过1000米自动选择驾车路线
-                            //驾车路线
-                            showDrivingRouteLine(drl);
-                        } else {
-                            //步行路线
-                            showWalkingRouteLine(wrl);
-                        }
-                    } else {
-                        mHandler.sendEmptyMessageDelayed(END_OVERTIME_WHAT, 5 * 1000);
+                    if (progressDialog != null) {
+                        progressDialog.dismiss();
+                    }
+                    if(wrl != null){
+                        showWalkingRouteLine(wrl);
+                    }else if(drl!=null){
+                        showDrivingRouteLine(drl);
                     }
                     break;
                 case END_OVERTIME_WHAT: {
@@ -177,12 +178,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
                     if (progressDialog != null) {
                         progressDialog.dismiss();
                     }
-                    if (wrl != null) {
-                        showWalkingRouteLine(wrl);
-                    }
-                    if (drl != null) {
-                        showDrivingRouteLine(drl);
-                    }
+                    CommonKit.showErrorShort(context,"路线规划失败");
                     }break;
                 case END_MOVEPATH_WHAT:
                     //获取移动轨迹完成
@@ -199,6 +195,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
         iv_location.setOnClickListener(this);
         navigationButton.setOnClickListener(this);
         routeplanButton.setOnClickListener(this);
+        shockBox.setOnClickListener(this);
         initMap();
     }
 
@@ -368,6 +365,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
     private void showWalkingRouteLine(WalkingRouteLine line){
         mapMode = MapMode.NAVIGATION;
         navigationButton.setVisibility(View.VISIBLE);
+        shockBox.setVisibility(View.VISIBLE);
         cleanMap();
         WalkingRouteOverlay overlay = new WalkingRouteOverlay(mBaiduMap);
         overlay.setData(line);
@@ -378,6 +376,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
     private void showDrivingRouteLine(DrivingRouteLine line){
         mapMode = MapMode.NAVIGATION;
         navigationButton.setVisibility(View.VISIBLE);
+        shockBox.setVisibility(View.VISIBLE);
         cleanMap();
         DrivingRouteOverlay overlay = new DrivingRouteOverlay(mBaiduMap);
         overlay.setData(line);
@@ -451,6 +450,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
                 mapMode = MapMode.NORMAL;
                 cleanMap();
                 navigationButton.setVisibility(View.GONE);
+                shockBox.setVisibility(View.GONE);
                 showBoxDevice();
                 break;
             case R.id.routeplan_exit:
@@ -497,16 +497,18 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
 
     @Override
     public void onWalking(WalkingRouteLine line) {
-        wrl = line;
         if(!isOverTime){
+            wrl = line;
+            mHandler.removeMessages(END_OVERTIME_WHAT);
             mHandler.sendEmptyMessage(END_WALKING_WHAT);
         }
     }
 
     @Override
     public void onDriving(DrivingRouteLine line) {
-        drl = line;
         if(!isOverTime){
+            drl = line;
+            mHandler.removeMessages(END_OVERTIME_WHAT);
             mHandler.sendEmptyMessage(END_DRIVING_WHAT);
         }
 
