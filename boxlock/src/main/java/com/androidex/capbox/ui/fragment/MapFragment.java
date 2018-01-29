@@ -1,29 +1,38 @@
 package com.androidex.capbox.ui.fragment;
 
-import android.util.Base64;
+import android.app.ProgressDialog;
+import android.hardware.SensorEvent;
+import android.hardware.SensorManager;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseFragment;
 import com.androidex.capbox.data.net.NetApi;
-import com.androidex.capbox.data.net.base.L;
 import com.androidex.capbox.data.net.base.ResultCallBack;
-import com.androidex.capbox.module.BaiduModel;
 import com.androidex.capbox.module.BoxDeviceModel;
+import com.androidex.capbox.module.BoxMovePathModel;
 import com.androidex.capbox.ui.activity.LoginActivity;
-import com.androidex.capbox.ui.listener.MyOrientationListener;
 import com.androidex.capbox.ui.widget.ThirdTitleBar;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
+import com.androidex.capbox.utils.Dialog;
+import com.androidex.capbox.utils.DrivingRouteOverlay;
+import com.androidex.capbox.utils.MapUtils;
+import com.androidex.capbox.utils.RLog;
+import com.androidex.capbox.utils.WalkingRouteOverlay;
 import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.InfoWindow;
+import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
@@ -31,8 +40,13 @@ import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.map.OverlayOptions;
+import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.route.DrivingRouteLine;
+import com.baidu.mapapi.search.route.WalkingRouteLine;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +58,11 @@ import butterknife.Bind;
 import okhttp3.Headers;
 import okhttp3.Request;
 
-public class MapFragment extends BaseFragment {
+/**
+ * Created by Administrator on 2018/1/26.
+ */
+
+public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
     private static final String TAG = "MapFragment";
     @Bind(R.id.bmapView)
     MapView airpotrtmapView;
@@ -52,293 +70,366 @@ public class MapFragment extends BaseFragment {
     ThirdTitleBar titleBar;
     @Bind(R.id.iv_location)
     ImageView iv_location;
+    @Bind(R.id.navigation_exit)
+    Button navigationButton;
+    @Bind(R.id.routeplan_exit)
+    Button routeplanButton;
+    private View markerDialog;
+    private ProgressDialog progressDialog;
+    private boolean isOverTime = false;
+    private MapMode mapMode = MapMode.NORMAL;
 
-    // 百度地图控件
-    public BaiduMap baiduMap = null;// 百度地图对象
-    public LocationClient locationClient = null;// 定位相关声明
-    boolean isFirstLoc = true;// 是否首次定位
-    private static List<Map<String, String>> mylist = new ArrayList<>();
-    List<Map<String, String>> loclist = new ArrayList();
-    private Timer timer_location = new Timer();// 设计定时器
-    private TimerTask timer_getlocation;
-    private MyOrientationListener myOrientationListener;//方向传感器
-    private int mXDirection;
-    private float mCurrentAccracy;
-    private double mCurrentLantitude;
-    private double mCurrentLongitude;
+    //地图位置参数
+    private BaiduMap mBaiduMap = null;
+    private MapUtils mMapUtils;
+    private List<Map<String, String>> mBoxDevices = new ArrayList<Map<String, String>>();
+    private List<LatLng> mBoxMovePath = new ArrayList<LatLng>();
+    private WalkingRouteLine wrl;
+    private DrivingRouteLine drl;
+    private BDLocation location;
+    private MyLocationData locData;
+    private int mCurrentDirection = 0;
+    private Double lastX = 0.0;
+    private BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.mipmap.icon_map);
+    private BaiduMap.OnMarkerClickListener onMarkerClickListener = new BaiduMap.OnMarkerClickListener() {
+        @Override
+        public boolean onMarkerClick(final Marker marker) {
+            showLocation(marker.getPosition());
+            if(markerDialog == null){
+                markerDialog = LayoutInflater.from(context).inflate(R.layout.marker_dialog, null);
+            }
+            markerDialog.findViewById(R.id.marker_dialog_navigation).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(location!=null){
+                        LatLng start = new LatLng(location.getLatitude(),location.getLongitude());
+                        LatLng end = marker.getPosition();
+                        isOverTime = false;
+                        mMapUtils.RoutePlan(start,end);
+                        progressDialog = ProgressDialog.show(context,null,"正在规划路线...");
+                        progressDialog.setCanceledOnTouchOutside(false);
+                    }else{
+                        CommonKit.showErrorShort(context,"未获取定位信息，请到开阔地带");
+                    }
+                    mBaiduMap.hideInfoWindow();
+                }
+            });
+            markerDialog.findViewById(R.id.marker_dialog_trajectory).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String uuid = mBoxDevices.get(marker.getExtraInfo().getInt("id")).get("uuid");
+                    if(uuid!=null && uuid.length()>0){
+                        getDeviceMovePath(uuid);
+                    }
+                    mBaiduMap.hideInfoWindow();
+                }
+            });
+            mBaiduMap.showInfoWindow(new InfoWindow(markerDialog, marker.getPosition(), -47));
+            return false;
+        }
+    };
+    private Timer timer;
+
+    //Handler
+    private final int END_DEVICES_WHAT = 0x01;
+    private final int END_WALKING_WHAT = 0x02;
+    private final int END_DRIVING_WHAT = 0x03;
+    private final int END_OVERTIME_WHAT = 0x04;
+    private final int END_MOVEPATH_WHAT = 0x05;
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case END_DEVICES_WHAT:
+                    //成功获取设备列表
+                    showBoxDevice();
+                    //每隔一分钟获取箱体坐标
+                    if(timer == null){
+                        timer = new Timer();
+                        timer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                getBoxDevices();
+                            }
+                        },0,1000*60);
+                    }
+                    break;
+                case END_WALKING_WHAT:
+                case END_DRIVING_WHAT:
+                    if (wrl != null && drl != null) {
+                        if (progressDialog != null) {
+                            progressDialog.dismiss();
+                        }
+                        int wrlDistance = wrl.getDistance();
+                        if (wrlDistance > 1000) { //超过1000米自动选择驾车路线
+                            //驾车路线
+                            showDrivingRouteLine(drl);
+                        } else {
+                            //步行路线
+                            showWalkingRouteLine(wrl);
+                        }
+                    } else {
+                        mHandler.sendEmptyMessageDelayed(END_OVERTIME_WHAT, 5 * 1000);
+                    }
+                    break;
+                case END_OVERTIME_WHAT: {
+                    isOverTime = true;
+                    if (progressDialog != null) {
+                        progressDialog.dismiss();
+                    }
+                    if (wrl != null) {
+                        showWalkingRouteLine(wrl);
+                    }
+                    if (drl != null) {
+                        showDrivingRouteLine(drl);
+                    }
+                    }break;
+                case END_MOVEPATH_WHAT:
+                    //获取移动轨迹完成
+                    showBoxDeviceMovePath();
+                    break;
+            }
+        }
+    };
 
     @Override
     public void initData() {
-        boxlist();
-        initMap();
+        mMapUtils = new MapUtils(context,this);
         titleBar.getLeftBtn().setVisibility(View.GONE);
-        iv_location.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                center2myLoc();
-            }
-        });
-        baiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
-
-            @Override
-            public boolean onMarkerClick(Marker mark) {
-                // showPop(mark);
-                Log.e(TAG, "mark position=" + mark.getPosition());
-                return true;
-            }
-        });
-        initOritationListener();
-        getLocation(true);
-    }
-
-    @Override
-    public void setListener() {
-
+        iv_location.setOnClickListener(this);
+        navigationButton.setOnClickListener(this);
+        routeplanButton.setOnClickListener(this);
+        initMap();
     }
 
     /**
-     * 初始化方向传感器
-     */
-    private void initOritationListener() {
-        myOrientationListener = new MyOrientationListener(context);
-        myOrientationListener.setOnOrientationListener(new MyOrientationListener.OnOrientationListener() {
-            @Override
-            public void onOrientationChanged(float x) {
-                mXDirection = (int) x;
-                // 构造定位数据
-                MyLocationData locData = new MyLocationData.Builder()
-                        .accuracy(mCurrentAccracy)
-                        .direction(mXDirection)// 此处设置开发者获取到的方向信息，顺时针0-360
-                        .latitude(mCurrentLantitude)
-                        .longitude(mCurrentLongitude).build();
-                // 设置定位数据
-                baiduMap.setMyLocationData(locData);
-                // 设置自定义图标
-//                        BitmapDescriptor mCurrentMarker = BitmapDescriptorFactory
-//                                .fromResource(R.drawable.navi_map_gps_locked);
-//                        MyLocationConfigeration config = new MyLocationConfigeration(
-//                                mCurrentMode, true, mCurrentMarker);
-                //baiduMap.setMyLocationConfigeration(config);
-            }
-        });
-    }
-
+     * 初始化地图，并获取设备列表
+     * */
     private void initMap() {
-        baiduMap = airpotrtmapView.getMap();
-        baiduMap.setMyLocationEnabled(true);
-        baiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
-        // 开启定位图层
-        locationClient = new LocationClient(getActivity().getApplicationContext()); // 实例化LocationClient类
-        locationClient.registerLocationListener(myListener); // 注册监听函数
-        LocationClientOption option = new LocationClientOption();
-        option.setOpenGps(true);                // 打开GPS
-        //option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);// 设置定位模式
-        option.setCoorType("bd09ll"); // 返回的定位结果是百度经纬度,默认值gcj02
-        option.setScanSpan(2000); // 设置发起定位请求的间隔时间为5000ms
-        option.setIsNeedAddress(true); // 返回的定位结果包含地址信息
-        option.setNeedDeviceDirect(true); // 返回的定位结果包含手机机头的方向
-
-        locationClient.setLocOption(option);
-        baiduMap.setMyLocationConfiguration(
-                new MyLocationConfiguration(MyLocationConfiguration.LocationMode.NORMAL, true, null));
-        airpotrtmapView.showZoomControls(true);//显示加减按钮
-        airpotrtmapView.showScaleControl(true);//显示比例尺
-        setwaterload();
-        locationClient.start(); // 开始定位
-    }
-
-    private void getLocation(boolean flag) {
-        if (flag) {
-            timer_getlocation = new TimerTask() {
-                @Override
-                public void run() {
-                    Log.i("LockFragment", "开始定位");
-                    boxlist();
-                }
-            };
-            timer_location.schedule(timer_getlocation, 1000, 1 * 60 * 1000);
-        } else {
-            if (timer_getlocation != null) {
-                timer_getlocation.cancel();
-                timer_location.cancel();
-                timer_getlocation = null;
-                timer_location = null;
-                Log.i("LockFragment", "停止定位");
-            }
-        }
-    }
-
-    private void setwaterload() {
-        List<LatLng> airpolist = new ArrayList<LatLng>();
-        for (int i = 0; i < loclist.size(); i++) {
-            double lat = 0;
-            double lon = 0;
-            Log.e(TAG, loclist.get(i).get("lat"));
-            Log.e(TAG, loclist.get(i).get("lon"));
-            String str_lat_64 = loclist.get(i).get("lat");
-            String str_lon_64 = loclist.get(i).get("lon");
-            String str_lat = new String(Base64.decode(str_lat_64, Base64.DEFAULT));
-            String str_lon = new String(Base64.decode(str_lon_64, Base64.DEFAULT));
-            Log.e("Base64", "Base64--lat-->" + str_lat);
-            Log.e("Base64", "Base64--lon-->" + str_lon);
-            if (!str_lat.equals("0") && !str_lat.equals("") && !str_lon.equals("0") && !str_lon.equals("")) {
-                lat = Double.valueOf(str_lat).doubleValue();
-                lon = Double.valueOf(str_lon).doubleValue();
-            }
-            if (lat == 0 && lon == 0) {
-            } else {
-                LatLng point = new LatLng(lat, lon);//正确的
-                airpolist.add(point);
-            }
-        }
-//        if (airpolist.size() == 0) {
-//            airpolist.clear();
-//            double lon = 0;
-//            double lat = 0;
-//            Log.e(TAG, "自身的经纬度 latitude=" + mCurrentLantitude);
-//            Log.e(TAG, "自身的经纬度 longitude=" + mCurrentLongitude);
-//            lat = Double.valueOf(mCurrentLantitude).doubleValue();
-//            lon = Double.valueOf(mCurrentLongitude).doubleValue();
-//            if (lat == 0 && lon == 0) {
-//            } else {
-//                LatLng point = new LatLng(lat, lon);//正确的
-//                airpolist.add(point);
-//            }
-//        }
-        for (int i = 0; i < airpolist.size(); i++) {
-            // 构建Marker图标
-            BitmapDescriptor bitmap = BitmapDescriptorFactory
-                    .fromResource(R.mipmap.icon_map);
-            // 构建MarkerOption，用于在地图上添加
-            MarkerOptions option = new MarkerOptions()
-                    .position(airpolist.get(i))
-                    .icon(bitmap)
-                    .zIndex(i)
-                    .animateType(MarkerOptions.MarkerAnimateType.grow)
-                    .draggable(true);           // 是否可拖拽，默认不可拖拽;
-            // 在地图上添加Marker，并显示
-            baiduMap.addOverlay(option);
-            baiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(airpolist.get(i)));
-        }
-        //locationClient.start(); // 开始定位
+        mBaiduMap = airpotrtmapView.getMap();
+        mBaiduMap.setMyLocationEnabled(true);
+        mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
+        mBaiduMap.setMyLocationConfiguration(new MyLocationConfiguration(
+                MyLocationConfiguration.LocationMode.NORMAL, true, null));
+        getBoxDevices();
     }
 
     /**
-     * 获取设备列表
-     * {"code":0,"devicelist":[
-     * {"boxName":"Box","deviceStatus":"1","isDefault":"0","isOnLine":1,
-     * "lat":"0","lon":"0",
-     * "mac":"B0:91:22:69:42:0A","uuid":"B0912269420A0000000070D042190000"}]}
-     */
-    public void boxlist() {
+     * 回到指定的位置
+     * */
+    private void showLocation(LatLng ll) {
+        MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
+        mBaiduMap.animateMapStatus(u);
+    }
+
+    /**
+     * 根据账户&uuid获取设备移动轨迹
+     * */
+    private void getDeviceMovePath(String uuid){
+        mBoxMovePath.clear();
+        NetApi.movepath(getToken(), getUserName(),uuid,new ResultCallBack<BoxMovePathModel>(){
+            @Override
+            public void onSuccess(int statusCode, Headers headers, BoxMovePathModel model) {
+                super.onSuccess(statusCode, headers, model);
+                if (model != null) {
+                    switch(model.code){
+                        case Constants.API.API_OK:{
+                            LatLng ll = null;
+                            for (BoxMovePathModel.LatLng latLng : model.datalist) {
+                                ll = new LatLng(Double.valueOf(latLng.getLatitude()),Double.valueOf(latLng.getLongitude()));
+                                mBoxMovePath.add(ll);
+                            }
+                            ll = null;
+                            }break;
+                        case Constants.API.API_FAIL:{
+                            CommonKit.showErrorShort(context, "账号在其他地方登录");
+                            LoginActivity.lauch(context);
+                        }break;
+                        case Constants.API.API_NOPERMMISION:{
+                            CommonKit.showErrorShort(context, "获取设备轨迹失败");
+                        }break;
+                        default:
+                            break;
+                    }
+                }
+                mHandler.sendEmptyMessage(END_MOVEPATH_WHAT);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Request request, Exception e) {
+                super.onFailure(statusCode, request, e);
+                if (context != null && !CommonKit.isNetworkAvailable(context)) {
+                    CommonKit.showErrorShort(context, "网络出现异常");
+                }
+                mHandler.sendEmptyMessage(END_MOVEPATH_WHAT);
+            }
+        });
+    }
+
+    /**
+     * 根据账户获取绑定设备列表
+     * */
+    private void getBoxDevices(){
+        mBoxDevices.clear();
         NetApi.boxlist(getToken(), getUserName(), new ResultCallBack<BoxDeviceModel>() {
             @Override
             public void onSuccess(int statusCode, Headers headers, BoxDeviceModel model) {
                 super.onSuccess(statusCode, headers, model);
                 if (model != null) {
-                    switch (model.code) {
-                        case Constants.API.API_OK:
-                            Log.e(TAG, "loclist.size=" + loclist.size() + "mylist.size=" + mylist.size());
-                            if (loclist.size() >= mylist.size()) {
-                                Log.e(TAG, "loclist.size=" + loclist.size());
-                                if (baiduMap != null) {
-                                    baiduMap.clear();
-                                }
-                            }
-                            mylist.clear();
+                    switch(model.code){
+                        case Constants.API.API_OK:{
+                            LatLng ll = null;
+                            RLog.i("============箱子坐标=====================");
                             for (BoxDeviceModel.device device : model.devicelist) {
+                                RLog.i("lat = "+device.lat+"  lon =  "+device.lon);
+                                ll = new LatLng(Double.valueOf(device.lat),Double.valueOf(device.lon));
+                                ll = mMapUtils.GpsToBD(ll);
                                 Map<String, String> map = new HashMap<>();
                                 map.put("name", device.boxName);
                                 map.put("uuid", device.uuid);
                                 map.put("mac", device.mac);
-                                map.put("lat", device.lat);
-                                map.put("lon", device.lon);
-                                mylist.add(map);
-                                getBaiduLocation(device.lat, device.lon);
+                                map.put("lat", ll.latitude+"");
+                                map.put("lon", ll.longitude+"");
+                                mBoxDevices.add(map);
                             }
-                            if (loclist.size() == 0) {
-
-                            } else {
-                                L.e(TAG + "收到绑定设备的数量=" + mylist.size());
-                                setwaterload();//加载经纬度数据
-                            }
-                            break;
-                        case Constants.API.API_FAIL:
+                            RLog.i("============end=====================");
+                            ll = null;
+                            mHandler.sendEmptyMessage(END_DEVICES_WHAT);
+                        }break;
+                        case Constants.API.API_FAIL:{
                             CommonKit.showErrorShort(context, "账号在其他地方登录");
                             LoginActivity.lauch(context);
-                            break;
-                        case Constants.API.API_NOPERMMISION:
+                        }break;
+                        case Constants.API.API_NOPERMMISION:{
                             CommonKit.showErrorShort(context, "获取设备列表失败");
-                            locationClient.start(); // 开始定位
-                            break;
+                        }break;
                         default:
-                            if (model.info != null) {
-                                CommonKit.showErrorShort(context, model.info);
-                            }
-                            locationClient.start(); // 开始定位
                             break;
                     }
                 }
+                mHandler.sendEmptyMessage(END_DEVICES_WHAT);
             }
 
             @Override
             public void onFailure(int statusCode, Request request, Exception e) {
                 super.onFailure(statusCode, request, e);
-                locationClient.start(); // 开始定位
-                if (context != null) {
+                if (context != null && !CommonKit.isNetworkAvailable(context)) {
                     CommonKit.showErrorShort(context, "网络出现异常");
                 }
-            }
-
-            @Override
-            public void onStart() {
-                super.onStart();
-            }
-
-            @Override
-            public void onFinish() {
-                super.onFinish();
-
+                mHandler.sendEmptyMessage(END_DEVICES_WHAT);
             }
         });
     }
 
     /**
-     * 经纬度纠偏
-     *
-     * @param latitude
-     * @param longitude
-     */
-    public void getBaiduLocation(String latitude, String longitude) {
-        if (!CommonKit.isNetworkAvailable(context)) {
-            CommonKit.showErrorShort(context, "设备未连接网络");
-            return;
+     * 将获取的移动轨迹显示在地图
+     * */
+    private void showBoxDeviceMovePath(){
+        if(mBoxMovePath!=null && mBoxMovePath.size()>0){
+            mapMode = MapMode.ROUTEPLAN;
+            routeplanButton.setVisibility(View.VISIBLE);
+            cleanMap(); //清除其他Overlay
+            OverlayOptions ooPolyline = new PolylineOptions().width(10)
+                    .color(0xAAFF0000).points(mBoxMovePath);
+            mBaiduMap.addOverlay(ooPolyline);
+        }else{
+            CommonKit.showErrorShort(context,"未获取轨迹信息");
         }
-        NetApi.getLocation(latitude, longitude, new ResultCallBack<BaiduModel>() {
-            @Override
-            public void onSuccess(int statusCode, Headers headers, BaiduModel model) {
-                super.onSuccess(statusCode, headers, model);
-                if (model != null) {
-                    if (model.error == 0) {
-                        HashMap<String, String> map = new HashMap<>();
-                        map.put("lat", model.y);
-                        map.put("lon", model.x);
-                        loclist.add(map);
-                    } else {
-                        Log.e(TAG, "经纬度转换出错 error=" + model.error);
-                    }
-                } else {
-                    Log.e(TAG, "经纬度转换出错 model=null");
-                }
-            }
+    }
 
-            @Override
-            public void onFailure(int statusCode, Request request, Exception e) {
-                super.onFailure(statusCode, request, e);
-                Log.e(TAG, "经纬度转换出错");
-                CommonKit.showErrorShort(context, "网络连接失败");
+    /**
+     * 将设备位置显示在地图
+     * */
+    private void showBoxDevice(){
+        if(mBoxDevices!=null && mBoxDevices.size()>0 && mapMode == MapMode.NORMAL){
+            mapMode = MapMode.NORMAL;
+            cleanMap(); //清除上次添加的Overlay
+            LatLng ll = null;
+            for(int i=0;i<mBoxDevices.size();i++){
+                ll = new LatLng(Double.valueOf(mBoxDevices.get(i).get("lat"))
+                        ,Double.valueOf(mBoxDevices.get(i).get("lon")));
+                MarkerOptions option = new MarkerOptions()
+                        .position(ll)
+                        .icon(bitmap)
+                        .zIndex(i)
+                        .animateType(MarkerOptions.MarkerAnimateType.grow)
+                        .draggable(true);
+                Marker k = (Marker) mBaiduMap.addOverlay(option);
+                Bundle bundle = new Bundle();
+                bundle.putInt("id",i);
+                k.setExtraInfo(bundle);
+                mBaiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(ll));
             }
-        });
+            ll = null;
+            mBaiduMap.setOnMarkerClickListener(onMarkerClickListener);
+        }
+    }
+
+    private void showWalkingRouteLine(WalkingRouteLine line){
+        mapMode = MapMode.NAVIGATION;
+        navigationButton.setVisibility(View.VISIBLE);
+        cleanMap();
+        WalkingRouteOverlay overlay = new WalkingRouteOverlay(mBaiduMap);
+        overlay.setData(line);
+        overlay.addToMap();
+        overlay.zoomToSpan();
+    }
+
+    private void showDrivingRouteLine(DrivingRouteLine line){
+        mapMode = MapMode.NAVIGATION;
+        navigationButton.setVisibility(View.VISIBLE);
+        cleanMap();
+        DrivingRouteOverlay overlay = new DrivingRouteOverlay(mBaiduMap);
+        overlay.setData(line);
+        overlay.addToMap();
+        overlay.zoomToSpan();
+    }
+
+    private void cleanMap(){
+        if(mBaiduMap!=null){
+            mBaiduMap.clear();
+            mBaiduMap.removeMarkerClickListener(onMarkerClickListener);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        if(mMapUtils!=null){
+            mMapUtils.stopLocation();
+            mMapUtils.stopSensor();
+        }
+        if(airpotrtmapView!=null){
+            airpotrtmapView.onPause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        if(mMapUtils!=null){
+            mMapUtils.startLocation();
+            mMapUtils.startSensor();
+        }
+        if(airpotrtmapView!=null){
+            airpotrtmapView.onResume();
+        }
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        if(mMapUtils!=null){
+            mMapUtils.stopLocation();
+            mMapUtils.stopSensor();
+        }
+        cleanMap();
+        airpotrtmapView.onDestroy();
+        super.onDestroy();
+    }
+
+    @Override
+    public void setListener() {
+
     }
 
     @Override
@@ -347,145 +438,81 @@ public class MapFragment extends BaseFragment {
     }
 
     @Override
-    public void onResume() {
-        if (airpotrtmapView != null) {
-            airpotrtmapView.onResume();
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.iv_location:
+                if(location!=null){
+                    showLocation(new LatLng(location.getLatitude(),location.getLongitude()));
+                }else{
+                    CommonKit.showErrorShort(context,"未获取定位信息");
+                }
+                break;
+            case R.id.navigation_exit:
+                mapMode = MapMode.NORMAL;
+                cleanMap();
+                navigationButton.setVisibility(View.GONE);
+                showBoxDevice();
+                break;
+            case R.id.routeplan_exit:
+                mapMode = MapMode.NORMAL;
+                cleanMap();
+                routeplanButton.setVisibility(View.GONE);
+                showBoxDevice();
+                break;
         }
-        super.onResume();
     }
 
     @Override
-    public void onPause() {
-        if (airpotrtmapView != null) {
-            airpotrtmapView.onPause();
+    public void onLocationEvent(BDLocation bdLocation, boolean first) {
+        location = bdLocation;
+        locData = new MyLocationData.Builder()
+                .accuracy(location.getRadius())
+                .direction(mCurrentDirection).latitude(location.getLatitude())
+                .longitude(location.getLongitude()).build();
+        mBaiduMap.setMyLocationData(locData);
+        if(first){
+            LatLng ll = new LatLng(bdLocation.getLatitude(),
+                    bdLocation.getLongitude());
+            MapStatus.Builder builder = new MapStatus.Builder();
+            builder.target(ll).zoom(18.0f);
+            mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
         }
-        super.onPause();
     }
 
     @Override
-    public void onDestroy() {
-        // 退出时销毁定位
-        locationClient.stop();
-        baiduMap.setMyLocationEnabled(false);
-        baiduMap.clear();
-        airpotrtmapView.onDestroy();
-        airpotrtmapView = null;
-        getLocation(false);
-        super.onDestroy();
-    }
-
-    /**
-     * 实现实位回调监听
-     */
-    public BDLocationListener myListener = new BDLocationListener() {
-        @Override
-        public void onReceiveLocation(BDLocation location) {
-            // map view 销毁后不在处理新接收的位置
-            if (location == null || airpotrtmapView == null)
-                return;
-            // 构造定位数据
-            mCurrentAccracy = location.getRadius();
-            mCurrentLantitude = location.getLatitude();
-            mCurrentLongitude = location.getLongitude();
-            MyLocationData locData = new MyLocationData.Builder()
-                    .accuracy(mCurrentAccracy)
-                    .direction(mXDirection) //此处设置开发者获取到的方向信息，顺时针0-360
-                    .latitude(mCurrentLantitude)
-                    .longitude(mCurrentLongitude)
-                    .build();
-            baiduMap.setMyLocationData(locData); // 设置定位数据
-
-            // 第一次定位时，将地图位置移动到当前位置
-            if (isFirstLoc) {
-                isFirstLoc = false;
-                LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
-                MapStatusUpdate u = MapStatusUpdateFactory.newLatLngZoom(latlng, 14.0f); // 设置地图中心点以及缩放级别
-                baiduMap.animateMapStatus(u);
-                Log.i("vvvv", "----zb=" + latlng.latitude);
-                Log.i("vvvv", "----zb=" + latlng.longitude);
+    public void ononSensorChangedEvent(SensorEvent sensorEvent) {
+        double x = sensorEvent.values[SensorManager.DATA_X];
+        if (Math.abs(x - lastX) > 1.0) {
+            mCurrentDirection = (int) x;
+            if(location!=null){
+                locData = new MyLocationData.Builder()
+                        .accuracy(location.getRadius())
+                        .direction(mCurrentDirection).latitude(location.getLatitude())
+                        .longitude(location.getLongitude()).build();
+                mBaiduMap.setMyLocationData(locData);
             }
         }
-    };
+        lastX = x;
+    }
 
     @Override
-    public void onStart() {
-        // 开启图层定位
-        baiduMap.setMyLocationEnabled(true);
-        if (!locationClient.isStarted()) {
-            locationClient.start();
+    public void onWalking(WalkingRouteLine line) {
+        wrl = line;
+        if(!isOverTime){
+            mHandler.sendEmptyMessage(END_WALKING_WHAT);
         }
-        // 开启方向传感器
-        myOrientationListener.start();
-        super.onStart();
     }
 
     @Override
-    public void onStop() {
-        // 关闭图层定位
-        baiduMap.setMyLocationEnabled(false);
-        locationClient.stop();
-        // 关闭方向传感器
-        myOrientationListener.stop();
-        loclist.clear();
-        super.onStop();
-    }
-
-    /**
-     * 地图移动到我的位置,此处可以重新发定位请求，然后定位；
-     * 直接拿最近一次经纬度，如果长时间没有定位成功，可能会显示效果不好
-     */
-    private void center2myLoc() {
-        LatLng ll = new LatLng(mCurrentLantitude, mCurrentLongitude);
-        MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
-        baiduMap.animateMapStatus(u);
-    }
-
-    @Override
-    public void onClick(View view) {
+    public void onDriving(DrivingRouteLine line) {
+        drl = line;
+        if(!isOverTime){
+            mHandler.sendEmptyMessage(END_DRIVING_WHAT);
+        }
 
     }
 
-    //    private void showPop(Marker marker) {
-//        View view = null;
-//        Bundle bundle = marker.getExtraInfo();
-//        final LatLng ll = marker.getPosition();
-//        if (marker.getZIndex() == 5) {
-//            view = LayoutInflater.from(getActivity()).inflate(
-//                    R.layout.apriport_invest_item, null);
-//            LinearLayout ll_invest = (LinearLayout) view
-//                    .findViewById(R.id.ll_invest);
-//            ll_invest.setOnClickListener(new View.OnClickListener() {
-//
-//                @Override
-//                public void onClick(View arg0) {
-//                    showToast("页面跳转");
-//
-//                }
-//            });
-//            InfoWindow mInfoWindow = new InfoWindow(view, ll, -70);
-//            // 显示InfoWindow
-//            baiduMap.showInfoWindow(mInfoWindow);
-//        }
-//        if (marker.getZIndex() == 1) {
-//            //bean = (RowsBean) bundle.getSerializable("info");
-//            view = LayoutInflater.from(getActivity()).inflate(
-//                    R.layout.apirport_item, null);
-//            LinearLayout ll_airport = (LinearLayout) view
-//                    .findViewById(R.id.ll_airport);
-//            ll_airport.setOnClickListener(new View.OnClickListener() {
-//
-//                @Override
-//                public void onClick(View arg0) {
-//                    Intent intent = new Intent(getActivity(),
-//                            AirportDetailsActivity.class);
-//                    //intent.putExtra("airport_id", bean.getId());
-//                    startActivity(intent);
-//
-//                }
-//            });
-//            InfoWindow mInfoWindow = new InfoWindow(view, ll, -70);
-//            // 显示InfoWindow
-//            baiduMap.showInfoWindow(mInfoWindow);
-//        }
-//    }
+    public enum MapMode{
+        NAVIGATION,ROUTEPLAN,NORMAL
+    }
 }

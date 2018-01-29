@@ -6,3 +6,4 @@ build
 *.property
 *.apk
 CapacityBoxlock/build
+local.properties

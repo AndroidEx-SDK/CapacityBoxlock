@@ -394,4 +394,7 @@
     <string name="sys_pwd_recognition_success">系统密码识别成功</string>
     <string name="sys_pwd_recognition_failed">系统密码识别失败</string>
 
+    <!--xiaozd add-->
+    <string name="marker_dialog_navigation_text">导航</string>
+    <string name="marker_dialog_trajectory_text">轨迹</string>
 </resources>

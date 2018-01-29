@@ -41,6 +41,7 @@ public class UrlTool {
     public static final String USER_ACTION_GETDEVICEMAC = "getDeviceMac";    //获取箱体mac
     public static final String USER_ACTION_GETALARMLIST = "getAlarmList";    //获取箱体报警信息
     public static final String USER_ACTION_CHECKVERSION = "checkVersion";    //检测新版本
+    public static final String USER_ACTION_MOVEPATH = "movePath";   //获取箱体移动轨迹
 
     public static String getUrl(String logic, String action) {
         StringBuilder builder = new StringBuilder(Constants.CONFIG.APP_BASIC_SERVER);

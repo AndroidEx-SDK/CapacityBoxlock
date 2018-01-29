@@ -31,6 +31,27 @@
             android:layout_marginBottom="10dip"
             android:layout_marginLeft="30dp"
             android:src="@mipmap/map_location" />
+
+        <Button
+            android:visibility="gone"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/navigation_exit"
+            android:text="退出导航"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content" />
+        <Button
+            android:visibility="gone"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/routeplan_exit"
+            android:text="退出轨迹"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content" />
     </RelativeLayout>
 
 </LinearLayout>
