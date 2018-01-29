@@ -63,7 +63,6 @@ public class Constants extends BleConstants {
         public static final int API_FAIL = 2;
         public static final int API_LOGIN_REPEAT = 1019; //重复登录
         public static final int API_CODE_UPLOAD_OK = 1;   //上传图片成功
-
     }
 
     /**
@@ -72,6 +71,9 @@ public class Constants extends BleConstants {
     public static class SP {
         public static final String SP_NAME = "conf";  //sp配置文件名称
         public static final String SP_OBJ_PREFIX = "obj_";    //sp对象名称前缀
+        public static final String SP_DISTANCE_TYPE = "sp_distance_type"; //sp存储距离报警方式
+        public static final String SP_LOST_TYPE = "sp_lost_type";    //sp存储脱距报警方式
+        public static final String SP_TEMP_TYPE = "sp_temp_type";    //sp存储温湿度报警方式
     }
 
     /**
@@ -89,7 +91,6 @@ public class Constants extends BleConstants {
         public static final int TAG_EVENT_BOX_LOCK_CLOSE = TAG_BASE_EVENT + 8;         //锁关闭
         public static final int TAG_EVENT_FRAGMENT_NEXT_PAGE = TAG_BASE_EVENT + 9;     //切换下一页
         public static final int TAG_EVENT_FRAGMENT_PREVIOUS_PAGE = TAG_BASE_EVENT + 10;//切换上一页
-
     }
 
     /**
