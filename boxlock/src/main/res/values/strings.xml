@@ -213,7 +213,7 @@
     <!-- MainActivity.java -->
     <string name="main_exit">Press the return key once again and exit the program</string>
 
-    <!-- TypeOfAlarm.java -->
+    <!-- TypeOfAlarmActivity.java -->
     <string name="typeofalarm_shake">shake</string>
     <string name="typeofalarm_bells">bells</string>
     <string name="typeofalarm_shake_bells">shake + bells</string>

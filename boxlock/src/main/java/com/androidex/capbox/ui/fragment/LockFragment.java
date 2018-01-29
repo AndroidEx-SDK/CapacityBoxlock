@@ -693,8 +693,10 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     public void onDestroy() {
         super.onDestroy();
         getLocation(false);
-        mSearch.destroy();
-        context.unregisterReceiver(dataUpdateRecevice);
+        if (mSearch != null)
+            mSearch.destroy();
+        if (dataUpdateRecevice != null)
+            context.unregisterReceiver(dataUpdateRecevice);
     }
 
     @Override

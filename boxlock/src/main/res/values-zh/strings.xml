@@ -125,11 +125,12 @@
 
     <!-- activity_typeofalarm -->
     <string name="typeofalarm_title_tv">报警方式</string>
-    <string name="typeofalarm_tv_lost">防丢报警方式</string>
+    <string name="typeofalarm_tv_lost">脱距报警方式</string>
     <string name="typeofalarm_tv_lost_type">震动+铃声</string>
     <string name="typeofalarm_tv_bells">铃声选择</string>
     <string name="typeofalarm_tv_bells_name">青春纪念册</string>
-    <string name="typeofalarm_tv_fever">温度/湿度报警方式</string>
+    <string name="typeofalarm_tv_fever">温湿度报警方式</string>
+    <string name="typeofalarm_tv_distance">距离报警方式</string>
     <string name="typeofalarm_tv_fever_type">铃声</string>
     <string name="typeofalarm_tv_cry">哭声报警方式</string>
     <string name="typeofalarm_tv_cry_type">震动+铃声</string>
@@ -249,7 +250,7 @@
     <string name="bledevice_toast11">别扯了，已经到最后一页了</string>
     <string name="bledevice_toast12">开始连接，请确定设备正常</string>
 
-    <!-- TypeOfAlarm.java -->
+    <!-- TypeOfAlarmActivity.java -->
     <string name="typeofalarm_shake">震动</string>
     <string name="typeofalarm_bells">铃声</string>
     <string name="typeofalarm_shake_bells">震动+铃声</string>
@@ -271,7 +272,7 @@
 
     <!-- LockFragment.java -->
     <string name="itemfragment_ble_toast">请先创建用户！</string>
-     <string name="itemfragment_exceed">温度超出测量范围!</string>
+    <string name="itemfragment_exceed">温度超出测量范围!</string>
     <string name="itemfragment_toast1">已断开</string>
     <string name="itemfragment_toast2">已主动断开</string>
     <string name="itemfragment_toast3">请先绑定设备</string>

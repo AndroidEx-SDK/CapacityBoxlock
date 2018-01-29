@@ -55,8 +55,8 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="GIDYV7mTuroWsLyMApmqSDVaBaCLdTb9" />
-        <!-- fc51UqGugQUOwzhBuan3UHSZ1MUERHXz-->
+            android:value="fc51UqGugQUOwzhBuan3UHSZ1MUERHXz" />
+        <!--android:value="GIDYV7mTuroWsLyMApmqSDVaBaCLdTb9" />-->
 
         <activity
             android:name="com.androidex.capbox.ui.activity.SplashActivity"
@@ -78,7 +78,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.androidex.capbox.ui.activity.TypeOfAlarm"
+            android:name="com.androidex.capbox.ui.activity.TypeOfAlarmActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.androidex.capbox.ui.activity.AboutActivity"
