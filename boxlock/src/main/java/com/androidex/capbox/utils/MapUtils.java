@@ -26,6 +26,7 @@ import com.baidu.mapapi.search.route.WalkingRouteLine;
 import com.baidu.mapapi.search.route.WalkingRoutePlanOption;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.baidu.mapapi.utils.CoordinateConverter;
+import com.baidu.mapapi.utils.DistanceUtil;
 
 /**
  * Created by Administrator on 2018/1/26.
@@ -94,8 +95,15 @@ public class MapUtils implements BDLocationListener,SensorEventListener,OnGetRou
         }
         PlanNode stMassNode = PlanNode.withLocation(start);
         PlanNode enMassNode = PlanNode.withLocation(end);
-        mRoutePlan.walkingSearch((new WalkingRoutePlanOption()).from(stMassNode).to(enMassNode));
-        mRoutePlan.drivingSearch((new DrivingRoutePlanOption()).from(stMassNode).to(enMassNode));
+        Double distance = DistanceUtil.getDistance(start,end);
+        RLog.i("两点相距："+distance+"米");
+        if(distance>1000){
+            RLog.i("选择驱车路线");
+            mRoutePlan.drivingSearch((new DrivingRoutePlanOption()).from(stMassNode).to(enMassNode));
+        }else{
+            RLog.i("选择步行路线");
+            mRoutePlan.walkingSearch((new WalkingRoutePlanOption()).from(stMassNode).to(enMassNode));
+        }
     }
     @Override
     public void onReceiveLocation(BDLocation bdLocation) {
