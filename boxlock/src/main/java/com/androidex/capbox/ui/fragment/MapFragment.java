@@ -46,10 +46,13 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.route.DrivingRouteLine;
 import com.baidu.mapapi.search.route.WalkingRouteLine;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.Bind;
 import okhttp3.Headers;
@@ -74,13 +77,13 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
     private View markerDialog;
     private ProgressDialog progressDialog;
     private boolean isOverTime = false;
+    private MapMode mapMode = MapMode.NORMAL;
 
     //地图位置参数
     private BaiduMap mBaiduMap = null;
     private MapUtils mMapUtils;
     private List<Map<String, String>> mBoxDevices = new ArrayList<Map<String, String>>();
     private List<LatLng> mBoxMovePath = new ArrayList<LatLng>();
-    private List<Marker> mBoxMarkers = new ArrayList<Marker>();
     private WalkingRouteLine wrl;
     private DrivingRouteLine drl;
     private BDLocation location;
@@ -125,6 +128,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
             return false;
         }
     };
+    private Timer timer;
 
     //Handler
     private final int END_DEVICES_WHAT = 0x01;
@@ -139,6 +143,16 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
                 case END_DEVICES_WHAT:
                     //成功获取设备列表
                     showBoxDevice();
+                    //每隔一分钟获取箱体坐标
+                    if(timer == null){
+                        timer = new Timer();
+                        timer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                getBoxDevices();
+                            }
+                        },0,1000*60);
+                    }
                     break;
                 case END_WALKING_WHAT:
                 case END_DRIVING_WHAT:
@@ -197,8 +211,6 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
         mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
         mBaiduMap.setMyLocationConfiguration(new MyLocationConfiguration(
                 MyLocationConfiguration.LocationMode.NORMAL, true, null));
-        mMapUtils.startLocation();
-        mMapUtils.startSensor();
         getBoxDevices();
     }
 
@@ -314,6 +326,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
      * */
     private void showBoxDeviceMovePath(){
         if(mBoxMovePath!=null && mBoxMovePath.size()>0){
+            mapMode = MapMode.ROUTEPLAN;
             routeplanButton.setVisibility(View.VISIBLE);
             cleanMap(); //清除其他Overlay
             OverlayOptions ooPolyline = new PolylineOptions().width(10)
@@ -328,7 +341,8 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
      * 将设备位置显示在地图
      * */
     private void showBoxDevice(){
-        if(mBoxDevices!=null && mBoxDevices.size()>0){
+        if(mBoxDevices!=null && mBoxDevices.size()>0 && mapMode == MapMode.NORMAL){
+            mapMode = MapMode.NORMAL;
             cleanMap(); //清除上次添加的Overlay
             LatLng ll = null;
             for(int i=0;i<mBoxDevices.size();i++){
@@ -352,6 +366,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
     }
 
     private void showWalkingRouteLine(WalkingRouteLine line){
+        mapMode = MapMode.NAVIGATION;
         navigationButton.setVisibility(View.VISIBLE);
         cleanMap();
         WalkingRouteOverlay overlay = new WalkingRouteOverlay(mBaiduMap);
@@ -361,6 +376,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
     }
 
     private void showDrivingRouteLine(DrivingRouteLine line){
+        mapMode = MapMode.NAVIGATION;
         navigationButton.setVisibility(View.VISIBLE);
         cleanMap();
         DrivingRouteOverlay overlay = new DrivingRouteOverlay(mBaiduMap);
@@ -374,6 +390,41 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
             mBaiduMap.clear();
             mBaiduMap.removeMarkerClickListener(onMarkerClickListener);
         }
+    }
+
+    @Override
+    public void onPause() {
+        if(mMapUtils!=null){
+            mMapUtils.stopLocation();
+            mMapUtils.stopSensor();
+        }
+        if(airpotrtmapView!=null){
+            airpotrtmapView.onPause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        if(mMapUtils!=null){
+            mMapUtils.startLocation();
+            mMapUtils.startSensor();
+        }
+        if(airpotrtmapView!=null){
+            airpotrtmapView.onResume();
+        }
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        if(mMapUtils!=null){
+            mMapUtils.stopLocation();
+            mMapUtils.stopSensor();
+        }
+        cleanMap();
+        airpotrtmapView.onDestroy();
+        super.onDestroy();
     }
 
     @Override
@@ -397,11 +448,13 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
                 }
                 break;
             case R.id.navigation_exit:
+                mapMode = MapMode.NORMAL;
                 cleanMap();
                 navigationButton.setVisibility(View.GONE);
                 showBoxDevice();
                 break;
             case R.id.routeplan_exit:
+                mapMode = MapMode.NORMAL;
                 cleanMap();
                 routeplanButton.setVisibility(View.GONE);
                 showBoxDevice();
@@ -457,5 +510,9 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
             mHandler.sendEmptyMessage(END_DRIVING_WHAT);
         }
 
+    }
+
+    public enum MapMode{
+        NAVIGATION,ROUTEPLAN,NORMAL
     }
 }
