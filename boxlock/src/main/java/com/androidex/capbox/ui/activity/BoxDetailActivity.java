@@ -12,6 +12,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
@@ -215,10 +216,7 @@ public class BoxDetailActivity extends BaseActivity {
                             status = model.data.deviceStatus;
                             unlocking = model.data.unlocking;//一次有效多次有效
                             unlockingMode = model.data.unlockingMode;//开锁方式
-                            carryPersonNum = model.data.carryPersonNum;//携行人员数量
-                            if (carryPersonNum == 0) {
-                                carryPersonNum = 1;
-                            }
+                            carryPersonNum = model.data.carryPersonNum + 1;//携行人员数量
                             police = model.data.police;//报警开启A和关闭B
                             policeDiatance = model.data.policeDiatance;////报警距离：0脱距、1较近、2近、3较远、4远
                             heartbeatRate = model.data.heartbeatRate;//心跳更新频率60秒
@@ -226,6 +224,15 @@ public class BoxDetailActivity extends BaseActivity {
                                 heartbeatRate = 60;
                             }
                             locationRate = model.data.locationRate;//定位更新频率60秒
+                            if (status == 2) {
+                                setDeviceCaryyStarts(true);//保存携行状态
+                                tv_boxConfig.setEnabled(false);
+                                tv_startCarryScort.setText("结束携行押运");
+                            } else {
+                                setDeviceCaryyStarts(false);//退出携行状态
+                                tv_boxConfig.setEnabled(true);
+                                tv_startCarryScort.setText("启动携行押运");
+                            }
                             if (locationRate <= 30) {
                                 locationRate = 60;
                             }
@@ -233,21 +240,14 @@ public class BoxDetailActivity extends BaseActivity {
                             lowestTemp = model.data.lowestTemp;//最低温
                             dismountPolice = model.data.dismountPolice;//破拆报警的开启A和关闭B
                             become = model.data.become;//静默开启A 关闭B
-                            if (become.equals("A")){
+                            if (become.equals("A")) {
                                 tb_becomeAlarm.setChecked(true);
-                            }else {
+                            } else {
                                 tb_becomeAlarm.setChecked(false);
                             }
                             tv_carryNum.setText(String.format("%d人", carryPersonNum));
                             tv_heartbeatRate.setText(String.format("%ds/次", heartbeatRate));
                             tv_locationRate.setText(String.format("%ds/次", locationRate));
-                            if (status == 2) {
-                                tv_boxConfig.setEnabled(false);
-                                tv_startCarryScort.setText("结束携行押运");
-                            } else {
-                                tv_boxConfig.setEnabled(true);
-                                tv_startCarryScort.setText("启动携行押运");
-                            }
                             becomeFinger1 = model.data.becomeFinger1;
                             becomeFinger2 = model.data.becomeFinger2;
                             becomeFinger3 = model.data.becomeFinger3;
@@ -280,6 +280,30 @@ public class BoxDetailActivity extends BaseActivity {
                 CommonKit.showErrorShort(context, "网络异常");
             }
         });
+    }
+
+    /**
+     * 设置是否携行状态
+     *
+     * @param isflag
+     */
+    private void setDeviceCaryyStarts(boolean isflag) {
+        ServiceBean obj = SharedPreTool.getInstance(context).getObj(ServiceBean.class, mac);
+        RLog.e("isflag==" + isflag);
+        if (obj != null) {
+            RLog.e("isflag111==" + isflag);
+            obj.setStartCarry(isflag);
+            SharedPreTool.getInstance(context).saveObj(obj, mac);
+        } else {
+            ServiceBean device = MyBleService.getInstance().getConnectDevice(mac);
+            if (device != null) {
+                RLog.e("isflag222==" + isflag);
+                device.setStartCarry(isflag);
+                SharedPreTool.getInstance(context).saveObj(device, mac);
+            }
+        }
+        Object obj1 = SharedPreTool.getInstance(context).getObj(ServiceBean.class, mac);
+        RLog.e("存储携行状态" + obj1.toString());
     }
 
     @OnClick({
@@ -440,7 +464,7 @@ public class BoxDetailActivity extends BaseActivity {
                     CommonKit.showErrorShort(context, "请先配置箱体");
                     return;
                 }
-                if (status == 2) {
+                if (status == 2) {//携行状态，结束携行
                     MyBleService.get().endTask(mac);
                 } else {
                     MyBleService.get().startEscort(mac);

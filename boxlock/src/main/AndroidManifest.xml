@@ -55,8 +55,8 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="fc51UqGugQUOwzhBuan3UHSZ1MUERHXz" />
-        <!--android:value="GIDYV7mTuroWsLyMApmqSDVaBaCLdTb9" />-->
+            android:value="fc51UqGugQUOwzhBuan3UHSZ1MUERHXz" />    <!--liyp-->
+        <!--android:value="GIDYV7mTuroWsLyMApmqSDVaBaCLdTb9" />-->  <!--xiaozd-->
 
         <activity
             android:name="com.androidex.capbox.ui.activity.SplashActivity"

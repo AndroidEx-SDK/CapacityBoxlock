@@ -89,6 +89,7 @@ public class MyBleService extends BleService {
         ServiceBean device = SharedPreTool.getInstance(this).getObj(ServiceBean.class, address);
         if (device != null) {
             RLog.e("device====" + device.toString());
+            connectDevice.setStartCarry(device.isStartCarry());//取出携行状态
             connectDevice.setPolice(device.isPolice());
             connectDevice.setDistanceAlarm(device.isDistanceAlarm());
             connectDevice.setTamperAlarm(device.isTamperAlarm());
@@ -109,11 +110,11 @@ public class MyBleService extends BleService {
     private void sendDisconnectMessage(String address, boolean isActive) {
         if (SharedPreTool.getInstance(this).getBoolData(SharedPreTool.IS_POLICE, true)) {
             ServiceBean device = SharedPreTool.getInstance(this).getObj(ServiceBean.class, address);
-            if (device != null && device.isPolice()) {//非主动断开时，报警
+            if (device != null && device.isPolice()) {//断开连接广播
                 sendBroadDis(address, isActive);
             } else {
                 ServiceBean connectDevice = MyBleService.get().getConnectDevice(address);
-                if (connectDevice != null && connectDevice.isPolice()) {//非主动断开时，报警
+                if (connectDevice != null && connectDevice.isPolice()) {//断开连接广播
                     sendBroadDis(address, isActive);
                 } else {
                     RLog.e("已关闭单个箱子报警开关");
@@ -131,6 +132,10 @@ public class MyBleService extends BleService {
      * @param isActive
      */
     public void sendBroadDis(String address, boolean isActive) {
+        if (!isStartCarry(address)) {
+            sendDisBroadcast(address, true);
+            return;//判断是否启动携行，没启动携行时不报警
+        }
         switch (SharedPreTool.getInstance(this).getIntData(SP_LOST_TYPE, 0)) {
             case 0:
                 sendDisBroadcast(address, isActive);
@@ -150,6 +155,25 @@ public class MyBleService extends BleService {
             default:
                 break;
         }
+    }
+
+    /**
+     * @param address
+     * @return
+     */
+    public boolean isStartCarry(String address) {
+        ServiceBean obj = SharedPreTool.getInstance(this).getObj(ServiceBean.class, address);
+        if (obj != null) {
+            RLog.e("service is startCarry ==" + obj.isStartCarry());
+            if (obj.isStartCarry()) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+
     }
 
     private void sendDisBroadcast(String address, boolean isActive) {
@@ -188,6 +212,7 @@ public class MyBleService extends BleService {
      * @param address
      */
     private void sendRSSIOut(String address) {
+        if (!isStartCarry(address)) return;//判断是否启动携行，没启动携行时不报警
         switch (SharedPreTool.getInstance(this).getIntData(SP_DISTANCE_TYPE, 0)) {
             case 0:
                 sendTempOutBroad(address, ACTION_RSSI_OUT);
@@ -244,6 +269,7 @@ public class MyBleService extends BleService {
      * @param address
      */
     private void sendTempOutBroadcast(String address) {
+        if (!isStartCarry(address)) return;//判断是否启动携行，没启动携行时不报警
         switch (SharedPreTool.getInstance(this).getIntData(SP_TEMP_TYPE, 0)) {
             case 0:
                 sendTempOutBroad(address, ACTION_TEMP_OUT);

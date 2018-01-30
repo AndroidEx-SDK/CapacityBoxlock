@@ -71,6 +71,7 @@ public class Constants extends BleConstants {
     public static class SP {
         public static final String SP_NAME = "conf";  //sp配置文件名称
         public static final String SP_OBJ_PREFIX = "obj_";    //sp对象名称前缀
+        public static final String SP_BOX_STARTS = "sp_box_starts"; //sp箱体的状态
         public static final String SP_DISTANCE_TYPE = "sp_distance_type"; //sp存储距离报警方式
         public static final String SP_LOST_TYPE = "sp_lost_type";    //sp存储脱距报警方式
         public static final String SP_TEMP_TYPE = "sp_temp_type";    //sp存储温湿度报警方式

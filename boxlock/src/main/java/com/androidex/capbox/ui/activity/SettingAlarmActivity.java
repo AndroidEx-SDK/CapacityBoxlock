@@ -76,7 +76,9 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
         if (mac != null) {
             connectDevice = MyBleService.get().getConnectDevice(mac);
         }
-        if (SharedPreTool.getInstance(context).getObj(ServiceBean.class, mac) != null) {
+        ServiceBean obj = SharedPreTool.getInstance(context).getObj(ServiceBean.class, mac);
+        if (obj != null) {
+            connectDevice.setStartCarry(obj.isStartCarry());
             tb_police.setChecked(true ? connectDevice.isPolice() : !connectDevice.isPolice());
             tb_distanceAlarm.setChecked(true ? connectDevice.isDistanceAlarm() : !connectDevice.isDistanceAlarm());
             tb_tamperAlarm.setChecked(true ? connectDevice.isTamperAlarm() : !connectDevice.isTamperAlarm());
