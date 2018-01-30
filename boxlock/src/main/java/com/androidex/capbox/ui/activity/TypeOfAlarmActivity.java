@@ -8,9 +8,14 @@ import android.widget.Button;
 
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
+import com.androidex.capbox.data.cache.SharedPreTool;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+
+import static com.androidex.capbox.utils.Constants.SP.SP_DISTANCE_TYPE;
+import static com.androidex.capbox.utils.Constants.SP.SP_LOST_TYPE;
+import static com.androidex.capbox.utils.Constants.SP.SP_TEMP_TYPE;
 
 /**
  * 报警方式
@@ -27,7 +32,6 @@ public class TypeOfAlarmActivity extends BaseActivity {
 
     private int callType;
     private String[] areas;
-    private RadioOnClick OnClick = new RadioOnClick(3);//不选中(>2    areas.length)
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -43,27 +47,54 @@ public class TypeOfAlarmActivity extends BaseActivity {
     @OnClick({
             R.id.ll_temp,
             R.id.ll_distance,
-            R.id.ll_lost
+            R.id.ll_lost,
+            R.id.btn_lost,
+            R.id.btn_distance,
+            R.id.btn_temp
     })
     public void clickEvent(View view) {
         switch (view.getId()) {
             case R.id.ll_lost:
                 callType = 0;
+                RadioOnClick OnClick = new RadioOnClick(SharedPreTool.getInstance(this).getIntData(SP_LOST_TYPE, 0));
                 AlertDialog ad0 = new AlertDialog.Builder(this).setTitle(getResources().getString(R.string.typeofalarm_type))
                         .setSingleChoiceItems(areas, OnClick.getIndex(), OnClick).create();
                 ad0.show();
                 break;
             case R.id.ll_distance:
                 callType = 1;
+                RadioOnClick OnClick1 = new RadioOnClick(SharedPreTool.getInstance(this).getIntData(SP_DISTANCE_TYPE, 0));
                 AlertDialog ad1 = new AlertDialog.Builder(this).setTitle(getResources().getString(R.string.typeofalarm_type))
-                        .setSingleChoiceItems(areas, OnClick.getIndex(), OnClick).create();
+                        .setSingleChoiceItems(areas, OnClick1.getIndex(), OnClick1).create();
                 ad1.show();
                 break;
             case R.id.ll_temp:
                 callType = 2;
+                RadioOnClick OnClick2 = new RadioOnClick(SharedPreTool.getInstance(this).getIntData(SP_TEMP_TYPE, 0));
                 AlertDialog ad2 = new AlertDialog.Builder(this).setTitle(getResources().getString(R.string.typeofalarm_type))
-                        .setSingleChoiceItems(areas, OnClick.getIndex(), OnClick).create();
+                        .setSingleChoiceItems(areas, OnClick2.getIndex(), OnClick2).create();
                 ad2.show();
+                break;
+            case R.id.btn_lost:
+                callType = 0;
+                RadioOnClick OnClick3 = new RadioOnClick(SharedPreTool.getInstance(this).getIntData(SP_LOST_TYPE, 0));
+                AlertDialog ad3 = new AlertDialog.Builder(this).setTitle(getResources().getString(R.string.typeofalarm_type))
+                        .setSingleChoiceItems(areas, OnClick3.getIndex(), OnClick3).create();
+                ad3.show();
+                break;
+            case R.id.btn_distance:
+                callType = 1;
+                RadioOnClick OnClick4 = new RadioOnClick(SharedPreTool.getInstance(this).getIntData(SP_DISTANCE_TYPE, 0));
+                AlertDialog ad4 = new AlertDialog.Builder(this).setTitle(getResources().getString(R.string.typeofalarm_type))
+                        .setSingleChoiceItems(areas, OnClick4.getIndex(), OnClick4).create();
+                ad4.show();
+                break;
+            case R.id.btn_temp:
+                callType = 2;
+                RadioOnClick OnClick5 = new RadioOnClick(SharedPreTool.getInstance(this).getIntData(SP_TEMP_TYPE, 0));
+                AlertDialog ad5 = new AlertDialog.Builder(this).setTitle(getResources().getString(R.string.typeofalarm_type))
+                        .setSingleChoiceItems(areas, OnClick5.getIndex(), OnClick5).create();
+                ad5.show();
                 break;
             default:
                 break;
@@ -75,7 +106,9 @@ public class TypeOfAlarmActivity extends BaseActivity {
      * 初始化控件
      */
     private void initView() {
-
+        btn_lost.setText(areas[SharedPreTool.getInstance(this).getIntData(SP_LOST_TYPE, 0)]);
+        btn_distance.setText(areas[SharedPreTool.getInstance(this).getIntData(SP_DISTANCE_TYPE, 0)]);
+        btn_temp.setText(areas[SharedPreTool.getInstance(this).getIntData(SP_TEMP_TYPE, 0)]);
     }
 
     @Override
@@ -107,12 +140,15 @@ public class TypeOfAlarmActivity extends BaseActivity {
             setIndex(whichButton);
             switch (callType) {
                 case 0:
+                    SharedPreTool.getInstance(context).setIntData(SP_LOST_TYPE, index);
                     btn_lost.setText(areas[index]);
                     break;
                 case 1:
+                    SharedPreTool.getInstance(context).setIntData(SP_DISTANCE_TYPE, index);
                     btn_distance.setText(areas[index]);
                     break;
                 case 2:
+                    SharedPreTool.getInstance(context).setIntData(SP_TEMP_TYPE, index);
                     btn_temp.setText(areas[index]);
                     break;
                 default:

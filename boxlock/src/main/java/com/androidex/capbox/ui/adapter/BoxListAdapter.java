@@ -221,14 +221,14 @@ public class BoxListAdapter extends BaseAdapter {
 
             @Override
             public void onClick(View v) {
+                if (!CommonKit.isNetworkAvailable(mContext)) {
+                    CommonKit.showErrorShort(mContext, "设备未连接网络");
+                    return;
+                }
                 String token = SharedPreTool.getInstance(mContext).getStringData(SharedPreTool.TOKEN, null);
                 if (token == null) {
                     CommonKit.showErrorShort(mContext, "账号异常");
                     token = "";
-                }
-                if (!CommonKit.isNetworkAvailable(mContext)) {
-                    CommonKit.showErrorShort(mContext, "设备未连接网络");
-                    return;
                 }
                 NetApi.relieveBoxBind(token, ((BaseActivity) mContext).getUserName(), uuid, mac, new ResultCallBack<BaseModel>() {
                     @Override
