@@ -107,11 +107,11 @@ public class MapUtils implements BDLocationListener,SensorEventListener,OnGetRou
     }
     @Override
     public void onReceiveLocation(BDLocation bdLocation) {
-        if(isFirstLocation){
-            isFirstLocation = false;
-            this.event.onLocationEvent(bdLocation,true);
-            return;
-        }
+//        if(isFirstLocation){
+//            isFirstLocation = false;
+//            this.event.onLocationEvent(bdLocation,true);
+//            return;
+//        }
         this.event.onLocationEvent(bdLocation,false);
     }
     @Override
