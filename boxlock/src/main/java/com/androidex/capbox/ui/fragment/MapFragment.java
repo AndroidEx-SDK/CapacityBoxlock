@@ -356,6 +356,9 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
                 bundle.putInt("id",i);
                 k.setExtraInfo(bundle);
                 mBaiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(ll));
+                if(i == 0){
+                    showLocation(ll);
+                }
             }
             ll = null;
             mBaiduMap.setOnMarkerClickListener(onMarkerClickListener);
