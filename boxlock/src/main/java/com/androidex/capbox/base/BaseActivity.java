@@ -413,8 +413,9 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         if (baseBroad != null)
             unregisterReceiver(baseBroad);
+        dismissSpinnerDlg();
+        super.onDestroy();
     }
 }

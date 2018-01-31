@@ -76,9 +76,9 @@ public abstract class UserBaseActivity extends BaseActivity {
                             if (model.info != null) {
                                 CommonKit.showErrorShort(context, model.info);
                             } else {
-                                CommonKit.showErrorShort(context, "登录错误");
+                                CommonKit.showErrorShort(context, "密码错误");
                             }
-                            LoginActivity.lauch(context);
+                            //LoginActivity.lauch(context);
                             break;
                         case Constants.API.API_NOPERMMISION:
                             CommonKit.showErrorShort(context, "请检查账号和密码是否正确");
