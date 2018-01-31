@@ -381,7 +381,8 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                                     carryNum++;
                                 }
                             }
-                            SharedPreTool.getInstance(context).setIntData(IS_BIND_NUM, carryNum++);
+                            //SharedPreTool.getInstance(context).setIntData(IS_BIND_NUM, carryNum++);
+                            SharedPreTool.getInstance(context).setIntData(IS_BIND_NUM, model.devicelist.size());
                             break;
                         default:
                             break;

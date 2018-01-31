@@ -475,7 +475,8 @@ public class BoxListFragment extends BaseFragment {
                                 }
                                 mylist.add(map);
                             }
-                            SharedPreTool.getInstance(context).setIntData(IS_BIND_NUM, carryNum++);
+                            //SharedPreTool.getInstance(context).setIntData(IS_BIND_NUM,carryNum);
+                            SharedPreTool.getInstance(context).setIntData(IS_BIND_NUM, model.devicelist.size());
                             if (model.devicelist.size() > 0) {
                                 Logd(TAG, "刷新列表");
                                 boxListAdapter.notifyDataSetChanged();
