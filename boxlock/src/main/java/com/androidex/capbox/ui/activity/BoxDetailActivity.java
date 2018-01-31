@@ -21,6 +21,7 @@ import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.module.BaseModel;
 import com.androidex.capbox.module.BoxDetailModel;
+import com.androidex.capbox.module.BoxDeviceModel;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.widget.SecondTitleBar;
 import com.androidex.capbox.utils.CommonKit;
@@ -37,6 +38,7 @@ import butterknife.OnClick;
 import okhttp3.Headers;
 import okhttp3.Request;
 
+import static com.androidex.boxlib.cache.SharedPreTool.IS_BIND_NUM;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BOX_MAC;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_END_TAST;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_ONEKEYCONFIG;
@@ -288,16 +290,14 @@ public class BoxDetailActivity extends BaseActivity {
      * @param isflag
      */
     private void setDeviceCaryyStarts(boolean isflag) {
+        boxlist();
         ServiceBean obj = SharedPreTool.getInstance(context).getObj(ServiceBean.class, mac);
-        RLog.e("isflag==" + isflag);
         if (obj != null) {
-            RLog.e("isflag111==" + isflag);
             obj.setStartCarry(isflag);
             SharedPreTool.getInstance(context).saveObj(obj, mac);
         } else {
             ServiceBean device = MyBleService.getInstance().getConnectDevice(mac);
             if (device != null) {
-                RLog.e("isflag222==" + isflag);
                 device.setStartCarry(isflag);
                 SharedPreTool.getInstance(context).saveObj(device, mac);
             }
@@ -473,6 +473,47 @@ public class BoxDetailActivity extends BaseActivity {
             default:
                 break;
         }
+    }
+
+    /**
+     * 获取设备列表
+     */
+    public void boxlist() {
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
+        NetApi.boxlist(getToken(), getUserName(), new ResultCallBack<BoxDeviceModel>() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, BoxDeviceModel model) {
+                super.onSuccess(statusCode, headers, model);
+                if (model != null) {
+                    switch (model.code) {
+                        case Constants.API.API_OK:
+                            int carryNum = 0;
+                            for (BoxDeviceModel.device device : model.devicelist) {
+                                if (device.deviceStatus == 2) {
+                                    carryNum++;
+                                }
+                            }
+                            SharedPreTool.getInstance(context).setIntData(IS_BIND_NUM, carryNum++);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Request request, Exception e) {
+                super.onFailure(statusCode, request, e);
+            }
+
+            @Override
+            public void onStart() {
+                super.onStart();
+            }
+        });
     }
 
     /**

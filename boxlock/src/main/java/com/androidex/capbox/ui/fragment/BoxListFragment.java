@@ -461,6 +461,7 @@ public class BoxListFragment extends BaseFragment {
                     switch (model.code) {
                         case Constants.API.API_OK:
                             mylist.clear();
+                            int carryNum = 0;
                             for (BoxDeviceModel.device device : model.devicelist) {
                                 Map<String, String> map = new HashMap<>();
                                 map.put(EXTRA_BOX_NAME, device.boxName);
@@ -469,9 +470,12 @@ public class BoxListFragment extends BaseFragment {
                                 map.put("deviceStatus", "" + device.deviceStatus);
                                 map.put("isdefault", "" + device.isDefault);
                                 map.put("isOnLine", "" + device.isOnLine);
+                                if (device.deviceStatus == 2) {
+                                    carryNum++;
+                                }
                                 mylist.add(map);
                             }
-                            SharedPreTool.getInstance(context).setIntData(IS_BIND_NUM, model.devicelist.size());
+                            SharedPreTool.getInstance(context).setIntData(IS_BIND_NUM, carryNum++);
                             if (model.devicelist.size() > 0) {
                                 Logd(TAG, "刷新列表");
                                 boxListAdapter.notifyDataSetChanged();

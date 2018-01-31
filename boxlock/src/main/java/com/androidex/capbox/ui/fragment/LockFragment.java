@@ -23,6 +23,7 @@ import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.module.ActionItem;
 import com.androidex.capbox.module.BaiduModel;
 import com.androidex.capbox.module.BaseModel;
+import com.androidex.capbox.module.BoxDeviceModel;
 import com.androidex.capbox.module.LocationModel;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.activity.BoxDetailActivity;
@@ -31,6 +32,7 @@ import com.androidex.capbox.ui.view.TitlePopup;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
 import com.androidex.capbox.utils.Dialog;
+import com.androidex.capbox.utils.RLog;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
@@ -51,6 +53,7 @@ import okhttp3.Headers;
 import okhttp3.Request;
 
 import static com.androidex.boxlib.cache.SharedPreTool.HIGHEST_TEMP;
+import static com.androidex.boxlib.cache.SharedPreTool.IS_BIND_NUM;
 import static com.androidex.boxlib.cache.SharedPreTool.LOWEST_TEMP;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_END_TAST;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_HEART;
@@ -314,6 +317,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     switch (model.code) {
                         case Constants.API.API_OK:
                             CommonKit.showOkShort(context, "结束成功");
+                            setDeviceCaryyStarts(false);
                             break;
                         default:
                             if (model.info != null) {
@@ -330,6 +334,69 @@ public class LockFragment extends BaseFragment implements OnClickListener {
             public void onFailure(int statusCode, Request request, Exception e) {
                 super.onFailure(statusCode, request, e);
                 CommonKit.showErrorShort(context, "网络异常");
+            }
+        });
+    }
+
+    /**
+     * 设置是否携行状态
+     *
+     * @param isflag
+     */
+    private void setDeviceCaryyStarts(boolean isflag) {
+        boxlist();
+        ServiceBean obj = SharedPreTool.getInstance(context).getObj(ServiceBean.class, address);
+        if (obj != null) {
+            obj.setStartCarry(isflag);
+            SharedPreTool.getInstance(context).saveObj(obj, address);
+        } else {
+            ServiceBean device = MyBleService.getInstance().getConnectDevice(address);
+            if (device != null) {
+                device.setStartCarry(isflag);
+                SharedPreTool.getInstance(context).saveObj(device, address);
+            }
+        }
+        Object obj1 = SharedPreTool.getInstance(context).getObj(ServiceBean.class, address);
+        RLog.e("存储携行状态" + obj1.toString());
+    }
+
+    /**
+     * 获取设备列表
+     */
+    public void boxlist() {
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
+        NetApi.boxlist(getToken(), getUserName(), new ResultCallBack<BoxDeviceModel>() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, BoxDeviceModel model) {
+                super.onSuccess(statusCode, headers, model);
+                if (model != null) {
+                    switch (model.code) {
+                        case Constants.API.API_OK:
+                            int carryNum = 0;
+                            for (BoxDeviceModel.device device : model.devicelist) {
+                                if (device.deviceStatus == 2) {
+                                    carryNum++;
+                                }
+                            }
+                            SharedPreTool.getInstance(context).setIntData(IS_BIND_NUM, carryNum++);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Request request, Exception e) {
+                super.onFailure(statusCode, request, e);
+            }
+
+            @Override
+            public void onStart() {
+                super.onStart();
             }
         });
     }
