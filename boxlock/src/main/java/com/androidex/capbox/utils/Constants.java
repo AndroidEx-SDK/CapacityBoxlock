@@ -15,6 +15,7 @@ public class Constants extends BleConstants {
     public static final String EXTRA_ITEM_ADDRESS = "address";
     public static final String EXTRA_BOX_UUID = "uuid";
     public static final String EXTRA_BOX_NAME = "name";
+    public static final String EXTRA_USER_HEAD = "head";//存储用户头像路径
 
     public static class BASE {
         public static final String ACTION_TEMP_OUT = "ACTION_TEMP_OUT";
@@ -48,8 +49,9 @@ public class Constants extends BleConstants {
      * 常量
      */
     public static class PARAM {
-        public static final String CACHE_KEY_CUR_LOGIN_USER = "curLoginedUser"; //当前登陆用户
+        public static final String CACHE_KEY_CUR_LOGIN_USER = "CACHE_KEY_CUR_LOGIN_USER"; //当前登陆用户
         public static final String SYSTEM_STOP_SHAKING = "SYSTEM_STOP_SHAKING"; //停止震动
+
 
     }
 

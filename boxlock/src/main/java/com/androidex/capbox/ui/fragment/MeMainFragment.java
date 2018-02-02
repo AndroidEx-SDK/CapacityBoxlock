@@ -42,6 +42,7 @@ import static com.androidex.capbox.ui.activity.ImageClipActivity.PARAM_IMAGE_PAT
 import static com.androidex.capbox.ui.activity.ImageGridActivity.PARAM_CLIP_WIDTH;
 import static com.androidex.capbox.ui.activity.ImageGridActivity.PARAM_IS_CAPTURE;
 import static com.androidex.capbox.ui.activity.ImageGridActivity.PARAM_SELECT_MAX_COUNT;
+import static com.androidex.capbox.utils.Constants.EXTRA_USER_HEAD;
 
 public class MeMainFragment extends BaseFragment implements CompoundButton.OnCheckedChangeListener {
     private static String TAG = "MeMainFragment";
@@ -87,6 +88,10 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
             tb_lockscreen.setChecked(true);
         } else {
             tb_lockscreen.setChecked(false);
+        }
+        String head_uri = SharedPreTool.getInstance(context).getStringData(EXTRA_USER_HEAD, null);
+        if (head_uri != null) {
+            uploadHead(head_uri);
         }
     }
 
@@ -341,6 +346,7 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
         if (!file.exists()) return;
         RLog.e("加载头像图片11111" + filePath);
 
+        SharedPreTool.getInstance(context).setStringData(EXTRA_USER_HEAD, filePath);
         iv_head.setImageURI(Uri.fromFile(file));
     }
 
