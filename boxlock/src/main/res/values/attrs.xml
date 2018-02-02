@@ -64,4 +64,10 @@
         <attr name="matProg_barWidth" format="dimension" />
         <attr name="matProg_linearProgress" format="boolean" />
     </declare-styleable>
+
+    <!-- 剪裁图片控件 -->
+    <declare-styleable name="ClipImageLayout">
+        <attr name="clipBorderWidth" format="dimension"></attr>
+        <attr name="srcId" format="reference"></attr>
+    </declare-styleable>
 </resources>

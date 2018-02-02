@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:background="@drawable/sel_bg_white_gray_radius"
+    android:padding="@dimen/marginPadding16">
+
+    <TextView
+        android:id="@+id/tv_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:text="中国银行"
+        android:textColor="@color/font_black"
+        android:textSize="14sp" />
+
+    <ImageView
+        android:id="@+id/iv_checked"
+        android:layout_width="@dimen/marginPadding25"
+        android:layout_height="@dimen/marginPadding25"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:scaleType="fitCenter"
+        android:visibility="gone"
+        android:src="@mipmap/ic_bg_checkbox_rect_checked" />
+
+</RelativeLayout>

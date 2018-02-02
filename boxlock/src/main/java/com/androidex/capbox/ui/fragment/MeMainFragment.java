@@ -1,31 +1,54 @@
 package com.androidex.capbox.ui.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseFragment;
+import com.androidex.capbox.callback.ItemClickCallBack;
 import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.activity.ConnectDeviceListActivity;
+import com.androidex.capbox.ui.activity.ImageClipActivity;
+import com.androidex.capbox.ui.activity.ImageGridActivity;
 import com.androidex.capbox.ui.activity.SettingActivity;
 import com.androidex.capbox.ui.activity.TypeOfAlarmActivity;
+import com.androidex.capbox.ui.widget.SingleCheckListDialog;
 import com.androidex.capbox.utils.CommonKit;
+import com.androidex.capbox.utils.RLog;
+import com.makeramen.roundedimageview.RoundedImageView;
+
+import java.io.File;
 
 import butterknife.Bind;
 
 import static com.androidex.boxlib.cache.SharedPreTool.IS_OPEN_LOCKSCREEN;
+import static com.androidex.capbox.ui.activity.ImageClipActivity.PARAM_BORDER_WIDTH;
+import static com.androidex.capbox.ui.activity.ImageClipActivity.PARAM_IMAGE_PATH;
+import static com.androidex.capbox.ui.activity.ImageGridActivity.PARAM_CLIP_WIDTH;
+import static com.androidex.capbox.ui.activity.ImageGridActivity.PARAM_IS_CAPTURE;
+import static com.androidex.capbox.ui.activity.ImageGridActivity.PARAM_SELECT_MAX_COUNT;
 
 public class MeMainFragment extends BaseFragment implements CompoundButton.OnCheckedChangeListener {
     private static String TAG = "MeMainFragment";
+    public static final int REQ_SELECT_USER_HEAD = 500; // 选择用户头像
+    public static final int REQ_IMAGE_CLIP = 300; // 图片剪裁
+    public static final int REQ_CAMERA = 100; // 照相
+
     @Bind(R.id.settint_bt_user)
     TextView tv_setting;
     @Bind(R.id.setting_alarm)
@@ -38,11 +61,17 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
     Spinner setting_distance;
     @Bind(R.id.tb_alarm)
     ToggleButton tb_alarm;
-@Bind(R.id.tb_lockscreen)
+    @Bind(R.id.tb_lockscreen)
     ToggleButton tb_lockscreen;
+    @Bind(R.id.iv_head)
+    RoundedImageView iv_head;
+    @Bind(R.id.rl_head)
+    RelativeLayout rl_head;
 
     private boolean isToast = false;
     private boolean isToast_lockscreen = false;
+    SingleCheckListDialog editHeadDlg;  //修改头像
+    private Uri photoUri;
 
     @Override
     public void initData() {
@@ -63,6 +92,7 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
 
     @Override
     public void setListener() {
+        rl_head.setOnClickListener(this);
         tv_setting.setOnClickListener(this);
         setting_alarm.setOnClickListener(this);
         ll_connectDevice.setOnClickListener(this);
@@ -106,6 +136,9 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
                 break;
             case R.id.ll_connectDevice://已连接设备
                 ConnectDeviceListActivity.lauch(context);
+                break;
+            case R.id.rl_head:
+                showHeadDlg();
                 break;
             default:
                 break;
@@ -151,6 +184,63 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
         });
     }
 
+    /**
+     * 选择头像对话框
+     */
+    private void showHeadDlg() {
+        if (editHeadDlg == null) {
+            editHeadDlg = new SingleCheckListDialog(context);
+        }
+        editHeadDlg.title(getString(R.string.label_edit_head))
+                .data(getResources().getStringArray(R.array.edit_head_opts))
+                .setItemClickCallBack(new ItemClickCallBack<String>() {
+                    @Override
+                    public void onItemClick(int position, String model, int tag) {
+                        super.onItemClick(position, model, tag);
+
+                        switch (position) {
+                            case 0: //拍照
+                                takePhoto();
+                                break;
+
+                            case 1: //从相册选择
+                                Bundle params = new Bundle();
+                                params.putBoolean(PARAM_IS_CAPTURE, false);
+                                params.putInt(PARAM_SELECT_MAX_COUNT, 1);
+                                params.putInt(PARAM_CLIP_WIDTH, 300);
+
+                                Intent intent = new Intent();
+                                intent.setClass(context, ImageGridActivity.class);
+                                intent.putExtras(params == null ? new Bundle() : params);
+                                startActivityForResult(intent, REQ_SELECT_USER_HEAD);
+                                context.overridePendingTransition(R.anim.in_from_right,
+                                        R.anim.out_to_left);
+
+                                //ImageGridActivity.lauch(context, false, 1, 300, REQ_SELECT_USER_HEAD);
+                                break;
+
+                            case 2://取消
+                                editHeadDlg.dismiss();
+                                break;
+                        }
+                    }
+                })
+                .show();
+    }
+
+    /**
+     * 拍照
+     */
+    private void takePhoto() {
+        photoUri = CommonKit.getOutputMediaFileUri(context);
+        //CommonKit.startCameraActivity(context, REQ_CAMERA, photoUri);
+        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+        startActivityForResult(intent, REQ_CAMERA);
+        context.overridePendingTransition(R.anim.in_from_right,
+                R.anim.out_to_left);
+    }
+
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
         switch (compoundButton.getId()) {
@@ -189,6 +279,69 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
                 }
                 break;
         }
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_CAMERA) {
+            if (resultCode == Activity.RESULT_OK) {
+                String photoPath = photoUri.toString()
+                        .replaceFirst("file:///", "/").trim();
+                if (new File(photoPath).exists()) {
+                    // 发送广播通知系统
+                    context.sendBroadcast(new Intent(
+                            Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, photoUri));
+
+
+                    Bundle params = new Bundle();
+                    params.putString(PARAM_IMAGE_PATH, photoPath);
+                    params.putInt(PARAM_BORDER_WIDTH, 300);
+
+                    Intent intent = new Intent();
+                    intent.setClass(context, ImageClipActivity.class);//跳转到裁剪页面
+                    intent.putExtras(params == null ? new Bundle() : params);
+                    startActivityForResult(intent, REQ_SELECT_USER_HEAD);
+                    context.overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+
+                    // 进入剪裁界面
+                    // ImageClipActivity.lauch(context, photoPath, 300, REQ_IMAGE_CLIP);
+                }
+            }
+        } else if (requestCode == REQ_SELECT_USER_HEAD) {
+            if (resultCode == Activity.RESULT_OK) {
+                // 裁剪
+                String filePath = data.getStringExtra(ImageGridActivity.OUT_SELECT_IMAGE_PATH);      //剪裁后的文件路径
+//                String wrapperPath = new StringBuffer("file://").append(filePath).toString();
+//                UILKit.loadHeadLocal(wrapperPath, iv_head);
+
+                uploadHead(filePath);
+            }
+        } else if (requestCode == REQ_IMAGE_CLIP) {
+            if (resultCode == Activity.RESULT_OK) {
+                // 裁剪
+                String filePath = data.getStringExtra(ImageClipActivity.OUT_IMAGE_PATH);      //剪裁后的文件路径
+//                String wrapperPath = new StringBuffer("file://").append(filePath).toString();
+//                UILKit.loadHeadLocal(wrapperPath, iv_head);
+                uploadHead(filePath);
+            }
+        }
+    }
+
+    /**
+     * 上传头像
+     *
+     * @param filePath
+     */
+    private void uploadHead(String filePath) {
+        if (TextUtils.isEmpty(filePath)) return;
+        RLog.e("加载头像图片" + filePath);
+        File file = new File(filePath);
+        if (!file.exists()) return;
+        RLog.e("加载头像图片11111" + filePath);
+
+        iv_head.setImageURI(Uri.fromFile(file));
     }
 
     @Override

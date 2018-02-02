@@ -1,5 +1,6 @@
 package com.androidex.capbox.ui.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -13,6 +14,8 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
+import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
@@ -37,6 +40,11 @@ public class RoundImageView extends ImageView {
         super(context);
         mContext = context;
 
+    }
+
+    @Override
+    public void setImageURI(@Nullable Uri uri) {
+        super.setImageURI(uri);
     }
 
     public RoundImageView(Context context, AttributeSet attrs) {

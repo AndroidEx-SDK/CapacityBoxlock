@@ -26,4 +26,10 @@
         <item>较远</item>
         <item>远</item>
     </string-array>
+
+    <string-array name="edit_head_opts">
+        <item>拍照</item>
+        <item>从相册选择</item>
+        <item>取消</item>
+    </string-array>
 </resources>

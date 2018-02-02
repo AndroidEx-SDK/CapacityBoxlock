@@ -489,6 +489,11 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         RLog.e("MainActivty  onStart");

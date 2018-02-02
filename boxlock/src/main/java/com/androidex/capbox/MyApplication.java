@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 
+import com.androidex.capbox.base.imageloader.UILKit;
 import com.androidex.capbox.service.MyBleService;
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
@@ -26,6 +27,8 @@ public class MyApplication extends Application {
         super.onCreate();
         mInstance = this;
         mContext = this;
+        /************初始化ImageLoader*******************/
+        UILKit.init(getApplicationContext());
         /**********设置全局字体格式*********/
         this.setTypeface();
         /**********初始化蓝牙**************/

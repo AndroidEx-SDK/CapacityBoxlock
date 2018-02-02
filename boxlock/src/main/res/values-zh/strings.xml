@@ -172,7 +172,6 @@
     <string name="error_bluetooth_not_supported">Bluetooth not supported(该手机不支持蓝牙4.0)</string>
     <string name="unknown_device">Unknown device(未知设备)</string>
     <string name="device_connect">正在连接设备...</string>
-
     <!-- activity_downfever -->
     <string name="downfever_title_tv">紧急求助</string>
     <string name="downfever_tv_commonsense">宝宝发烧常识</string>
@@ -311,6 +310,9 @@
     <string name="label_box_name">箱体昵称</string>
     <string name="label_device_list">设备列表</string>
     <string name="label_user_login_account">手机号码</string>
+    <string name="label_edit_head">修改头像</string>
+    <string name="label_img_clip">图片裁剪</string>
+    <string name="label_img_select">图片选择</string>
     <string name="hint_phone_input">请输入11位手机号</string>
     <string name="hint_uuid_commit">箱体uuid为空</string>
     <string name="hint_boxname_commit">请设置箱体昵称</string>
