@@ -137,6 +137,7 @@
     <!-- 通用的各种间距 -->
     <dimen name="marginPadding138">138dp</dimen>
     <dimen name="marginPadding120">120dp</dimen>
+    <dimen name="marginPadding100">100dp</dimen>
     <dimen name="marginPadding76">57dp</dimen>
     <dimen name="marginPadding66">49.5dp</dimen>
     <dimen name="marginPadding55">55dp</dimen>

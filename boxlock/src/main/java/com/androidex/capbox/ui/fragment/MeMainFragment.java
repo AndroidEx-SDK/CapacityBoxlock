@@ -291,6 +291,7 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_CAMERA) {
+            RLog.e("拍照页返回code= " + requestCode);
             if (resultCode == Activity.RESULT_OK) {
                 String photoPath = photoUri.toString()
                         .replaceFirst("file:///", "/").trim();
@@ -299,7 +300,6 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
                     context.sendBroadcast(new Intent(
                             Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, photoUri));
 
-
                     Bundle params = new Bundle();
                     params.putString(PARAM_IMAGE_PATH, photoPath);
                     params.putInt(PARAM_BORDER_WIDTH, 300);
@@ -307,7 +307,7 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
                     Intent intent = new Intent();
                     intent.setClass(context, ImageClipActivity.class);//跳转到裁剪页面
                     intent.putExtras(params == null ? new Bundle() : params);
-                    startActivityForResult(intent, REQ_SELECT_USER_HEAD);
+                    startActivityForResult(intent, REQ_IMAGE_CLIP);
                     context.overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
 
                     // 进入剪裁界面
@@ -324,6 +324,7 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
                 uploadHead(filePath);
             }
         } else if (requestCode == REQ_IMAGE_CLIP) {
+            RLog.e("裁剪页面返回code= " + requestCode);
             if (resultCode == Activity.RESULT_OK) {
                 // 裁剪
                 String filePath = data.getStringExtra(ImageClipActivity.OUT_IMAGE_PATH);      //剪裁后的文件路径
@@ -341,10 +342,8 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
      */
     private void uploadHead(String filePath) {
         if (TextUtils.isEmpty(filePath)) return;
-        RLog.e("加载头像图片" + filePath);
         File file = new File(filePath);
         if (!file.exists()) return;
-        RLog.e("加载头像图片11111" + filePath);
 
         SharedPreTool.getInstance(context).setStringData(EXTRA_USER_HEAD, filePath);
         iv_head.setImageURI(Uri.fromFile(file));

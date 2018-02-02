@@ -52,14 +52,15 @@
 
                 <com.makeramen.roundedimageview.RoundedImageView
                     android:id="@+id/iv_head"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/marginPadding100"
+                    android:layout_height="@dimen/marginPadding100"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/marginPadding12"
+                    android:layout_marginLeft="@dimen/marginPadding10"
+                    android:padding="15dp"
                     android:scaleType="fitXY"
                     android:src="@mipmap/ic_label_head"
                     app:riv_border_color="@android:color/white"
-                    app:riv_border_width="2dip"
+                    app:riv_border_width="0dip"
                     app:riv_mutate_background="true"
                     app:riv_oval="true" />
 
