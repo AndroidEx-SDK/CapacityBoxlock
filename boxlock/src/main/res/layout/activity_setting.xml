@@ -111,7 +111,6 @@
                 android:id="@+id/ll_about"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/marginPadding50"
-                android:layout_marginTop="10dp"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/marginPadding16">
 

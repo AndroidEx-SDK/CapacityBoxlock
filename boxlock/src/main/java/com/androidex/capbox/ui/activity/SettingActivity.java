@@ -141,6 +141,11 @@ public class SettingActivity extends UserBaseActivity {
 
     /**
      * 检测版本号，包括APP的，箱体的，腕表的
+     * {"appFileName":"boxlock-3.apk",
+     * "appVersion":"3","boxFileName":"20171129.hex",
+     * "boxVersion":"0.0.1","code":0,"watchFileName":"20171129.hex",
+     * "watchVersion":"0.0.2"}
+
      */
     public void checkVersion() {
         if (!CommonKit.isNetworkAvailable(context)) {
