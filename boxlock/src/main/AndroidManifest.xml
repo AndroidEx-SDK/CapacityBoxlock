@@ -141,12 +141,6 @@
         <activity
             android:name="com.androidex.capbox.ui.activity.ConnectDeviceListActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.ImageGridActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.ImageClipActivity"
-            android:screenOrientation="portrait" />
 
         <service android:name="com.androidex.capbox.service.MyBleService"></service>
 

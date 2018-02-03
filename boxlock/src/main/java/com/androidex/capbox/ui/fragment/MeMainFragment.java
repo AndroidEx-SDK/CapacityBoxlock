@@ -36,7 +36,6 @@ import com.androidex.capbox.ui.activity.TypeOfAlarmActivity;
 import com.androidex.capbox.ui.widget.SingleCheckListDialog;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.PhotoUtils;
-import com.androidex.capbox.utils.RLog;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.File;
@@ -80,7 +79,6 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
     private boolean isToast = false;
     private boolean isToast_lockscreen = false;
     SingleCheckListDialog editHeadDlg;  //修改头像
-    private File fileUri = new File(Environment.getExternalStorageDirectory().getPath() + "/photo.jpg");
     private File fileCropUri = new File(Environment.getExternalStorageDirectory().getPath() + "/crop_photo.jpg");
     private Uri photoUri;
 
@@ -101,7 +99,6 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
         }
         String head_uri = SharedPreTool.getInstance(context).getStringData(EXTRA_USER_HEAD, null);
         if (head_uri != null) {
-            RLog.e("储存的头像地址 head_uri = " + head_uri);
             uploadHead(head_uri);
         }
     }
@@ -306,7 +303,6 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.d(TAG, "onRequestPermissionsResult: ");
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             //调用系统相机申请拍照权限回调
@@ -341,7 +337,6 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case REQ_CAMERA://拍照完成回调
-                    RLog.e("拍照完毕后的照片地址 photoUri = " + photoUri.toString());
                     cropImageUri = Uri.fromFile(fileCropUri);
                     PhotoUtils.cropImageUri(fragment, photoUri, cropImageUri, 1, 1, OUTPUT_X, OUTPUT_Y, REQ_IMAGE_CLIP);
                     break;
@@ -359,7 +354,6 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
                     break;
                 case REQ_IMAGE_CLIP:
                     SharedPreTool.getInstance(context).setStringData(EXTRA_USER_HEAD, cropImageUri.getPath());
-                    RLog.e("path=" + cropImageUri.getPath());
                     Bitmap bitmap = PhotoUtils.getBitmapFromUri(cropImageUri, getActivity());
                     if (bitmap != null)
                         iv_head.setImageBitmap(bitmap);
