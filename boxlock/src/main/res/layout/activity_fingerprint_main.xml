@@ -3,16 +3,16 @@
     android:id="@+id/activity_fingerprint_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/fingerpint_guid"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:background="@mipmap/fingerpint_guid"
     android:paddingRight="@dimen/activity_horizontal_margin">
 
     <TextView
-        android:layout_weight="1"
         android:id="@+id/fingerprint_guide_tip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:gravity="bottom"
         android:text="@string/fingerprint_recognition_start"
         android:textColor="@color/black"
@@ -26,5 +26,15 @@
         android:text="@string/fingerprint_recognition_hint"
         android:textColor="@color/Gray_66"
         android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_usePassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="@dimen/marginPadding16"
+        android:paddingTop="@dimen/marginPadding16"
+        android:text="使用密码"
+        android:textSize="@dimen/size16" />
 
 </LinearLayout>

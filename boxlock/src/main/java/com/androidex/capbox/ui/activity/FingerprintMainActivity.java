@@ -15,6 +15,8 @@ import com.androidex.capbox.core.FingerprintUtil;
 import com.androidex.capbox.core.KeyguardLockScreenManager;
 import com.androidex.capbox.utils.CommonKit;
 
+import butterknife.Bind;
+
 /**
  * 调用手机指纹验证，验证成功后即可开启APP
  */
@@ -22,6 +24,9 @@ public class FingerprintMainActivity extends BaseActivity {
     private FingerprintCore mFingerprintCore;
     private KeyguardLockScreenManager mKeyguardLockScreenManager;
     private TextView mFingerGuideTxt;
+
+    @Bind(R.id.tv_usePassword)
+    TextView tv_usePassword;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -38,7 +43,7 @@ public class FingerprintMainActivity extends BaseActivity {
 
     @Override
     public void setListener() {
-
+        tv_usePassword.setOnClickListener(this);
     }
 
     /**
@@ -78,7 +83,7 @@ public class FingerprintMainActivity extends BaseActivity {
             Loge("无锁屏密码");
             LoginActivity.lauch(context);
             return;
-        }else {
+        } else {
             Loge("有锁屏密码");
         }
         mKeyguardLockScreenManager.showAuthenticationScreen(this);
@@ -172,9 +177,14 @@ public class FingerprintMainActivity extends BaseActivity {
         mResultListener = null;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onClick(View view) {
-
+        switch (view.getId()){
+            case R.id.tv_usePassword:
+                startFingerprintRecognitionUnlockScreen();
+                break;
+        }
     }
 
     public static void lauch(Activity activity) {

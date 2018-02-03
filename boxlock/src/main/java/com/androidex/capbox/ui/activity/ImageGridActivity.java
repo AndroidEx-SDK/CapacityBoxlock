@@ -104,8 +104,9 @@ public class ImageGridActivity extends BaseActivity {
                         //单击
                         if (selectMaxCount == 1) {
                             // 进入剪裁界面
-                            ImageClipActivity.lauch(context, model.getPath(),
-                                    clipWidth, REQ_IMAGE_CLIP);
+                            ImageClipActivity.lauch(context, model.getPath(), clipWidth, REQ_IMAGE_CLIP);
+//                            Uri newUri = Uri.parse(PhotoUtils.getPath(context, data.getData()));
+//                            PhotoUtils.cropImageUri(this, newUri, cropImageUri, 1, 1, OUTPUT_X, OUTPUT_Y, CODE_RESULT_REQUEST);
                         }
                         break;
 

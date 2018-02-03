@@ -50,7 +50,7 @@ public class ImageClipActivity extends BaseActivity {
                 imagePath = params.getString(PARAM_IMAGE_PATH);
             }
             if (params.containsKey(PARAM_BORDER_WIDTH)) {
-                borderWidth = params.getInt(PARAM_BORDER_WIDTH, 250);
+                borderWidth = params.getInt(PARAM_BORDER_WIDTH, 480);
             }
 
             clipImageLayout.setBorderWidth(borderWidth);

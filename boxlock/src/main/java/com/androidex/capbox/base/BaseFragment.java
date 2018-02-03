@@ -66,11 +66,13 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     private android.app.Dialog dialog;
     private android.app.Dialog mLostAlarmDialog;//防丢弹框Dialog
     protected BluetoothAdapter mBtAdapter;
+    protected Fragment fragment;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         layoutInflater = inflater;
+        fragment=this;
         if (rootView == null) {
             context = getActivity();
             rootView = inflater.inflate(getLayoutId(), null);
@@ -83,7 +85,6 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         }
         return rootView;
     }
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {

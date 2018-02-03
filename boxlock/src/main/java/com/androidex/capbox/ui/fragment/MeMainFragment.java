@@ -4,14 +4,15 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -30,12 +31,11 @@ import com.androidex.capbox.callback.ItemClickCallBack;
 import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.activity.ConnectDeviceListActivity;
-import com.androidex.capbox.ui.activity.ImageClipActivity;
-import com.androidex.capbox.ui.activity.ImageGridActivity;
 import com.androidex.capbox.ui.activity.SettingActivity;
 import com.androidex.capbox.ui.activity.TypeOfAlarmActivity;
 import com.androidex.capbox.ui.widget.SingleCheckListDialog;
 import com.androidex.capbox.utils.CommonKit;
+import com.androidex.capbox.utils.PhotoUtils;
 import com.androidex.capbox.utils.RLog;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -44,11 +44,7 @@ import java.io.File;
 import butterknife.Bind;
 
 import static com.androidex.boxlib.cache.SharedPreTool.IS_OPEN_LOCKSCREEN;
-import static com.androidex.capbox.ui.activity.ImageClipActivity.PARAM_BORDER_WIDTH;
-import static com.androidex.capbox.ui.activity.ImageClipActivity.PARAM_IMAGE_PATH;
-import static com.androidex.capbox.ui.activity.ImageGridActivity.PARAM_CLIP_WIDTH;
-import static com.androidex.capbox.ui.activity.ImageGridActivity.PARAM_IS_CAPTURE;
-import static com.androidex.capbox.ui.activity.ImageGridActivity.PARAM_SELECT_MAX_COUNT;
+import static com.androidex.boxlib.utils.ImageUtils.cropImageUri;
 import static com.androidex.capbox.utils.Constants.CODE.CAMERA_PERMISSIONS_REQUEST_CODE;
 import static com.androidex.capbox.utils.Constants.CODE.STORAGE_PERMISSIONS_REQUEST_CODE;
 import static com.androidex.capbox.utils.Constants.EXTRA_PACKAGE_NAME;
@@ -59,6 +55,8 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
     public static final int REQ_SELECT_USER_HEAD = 500; // 选择用户头像
     public static final int REQ_IMAGE_CLIP = 300; // 图片剪裁
     public static final int REQ_CAMERA = 100; // 照相
+    private static final int OUTPUT_X = 480;
+    private static final int OUTPUT_Y = 480;
 
     @Bind(R.id.settint_bt_user)
     TextView tv_setting;
@@ -103,6 +101,7 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
         }
         String head_uri = SharedPreTool.getInstance(context).getStringData(EXTRA_USER_HEAD, null);
         if (head_uri != null) {
+            RLog.e("储存的头像地址 head_uri = " + head_uri);
             uploadHead(head_uri);
         }
     }
@@ -236,10 +235,10 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
                                     if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                                         requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSIONS_REQUEST_CODE);
                                     } else {
-                                        takePicture();//打开自定义相册
+                                        PhotoUtils.openPic(fragment, REQ_SELECT_USER_HEAD);//打开系统相册
                                     }
                                 } else {
-                                    takePicture();//打开自定义相册
+                                    PhotoUtils.openPic(fragment, REQ_SELECT_USER_HEAD);//打开系统相册
                                 }
                                 break;
 
@@ -248,25 +247,7 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
                                 break;
                         }
                     }
-                })
-                .show();
-    }
-
-    /**
-     * 进入相册
-     */
-    private void takePicture() {
-        Bundle params = new Bundle();
-        params.putBoolean(PARAM_IS_CAPTURE, false);
-        params.putInt(PARAM_SELECT_MAX_COUNT, 1);
-        params.putInt(PARAM_CLIP_WIDTH, 480);
-
-        Intent intent = new Intent();
-        intent.setClass(context, ImageGridActivity.class);
-        intent.putExtras(params == null ? new Bundle() : params);
-        startActivityForResult(intent, REQ_SELECT_USER_HEAD);
-        context.overridePendingTransition(R.anim.in_from_right,
-                R.anim.out_to_left);
+                }).show();
     }
 
     /**
@@ -344,7 +325,7 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
             //调用系统相册申请Sdcard权限回调
             case STORAGE_PERMISSIONS_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    takePicture();
+                    PhotoUtils.openPic(fragment, REQ_SELECT_USER_HEAD); //打开系统相册
                 } else {
                     CommonKit.showOkShort(context, "请允许打开SD卡");
                 }
@@ -361,29 +342,27 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
             switch (requestCode) {
                 case REQ_CAMERA://拍照完成回调
                     RLog.e("拍照完毕后的照片地址 photoUri = " + photoUri.toString());
-                    String photoPath = photoUri.toString().replaceFirst("file:///", "/").trim();
-                    if (new File(photoPath).exists()) {
-                        // 发送广播通知系统
-                        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, photoUri));
-                        Bundle params = new Bundle();
-                        params.putString(PARAM_IMAGE_PATH, photoPath);
-                        params.putInt(PARAM_BORDER_WIDTH, 480);
-                        // 进入剪裁界面
-                        Intent intent = new Intent(context, ImageClipActivity.class);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        }
-                        intent.putExtras(params);
-                        startActivityForResult(intent, REQ_IMAGE_CLIP);
-                        context.overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
-                    }
+                    cropImageUri = Uri.fromFile(fileCropUri);
+                    PhotoUtils.cropImageUri(fragment, photoUri, cropImageUri, 1, 1, OUTPUT_X, OUTPUT_Y, REQ_IMAGE_CLIP);
                     break;
                 case REQ_SELECT_USER_HEAD:
-                    String filePath = data.getStringExtra(ImageGridActivity.OUT_SELECT_IMAGE_PATH);//剪裁后的文件路径
-                    uploadHead(filePath);
+                    if (CommonKit.isExitsSdcard()) {
+                        cropImageUri = Uri.fromFile(fileCropUri);
+                        Uri newUri = Uri.parse(PhotoUtils.getPath(getActivity(), data.getData()));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            newUri = FileProvider.getUriForFile(getActivity(), EXTRA_PACKAGE_NAME, new File(newUri.getPath()));
+                        }
+                        PhotoUtils.cropImageUri(this, newUri, cropImageUri, 1, 1, OUTPUT_X, OUTPUT_Y, REQ_IMAGE_CLIP);
+                    } else {
+                        CommonKit.showErrorShort(context, "设备没有SD卡！");
+                    }
                     break;
                 case REQ_IMAGE_CLIP:
-                    uploadHead(data.getStringExtra(ImageClipActivity.OUT_IMAGE_PATH));//将剪裁后的文件路径传入
+                    SharedPreTool.getInstance(context).setStringData(EXTRA_USER_HEAD, cropImageUri.getPath());
+                    RLog.e("path=" + cropImageUri.getPath());
+                    Bitmap bitmap = PhotoUtils.getBitmapFromUri(cropImageUri, getActivity());
+                    if (bitmap != null)
+                        iv_head.setImageBitmap(bitmap);
                     break;
                 default:
                     break;

@@ -518,6 +518,15 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     }
 
     @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        Intent home = new Intent(Intent.ACTION_MAIN);
+        home.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        home.addCategory(Intent.CATEGORY_HOME);
+        startActivity(home);
+    }
+
+    @Override
     protected void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
