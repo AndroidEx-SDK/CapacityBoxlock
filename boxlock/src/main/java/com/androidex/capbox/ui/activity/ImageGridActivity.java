@@ -25,6 +25,8 @@ import java.util.List;
 
 import butterknife.Bind;
 
+import static com.androidex.capbox.utils.Constants.EXTRA_PACKAGE_NAME;
+
 
 /**
  * @author liyp
@@ -90,7 +92,7 @@ public class ImageGridActivity extends BaseActivity {
                     case ImageGridRecyclerAdapter.TAG_CAPTURE:
                         //拍照
                         try {
-                            cameraUri = CommonKit.getOutputMediaFileUri(context);
+                            cameraUri = CommonKit.getOutputMediaFileUri(context,EXTRA_PACKAGE_NAME);
                             CommonKit.startCameraActivity(context, REQ_CAMERA, cameraUri);
                         } catch (Exception e) {
                             CommonKit.showErrorShort(context, "相机出现问题,请稍后再试!");

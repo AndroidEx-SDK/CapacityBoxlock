@@ -12,6 +12,7 @@ import com.androidex.boxlib.utils.BleConstants;
  */
 public class Constants extends BleConstants {
 
+    public static final String EXTRA_PACKAGE_NAME = "com.androidex.capbox";
     public static final String EXTRA_ITEM_ADDRESS = "address";
     public static final String EXTRA_BOX_UUID = "uuid";
     public static final String EXTRA_BOX_NAME = "name";
@@ -51,8 +52,6 @@ public class Constants extends BleConstants {
     public static class PARAM {
         public static final String CACHE_KEY_CUR_LOGIN_USER = "CACHE_KEY_CUR_LOGIN_USER"; //当前登陆用户
         public static final String SYSTEM_STOP_SHAKING = "SYSTEM_STOP_SHAKING"; //停止震动
-
-
     }
 
     /**
@@ -121,6 +120,7 @@ public class Constants extends BleConstants {
         public static final int REQUESTCODE_FINGER_BECOME = 0x0007;//录入无线静默指纹
         public static final int REQUESTCODE_FINGER_CARRY = 0x0008;//录入携行人指纹
         public static final int REQUESTCODE_FINGER_SETTING = 0x0009;//指纹设置
-
+        public static final int CAMERA_PERMISSIONS_REQUEST_CODE = 0x03;//请求相机权限
+        public static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0x04;//请求SD卡权限
     }
 }

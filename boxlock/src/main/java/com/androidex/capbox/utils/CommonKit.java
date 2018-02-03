@@ -25,6 +25,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.View;
@@ -170,10 +171,11 @@ public class CommonKit {
         }
     }
 
-    public static void sendMessage(Context context,String action) {
+    public static void sendMessage(Context context, String action) {
         Intent intent = new Intent(action);
         context.sendBroadcast(intent);
     }
+
     /**
      * 启动Activity
      *
@@ -476,6 +478,7 @@ public class CommonKit {
 
     /**
      * 判断是否有网络连接
+     *
      * @param context
      * @return
      */
@@ -488,6 +491,7 @@ public class CommonKit {
         }
         return false;
     }
+
     /**
      * 获取当前连接的网络类型
      *
@@ -990,8 +994,16 @@ public class CommonKit {
      * @param context
      * @return
      */
-    public static Uri getOutputMediaFileUri(Context context) {
-        return Uri.fromFile(getOutputMediaFile(context, Constants.CONFIG.IMG_CACHE_DIR));
+    public static Uri getOutputMediaFileUri(Context context,String packageName) {
+        Uri imageUri;
+        //通过FileProvider创建一个content类型的Uri
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            imageUri = FileProvider.getUriForFile(context, packageName, getOutputMediaFile(context, Constants.CONFIG.IMG_CACHE_DIR));
+        } else {
+            imageUri = Uri.fromFile(getOutputMediaFile(context, Constants.CONFIG.IMG_CACHE_DIR));
+        }
+        RLog.e("imageUri=" + imageUri.getPath());
+        return imageUri;
     }
 
     public static File getOutputMediaFile(Context context, String uniqueName) {
@@ -1057,6 +1069,7 @@ public class CommonKit {
             return petName;
         }
     }
+
     public static String md5(String passW) {
         byte[] hash;
         try {

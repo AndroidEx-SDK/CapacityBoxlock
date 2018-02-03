@@ -246,7 +246,6 @@ public class QTRecyclerView extends FrameLayout implements SwipeRefreshLayout.On
             errorView.setVisibility(state == STATE_ERROR ? VISIBLE : GONE);
             contentView.setVisibility(state == STATE_CONTENT ? VISIBLE : GONE);
         }
-
     }
 
 

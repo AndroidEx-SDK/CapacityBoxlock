@@ -1,10 +1,17 @@
 package com.androidex.capbox.ui.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -42,6 +49,9 @@ import static com.androidex.capbox.ui.activity.ImageClipActivity.PARAM_IMAGE_PAT
 import static com.androidex.capbox.ui.activity.ImageGridActivity.PARAM_CLIP_WIDTH;
 import static com.androidex.capbox.ui.activity.ImageGridActivity.PARAM_IS_CAPTURE;
 import static com.androidex.capbox.ui.activity.ImageGridActivity.PARAM_SELECT_MAX_COUNT;
+import static com.androidex.capbox.utils.Constants.CODE.CAMERA_PERMISSIONS_REQUEST_CODE;
+import static com.androidex.capbox.utils.Constants.CODE.STORAGE_PERMISSIONS_REQUEST_CODE;
+import static com.androidex.capbox.utils.Constants.EXTRA_PACKAGE_NAME;
 import static com.androidex.capbox.utils.Constants.EXTRA_USER_HEAD;
 
 public class MeMainFragment extends BaseFragment implements CompoundButton.OnCheckedChangeListener {
@@ -72,6 +82,8 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
     private boolean isToast = false;
     private boolean isToast_lockscreen = false;
     SingleCheckListDialog editHeadDlg;  //修改头像
+    private File fileUri = new File(Environment.getExternalStorageDirectory().getPath() + "/photo.jpg");
+    private File fileCropUri = new File(Environment.getExternalStorageDirectory().getPath() + "/crop_photo.jpg");
     private Uri photoUri;
 
     @Override
@@ -202,26 +214,33 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
                     @Override
                     public void onItemClick(int position, String model, int tag) {
                         super.onItemClick(position, model, tag);
-
                         switch (position) {
                             case 0: //拍照
-                                takePhoto();
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                                            || ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)) {
+                                            CommonKit.showErrorShort(context, "您已经拒绝过一次");
+                                        }
+                                        requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE}, CAMERA_PERMISSIONS_REQUEST_CODE);
+                                    } else {//已经有权限
+                                        takePhoto();
+                                    }
+                                } else {
+                                    takePhoto();
+                                }
                                 break;
 
                             case 1: //从相册选择
-                                Bundle params = new Bundle();
-                                params.putBoolean(PARAM_IS_CAPTURE, false);
-                                params.putInt(PARAM_SELECT_MAX_COUNT, 1);
-                                params.putInt(PARAM_CLIP_WIDTH, 300);
-
-                                Intent intent = new Intent();
-                                intent.setClass(context, ImageGridActivity.class);
-                                intent.putExtras(params == null ? new Bundle() : params);
-                                startActivityForResult(intent, REQ_SELECT_USER_HEAD);
-                                context.overridePendingTransition(R.anim.in_from_right,
-                                        R.anim.out_to_left);
-
-                                //ImageGridActivity.lauch(context, false, 1, 300, REQ_SELECT_USER_HEAD);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSIONS_REQUEST_CODE);
+                                    } else {
+                                        takePicture();//打开自定义相册
+                                    }
+                                } else {
+                                    takePicture();//打开自定义相册
+                                }
                                 break;
 
                             case 2://取消
@@ -234,23 +253,42 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
     }
 
     /**
+     * 进入相册
+     */
+    private void takePicture() {
+        Bundle params = new Bundle();
+        params.putBoolean(PARAM_IS_CAPTURE, false);
+        params.putInt(PARAM_SELECT_MAX_COUNT, 1);
+        params.putInt(PARAM_CLIP_WIDTH, 480);
+
+        Intent intent = new Intent();
+        intent.setClass(context, ImageGridActivity.class);
+        intent.putExtras(params == null ? new Bundle() : params);
+        startActivityForResult(intent, REQ_SELECT_USER_HEAD);
+        context.overridePendingTransition(R.anim.in_from_right,
+                R.anim.out_to_left);
+    }
+
+    /**
      * 拍照
      */
     private void takePhoto() {
-        photoUri = CommonKit.getOutputMediaFileUri(context);
-        //CommonKit.startCameraActivity(context, REQ_CAMERA, photoUri);
-        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+        photoUri = CommonKit.getOutputMediaFileUri(context, EXTRA_PACKAGE_NAME);
+        Intent intent = new Intent();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            //添加这一句表示对目标应用临时授权该Uri所代表的文件
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        }
+        intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
         startActivityForResult(intent, REQ_CAMERA);
-        context.overridePendingTransition(R.anim.in_from_right,
-                R.anim.out_to_left);
+        context.overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
     }
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
         switch (compoundButton.getId()) {
             case R.id.tb_alarm://报警开关
-                Loge(TAG, "alarm开关  " + isChecked);
                 if (isChecked) {
                     SharedPreTool.getInstance(context).setBoolData(SharedPreTool.IS_POLICE, true);
                 } else {
@@ -267,7 +305,6 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
                 }
                 break;
             case R.id.tb_lockscreen://锁屏开关
-                Loge(TAG, "alarm开关  " + isChecked);
                 if (isChecked) {
                     SharedPreTool.getInstance(context).setBoolData(IS_OPEN_LOCKSCREEN, true);
                 } else {
@@ -286,51 +323,70 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.d(TAG, "onRequestPermissionsResult: ");
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            //调用系统相机申请拍照权限回调
+            case CAMERA_PERMISSIONS_REQUEST_CODE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (CommonKit.isExitsSdcard()) {
+                        takePhoto();
+                    } else {
+                        CommonKit.showErrorShort(context, "设备没有SD卡！");
+                    }
+                } else {
+                    CommonKit.showErrorShort(context, "请允许打开相机！！");
+                }
+                break;
+            }
+            //调用系统相册申请Sdcard权限回调
+            case STORAGE_PERMISSIONS_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    takePicture();
+                } else {
+                    CommonKit.showOkShort(context, "请允许打开SD卡");
+                }
+                break;
+            default:
+                break;
+        }
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQ_CAMERA) {
-            RLog.e("拍照页返回code= " + requestCode);
-            if (resultCode == Activity.RESULT_OK) {
-                String photoPath = photoUri.toString()
-                        .replaceFirst("file:///", "/").trim();
-                if (new File(photoPath).exists()) {
-                    // 发送广播通知系统
-                    context.sendBroadcast(new Intent(
-                            Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, photoUri));
-
-                    Bundle params = new Bundle();
-                    params.putString(PARAM_IMAGE_PATH, photoPath);
-                    params.putInt(PARAM_BORDER_WIDTH, 300);
-
-                    Intent intent = new Intent();
-                    intent.setClass(context, ImageClipActivity.class);//跳转到裁剪页面
-                    intent.putExtras(params == null ? new Bundle() : params);
-                    startActivityForResult(intent, REQ_IMAGE_CLIP);
-                    context.overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
-
-                    // 进入剪裁界面
-                    // ImageClipActivity.lauch(context, photoPath, 300, REQ_IMAGE_CLIP);
-                }
-            }
-        } else if (requestCode == REQ_SELECT_USER_HEAD) {
-            if (resultCode == Activity.RESULT_OK) {
-                // 裁剪
-                String filePath = data.getStringExtra(ImageGridActivity.OUT_SELECT_IMAGE_PATH);      //剪裁后的文件路径
-//                String wrapperPath = new StringBuffer("file://").append(filePath).toString();
-//                UILKit.loadHeadLocal(wrapperPath, iv_head);
-
-                uploadHead(filePath);
-            }
-        } else if (requestCode == REQ_IMAGE_CLIP) {
-            RLog.e("裁剪页面返回code= " + requestCode);
-            if (resultCode == Activity.RESULT_OK) {
-                // 裁剪
-                String filePath = data.getStringExtra(ImageClipActivity.OUT_IMAGE_PATH);      //剪裁后的文件路径
-//                String wrapperPath = new StringBuffer("file://").append(filePath).toString();
-//                UILKit.loadHeadLocal(wrapperPath, iv_head);
-                uploadHead(filePath);
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
+                case REQ_CAMERA://拍照完成回调
+                    RLog.e("拍照完毕后的照片地址 photoUri = " + photoUri.toString());
+                    String photoPath = photoUri.toString().replaceFirst("file:///", "/").trim();
+                    if (new File(photoPath).exists()) {
+                        // 发送广播通知系统
+                        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, photoUri));
+                        Bundle params = new Bundle();
+                        params.putString(PARAM_IMAGE_PATH, photoPath);
+                        params.putInt(PARAM_BORDER_WIDTH, 480);
+                        // 进入剪裁界面
+                        Intent intent = new Intent(context, ImageClipActivity.class);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        }
+                        intent.putExtras(params);
+                        startActivityForResult(intent, REQ_IMAGE_CLIP);
+                        context.overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+                    }
+                    break;
+                case REQ_SELECT_USER_HEAD:
+                    String filePath = data.getStringExtra(ImageGridActivity.OUT_SELECT_IMAGE_PATH);//剪裁后的文件路径
+                    uploadHead(filePath);
+                    break;
+                case REQ_IMAGE_CLIP:
+                    uploadHead(data.getStringExtra(ImageClipActivity.OUT_IMAGE_PATH));//将剪裁后的文件路径传入
+                    break;
+                default:
+                    break;
             }
         }
     }
@@ -338,13 +394,12 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
     /**
      * 上传头像
      *
-     * @param filePath
+     * @param filePath 裁剪后的路径
      */
     private void uploadHead(String filePath) {
         if (TextUtils.isEmpty(filePath)) return;
         File file = new File(filePath);
         if (!file.exists()) return;
-
         SharedPreTool.getInstance(context).setStringData(EXTRA_USER_HEAD, filePath);
         iv_head.setImageURI(Uri.fromFile(file));
     }

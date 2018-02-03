@@ -124,10 +124,7 @@ public class ImageGridRecyclerAdapter extends RecyclerAdapter<ImageItem, ImageGr
                 }
             }
         });
-
-
     }
-
 
     @Override
     public void setData(List<ImageItem> data) {
