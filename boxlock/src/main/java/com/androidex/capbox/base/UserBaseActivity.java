@@ -1,6 +1,5 @@
 package com.androidex.capbox.base;
 
-import com.androidex.capbox.MainActivity;
 import com.androidex.capbox.R;
 import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
@@ -11,6 +10,7 @@ import com.androidex.capbox.module.LoginModel;
 import com.androidex.capbox.ui.activity.LoginActivity;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
+import com.androidex.capbox.utils.RLog;
 
 import okhttp3.Headers;
 import okhttp3.Request;
@@ -184,11 +184,13 @@ public abstract class UserBaseActivity extends BaseActivity {
                     switch (model.code) {
                         case Constants.API.API_OK:
                             callDataBackAction.action(model.authcode);
+                            RLog.e("获取到验证码authcode=" + model.authcode);
                             break;
                         default:
                             if (model.info != null) {
                                 CommonKit.showErrorShort(context, model.info);
                             }
+                            callDataBackAction.action(null);
                             break;
                     }
                 }
@@ -198,7 +200,7 @@ public abstract class UserBaseActivity extends BaseActivity {
             public void onFailure(int statusCode, Request request, Exception e) {
                 super.onFailure(statusCode, request, e);
                 CommonKit.showErrorShort(context, "网络连接失败");
-                MainActivity.lauch(context);
+                callDataBackAction.action(null);
             }
         });
     }

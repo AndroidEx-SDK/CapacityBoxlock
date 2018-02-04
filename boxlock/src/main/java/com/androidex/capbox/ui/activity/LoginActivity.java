@@ -16,6 +16,7 @@ import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.ui.widget.ThirdTitleBar;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
+import com.androidex.capbox.utils.RLog;
 
 import java.util.regex.Pattern;
 
@@ -43,17 +44,27 @@ public class LoginActivity extends UserBaseActivity {
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        String phone = SharedPreTool.getInstance(context).getStringData(SharedPreTool.PHONE, null);
-        String md5Pwd = SharedPreTool.getInstance(context).getStringData(SharedPreTool.PASSWORD, null);
-        if (phone != null && md5Pwd != null) {
-            automaticLogin(phone, md5Pwd);//自动登录
-            return;
-        }
         initTitleBar();
-        getAuthCode();
+        initView();
+        boolean boolData = SharedPreTool.getInstance(context).getBoolData(SharedPreTool.AUTOMATIC_LOGIN, false);
+        if (boolData) {
+            RLog.e("isaulogin=" + boolData);
+            String phone = SharedPreTool.getInstance(context).getStringData(SharedPreTool.PHONE, null);
+            String md5Pwd = SharedPreTool.getInstance(context).getStringData(SharedPreTool.PASSWORD, null);
+            if (phone != null && md5Pwd != null) {
+                RLog.e("自动登录");
+                automaticLogin(phone, md5Pwd);//自动登录
+            } else {
+                getAuthCode();
+            }
+        }
+    }
+
+    private void initView() {
         cb_automatic_login.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                RLog.e("compounbtn change b = " + b);
                 SharedPreTool.getInstance(context).setBoolData(SharedPreTool.AUTOMATIC_LOGIN, b);
             }
         });
@@ -104,40 +115,38 @@ public class LoginActivity extends UserBaseActivity {
      * @param md5Pwd
      */
     private void automaticLogin(final String phone, final String md5Pwd) {
-        boolean boolData = SharedPreTool.getInstance(context).getBoolData(SharedPreTool.AUTOMATIC_LOGIN, false);
-        if (boolData) {
-            getAuthCode(new CallDataBackAction() {
-                @Override
-                public void action(String authcode) {
-                    if (authcode != null) {
-                        userLogin(phone, md5Pwd, authcode, new CallBackAction() {
-                            @Override
-                            public void action() {
-                                MainActivity.lauch(context);
-                                if (callBackAction != null) {
-                                    callBackAction.action();
-                                    callBackAction = null;
-                                }
-                                return;
+        getAuthCode(new CallDataBackAction() {
+            @Override
+            public void action(String authcode) {
+                if (authcode != null) {
+                    userLogin(phone, md5Pwd, authcode, new CallBackAction() {
+                        @Override
+                        public void action() {
+                            MainActivity.lauch(context);
+                            if (callBackAction != null) {
+                                callBackAction.action();
+                                callBackAction = null;
                             }
-                        });
-                    } else {
-                        CommonKit.showErrorShort(context, "自动登录失败");
-                        LoginActivity.lauch(context);
-                    }
+                        }
+                    });
+                } else {
+                    CommonKit.showErrorShort(context, "自动登录失败");
+                    initView();
                 }
-            });
-        }
+            }
+        });
     }
 
     /**
      * 获取验证码
      */
     private void getAuthCode() {
+        RLog.e("开始获取验证码");
         getAuthCode(new CallDataBackAction() {
             @Override
             public void action(String authcode) {
                 if (authcode != null) {
+                    RLog.e("获取到验证码=" + authcode);
                     tv_authcode.setText(authcode);
                 } else {
                     CommonKit.showErrorShort(context, "获取验证码失败");

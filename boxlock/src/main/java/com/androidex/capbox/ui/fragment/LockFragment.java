@@ -134,9 +134,11 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     private String elevation;
     private GeoCoder mSearch;
     private TitlePopup titlePopup;
+    private boolean isConnect = false;
 
     @Override
     public void initData() {
+        isConnect = false;
         Bundle bundle = getArguments();
         address = bundle.getString(EXTRA_ITEM_ADDRESS);
         uuid = bundle.getString(EXTRA_BOX_UUID);
@@ -144,7 +146,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         if (uuid != null) getLocation(true);
         initView();
         initMap();
-        initBleBroadCast();
     }
 
     /**
@@ -492,6 +493,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     Loge(TAG, "开始睡眠");
                     Thread.sleep(5000);
                     Loge(TAG, "检测是否连接");
+                    if (isConnect) return;
                     if (BleService.get().getConnectDevice(address) == null) {
                         context.runOnUiThread(new Runnable() {
                             @Override
@@ -635,6 +637,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
             switch (intent.getAction()) {
                 case BLE_CONN_SUCCESS:
                 case BLE_CONN_SUCCESS_ALLCONNECTED:
+                    isConnect = true;
                     BleService.get().enableNotify(address);
                     disProgress();
                     updateBleView(View.GONE, View.VISIBLE);
@@ -748,6 +751,8 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         if (address == null) return;
         if (MyBleService.getInstance().getConnectDevice(address) == null) {
             scanLeDevice();
+            isConnect = false;
+            initBleBroadCast();
         } else {
             CommonKit.showMsgShort(context, "设备已连接");
             BleService.get().enableNotify(address);

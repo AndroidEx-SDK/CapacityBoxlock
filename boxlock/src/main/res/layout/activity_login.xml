@@ -113,7 +113,6 @@
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:hint="@string/hint_authcode"
-                    android:inputType="textPassword"
                     android:lines="1"
                     android:paddingLeft="@dimen/marginPadding16"
                     android:textColor="@color/white"
