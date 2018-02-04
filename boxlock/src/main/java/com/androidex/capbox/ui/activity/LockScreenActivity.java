@@ -75,7 +75,7 @@ public class LockScreenActivity extends BaseActivity {
     private List<Fragment> list = new ArrayList();
     private TimeThread timeThread;
     private PagerAdapter pagerAdapter;
-    private boolean isFirstOnEvent = false;
+    private boolean isFirstOnEvent = false;//防止event初始化时导致的自动连接和断开等操作bug
 
     @Override
     public void initData(Bundle savedInstanceState) {

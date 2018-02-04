@@ -145,15 +145,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         initView();
         initMap();
         initBleBroadCast();
-        if (address != null) {
-            if (MyBleService.get().getConnectDevice(address) == null) {
-                scanLeDevice();
-            } else {
-                CommonKit.showMsgShort(context, "设备已连接");
-                BleService.get().enableNotify(address);
-                updateBleView(View.GONE, View.VISIBLE);
-            }
-        }
     }
 
     /**
@@ -752,6 +743,19 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     };
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (address == null) return;
+        if (MyBleService.getInstance().getConnectDevice(address) == null) {
+            scanLeDevice();
+        } else {
+            CommonKit.showMsgShort(context, "设备已连接");
+            BleService.get().enableNotify(address);
+            updateBleView(View.GONE, View.VISIBLE);
+        }
+    }
+
+    @Override
     public void onPause() {
         stopScanLe();
         super.onPause();
@@ -765,11 +769,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
             mSearch.destroy();
         if (dataUpdateRecevice != null)
             context.unregisterReceiver(dataUpdateRecevice);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     @Override
