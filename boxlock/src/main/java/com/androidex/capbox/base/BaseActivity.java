@@ -272,6 +272,7 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
      * 停止显示报警dialog
      */
     protected void closeLostAlarm() {
+        RLog.e("停止震动和响铃");
         SystemUtil.stopVibrate(context);//停止震动
         SystemUtil.stopPlayRaw();//停止铃声zx
         if (mLostAlarmDialog != null && mLostAlarmDialog.isShowing()) {

@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -21,7 +22,6 @@ import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.data.Event;
-import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.module.BoxDeviceModel;
@@ -42,7 +42,6 @@ import butterknife.OnClick;
 import okhttp3.Headers;
 import okhttp3.Request;
 
-import static com.androidex.boxlib.cache.SharedPreTool.IS_BIND_NUM;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_HEART;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_OPEN_SUCCED;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_STARTS;
@@ -76,12 +75,12 @@ public class LockScreenActivity extends BaseActivity {
     private List<Fragment> list = new ArrayList();
     private TimeThread timeThread;
     private PagerAdapter pagerAdapter;
-    private boolean isfisrst = true;
-    private boolean isfisrst_next = true;
+    private boolean isFirstOnEvent = false;
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        RLog.e("锁屏界面启动");
+        RLog.e("lockscreen onCreat");
+        isFirstOnEvent = false;
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED   //这个在锁屏状态下
                 //| WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON                    //这个是点亮屏幕
                 //| WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD                //这个是透过锁屏界面，相当与解锁，但实质没有
@@ -99,7 +98,6 @@ public class LockScreenActivity extends BaseActivity {
         viewPager.setOffscreenPageLimit(1);//设置预加载item个数
         viewPager.setPageTransformer(true, PagerSwitchAnimation.Instance().new MyPageTransformer());
         pagerAdapter = new PagerAdapter(getSupportFragmentManager(), list);
-        RLog.e("--viewpager set adapter" + "" + list.size());
         viewPager.setAdapter(pagerAdapter);
     }
 
@@ -145,6 +143,13 @@ public class LockScreenActivity extends BaseActivity {
 
             }
         });
+        rl_lockscreen.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                return false;
+            }
+        });
     }
 
     /**
@@ -172,8 +177,12 @@ public class LockScreenActivity extends BaseActivity {
      * @param event
      */
     public void onEvent(Event.BleConnected event) {
-        RLog.e("onEvent connect " + event.getAddress());
-        BleService.get().connectionDevice(context, event.getAddress());
+        if (!isFirstOnEvent) {
+            RLog.e("onEvent init connect " + !isFirstOnEvent);
+        } else {
+            RLog.e("onEvent connect " + event.getAddress());
+            BleService.get().connectionDevice(context, event.getAddress());
+        }
     }
 
     /**
@@ -182,12 +191,16 @@ public class LockScreenActivity extends BaseActivity {
      * @param event
      */
     public void onEvent(Event.BleDisConnected event) {
-        RLog.e("onEvent disconnect " + event.getAddress());
-        ServiceBean device = MyBleService.get().getConnectDevice(event.getAddress());
-        if (device != null) {
-            device.setActiveDisConnect(true);
+        if (!isFirstOnEvent) {//初始化的时候会执行
+            RLog.e("onEvent init disconnect " + !isFirstOnEvent);
+        } else {
+            RLog.e("onEvent disconnect " + event.getAddress());
+            ServiceBean device = MyBleService.get().getConnectDevice(event.getAddress());
+            if (device != null) {
+                device.setActiveDisConnect(true);
+            }
+            MyBleService.get().disConnectDevice(event.getAddress());
         }
-        MyBleService.get().disConnectDevice(event.getAddress());
     }
 
     /**
@@ -196,15 +209,16 @@ public class LockScreenActivity extends BaseActivity {
      * @param event
      */
     public void onEvent(Event.NextPage event) {
-        int currentItem = viewPager.getCurrentItem();
-        if (currentItem >= list.size() - 1) {
-            if (!isfisrst_next) {
+        if (!isFirstOnEvent) {//初始化的时候调用这里
+            RLog.e("onEvent nextpage init " + !isFirstOnEvent);
+        } else {
+            int currentItem = viewPager.getCurrentItem();
+            RLog.e("onEvent nextpage currentItem = " + currentItem);
+            if (currentItem >= list.size() - 1) {
                 CommonKit.showOkShort(context, context.getResources().getString(R.string.bledevice_toast11));
             } else {
-                isfisrst_next = false;
+                viewPager.setCurrentItem(currentItem + 1);
             }
-        } else {
-            viewPager.setCurrentItem(currentItem + 1);
         }
     }
 
@@ -214,14 +228,16 @@ public class LockScreenActivity extends BaseActivity {
      * @param event
      */
     public void onEvent(Event.PreviousPage event) {
-        int currentItem = viewPager.getCurrentItem();
-        if (currentItem > 0) {
-            viewPager.setCurrentItem(currentItem - 1);
+        if (!isFirstOnEvent) {
+            RLog.e("onEvent init lastPage " + !isFirstOnEvent);
         } else {
-            if (!isfisrst) {
-                CommonKit.showOkShort(context, context.getResources().getString(R.string.bledevice_toast10));
+            int currentItem = viewPager.getCurrentItem();
+            RLog.e("onEvent lastPage " + currentItem);
+            if (currentItem > 0) {
+                viewPager.setCurrentItem(currentItem - 1);
             } else {
-                isfisrst = false;
+                CommonKit.showOkShort(context, context.getResources().getString(R.string.bledevice_toast10));
+
             }
         }
     }
@@ -232,7 +248,6 @@ public class LockScreenActivity extends BaseActivity {
     public void clickEvent(View view) {
         switch (view.getId()) {
             case R.id.rl_lockscreen:
-                Logd("锁屏界面主页面被点击");
                 break;
         }
     }
@@ -258,7 +273,6 @@ public class LockScreenActivity extends BaseActivity {
                                 if (model.devicelist != null && !model.devicelist.isEmpty()) {
                                     //list = model.devicelist;
                                     for (int i = 0; i < model.devicelist.size(); i++) {
-                                        RLog.e("fragment is has values");
                                         ScreenItemFragment screenItemFragment = new ScreenItemFragment();
                                         Bundle bundle = new Bundle();
                                         bundle.putSerializable("item", model.devicelist.get(i));
@@ -266,10 +280,8 @@ public class LockScreenActivity extends BaseActivity {
                                         list.add(screenItemFragment);
                                     }
                                     pagerAdapter.notifyDataSetChanged();
-                                    RLog.e("adapter set notifyDataSetChanged list.size=" + list.size());
                                 }
                             }
-                            Logd("锁屏 刷新列表");
                             break;
                         case Constants.API.API_FAIL:
                             CommonKit.showErrorShort(context, "账号在其他地方登录");
@@ -444,8 +456,6 @@ public class LockScreenActivity extends BaseActivity {
          */
         @Override
         public int getCount() {
-            RLog.e("get bind count = " + SharedPreTool.getInstance(context).getIntData(IS_BIND_NUM, 0));
-            RLog.e("get list size = " + list.size());
             return list.size();
         }
 
@@ -457,29 +467,24 @@ public class LockScreenActivity extends BaseActivity {
          */
         @Override
         public Fragment getItem(int position) {
-            RLog.e("adapter getItem");
             if (list.size() > 0) {
                 return list.get(position);
             }
-            RLog.e("fragment is null ");
             return null;
         }
 
         @Override
         public int getItemPosition(Object object) {
-            // if (object.getClass().getName().equals(ScreenItemFragment.class.getName())) {
-            RLog.e("切换 fargment=" + object.getClass().getName());
             return POSITION_NONE;
-            //}
-            //RLog.e("父类的 fargment=" + object.getClass().getName());
-            //return super.getItemPosition(object);
         }
 
         @Override
         public void notifyDataSetChanged() {
+            isFirstOnEvent = true;
             RLog.e("notify  is start " + getCount());
             super.notifyDataSetChanged();
         }
+
     }
 
     @Override

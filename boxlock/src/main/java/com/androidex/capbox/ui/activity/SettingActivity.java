@@ -145,7 +145,6 @@ public class SettingActivity extends UserBaseActivity {
      * "appVersion":"3","boxFileName":"20171129.hex",
      * "boxVersion":"0.0.1","code":0,"watchFileName":"20171129.hex",
      * "watchVersion":"0.0.2"}
-
      */
     public void checkVersion() {
         if (!CommonKit.isNetworkAvailable(context)) {

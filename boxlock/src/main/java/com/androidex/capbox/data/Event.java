@@ -46,26 +46,6 @@ public class Event {
     }
 
     /**
-     * 蓝牙连接
-     */
-    public static class BleConnected extends BaseEvent {
-        String address;
-
-        public BleConnected(String address) {
-            this.address = address;
-        }
-
-        public String getAddress() {
-            return address;
-        }
-
-        @Override
-        int getCode() {
-            return Constants.EVENT.TAG_EVENT_BOX_BLE_CONNECTED;
-        }
-    }
-
-    /**
      * 监控设备变更
      */
     public static class UpdateMonitorDevice extends BaseEvent {
@@ -103,6 +83,26 @@ public class Event {
 
         public void setPosition(int position) {
             this.position = position;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        @Override
+        int getCode() {
+            return Constants.EVENT.TAG_EVENT_BOX_BLE_CONNECTED;
+        }
+    }
+
+    /**
+     * 蓝牙连接
+     */
+    public static class BleConnected extends BaseEvent {
+        String address;
+
+        public BleConnected(String address) {
+            this.address = address;
         }
 
         public String getAddress() {
