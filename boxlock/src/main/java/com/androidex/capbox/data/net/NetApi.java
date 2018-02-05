@@ -75,7 +75,6 @@ public class NetApi {
      * 获取审核结果
      *
      * @param username     手机号
-     * @param -默认注册，1-找回密码
      * @param callBack
      */
     public static void getCheckResult(String token, String username, ResultCallBack<ResultModel> callBack) {

@@ -53,6 +53,7 @@ public class SettingActivity extends UserBaseActivity {
             R.id.tv_logoff,
             R.id.ll_about,
             R.id.ll_searchVersion,
+            R.id.ll_changePassword,
     })
     public void clickEvent(View view) {
         String username = SharedPreTool.getInstance(context).getStringData(SharedPreTool.PHONE, null);
@@ -133,6 +134,9 @@ public class SettingActivity extends UserBaseActivity {
 
             case R.id.ll_searchVersion:
                 checkVersion();
+                break;
+            case R.id.ll_changePassword:
+                ModifiActivtiy.lauch(context);
                 break;
             default:
                 break;

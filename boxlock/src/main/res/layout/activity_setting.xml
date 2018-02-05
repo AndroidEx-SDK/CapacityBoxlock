@@ -29,7 +29,8 @@
                 android:layout_height="@dimen/marginPadding50"
                 android:layout_marginTop="10dp"
                 android:gravity="center_vertical"
-                android:paddingLeft="@dimen/marginPadding16">
+                android:paddingLeft="@dimen/marginPadding16"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
