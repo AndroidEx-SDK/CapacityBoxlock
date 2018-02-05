@@ -50,12 +50,6 @@ public class ModifiActivtiy extends RegisterActivity {
                     switch (model.code) {
                         case Constants.API.API_OK:
                             CommonKit.showOkShort(context, getString(R.string.hint_find_pwd_ok));
-                            LoginActivity.lauch(context, new CallBackAction() {
-                                @Override
-                                public void action() {
-
-                                }
-                            });
                             CommonKit.finishActivity(context);
                             break;
 

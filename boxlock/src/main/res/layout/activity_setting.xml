@@ -50,7 +50,8 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/tv_line_height"
-                android:background="@color/line_color" />
+                android:background="@color/line_color"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/ll_changePassword"

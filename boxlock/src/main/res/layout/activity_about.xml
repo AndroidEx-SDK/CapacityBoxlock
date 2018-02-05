@@ -49,7 +49,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/marginPadding16"
         android:layout_marginTop="@dimen/marginPadding16"
-        android:hint="@string/about_tv2"
+        android:text="@string/about_tv2"
+        android:textColor="@color/white"
         android:textSize="@dimen/about_tv2" />
 
     <TextView
