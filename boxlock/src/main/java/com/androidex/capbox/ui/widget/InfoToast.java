@@ -23,6 +23,7 @@ public class InfoToast {
     private static final int TYPE_ERROR = 2;
 
     private static void show(Context context, int type, String msg, int duration) {
+        if (context == null) return;
         Toast toast = new Toast(context);
 
         View contentView = View.inflate(context, R.layout.dlg_info_toast, null);

@@ -135,6 +135,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     private GeoCoder mSearch;
     private TitlePopup titlePopup;
     private boolean isConnect = false;
+    private boolean mReceiverTag = false;   //广播接受者标识
 
     @Override
     public void initData() {
@@ -146,27 +147,31 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         if (uuid != null) getLocation(true);
         initView();
         initMap();
+        initBleBroadCast();
     }
 
     /**
      * 初始化蓝牙广播
      */
     private void initBleBroadCast() {
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BLE_CONN_SUCCESS);
-        intentFilter.addAction(BLE_CONN_SUCCESS_ALLCONNECTED);
-        intentFilter.addAction(BLE_CONN_FAIL);
-        intentFilter.addAction(BLE_CONN_DIS);
-        intentFilter.addAction(ACTION_LOCK_STARTS);//锁状态
-        intentFilter.addAction(ACTION_TEMP_UPDATE);//更新温度
-        intentFilter.addAction(BLE_CONN_RSSI_SUCCED);
-        intentFilter.addAction(BLE_CONN_RSSI_FAIL);
-        intentFilter.addAction(ACTION_HEART);//收到心跳返回
-        intentFilter.addAction(ACTION_END_TAST);//结束携行押运
-        intentFilter.addAction(ACTION_LOCK_OPEN_SUCCED);//开锁成功
-        intentFilter.addAction(BLUTOOTH_OFF);//手机蓝牙关闭
-        intentFilter.addAction(BLUTOOTH_ON);//手机蓝牙关闭
-        context.registerReceiver(dataUpdateRecevice, intentFilter);
+        if (!mReceiverTag) {     //在注册广播接受者的时候 判断是否已被注册,避免重复多次注册广播
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(BLE_CONN_SUCCESS);
+            intentFilter.addAction(BLE_CONN_SUCCESS_ALLCONNECTED);
+            intentFilter.addAction(BLE_CONN_FAIL);
+            intentFilter.addAction(BLE_CONN_DIS);
+            intentFilter.addAction(ACTION_LOCK_STARTS);//锁状态
+            intentFilter.addAction(ACTION_TEMP_UPDATE);//更新温度
+            intentFilter.addAction(BLE_CONN_RSSI_SUCCED);
+            intentFilter.addAction(BLE_CONN_RSSI_FAIL);
+            intentFilter.addAction(ACTION_HEART);//收到心跳返回
+            intentFilter.addAction(ACTION_END_TAST);//结束携行押运
+            intentFilter.addAction(ACTION_LOCK_OPEN_SUCCED);//开锁成功
+            intentFilter.addAction(BLUTOOTH_OFF);//手机蓝牙关闭
+            intentFilter.addAction(BLUTOOTH_ON);//手机蓝牙关闭
+            mReceiverTag = true;    //标识值 赋值为 true 表示广播已被注册
+            context.registerReceiver(dataUpdateRecevice, intentFilter);
+        }
     }
 
     @Override
@@ -610,17 +615,17 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                             tv_address.setText("位置未知");
                         }
                     } else {
-                        Log.e(TAG, "经纬度转换出错 error=" + model.error);
+                        RLog.e("经纬度转换出错 error=" + model.error);
                     }
                 } else {
-                    Log.e(TAG, "经纬度转换出错 model=null");
+                    RLog.e("经纬度转换出错 model=null");
                 }
             }
 
             @Override
             public void onFailure(int statusCode, Request request, Exception e) {
                 super.onFailure(statusCode, request, e);
-                Log.e(TAG, "经纬度转换出错");
+                RLog.e("经纬度转换出错");
                 CommonKit.showErrorShort(getContext(), "网络连接失败");
             }
         });
@@ -752,11 +757,18 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         if (MyBleService.getInstance().getConnectDevice(address) == null) {
             scanLeDevice();
             isConnect = false;
-            initBleBroadCast();
         } else {
             CommonKit.showMsgShort(context, "设备已连接");
             BleService.get().enableNotify(address);
             updateBleView(View.GONE, View.VISIBLE);
+        }
+    }
+
+    //注销广播
+    private void unregisterReceiver() {
+        if (mReceiverTag && dataUpdateRecevice != null) {   //判断广播是否注册
+            mReceiverTag = false;   //Tag值 赋值为false 表示该广播已被注销
+            context.unregisterReceiver(dataUpdateRecevice);   //注销广播
         }
     }
 
@@ -772,9 +784,9 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         getLocation(false);
         if (mSearch != null)
             mSearch.destroy();
-        if (dataUpdateRecevice != null)
-            context.unregisterReceiver(dataUpdateRecevice);
+        unregisterReceiver();
     }
+
 
     @Override
     public int getLayoutId() {
