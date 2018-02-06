@@ -96,11 +96,13 @@
                     android:text="清除缓存"
                     android:textColor="@color/white" />
 
-                <ImageView
-                    android:layout_width="@dimen/marginPadding20"
-                    android:layout_height="@dimen/marginPadding20"
-                    android:layout_marginRight="@dimen/marginPadding16"
-                    android:src="@mipmap/white_right" />
+                <TextView
+                    android:id="@+id/tv_cacheSize"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="12MB"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/size14" />
 
             </LinearLayout>
 

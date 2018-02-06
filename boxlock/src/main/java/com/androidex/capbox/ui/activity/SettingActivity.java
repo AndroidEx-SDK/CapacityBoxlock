@@ -1,6 +1,7 @@
 package com.androidex.capbox.ui.activity;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.UserBaseActivity;
+import com.androidex.capbox.base.imageloader.UILKit;
 import com.androidex.capbox.data.Event;
 import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
@@ -18,29 +20,38 @@ import com.androidex.capbox.module.BaseModel;
 import com.androidex.capbox.module.CheckVersionModel;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
+import com.androidex.capbox.utils.RLog;
+
+import java.io.File;
 
 import butterknife.Bind;
 import butterknife.OnClick;
 import okhttp3.Headers;
 import okhttp3.Request;
 
+/**
+ * @title 设置界面
+ */
 public class SettingActivity extends UserBaseActivity {
     @Bind(R.id.ll_notification)
     LinearLayout ll_notification;
     @Bind(R.id.ll_changePassword)
     LinearLayout ll_changePassword;
     @Bind(R.id.ll_clearCache)
-    LinearLayout ll_about;
-    @Bind(R.id.ll_about)
     LinearLayout ll_clearCache;
+    @Bind(R.id.ll_about)
+    LinearLayout ll_about;
     @Bind(R.id.ll_searchVersion)
     LinearLayout ll_searchVersion;
     @Bind(R.id.tv_versionNum)
     TextView tv_versionNum;
+    @Bind(R.id.tv_cacheSize)
+    TextView tv_cacheSize;
 
     @Override
     public void initData(Bundle savedInstanceState) {
         tv_versionNum.setText(getResources().getString(R.string.about_tv_versionNum) + CommonKit.getVersionName(context));
+        updateCache();
     }
 
     @Override
@@ -52,6 +63,7 @@ public class SettingActivity extends UserBaseActivity {
             R.id.tv_logout,
             R.id.tv_logoff,
             R.id.ll_about,
+            R.id.ll_clearCache,
             R.id.ll_searchVersion,
             R.id.ll_changePassword,
     })
@@ -138,6 +150,9 @@ public class SettingActivity extends UserBaseActivity {
             case R.id.ll_changePassword:
                 ModifiActivtiy.lauch(context);
                 break;
+            case R.id.ll_clearCache:
+                clearCache();
+                break;
             default:
                 break;
         }
@@ -167,24 +182,24 @@ public class SettingActivity extends UserBaseActivity {
                 if (model != null) {
                     switch (model.code) {
                         case Constants.API.API_OK:
-                            Log.d(TAG, model.toString());
+                            RLog.d(model.toString());
                             if (model.appVersion > CommonKit.getAppVersionCode(context)) {
-                                Log.d(TAG, "发现新版本");
+                                RLog.d("发现新版本");
                                 downloadAppApk(model.appFileName);
                             } else {
                                 CommonKit.showOkShort(context, "已经是最新版本");
                             }
                             break;
                         case Constants.API.API_FAIL:
-                            Log.d(TAG, "网络连接失败");
+                            RLog.d("网络连接失败");
                             CommonKit.showErrorShort(context, "网络连接失败");
                             break;
                         default:
                             if (model.info != null) {
-                                Log.d(TAG, model.info);
+                                RLog.d(model.info);
                                 CommonKit.showErrorShort(context, model.info);
                             } else {
-                                Log.d(TAG, "网络连接失败");
+                                RLog.d("网络连接失败");
                                 CommonKit.showErrorShort(context, "网络连接失败");
                             }
                             break;
@@ -195,7 +210,7 @@ public class SettingActivity extends UserBaseActivity {
             @Override
             public void onFailure(int statusCode, Request request, Exception e) {
                 super.onFailure(statusCode, request, e);
-                Log.d(TAG, "网络连接失败");
+                RLog.d( "网络连接失败");
                 CommonKit.showErrorShort(context, "网络连接失败");
             }
         });
@@ -239,6 +254,59 @@ public class SettingActivity extends UserBaseActivity {
                 Log.e(TAG, "下载失败" + e.getMessage());
             }
         });
+    }
+
+    /**
+     * 清除缓存
+     */
+    private void clearCache() {
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                UILKit.getLoader().clearDiskCache();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                super.onPostExecute(result);
+                CommonKit.showOkShort(context, "成功清除缓存");
+                updateCache();
+            }
+
+        }.execute();
+    }
+
+    /**
+     * 更新缓存
+     */
+    private void updateCache() {
+        getSpaceSize(UILKit.getLoader().getDiskCache().getDirectory());
+    }
+
+    private void getSpaceSize(File file) {
+        new AsyncTask<File, Void, Float>() {
+
+            @Override
+            protected Float doInBackground(File... params) {
+                File file = params[0];
+                if (file.exists() && file.isDirectory()) {
+                    return CommonKit.getFolderSize(file.getAbsolutePath()) / 1024.0f;
+                }
+                return 0f;
+            }
+
+            @Override
+            protected void onPostExecute(Float result) {
+                if (result != 0) {
+                    tv_cacheSize.setText(String.format("%.2f", result) + "MB");
+                } else {
+                    tv_cacheSize.setText("无缓存");
+                }
+                super.onPostExecute(result);
+            }
+        }.execute(file);
     }
 
     /**

@@ -143,7 +143,7 @@
     <!-- activity_about -->
     <string name="about_title_tv">关于我们</string>
     <string name="about_null_versionNum">未检测到版本</string>
-    <string name="about_tv_versionNum">版本号:Ver</string>
+    <string name="about_tv_versionNum">版本号:Ver </string>
     <string name="about_tv1">智能箱锁APP</string>
     <string name="about_tv2">版本号:Ver1.0.0</string>
     <string name="about_btn_tv">版本检测</string>
