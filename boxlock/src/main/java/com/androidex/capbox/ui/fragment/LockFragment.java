@@ -414,6 +414,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     boxlocation(uuid);
                 }
             };
+            if (timer_location == null) timer_location = new Timer();
             timer_location.schedule(timer_getlocation, 1000, 1 * 60 * 1000);
         } else {
             if (timer_getlocation != null) {
@@ -491,30 +492,22 @@ public class LockFragment extends BaseFragment implements OnClickListener {
      * 检测是否连接成功，不成功再连接一次
      */
     private void detectionIsConnect() {
-        Runnable runnable = new Runnable() {
+        new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                try {
-                    Loge(TAG, "开始睡眠");
-                    Thread.sleep(5000);
-                    Loge(TAG, "检测是否连接");
-                    if (isConnect) return;
-                    if (BleService.get().getConnectDevice(address) == null) {
-                        context.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                showProgress("正在重连设备");
-                            }
-                        });
-                        BleService.get().connectionDevice(context, address);
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                Loge(TAG, "检测是否连接");
+                if (isConnect) return;
+                if (BleService.get().getConnectDevice(address) == null) {
+                    context.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showProgress("正在重连设备");
+                        }
+                    });
+                    BleService.get().connectionDevice(context, address);
                 }
             }
-        };
-        Loge(TAG, "开启新线程");
-        new Thread(runnable).start();
+        }, 3000);
     }
 
     private void stopScanLe() {

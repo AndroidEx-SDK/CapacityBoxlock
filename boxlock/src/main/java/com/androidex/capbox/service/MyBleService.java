@@ -97,7 +97,7 @@ public class MyBleService extends BleService {
             connectDevice.setHumAlarm(device.isHumAlarm());
             RLog.e("转换后设备参数" + connectDevice.toString());
         } else {
-            RLog.e("device is null");
+            //RLog.e("device ");
         }
     }
 

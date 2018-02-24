@@ -83,35 +83,6 @@
                 android:background="@color/line_color" />
 
             <LinearLayout
-                android:id="@+id/ll_clearCache"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/marginPadding50"
-                android:gravity="center_vertical"
-                android:paddingLeft="@dimen/marginPadding16">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="清除缓存"
-                    android:textColor="@color/white" />
-
-                <TextView
-                    android:id="@+id/tv_cacheSize"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="12MB"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/size14" />
-
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/tv_line_height"
-                android:background="@color/line_color" />
-
-            <LinearLayout
                 android:id="@+id/ll_about"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/marginPadding50"
@@ -168,6 +139,36 @@
                     android:layout_height="@dimen/marginPadding20"
                     android:layout_marginRight="@dimen/marginPadding16"
                     android:src="@mipmap/white_right" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tv_line_height"
+                android:background="@color/line_color" />
+
+            <LinearLayout
+                android:id="@+id/ll_clearCache"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/marginPadding50"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/marginPadding16">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="清除缓存"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/tv_cacheSize"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/marginPadding16"
+                    android:text="12MB"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/size14" />
 
             </LinearLayout>
 

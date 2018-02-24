@@ -11,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -82,9 +81,9 @@ public class LockScreenActivity extends BaseActivity {
         RLog.e("lockscreen onCreat");
         isFirstOnEvent = false;
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED   //这个在锁屏状态下
-                //| WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON                    //这个是点亮屏幕
-                //| WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD                //这个是透过锁屏界面，相当与解锁，但实质没有
-                //| WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON                  //这个是保持屏幕常亮。
+                //| WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON              //这个是点亮屏幕
+                //| WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD            //这个是透过锁屏界面，相当与解锁，但实质没有
+                //| WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON              //这个是保持屏幕常亮。
         );
         registerEventBusSticky();//注册Event
         initData();
@@ -95,7 +94,7 @@ public class LockScreenActivity extends BaseActivity {
 
     private void initViewPager() {
         //给viewPager添加动画
-        viewPager.setOffscreenPageLimit(1);//设置预加载item个数
+        viewPager.setOffscreenPageLimit(5);//设置预加载item个数
         viewPager.setPageTransformer(true, PagerSwitchAnimation.Instance().new MyPageTransformer());
         pagerAdapter = new PagerAdapter(getSupportFragmentManager(), list);
         viewPager.setAdapter(pagerAdapter);
@@ -141,13 +140,6 @@ public class LockScreenActivity extends BaseActivity {
             @Override
             public void onLeft() {
 
-            }
-        });
-        rl_lockscreen.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-
-                return false;
             }
         });
     }
@@ -237,7 +229,6 @@ public class LockScreenActivity extends BaseActivity {
                 viewPager.setCurrentItem(currentItem - 1);
             } else {
                 CommonKit.showOkShort(context, context.getResources().getString(R.string.bledevice_toast10));
-
             }
         }
     }
@@ -332,6 +323,7 @@ public class LockScreenActivity extends BaseActivity {
                     BleService.get().enableNotify(address);
                     disProgress();
                     if (list != null) {
+                        RLog.e("蓝牙连接时更新 list size = " + list.size());
                         pagerAdapter.notifyDataSetChanged();
                     }
                     CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast3));
@@ -339,6 +331,7 @@ public class LockScreenActivity extends BaseActivity {
                 case BLE_CONN_DIS://蓝牙断开
                     CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast4));
                     if (list != null) {
+                        RLog.e("蓝牙断开时更新 list size = " + list.size());
                         pagerAdapter.notifyDataSetChanged();
                     }
                     break;
@@ -431,7 +424,6 @@ public class LockScreenActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         unregisterReceiver(lockScreenReceiver);
         unregisterEventBus();
         mHandler.removeMessages(1);
@@ -439,14 +431,15 @@ public class LockScreenActivity extends BaseActivity {
             timeThread.interrupt();
             timeThread = null;
         }
+        super.onDestroy();
     }
 
     public class PagerAdapter extends FragmentStatePagerAdapter {
-        List<Fragment> list = new ArrayList();
+        List<Fragment> list_adapter = new ArrayList();
 
         public PagerAdapter(FragmentManager fm, List<Fragment> list) {
             super(fm);
-            this.list = list;
+            this.list_adapter = list;
         }
 
         /**
@@ -456,7 +449,7 @@ public class LockScreenActivity extends BaseActivity {
          */
         @Override
         public int getCount() {
-            return list.size();
+            return list_adapter.size();
         }
 
         /**
@@ -467,15 +460,15 @@ public class LockScreenActivity extends BaseActivity {
          */
         @Override
         public Fragment getItem(int position) {
-            if (list.size() > 0) {
-                return list.get(position);
-            }
-            return null;
+            RLog.e("getItem position =" + position);
+            return list_adapter.get(position);
         }
 
         @Override
         public int getItemPosition(Object object) {
+            RLog.e("getItemPosition  执行了");
             return POSITION_NONE;
+            //return POSITION_UNCHANGED;
         }
 
         @Override
@@ -484,13 +477,11 @@ public class LockScreenActivity extends BaseActivity {
             RLog.e("notify  is start " + getCount());
             super.notifyDataSetChanged();
         }
-
     }
 
     @Override
     public int getLayoutId() {
         return R.layout.activity_lock_screen;
     }
-
 
 }
