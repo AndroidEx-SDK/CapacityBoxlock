@@ -1,8 +1,10 @@
 package com.androidex.capbox.ui.fragment;
 
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.androidex.boxlib.service.BleService;
@@ -11,6 +13,7 @@ import com.androidex.capbox.base.BaseFragment;
 import com.androidex.capbox.data.Event;
 import com.androidex.capbox.module.BoxDeviceModel;
 import com.androidex.capbox.utils.CommonKit;
+import com.androidex.capbox.utils.RLog;
 
 import butterknife.Bind;
 import de.greenrobot.event.EventBus;
@@ -26,6 +29,8 @@ public class ScreenItemFragment extends BaseFragment {
     ImageView iv_connect;
     @Bind(R.id.tv_name)
     TextView tv_name;
+    @Bind(R.id.ll_fragmentScreenItem)
+    LinearLayout ll_fragmentScreenItem;
 
     BoxDeviceModel.device item;
 
@@ -38,6 +43,19 @@ public class ScreenItemFragment extends BaseFragment {
     }
 
     private void initView() {
+        ll_fragmentScreenItem.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                RLog.e("fragementScreenItem onTouch");
+                return false;
+            }
+        });
+        ll_fragmentScreenItem.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+            @Override
+            public void onSystemUiVisibilityChange(int i) {
+                RLog.e("fragementScreenItem onUIChange i = " + i);
+            }
+        });
         if (item.boxName.equals("Box")) {
             item.boxName = item.boxName + item.getMac().substring(item.getMac().length() - 2);
         } else if (item.boxName.contains("AndroidExBox")) {
@@ -46,8 +64,10 @@ public class ScreenItemFragment extends BaseFragment {
         tv_name.setText(item.boxName);
         iv_lock.setImageResource(R.mipmap.lock_close);
         if (BleService.get().getConnectDevice(item.getMac()) == null) {
+            RLog.e("蓝牙没连接");
             iv_connect.setImageResource(R.mipmap.starts_connect);
         } else {
+            RLog.e("蓝牙已连接");
             iv_connect.setImageResource(R.mipmap.starts_disconnect);
         }
         iv_connect.setOnClickListener(new View.OnClickListener() {

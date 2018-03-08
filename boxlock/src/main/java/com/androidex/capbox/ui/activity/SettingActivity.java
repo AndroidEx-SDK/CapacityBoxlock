@@ -210,7 +210,7 @@ public class SettingActivity extends UserBaseActivity {
             @Override
             public void onFailure(int statusCode, Request request, Exception e) {
                 super.onFailure(statusCode, request, e);
-                RLog.d( "网络连接失败");
+                RLog.d("网络连接失败");
                 CommonKit.showErrorShort(context, "网络连接失败");
             }
         });
@@ -232,33 +232,36 @@ public class SettingActivity extends UserBaseActivity {
             @Override
             public void onStart() {
                 super.onStart();
-                Log.e(TAG, "开始下载新版本");
+                RLog.d("开始下载新版本");
+                CommonKit.showOkShort(context, "开始下载新版本");
             }
 
             @Override
             public void onSuccess(int statusCode, Headers headers, Object model) {
                 super.onSuccess(statusCode, headers, model);
-                Log.e(TAG, "下载完成");
+                RLog.d("下载完成");
                 CommonKit.installNormal(context, SDCard + "/" + appFireName);
             }
 
             @Override
             public void onProgress(long bytesWritten, long totalSize) {
                 super.onProgress(bytesWritten, totalSize);
-                Log.e(TAG, "bytesWritten=" + bytesWritten + "\ntotalSize=" + totalSize);
+                RLog.d("bytesWritten=" + bytesWritten + "\ntotalSize=" + totalSize);
             }
 
             @Override
             public void onFailure(int statusCode, Request request, Exception e) {
                 super.onFailure(statusCode, request, e);
-                Log.e(TAG, "下载失败" + e.getMessage());
+                RLog.d("下载失败" + e.getMessage());
             }
         });
     }
 
+
     /**
      * 清除缓存
      */
+
     private void clearCache() {
         new AsyncTask<Void, Void, Void>() {
 
@@ -274,7 +277,6 @@ public class SettingActivity extends UserBaseActivity {
                 CommonKit.showOkShort(context, "成功清除缓存");
                 updateCache();
             }
-
         }.execute();
     }
 

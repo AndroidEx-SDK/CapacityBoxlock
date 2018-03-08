@@ -568,6 +568,7 @@ public class BoxListFragment extends BaseFragment {
                 case Constants.BLE.ACTION_UUID:
                     byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
                     if (b.length >= 20) {
+                        RLog.e(Byte2HexUtil.byte2Hex(b).trim());
                         showProgress("开始绑定...");
                         startGetUUID(false, null);
                         byte[] b_uuid = new byte[b.length - 4];
