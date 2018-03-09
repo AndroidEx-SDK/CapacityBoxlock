@@ -168,7 +168,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
             intentFilter.addAction(ACTION_END_TAST);//结束携行押运
             intentFilter.addAction(ACTION_LOCK_OPEN_SUCCED);//开锁成功
             intentFilter.addAction(BLUTOOTH_OFF);//手机蓝牙关闭
-            intentFilter.addAction(BLUTOOTH_ON);//手机蓝牙关闭
+            intentFilter.addAction(BLUTOOTH_ON);//手机蓝牙打开
             mReceiverTag = true;    //标识值 赋值为 true 表示广播已被注册
             context.registerReceiver(dataUpdateRecevice, intentFilter);
         }
