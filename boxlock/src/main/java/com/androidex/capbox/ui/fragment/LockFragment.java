@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.boxlib.service.BleService;
+import com.androidex.boxlib.utils.Byte2HexUtil;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseFragment;
 import com.androidex.capbox.data.cache.SharedPreTool;
@@ -671,7 +672,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     MyBleService.get().getLockStatus(address);
                     break;
                 case ACTION_LOCK_STARTS://锁状态FB 32 00 01 00 00 FE
-                    if (b[2] == (byte) 0x01) {
+                    if (b[4] == (byte) 0x01) {
                         tv_status.setText("已打开");
                     } else {
                         tv_status.setText("已关闭");
@@ -706,6 +707,8 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                             break;
                         case (byte) 0x01://失败
                             CommonKit.showErrorShort(context, "结束失败");
+                            break;
+                        default:
                             break;
                     }
                     break;
