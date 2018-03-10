@@ -19,15 +19,14 @@
 
         <EditText
             android:id="@+id/editTextRecDisp"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
             android:layout_weight="1"
             android:clickable="false"
             android:editable="false"
             android:gravity="top"
             android:longClickable="false"
             android:textSize="14sp" />
-
 
         <LinearLayout
             android:id="@+id/LinearLayoutRecTool"
@@ -49,17 +48,18 @@
                 android:layout_height="wrap_content">
 
                 <RadioButton
-                    android:id="@+id/radioButtonTxt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="Txt" />
-
-                <RadioButton
                     android:id="@+id/radioButtonHex"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:checked="true"
                     android:text="Hex" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Txt" />
+
             </RadioGroup>
 
 
@@ -283,7 +283,6 @@
                 android:gravity="top"
                 android:imeOptions="actionDone"
                 android:singleLine="true" />
-
 
             <LinearLayout
                 android:id="@+id/LinearLayoutTooLCOMA"

@@ -33,6 +33,7 @@ import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.RLog;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import butterknife.Bind;
@@ -78,8 +79,9 @@ public class TestBLEActivity extends BaseActivity {
     int iRecLines = 0;//接收区行数
     private int delayTime = 500;//定时发送的间隔时间
     private String address = null;
-    private boolean isHex;
+    private boolean isHex = true;
     private List<BluetoothDevice> allConnectDevice;
+    boolean isCirculation = false;
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -126,13 +128,22 @@ public class TestBLEActivity extends BaseActivity {
         Runnable sendRunnable = new Runnable() {
             @Override
             public void run() {
-                while (true) {
+                if (getSendData() == null) {
+                    checkBoxAutoCOMA.setChecked(false);
+                    return;
+                }
+                while (MyBleService.getInstance().getConnectDevice(address) != null) {
                     try {
                         Thread.sleep(getDelayTime());
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    sendData();
+                    if (isCirculation) {
+                        sendData();
+                    } else {
+                        return;
+                    }
+                    RLog.e("循环发送");
                 }
             }
         };
@@ -160,7 +171,6 @@ public class TestBLEActivity extends BaseActivity {
     class FocusChangeEvent implements EditText.OnFocusChangeListener {
         public void onFocusChange(View v, boolean hasFocus) {
             if (v == editTextCOMA) {
-                setSendData(editTextCOMA);
             } else if (v == editTextTimeCOMA) {
                 setDelayTime(editTextTimeCOMA);
             }
@@ -171,7 +181,7 @@ public class TestBLEActivity extends BaseActivity {
     class EditorActionEvent implements EditText.OnEditorActionListener {
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
             if (v == editTextCOMA) {
-                setSendData(editTextCOMA);
+
             } else if (v == editTextTimeCOMA) {
                 setDelayTime(editTextTimeCOMA);
             }
@@ -187,7 +197,6 @@ public class TestBLEActivity extends BaseActivity {
             } else if (v == radioButtonHex) {
                 isHex = true;
             }
-            setSendData(editTextCOMA);
         }
     }
 
@@ -195,11 +204,13 @@ public class TestBLEActivity extends BaseActivity {
     class CheckBoxChangeEvent implements CheckBox.OnCheckedChangeListener {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (buttonView == checkBoxAutoCOMA) {
+                RLog.e("isChecked=" + isChecked);
                 if (isChecked) {
-                    buttonView.setChecked(false);
-                    return;
+                    isCirculation = true;
+                    startSend();
+                } else {
+                    isCirculation = false;
                 }
-                startSend();
             }
         }
     }
@@ -220,6 +231,7 @@ public class TestBLEActivity extends BaseActivity {
             CommonKit.showErrorShort(context, "设备未连接");
             return;
         }
+        if (getSendData() == null) return;
         MyBleService.get().sendData(address, Byte2HexUtil.decodeHex(getSendData()));
     }
 
@@ -227,7 +239,13 @@ public class TestBLEActivity extends BaseActivity {
     private char[] getSendData() {
         String str = editTextCOMA.getText().toString().trim();
         if (TextUtils.isEmpty(str)) {
-            CommonKit.showErrorShort(context, "请输入正确的指令");
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    CommonKit.showErrorShort(context, "请输入正确的指令");
+                }
+            });
+            return null;
         }
         return str.toCharArray();
     }
@@ -243,16 +261,23 @@ public class TestBLEActivity extends BaseActivity {
         return delayTime;
     }
 
-    //设置自动发送数据
-    private void setSendData(TextView v) {
-        if (v == editTextCOMA) {
-
+    private void updateText(byte[] b) {
+        if (isHex) {
+            editTextRecDisp.append(String.format("%s\r\n", Byte2HexUtil.byte2Hex(b)));
+        } else {
+            try {
+                editTextRecDisp.append(String.format("%s\r\n", new String(b, "UTF-8")));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
-    }
-
-    private void updateText(String msg) {
-        editTextRecDisp.append(String.format("%s\r\n", msg));
-        //Log.i("TS",msg);
+        iRecLines++;
+        editTextLines.setText(String.valueOf(iRecLines));
+        if ((iRecLines > 200) && (checkBoxAutoClear.isChecked())) {//达到200项自动清除
+            editTextRecDisp.setText("");
+            editTextLines.setText("0");
+            iRecLines = 0;
+        }
     }
 
 
@@ -273,6 +298,7 @@ public class TestBLEActivity extends BaseActivity {
                     break;
 
                 case BLE_CONN_DIS://断开连接
+                    checkBoxAutoCOMA.setChecked(false);
                     RLog.d("断开连接");
                     CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast4));
                     break;
@@ -290,13 +316,19 @@ public class TestBLEActivity extends BaseActivity {
                     break;
                 case ACTION_ALL_DATA:
                     RLog.d("读取到的数据=" + Byte2HexUtil.byte2Hex(b));
-                    updateText(Byte2HexUtil.byte2Hex(b));
+                    updateText(b);
                     break;
                 default:
                     break;
             }
         }
     };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isCirculation = false;
+    }
 
     public static void lauch(Activity activity) {
         CommonKit.startActivity(activity, TestBLEActivity.class, null, false);

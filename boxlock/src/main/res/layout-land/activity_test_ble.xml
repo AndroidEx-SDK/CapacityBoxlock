@@ -49,18 +49,17 @@
 
 
                 <RadioButton
-                    android:id="@+id/radioButtonTxt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="Txt" />
-
-
-                <RadioButton
                     android:id="@+id/radioButtonHex"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:checked="true"
                     android:text="Hex" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Txt" />
             </RadioGroup>
 
 
