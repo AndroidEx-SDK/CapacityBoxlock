@@ -18,6 +18,7 @@ import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.module.BaseModel;
 import com.androidex.capbox.module.CheckVersionModel;
+import com.androidex.capbox.ui.widget.SecondTitleBar;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
 import com.androidex.capbox.utils.RLog;
@@ -33,6 +34,8 @@ import okhttp3.Request;
  * @title 设置界面
  */
 public class SettingActivity extends UserBaseActivity {
+    @Bind(R.id.title)
+    SecondTitleBar title;
     @Bind(R.id.ll_notification)
     LinearLayout ll_notification;
     @Bind(R.id.ll_changePassword)
@@ -56,7 +59,12 @@ public class SettingActivity extends UserBaseActivity {
 
     @Override
     public void setListener() {
-
+        title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TestBLEActivity.lauch(context);
+            }
+        });
     }
 
     @OnClick({

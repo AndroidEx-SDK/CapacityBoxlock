@@ -91,9 +91,9 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
             setContentView(getLayoutId());
             ButterKnife.bind(this);
         }
+        initData(savedInstanceState);
         setListener();
         initBleBroadCast();
-        initData(savedInstanceState);
     }
 
     /**

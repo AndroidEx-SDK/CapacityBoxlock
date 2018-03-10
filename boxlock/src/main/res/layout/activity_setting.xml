@@ -9,8 +9,10 @@
     android:orientation="vertical">
 
     <com.androidex.capbox.ui.widget.SecondTitleBar
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:rightText="调试"
         app:titleText="@string/setting" />
 
     <ScrollView

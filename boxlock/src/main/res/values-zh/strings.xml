@@ -57,6 +57,7 @@
     <string name="updated_just_now">刚刚更新</string>
     <string name="time_error">时间有问题</string>
     <string name="setting">设置</string>
+    <string name="testble">蓝牙调试</string>
 
     <!-- fragment_history -->
     <string name="history_title_tv">历史记录</string>
