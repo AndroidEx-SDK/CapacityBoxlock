@@ -13,7 +13,6 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.androidex.boxlib.modules.ServiceBean;
-import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.data.cache.SharedPreTool;
@@ -123,15 +122,15 @@ public class BoxDetailActivity extends BaseActivity {
         initTitleBar();
         initCheckedButton();//初始化静默开关的View;
         if (mac != null) {
-            if (MyBleService.get().getConnectDevice(mac) == null) {
+            if (MyBleService.getInstance().getConnectDevice(mac) == null) {
                 if (mac != null) {
-                    BleService.get().connectionDevice(context, mac);
+                    MyBleService.getInstance().connectionDevice(context, mac);
                 } else {
                     Log.d(TAG, "mac is null");
                 }
             } else {
                 Log.d(TAG, "已经连接");
-                BleService.get().enableNotify(mac);
+                MyBleService.getInstance().enableNotify(mac);
                 tv_connect_starts.setText("已连接");
                 CommonKit.showOkShort(mContext, "设备已连接");
             }
@@ -369,7 +368,7 @@ public class BoxDetailActivity extends BaseActivity {
             case R.id.oneKeyConfig://一键配置
                 if (isCarry()) return;//判断是否处于不可配置状态
                 if (isConnectBle()) return;//判断是否连接蓝牙
-                MyBleService.get().startBoxConfig(mac);
+                MyBleService.getInstance().startBoxConfig(mac);
                 break;
             case R.id.setting_carryPersonNum://携行设备
                 if (isCarry()) return;//判断是否处于不可配置状态
@@ -441,7 +440,7 @@ public class BoxDetailActivity extends BaseActivity {
             case R.id.setting_factory_settings://恢复出厂
                 if (isCarry()) return;//判断是否处于不可配置状态
                 if (isConnectBle()) return;//判断是否连接蓝牙
-                MyBleService.get().recover(mac);
+                MyBleService.getInstance().recover(mac);
                 break;
             case R.id.ll_settingAlarm://报警设置
                 if (isCarry()) return;//判断是否处于不可配置状态
@@ -457,7 +456,7 @@ public class BoxDetailActivity extends BaseActivity {
                 SettingLockActivity.lauch(context, Constants.CODE.REQUESTCODE_SET_LOCK);
                 break;
             case R.id.tv_connect_starts:
-                BleService.get().connectionDevice(context, mac);
+                MyBleService.getInstance().connectionDevice(context, mac);
                 break;
             case R.id.tv_startCarryScort://启动/结束携行押运
                 if (becomeFinger1.trim().isEmpty() || becomeFinger1.equals("null") || possessorFinger1.trim().isEmpty() || possessorFinger1.equals("null")) {
@@ -465,9 +464,9 @@ public class BoxDetailActivity extends BaseActivity {
                     return;
                 }
                 if (status == 2) {//携行状态，结束携行
-                    MyBleService.get().endTask(mac);
+                    MyBleService.getInstance().endTask(mac);
                 } else {
-                    MyBleService.get().startEscort(mac);
+                    MyBleService.getInstance().startEscort(mac);
                 }
                 break;
             default:
@@ -544,9 +543,9 @@ public class BoxDetailActivity extends BaseActivity {
      * @return
      */
     private boolean isConnectBle() {
-        if (MyBleService.get().getConnectDevice(mac) == null) {
+        if (MyBleService.getInstance().getConnectDevice(mac) == null) {
             CommonKit.showErrorShort(context, getResources().getString(R.string.setting_tv_ble_disconnect));
-            BleService.get().connectionDevice(context, mac);
+            MyBleService.getInstance().connectionDevice(context, mac);
             return true;
         }
         return false;
@@ -696,7 +695,7 @@ public class BoxDetailActivity extends BaseActivity {
             switch (resultCode) {
                 case Activity.RESULT_OK:
                     if (mac != null) {
-                        BleService.get().connectionDevice(context, mac);
+                        MyBleService.getInstance().connectionDevice(context, mac);
                     }
                     break;
                 default:
@@ -735,7 +734,7 @@ public class BoxDetailActivity extends BaseActivity {
                 case BLE_CONN_SUCCESS:
                 case BLE_CONN_SUCCESS_ALLCONNECTED:
                     Log.d(TAG, "连接成功=");
-                    BleService.get().enableNotify(mac);
+                    MyBleService.getInstance().enableNotify(mac);
                     tv_connect_starts.setText("已连接");
                     CommonKit.showOkShort(mContext, "连接成功");
                     break;

@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseFragment;
 import com.androidex.capbox.data.net.NetApi;
@@ -115,7 +114,7 @@ public class WatchListFragment extends BaseFragment {
         showProgress("搜索设备中。。。。");
         BLEScanCfg scanCfg = new BLEScanCfg.ScanCfgBuilder(SCAN_PERIOD)
                 .builder();
-        MyBleService.get().startScanner(scanCfg, new BLEScanListener() {
+        MyBleService.getInstance().startScanner(scanCfg, new BLEScanListener() {
             @Override
             public void onScannerStart() {
 
@@ -127,7 +126,7 @@ public class WatchListFragment extends BaseFragment {
                     showProgress("搜索到设备。。。");
                     //showProgress("正在连接设备：" + device.getName());
                     stopScanLe();
-                    BleService.get().connectionDevice(context, deviceMac);
+                    MyBleService.getInstance().connectionDevice(context, deviceMac);
                 }
             }
 
@@ -151,7 +150,7 @@ public class WatchListFragment extends BaseFragment {
 
     private void stopScanLe() {
         disProgress();
-        MyBleService.get().stopScan();
+        MyBleService.getInstance().stopScan();
     }
 
     private void initBleReceiver() {

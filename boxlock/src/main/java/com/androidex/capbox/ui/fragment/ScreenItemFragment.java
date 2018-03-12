@@ -7,11 +7,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseFragment;
 import com.androidex.capbox.data.Event;
 import com.androidex.capbox.module.BoxDeviceModel;
+import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.RLog;
 
@@ -63,7 +63,7 @@ public class ScreenItemFragment extends BaseFragment {
         }
         tv_name.setText(item.boxName);
         iv_lock.setImageResource(R.mipmap.lock_close);
-        if (BleService.get().getConnectDevice(item.getMac()) == null) {
+        if (MyBleService.getInstance().getConnectDevice(item.getMac()) == null) {
             RLog.e("蓝牙没连接");
             iv_connect.setImageResource(R.mipmap.starts_connect);
         } else {
@@ -73,7 +73,7 @@ public class ScreenItemFragment extends BaseFragment {
         iv_connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (BleService.get().getConnectDevice(item.getMac()) == null) {
+                if (MyBleService.getInstance().getConnectDevice(item.getMac()) == null) {
                     CommonKit.showOkShort(context, context.getResources().getString(R.string.bledevice_toast12));
                     EventBus.getDefault().postSticky(new Event.BleConnected(item.getMac()));
                 } else {
@@ -84,10 +84,10 @@ public class ScreenItemFragment extends BaseFragment {
         iv_lock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (BleService.get().getConnectDevice(item.getMac()) == null) {
+                if (MyBleService.getInstance().getConnectDevice(item.getMac()) == null) {
                     CommonKit.showErrorShort(context, context.getResources().getString(R.string.bledevice_toast7));
                 } else {
-                    BleService.get().openLock(item.getMac());
+                    MyBleService.getInstance().openLock(item.getMac());
                 }
             }
         });

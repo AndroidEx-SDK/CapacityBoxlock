@@ -15,7 +15,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.androidex.boxlib.modules.ServiceBean;
-import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.data.cache.SharedPreTool;
@@ -136,15 +135,15 @@ public class LockActivity extends BaseActivity implements OnClickListener {
         initMap();
         initBleBroadCast();
         if (uuid != null) getLocation(true);
-        if (MyBleService.get().getConnectDevice(address) == null) {
+        if (MyBleService.getInstance().getConnectDevice(address) == null) {
             scanLeDevice();
         } else {
-            if (MyBleService.get().getConnectDevice(address).isActiveDisConnect()) {
+            if (MyBleService.getInstance().getConnectDevice(address).isActiveDisConnect()) {
                 scanLeDevice();
             } else {
                 Log.e(TAG, "已连接 address=" + address);
                 CommonKit.showMsgShort(context, "设备已连接");
-                BleService.get().enableNotify(address);
+                MyBleService.getInstance().enableNotify(address);
                 updateBleView(View.GONE, View.VISIBLE);
             }
         }
@@ -214,11 +213,11 @@ public class LockActivity extends BaseActivity implements OnClickListener {
                 CommonKit.finishActivity(context);
                 break;
             case R.id.main_bt_ble_close://连接状态，点击关闭
-                ServiceBean device = MyBleService.get().getConnectDevice(address);
+                ServiceBean device = MyBleService.getInstance().getConnectDevice(address);
                 if (device != null) {
                     device.setActiveDisConnect(true);
                 }
-                BleService.get().disConnectDevice(address);
+                MyBleService.getInstance().disConnectDevice(address);
                 updateBleView(View.VISIBLE, View.GONE);
                 break;
 
@@ -267,8 +266,8 @@ public class LockActivity extends BaseActivity implements OnClickListener {
      * 开锁
      */
     private void openLock() {
-        if (MyBleService.get().getConnectDevice(address) != null) {
-            MyBleService.get().openLock(address);
+        if (MyBleService.getInstance().getConnectDevice(address) != null) {
+            MyBleService.getInstance().openLock(address);
         } else {
             CommonKit.showErrorShort(context, getResources().getString(R.string.setting_tv_ble_disconnect));
         }
@@ -281,7 +280,7 @@ public class LockActivity extends BaseActivity implements OnClickListener {
         showProgress("搜索设备中。。。。");
         BLEScanCfg scanCfg = new BLEScanCfg.ScanCfgBuilder(Constants.BLE.SCAN_PERIOD)
                 .builder();
-        MyBleService.get().startScanner(scanCfg, new BLEScanListener() {
+        MyBleService.getInstance().startScanner(scanCfg, new BLEScanListener() {
             boolean isScanDevice;//是否扫描到设备
 
             @Override
@@ -295,7 +294,7 @@ public class LockActivity extends BaseActivity implements OnClickListener {
                     isScanDevice = true;
                     CommonKit.showOkShort(context, "搜索到设备。。。");
                     stopScanLe();
-                    BleService.get().connectionDevice(context, address);
+                    MyBleService.getInstance().connectionDevice(context, address);
                 }
             }
 
@@ -322,7 +321,7 @@ public class LockActivity extends BaseActivity implements OnClickListener {
 
     private void stopScanLe() {
         disProgress();
-        MyBleService.get().stopScan();
+        MyBleService.getInstance().stopScan();
     }
 
     /**
@@ -449,7 +448,7 @@ public class LockActivity extends BaseActivity implements OnClickListener {
                     Log.e("LockFragment", "连接成功");
                     CommonKit.showMsgShort(context, "设备连接成功");
                     disProgress();
-                    BleService.get().enableNotify(address);
+                    MyBleService.getInstance().enableNotify(address);
                     updateBleView(View.GONE, View.VISIBLE);
                     break;
 
@@ -461,11 +460,11 @@ public class LockActivity extends BaseActivity implements OnClickListener {
                 case BLUTOOTH_OFF:
                     Log.e(TAG, "手机蓝牙断开");
                     CommonKit.showErrorShort(context, "手机蓝牙断开");
-                    ServiceBean device = MyBleService.get().getConnectDevice(address);
+                    ServiceBean device = MyBleService.getInstance().getConnectDevice(address);
                     if (device != null) {
                         device.setActiveDisConnect(true);
                     }
-                    MyBleService.get().disConnectDevice(address);
+                    MyBleService.getInstance().disConnectDevice(address);
                     updateBleView(View.VISIBLE, View.GONE);
                     break;
                 case BLUTOOTH_ON:
@@ -476,7 +475,7 @@ public class LockActivity extends BaseActivity implements OnClickListener {
 
                 case ACTION_LOCK_OPEN_SUCCED:
                     CommonKit.showOkShort(context, "开锁成功");
-                    MyBleService.get().getLockStatus(address);
+                    MyBleService.getInstance().getLockStatus(address);
                     break;
 
                 case ACTION_LOCK_STARTS://锁状态FB 32 00 01 00 00 FE

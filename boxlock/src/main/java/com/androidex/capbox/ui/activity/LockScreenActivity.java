@@ -17,7 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.androidex.boxlib.modules.ServiceBean;
-import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.data.Event;
@@ -173,7 +172,7 @@ public class LockScreenActivity extends BaseActivity {
             RLog.e("onEvent init connect " + !isFirstOnEvent);
         } else {
             RLog.e("onEvent connect " + event.getAddress());
-            BleService.get().connectionDevice(context, event.getAddress());
+            MyBleService.getInstance().connectionDevice(context, event.getAddress());
         }
     }
 
@@ -187,11 +186,11 @@ public class LockScreenActivity extends BaseActivity {
             RLog.e("onEvent init disconnect " + !isFirstOnEvent);
         } else {
             RLog.e("onEvent disconnect " + event.getAddress());
-            ServiceBean device = MyBleService.get().getConnectDevice(event.getAddress());
+            ServiceBean device = MyBleService.getInstance().getConnectDevice(event.getAddress());
             if (device != null) {
                 device.setActiveDisConnect(true);
             }
-            MyBleService.get().disConnectDevice(event.getAddress());
+            MyBleService.getInstance().disConnectDevice(event.getAddress());
         }
     }
 
@@ -320,7 +319,7 @@ public class LockScreenActivity extends BaseActivity {
             switch (intent.getAction()) {
                 case BLE_CONN_SUCCESS://重复连接
                 case BLE_CONN_SUCCESS_ALLCONNECTED://重复连接
-                    BleService.get().enableNotify(address);
+                    MyBleService.getInstance().enableNotify(address);
                     disProgress();
                     if (list != null) {
                         RLog.e("蓝牙连接时更新 list size = " + list.size());
@@ -342,7 +341,7 @@ public class LockScreenActivity extends BaseActivity {
                 case BLUTOOTH_OFF:
                     Logd("手机蓝牙断开");
                     CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast9));
-                    MyBleService.get().disConnectDeviceALL();
+                    MyBleService.getInstance().disConnectDeviceALL();
                     if (list != null) {
                         pagerAdapter.notifyDataSetChanged();
                     }
@@ -353,7 +352,7 @@ public class LockScreenActivity extends BaseActivity {
                     break;
                 case ACTION_LOCK_OPEN_SUCCED:
                     CommonKit.showOkShort(context, "开锁成功");
-                    MyBleService.get().getLockStatus(address);
+                    MyBleService.getInstance().getLockStatus(address);
                     break;
                 case ACTION_LOCK_STARTS://锁状态FB 32 00 01 00 00 FE
                     if (b[2] == (byte) 0x01) {

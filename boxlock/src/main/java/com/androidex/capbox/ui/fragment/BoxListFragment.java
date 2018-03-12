@@ -19,7 +19,6 @@ import android.widget.ListView;
 
 import com.acker.simplezxing.activity.CaptureActivity;
 import com.androidex.boxlib.modules.ServiceBean;
-import com.androidex.boxlib.service.BleService;
 import com.androidex.boxlib.utils.Byte2HexUtil;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseFragment;
@@ -167,7 +166,7 @@ public class BoxListFragment extends BaseFragment {
             public void listViewItemClick(int position, View v) {
                 switch (v.getId()) {
                     case R.id.rl_normal:
-                        if (MyBleService.get().getConnectDevice(mylist.get(position).get(EXTRA_ITEM_ADDRESS)) != null) {
+                        if (MyBleService.getInstance().getConnectDevice(mylist.get(position).get(EXTRA_ITEM_ADDRESS)) != null) {
                             Bundle bundle = new Bundle();
                             bundle.putString(EXTRA_BOX_NAME, mylist.get(position).get(EXTRA_BOX_NAME));
                             bundle.putString(EXTRA_BOX_UUID, mylist.get(position).get(EXTRA_BOX_UUID));
@@ -193,15 +192,15 @@ public class BoxListFragment extends BaseFragment {
                 switch (v.getId()) {
                     case R.id.tv_connect:
                         scanAddress = mDeviceListAdapter.getDevice(position).getAddress();
-                        ServiceBean device = MyBleService.get().getConnectDevice(mDeviceListAdapter.getDevice(position).getAddress());
+                        ServiceBean device = MyBleService.getInstance().getConnectDevice(mDeviceListAdapter.getDevice(position).getAddress());
                         if (device != null) {
                             mDeviceListAdapter.setTextHint(-1, "");//刷新列表的提醒显示
                             device.setActiveDisConnect(true);
-                            MyBleService.get().disConnectDevice(scanAddress);
+                            MyBleService.getInstance().disConnectDevice(scanAddress);
                         } else {
                             stopScanLe();
                             showProgress(getResources().getString(R.string.device_connect));
-                            MyBleService.get().connectionDevice(context, scanAddress);
+                            MyBleService.getInstance().connectionDevice(context, scanAddress);
                         }
                         break;
                     default:
@@ -219,7 +218,7 @@ public class BoxListFragment extends BaseFragment {
                 scanAddress = mDeviceListAdapter.getDevice(position).getAddress();
                 stopScanLe();
                 showProgress(getResources().getString(R.string.device_connect));
-                BleService.get().connectionDevice(context, mDeviceListAdapter.getDevice(position).getAddress());
+                MyBleService.getInstance().connectionDevice(context, mDeviceListAdapter.getDevice(position).getAddress());
             }
         });
     }
@@ -261,7 +260,7 @@ public class BoxListFragment extends BaseFragment {
     private void scanLeDevice(final String address, final String deviceUUID) {
         showProgress("搜索设备...");
         BLEScanCfg scanCfg = new BLEScanCfg.ScanCfgBuilder(SCAN_PERIOD).builder();
-        MyBleService.get().startScanner(scanCfg, new BLEScanListener() {
+        MyBleService.getInstance().startScanner(scanCfg, new BLEScanListener() {
             boolean isScanDevice;//是否扫描到设备
 
             @Override
@@ -309,7 +308,7 @@ public class BoxListFragment extends BaseFragment {
 
     private void stopScanLe() {
         disProgress();
-        MyBleService.get().stopScan();
+        MyBleService.getInstance().stopScan();
     }
 
     /**
@@ -326,7 +325,7 @@ public class BoxListFragment extends BaseFragment {
                     @Override
                     public void run() {
                         if (address != null) {
-                            MyBleService.get().getUUID(address);
+                            MyBleService.getInstance().getUUID(address);
                         }
                     }
                 };
@@ -552,7 +551,7 @@ public class BoxListFragment extends BaseFragment {
             switch (intent.getAction()) {
                 case BLE_CONN_SUCCESS://连接成功
                 case BLE_CONN_SUCCESS_ALLCONNECTED://重复连接
-                    BleService.get().enableNotify(address);
+                    MyBleService.getInstance().enableNotify(address);
                     disProgress();
                     showProgress("连接成功...");
                     RLog.e("开始获取UUID");
@@ -567,8 +566,8 @@ public class BoxListFragment extends BaseFragment {
 
                 case Constants.BLE.ACTION_UUID:
                     byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
+                    RLog.e(Byte2HexUtil.byte2Hex(b).trim());
                     if (b.length >= 20) {
-                        RLog.e(Byte2HexUtil.byte2Hex(b).trim());
                         showProgress("开始绑定...");
                         startGetUUID(false, null);
                         byte[] b_uuid = new byte[b.length - 4];
@@ -580,8 +579,8 @@ public class BoxListFragment extends BaseFragment {
                             bindBox(uuid.trim());
                         }
                     }
-                    MyBleService.get().getConnectDevice(address).setActiveDisConnect(true);
-                    MyBleService.get().disConnectDevice(address);
+                    MyBleService.getInstance().getConnectDevice(address).setActiveDisConnect(true);
+                    MyBleService.getInstance().disConnectDevice(address);
                     mDeviceListAdapter.setTextHint(-1, "");
                     if (!mScanning) {
                         scanLeDeviceList(true);

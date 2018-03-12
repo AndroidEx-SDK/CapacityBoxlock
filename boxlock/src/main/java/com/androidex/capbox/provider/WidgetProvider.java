@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.widget.RemoteViews;
 
 import com.androidex.boxlib.modules.ServiceBean;
-import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.MainActivity;
 import com.androidex.capbox.R;
 import com.androidex.capbox.data.Event;
@@ -113,24 +112,24 @@ public class WidgetProvider extends AppWidgetProvider {
                 switch (click_sign) {
                     case CLICK_BLE_CONNECTED:
                         if (address == null) return;
-                        ServiceBean device = BleService.get().getConnectDevice(address);
+                        ServiceBean device = MyBleService.getInstance().getConnectDevice(address);
                         if (device == null) {
                             RLog.e("开始连接");
-                            BleService.get().connectionDevice(context, address);
+                            MyBleService.getInstance().connectionDevice(context, address);
                         } else {
                             RLog.e("断开连接");
                             device.setActiveDisConnect(true);
-                            MyBleService.get().disConnectDevice(address);
+                            MyBleService.getInstance().disConnectDevice(address);
                         }
                         appWidgetManager.notifyAppWidgetViewDataChanged(appIds, R.id.myListView);
                         break;
 
                     case CLICK_LOCK_OPEN:
                         if (address == null) return;
-                        if (BleService.get().getConnectDevice(address) == null) {
+                        if (MyBleService.getInstance().getConnectDevice(address) == null) {
                             CommonKit.showErrorShort(context, context.getResources().getString(R.string.bledevice_toast7));
                         } else {
-                            BleService.get().openLock(address);
+                            MyBleService.getInstance().openLock(address);
                         }
                         appWidgetManager.notifyAppWidgetViewDataChanged(appIds, R.id.myListView);
                         break;
@@ -159,7 +158,7 @@ public class WidgetProvider extends AppWidgetProvider {
                 break;
             case BLE_CONN_SUCCESS://重复连接
             case BLE_CONN_SUCCESS_ALLCONNECTED://重复连接
-                BleService.get().enableNotify(intent.getStringExtra(EXTRA_ITEM_ADDRESS));
+                MyBleService.getInstance().enableNotify(intent.getStringExtra(EXTRA_ITEM_ADDRESS));
                 CommonKit.showOkShort(context, context.getResources().getString(R.string.bledevice_toast3));
                 appWidgetManager.notifyAppWidgetViewDataChanged(appIds, R.id.myListView);
                 break;
@@ -173,7 +172,7 @@ public class WidgetProvider extends AppWidgetProvider {
                 break;
             case BLUTOOTH_OFF:
                 CommonKit.showOkShort(context, context.getResources().getString(R.string.bledevice_toast9));
-                MyBleService.get().disConnectDeviceALL();
+                MyBleService.getInstance().disConnectDeviceALL();
                 appWidgetManager.notifyAppWidgetViewDataChanged(appIds, R.id.myListView);
                 break;
             case BLUTOOTH_ON:
@@ -182,7 +181,7 @@ public class WidgetProvider extends AppWidgetProvider {
             case ACTION_LOCK_OPEN_SUCCED:
                 String address2 = intent.getStringExtra(EXTRA_ITEM_ADDRESS);
                 CommonKit.showOkShort(context, "开锁成功");
-                MyBleService.get().getLockStatus(address2);
+                MyBleService.getInstance().getLockStatus(address2);
                 break;
             case ACTION_LOCK_STARTS://锁状态FB 32 00 01 00 00 FE
                 byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);

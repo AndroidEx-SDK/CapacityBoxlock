@@ -29,7 +29,7 @@ import static com.baidu.mapapi.BMapManager.getContext;
 
 public class MyBleService extends BleService {
     public static final String TAG = "MyBleService";
-    private static BleService service;
+    private static MyBleService service;
 
     @Override
     public void onCreate() {
@@ -43,7 +43,7 @@ public class MyBleService extends BleService {
      */
     public static BleService getInstance() {
         try {
-            service = get();
+            service = (MyBleService) get();
         } catch (NullPointerException e) {
             Log.e(TAG, e.toString());
             service = new MyBleService();
@@ -84,7 +84,7 @@ public class MyBleService extends BleService {
      */
     @Override
     protected void initDevice(String address) {
-        ServiceBean connectDevice = MyBleService.get().getConnectDevice(address);
+        ServiceBean connectDevice = MyBleService.getInstance().getConnectDevice(address);
         if (connectDevice == null) return;
         ServiceBean device = SharedPreTool.getInstance(this).getObj(ServiceBean.class, address);
         if (device != null) {
@@ -113,7 +113,7 @@ public class MyBleService extends BleService {
             if (device != null && device.isPolice()) {//断开连接广播
                 sendBroadDis(address, isActive);
             } else {
-                ServiceBean connectDevice = MyBleService.get().getConnectDevice(address);
+                ServiceBean connectDevice = MyBleService.getInstance().getConnectDevice(address);
                 if (connectDevice != null && connectDevice.isPolice()) {//断开连接广播
                     sendBroadDis(address, isActive);
                 } else {
@@ -194,7 +194,7 @@ public class MyBleService extends BleService {
             if (device != null && device.isDistanceAlarm()) {//信号弱，报警
                 sendRSSIOut(address);
             } else {
-                ServiceBean connectDevice = MyBleService.get().getConnectDevice(address);
+                ServiceBean connectDevice = MyBleService.getInstance().getConnectDevice(address);
                 if (connectDevice != null && connectDevice.isDistanceAlarm()) {//信号弱，报警
                     sendRSSIOut(address);
                 } else {
@@ -250,7 +250,7 @@ public class MyBleService extends BleService {
                 RLog.e("发送广播，温度超范围报警");
                 sendTempOutBroadcast(address);
             } else {
-                ServiceBean connectDevice = MyBleService.get().getConnectDevice(address);
+                ServiceBean connectDevice = MyBleService.getInstance().getConnectDevice(address);
                 if (connectDevice != null && connectDevice.isTempAlarm()) {//非主动断开时，报警
                     RLog.e("发送广播，温度超范围报警");
                     sendTempOutBroadcast(address);

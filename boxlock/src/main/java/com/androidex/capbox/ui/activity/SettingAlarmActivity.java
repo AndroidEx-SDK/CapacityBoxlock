@@ -9,7 +9,6 @@ import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
 import com.androidex.boxlib.modules.ServiceBean;
-import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.data.cache.SharedPreTool;
@@ -74,7 +73,7 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
         mac = getIntent().getStringExtra(EXTRA_ITEM_ADDRESS);
         uuid = getIntent().getStringExtra(EXTRA_BOX_UUID);
         if (mac != null) {
-            connectDevice = MyBleService.get().getConnectDevice(mac);
+            connectDevice = MyBleService.getInstance().getConnectDevice(mac);
         }
         ServiceBean obj = SharedPreTool.getInstance(context).getObj(ServiceBean.class, mac);
         if (obj != null) {
@@ -263,10 +262,10 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
      * @return
      */
     private boolean isConnectBle() {
-        if (MyBleService.get().getConnectDevice(mac) == null) {
-            connectDevice = MyBleService.get().getConnectDevice(mac);
+        if (MyBleService.getInstance().getConnectDevice(mac) == null) {
+            connectDevice = MyBleService.getInstance().getConnectDevice(mac);
             CommonKit.showErrorShort(context, getResources().getString(R.string.setting_tv_ble_disconnect));
-            BleService.get().connectionDevice(context, mac);
+            MyBleService.getInstance().connectionDevice(context, mac);
             return true;
         }
         return false;

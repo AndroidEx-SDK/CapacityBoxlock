@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.RecyclerAdapter;
 import com.androidex.capbox.data.Event;
 import com.androidex.capbox.module.BoxDeviceModel;
+import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.utils.CommonKit;
 
 import butterknife.Bind;
@@ -51,7 +51,7 @@ public class BindDeviceAdapter extends RecyclerAdapter<BoxDeviceModel.device, Bi
         }
         holder.tv_name.setText(item.boxName);
         holder.iv_lock.setImageResource(R.mipmap.lock_close);
-        if (BleService.get().getConnectDevice(item.getMac()) == null) {
+        if (MyBleService.getInstance().getConnectDevice(item.getMac()) == null) {
             holder.iv_connect.setImageResource(R.mipmap.starts_connect);
         } else {
             holder.iv_connect.setImageResource(R.mipmap.starts_disconnect);
@@ -59,7 +59,7 @@ public class BindDeviceAdapter extends RecyclerAdapter<BoxDeviceModel.device, Bi
         holder.iv_connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (BleService.get().getConnectDevice(item.getMac()) == null) {
+                if (MyBleService.getInstance().getConnectDevice(item.getMac()) == null) {
                     EventBus.getDefault().postSticky(new Event.BleConnected(item.getMac()));
                 } else {
                     EventBus.getDefault().postSticky(new Event.BleDisConnected(item.getMac()));
@@ -69,10 +69,10 @@ public class BindDeviceAdapter extends RecyclerAdapter<BoxDeviceModel.device, Bi
         holder.iv_lock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (BleService.get().getConnectDevice(item.getMac()) == null) {
+                if (MyBleService.getInstance().getConnectDevice(item.getMac()) == null) {
                     CommonKit.showErrorShort(context, context.getResources().getString(R.string.bledevice_toast7));
                 } else {
-                    BleService.get().openLock(item.getMac());
+                    MyBleService.getInstance().openLock(item.getMac());
                 }
             }
         });

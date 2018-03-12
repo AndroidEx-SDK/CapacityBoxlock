@@ -51,7 +51,7 @@ public class ConnectDeviceListActivity extends BaseActivity {
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        allConnectDevice = MyBleService.get().getAllConnectDevice();
+        allConnectDevice = MyBleService.getInstance().getAllConnectDevice();
         Loge("connected device size=" + allConnectDevice.size());
         initTitleBar();
         iniRefreshView();
@@ -185,7 +185,7 @@ public class ConnectDeviceListActivity extends BaseActivity {
      * 获取数据
      */
     private void getConnectDeviceList() {
-        allConnectDevice = MyBleService.get().getAllConnectDevice();
+        allConnectDevice = MyBleService.getInstance().getAllConnectDevice();
         boxListAdapter.notifyDataSetChanged();
     }
 

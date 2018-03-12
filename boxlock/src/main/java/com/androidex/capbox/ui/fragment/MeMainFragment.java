@@ -121,7 +121,7 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
         if (username != null) {
             tv_username.setText(username);
         }
-        int rssiMaxValue = MyBleService.get().getRssiMaxValue();
+        int rssiMaxValue = MyBleService.getInstance().getRssiMaxValue();
         settingDistance();//报警距离
         if (rssiMaxValue >= 0) {
             setting_distance.setSelection(0);
@@ -170,22 +170,22 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
                 Log.e(TAG, "pos=" + pos);
                 switch (pos) {
                     case 0:
-                        MyBleService.get().setRssiMaxValue(0);
+                        MyBleService.getInstance().setRssiMaxValue(0);
                         break;
                     case 1:
-                        MyBleService.get().setRssiMaxValue(-70);
+                        MyBleService.getInstance().setRssiMaxValue(-70);
                         break;
                     case 2:
-                        MyBleService.get().setRssiMaxValue(-80);
+                        MyBleService.getInstance().setRssiMaxValue(-80);
                         break;
                     case 3:
-                        MyBleService.get().setRssiMaxValue(-90);
+                        MyBleService.getInstance().setRssiMaxValue(-90);
                         break;
                     case 4:
-                        MyBleService.get().setRssiMaxValue(-98);
+                        MyBleService.getInstance().setRssiMaxValue(-98);
                         break;
                     default:
-                        MyBleService.get().setRssiMaxValue(0);
+                        MyBleService.getInstance().setRssiMaxValue(0);
                         break;
                 }
             }

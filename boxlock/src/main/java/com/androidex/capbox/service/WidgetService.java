@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.R;
 import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
@@ -135,7 +134,7 @@ public class WidgetService extends RemoteViewsService {
             rv.setOnClickFillInIntent(R.id.iv_connect, getIntent(CLICK_BLE_CONNECTED, position, device.getMac()));
             rv.setOnClickFillInIntent(R.id.iv_lock, getIntent(CLICK_LOCK_OPEN, position, device.getMac()));
 
-            if (BleService.get().getConnectDevice(device.getMac()) == null) {
+            if (MyBleService.getInstance().getConnectDevice(device.getMac()) == null) {
                 rv.setImageViewResource(R.id.iv_connect, R.mipmap.starts_connect2);
             } else {
                 rv.setImageViewResource(R.id.iv_connect, R.mipmap.starts_disconnect2);

@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.androidex.boxlib.modules.ServiceBean;
-import com.androidex.boxlib.service.BleService;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.data.Event;
@@ -244,10 +243,10 @@ public class BoxListAdapter extends BaseAdapter {
                                 case Constants.API.API_OK:
                                     CommonKit.showOkShort(mContext, mContext.getString(R.string.hint_unbind_ok));
                                     removeItem(position);
-                                    ServiceBean device = MyBleService.get().getConnectDevice(mac);
+                                    ServiceBean device = MyBleService.getInstance().getConnectDevice(mac);
                                     if (device != null) {
                                         device.setActiveDisConnect(true);
-                                        BleService.get().disConnectDevice(mac);
+                                        MyBleService.getInstance().disConnectDevice(mac);
                                     }
                                     SharedPreTool.getInstance(mContext).remove(mac);
                                     EventBus.getDefault().postSticky(new Event.BoxRelieveBind());

@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.androidex.boxlib.service.BleService;
 import com.androidex.boxlib.utils.Byte2HexUtil;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
@@ -87,19 +86,19 @@ public class FingerEnterActivity extends BaseActivity {
         mContext = context;
         mac = getIntent().getStringExtra(EXTRA_ITEM_ADDRESS);
         initBroadCast();
-        if (MyBleService.get().getConnectDevice(mac) != null) {
+        if (MyBleService.getInstance().getConnectDevice(mac) != null) {
             if (code == REQUESTCODE_FINGER_POSSESSOR) {
-                MyBleService.get().getFinger(mac, "1101");
+                MyBleService.getInstance().getFinger(mac, "1101");
                 tv_hint_printFinger.setText("请将手指放到箱体的指纹处");
             } else if (code == REQUESTCODE_FINGER_BECOME) {
                 tv_hint_printFinger.setText("请将手指放到箱体的指纹处");
-                MyBleService.get().getFinger(mac, "1301");
+                MyBleService.getInstance().getFinger(mac, "1301");
             } else {
 
             }
         } else {
             CommonKit.showErrorShort(context, "正在连接蓝牙，稍后再试");
-            BleService.get().connectionDevice(context, mac);
+            MyBleService.getInstance().connectionDevice(context, mac);
         }
     }
 
@@ -137,13 +136,13 @@ public class FingerEnterActivity extends BaseActivity {
                 case BLE_CONN_SUCCESS:
                 case BLE_CONN_SUCCESS_ALLCONNECTED:
                     Log.d(TAG, "连接成功=");
-                    BleService.get().enableNotify(mac);
+                    MyBleService.getInstance().enableNotify(mac);
                     CommonKit.showOkShort(mContext, "连接成功");
                     break;
 
                 case BLE_CONN_DIS:
                     Log.d(TAG, "断开连接=");
-                    BleService.get().connectionDevice(context, mac);
+                    MyBleService.getInstance().connectionDevice(context, mac);
                     CommonKit.showErrorShort(mContext, "蓝牙断开，已开始重连");
                     break;
                 case ACTION_POSSESSORFINGER://获取到所有人的指纹信息
@@ -158,7 +157,7 @@ public class FingerEnterActivity extends BaseActivity {
                             break;
                         case (byte) 0x02://识别失败
                             tv_hint_printFinger.setText("");
-                            MyBleService.get().getFinger(mac, "1101");
+                            MyBleService.getInstance().getFinger(mac, "1101");
                             CommonKit.showErrorShort(context, "请重新录入");
                             tv_hint_printFinger.setText("指纹录入失败，请重新录入");
                             break;
@@ -178,7 +177,7 @@ public class FingerEnterActivity extends BaseActivity {
                             break;
                         case (byte) 0x02://识别失败
                             tv_hint_printFinger.setText("");
-                            MyBleService.get().getFinger(mac, "1301");
+                            MyBleService.getInstance().getFinger(mac, "1301");
                             CommonKit.showErrorShort(context, "请重新录入");
                             tv_hint_printFinger.setText("指纹录入失败，请重新录入");
                             break;

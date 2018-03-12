@@ -25,7 +25,6 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.androidex.boxlib.service.BleService;
 import com.androidex.boxlib.utils.Byte2HexUtil;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
@@ -85,7 +84,7 @@ public class TestBLEActivity extends BaseActivity {
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        allConnectDevice = MyBleService.get().getAllConnectDevice();
+        allConnectDevice = MyBleService.getInstance().getAllConnectDevice();
         Loge("connected device size=" + allConnectDevice.size());
         BluetoothDevice device = allConnectDevice.get(0);
         address = device.getAddress();
@@ -232,7 +231,7 @@ public class TestBLEActivity extends BaseActivity {
             return;
         }
         if (getSendData() == null) return;
-        MyBleService.get().sendData(address, Byte2HexUtil.decodeHex(getSendData()));
+        MyBleService.getInstance().sendData(address, Byte2HexUtil.decodeHex(getSendData()));
     }
 
     @NonNull
@@ -292,7 +291,7 @@ public class TestBLEActivity extends BaseActivity {
             switch (intent.getAction()) {
                 case BLE_CONN_SUCCESS:
                 case BLE_CONN_SUCCESS_ALLCONNECTED:
-                    BleService.get().enableNotify(address);
+                    MyBleService.getInstance().enableNotify(address);
                     disProgress();
                     CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast3));
                     break;
