@@ -15,6 +15,7 @@ import android.widget.ToggleButton;
 import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
+import com.androidex.capbox.data.Event;
 import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
@@ -34,6 +35,7 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import de.greenrobot.event.EventBus;
 import okhttp3.Headers;
 import okhttp3.Request;
 
@@ -49,6 +51,7 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCONNECTED;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
+import static com.androidex.capbox.provider.WidgetProvider.EXTRA_ITEM_POSITION;
 import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_FINGER_SETTING;
 import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_OPEN_MONITOR;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
@@ -112,6 +115,7 @@ public class BoxDetailActivity extends BaseActivity {
     private Context mContext;
     private int status;
     private int pager_sign;//跳转页标识，0代表从列表页跳转到此类，1代表从监控页跳转到此类
+    private int position;//用户选中的第几个设备
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -121,6 +125,9 @@ public class BoxDetailActivity extends BaseActivity {
         uuid = getIntent().getStringExtra(EXTRA_BOX_UUID);
         mac = getIntent().getStringExtra(EXTRA_ITEM_ADDRESS);
         pager_sign = getIntent().getIntExtra(EXTRA_PAGER_SIGN, -1);
+        if (pager_sign == 0) {
+            position = getIntent().getIntExtra(EXTRA_ITEM_POSITION, -1);
+        }
         initBroadCast();
         initTitleBar();
         initCheckedButton();//初始化静默开关的View;
@@ -190,12 +197,12 @@ public class BoxDetailActivity extends BaseActivity {
      * 跳转到监控页
      */
     private void intentMonitorPager() {
-        Bundle bundle = new Bundle();
-        bundle.putString(EXTRA_ITEM_ADDRESS, mac);
-        bundle.putString(EXTRA_BOX_UUID, uuid);
-        bundle.putString(EXTRA_BOX_NAME, name);
-        bundle.putInt("status", status);
-        LockActivity.lauch(context, bundle);
+        Event.UpdateMonitorDevice monitorDevice = new Event.UpdateMonitorDevice();
+        monitorDevice.setAddress(mac);
+        monitorDevice.setPosition(position);
+        monitorDevice.setName(name);
+        monitorDevice.setUuid(uuid);
+        EventBus.getDefault().postSticky(monitorDevice);
     }
 
     public void initCheckedButton() {

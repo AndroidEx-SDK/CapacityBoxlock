@@ -63,6 +63,7 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCO
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
 import static com.androidex.capbox.provider.WidgetProvider.ACTION_UPDATE_ALL;
+import static com.androidex.capbox.provider.WidgetProvider.EXTRA_ITEM_POSITION;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
 import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
@@ -173,10 +174,11 @@ public class BoxListFragment extends BaseFragment {
                             bundle.putString(EXTRA_BOX_UUID, mylist.get(position).get(EXTRA_BOX_UUID));
                             bundle.putString(EXTRA_ITEM_ADDRESS, mylist.get(position).get(EXTRA_ITEM_ADDRESS));
                             bundle.putInt(EXTRA_PAGER_SIGN, 0);//0表示从设备列表跳转过去的1表示从监控页跳转
+                            bundle.putInt(EXTRA_ITEM_POSITION, position);//position选择的是第几个设备
                             BoxDetailActivity.lauch(getActivity(), bundle);
                         } else {
                             CommonKit.showOkShort(context, "开始扫描...");
-                            scanLeDevice(mylist.get(position).get(EXTRA_ITEM_ADDRESS), mylist.get(position).get(EXTRA_BOX_UUID));//开始扫描
+                            scanLeDevice(position);//开始扫描
                         }
                         break;
                     default:
@@ -259,7 +261,9 @@ public class BoxListFragment extends BaseFragment {
     /**
      * 开始扫描
      */
-    private void scanLeDevice(final String address, final String deviceUUID) {
+    private void scanLeDevice(final int position) {
+        final String address = mylist.get(position).get(EXTRA_ITEM_ADDRESS);
+        final String deviceUUID = mylist.get(position).get(EXTRA_BOX_UUID);
         showProgress("搜索设备...");
         BLEScanCfg scanCfg = new BLEScanCfg.ScanCfgBuilder(SCAN_PERIOD).builder();
         MyBleService.getInstance().startScanner(scanCfg, new BLEScanListener() {
@@ -283,6 +287,7 @@ public class BoxListFragment extends BaseFragment {
                         bundle.putString(EXTRA_BOX_UUID, deviceUUID);
                         bundle.putString(EXTRA_ITEM_ADDRESS, address);
                         bundle.putInt(EXTRA_PAGER_SIGN, 0);//0表示从设备列表跳转过去的1表示从监控页跳转
+                        bundle.putInt(EXTRA_ITEM_POSITION, position);//position选择的是第几个设备
                         BoxDetailActivity.lauch(getActivity(), bundle);
                     }
                 }
@@ -482,7 +487,6 @@ public class BoxListFragment extends BaseFragment {
                                 }
                                 mylist.add(map);
                             }
-                            //SharedPreTool.getInstance(context).setIntData(IS_BIND_NUM,carryNum);
                             SharedPreTool.getInstance(context).setIntData(IS_BIND_NUM, model.devicelist.size());
                             if (model.devicelist.size() > 0) {
                                 Logd(TAG, "刷新列表");
