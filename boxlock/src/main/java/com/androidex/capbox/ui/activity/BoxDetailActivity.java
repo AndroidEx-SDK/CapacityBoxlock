@@ -301,8 +301,6 @@ public class BoxDetailActivity extends BaseActivity {
                 SharedPreTool.getInstance(context).saveObj(device, mac);
             }
         }
-        Object obj1 = SharedPreTool.getInstance(context).getObj(ServiceBean.class, mac);
-        RLog.e("存储携行状态" + obj1.toString());
     }
 
     @OnClick({
