@@ -66,6 +66,7 @@ import static com.androidex.capbox.provider.WidgetProvider.ACTION_UPDATE_ALL;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
 import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
+import static com.androidex.capbox.utils.Constants.EXTRA_PAGER_SIGN;
 
 /**
  * 箱体列表
@@ -171,6 +172,7 @@ public class BoxListFragment extends BaseFragment {
                             bundle.putString(EXTRA_BOX_NAME, mylist.get(position).get(EXTRA_BOX_NAME));
                             bundle.putString(EXTRA_BOX_UUID, mylist.get(position).get(EXTRA_BOX_UUID));
                             bundle.putString(EXTRA_ITEM_ADDRESS, mylist.get(position).get(EXTRA_ITEM_ADDRESS));
+                            bundle.putInt(EXTRA_PAGER_SIGN, 0);//0表示从设备列表跳转过去的1表示从监控页跳转
                             BoxDetailActivity.lauch(getActivity(), bundle);
                         } else {
                             CommonKit.showOkShort(context, "开始扫描...");
@@ -280,6 +282,7 @@ public class BoxListFragment extends BaseFragment {
                         bundle.putString(EXTRA_BOX_NAME, device.getName());
                         bundle.putString(EXTRA_BOX_UUID, deviceUUID);
                         bundle.putString(EXTRA_ITEM_ADDRESS, address);
+                        bundle.putInt(EXTRA_PAGER_SIGN, 0);//0表示从设备列表跳转过去的1表示从监控页跳转
                         BoxDetailActivity.lauch(getActivity(), bundle);
                     }
                 }

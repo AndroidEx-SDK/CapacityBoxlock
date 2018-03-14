@@ -54,6 +54,7 @@ import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_OPEN_MONITOR
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
 import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
+import static com.androidex.capbox.utils.Constants.EXTRA_PAGER_SIGN;
 
 /**
  * 配置箱体,箱体详情
@@ -110,6 +111,7 @@ public class BoxDetailActivity extends BaseActivity {
     private DataBroadcast dataBroadcast;
     private Context mContext;
     private int status;
+    private int pager_sign;//跳转页标识，0代表从列表页跳转到此类，1代表从监控页跳转到此类
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -118,6 +120,7 @@ public class BoxDetailActivity extends BaseActivity {
         name = getIntent().getStringExtra(EXTRA_BOX_NAME);
         uuid = getIntent().getStringExtra(EXTRA_BOX_UUID);
         mac = getIntent().getStringExtra(EXTRA_ITEM_ADDRESS);
+        pager_sign = getIntent().getIntExtra(EXTRA_PAGER_SIGN, -1);
         initBroadCast();
         initTitleBar();
         initCheckedButton();//初始化静默开关的View;
@@ -172,14 +175,27 @@ public class BoxDetailActivity extends BaseActivity {
         titlebar.getRightTv().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                bundle.putString(EXTRA_ITEM_ADDRESS, mac);
-                bundle.putString(EXTRA_BOX_UUID, uuid);
-                bundle.putString(EXTRA_BOX_NAME, name);
-                bundle.putInt("status", status);
-                LockActivity.lauch(context, bundle);
+                if (pager_sign == 0) {
+                    intentMonitorPager();
+                } else if (pager_sign == 1) {//从监控页面跳转过来的
+                    CommonKit.finishActivity(context);
+                } else {
+                    intentMonitorPager();//跳转到监控页
+                }
             }
         });
+    }
+
+    /**
+     * 跳转到监控页
+     */
+    private void intentMonitorPager() {
+        Bundle bundle = new Bundle();
+        bundle.putString(EXTRA_ITEM_ADDRESS, mac);
+        bundle.putString(EXTRA_BOX_UUID, uuid);
+        bundle.putString(EXTRA_BOX_NAME, name);
+        bundle.putInt("status", status);
+        LockActivity.lauch(context, bundle);
     }
 
     public void initCheckedButton() {

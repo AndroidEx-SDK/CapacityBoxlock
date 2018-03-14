@@ -76,6 +76,7 @@ import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
 import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
+import static com.androidex.capbox.utils.Constants.EXTRA_PAGER_SIGN;
 
 public class LockFragment extends BaseFragment implements OnClickListener {
     private final static String TAG = "LockFragment";
@@ -266,6 +267,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                 bundle.putString(EXTRA_BOX_NAME, deviceName);
                 bundle.putString(EXTRA_ITEM_ADDRESS, address);
                 bundle.putString(EXTRA_BOX_UUID, uuid);
+                bundle.putInt(EXTRA_PAGER_SIGN, 1);//0表示从设备列表跳转过去的1表示从监控页跳转
                 BoxDetailActivity.lauch(getActivity(), bundle);
                 break;
             case R.id.iv_menu:
