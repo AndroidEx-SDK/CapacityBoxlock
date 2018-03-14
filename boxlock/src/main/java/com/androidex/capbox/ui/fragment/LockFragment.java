@@ -1,21 +1,25 @@
 package com.androidex.capbox.ui.fragment;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseFragment;
+import com.androidex.capbox.callback.NetSucceedCallBack;
 import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
@@ -23,7 +27,9 @@ import com.androidex.capbox.module.ActionItem;
 import com.androidex.capbox.module.BaiduModel;
 import com.androidex.capbox.module.BaseModel;
 import com.androidex.capbox.module.BoxDeviceModel;
+import com.androidex.capbox.module.CheckVersionModel;
 import com.androidex.capbox.module.LocationModel;
+import com.androidex.capbox.service.DfuService;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.activity.BoxDetailActivity;
 import com.androidex.capbox.ui.activity.ConnectDeviceListActivity;
@@ -48,6 +54,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import butterknife.Bind;
+import no.nordicsemi.android.dfu.DfuProgressListener;
+import no.nordicsemi.android.dfu.DfuServiceInitiator;
+import no.nordicsemi.android.dfu.DfuServiceListenerHelper;
 import okhttp3.Headers;
 import okhttp3.Request;
 
@@ -122,6 +131,8 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     TextView maxhum;
     @Bind(R.id.main_tv_minhum)
     TextView minhum;
+    @Bind(R.id.progressBar_dfu)
+    ProgressBar mProgressBarOtaUpload;
 
     private Timer timer_location = new Timer();// 设计定时器
     private TimerTask timer_getlocation;
@@ -136,6 +147,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     private TitlePopup titlePopup;
     private boolean isConnect = false;
     private boolean mReceiverTag = false;   //广播接受者标识
+    BluetoothDevice bluetoothDevice;
 
     @Override
     public void initData() {
@@ -213,7 +225,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         // 给标题栏弹窗添加子类
         titlePopup.addAction(new ActionItem(context, "结束携行", R.drawable.finish_carry));
         titlePopup.addAction(new ActionItem(context, "连接列表", R.drawable.connectlist));
-        titlePopup.addAction(new ActionItem(context, "箱体设置", R.drawable.setting));
+        titlePopup.addAction(new ActionItem(context, "版本更新", R.drawable.setting));
         titlePopup.setItemOnClickListener(new TitlePopup.OnItemOnClickListener() {
             @Override
             public void onItemClick(ActionItem item, int position) {
@@ -225,7 +237,20 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                         ConnectDeviceListActivity.lauch(context);
                         break;
                     case 2:
+                        checkVersion(new NetSucceedCallBack() {
+                            @Override
+                            public void onSuccess(CheckVersionModel model) {
+                                super.onSuccess(model);
 
+                                DfuServiceListenerHelper.registerProgressListener(context, mDfuProgressListener);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    //大于等于6.0的时候，禁用PEN
+                                    startDFU(bluetoothDevice, true, false, false, 0, "");
+                                } else {
+                                    startDFU(bluetoothDevice, true, false, true, 0, "");
+                                }
+                            }
+                        });
                         break;
                     default:
                         break;
@@ -270,13 +295,39 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                 bundle.putInt(EXTRA_PAGER_SIGN, 1);//0表示从设备列表跳转过去的1表示从监控页跳转
                 BoxDetailActivity.lauch(getActivity(), bundle);
                 break;
+
             case R.id.iv_menu:
                 titlePopup.show(v);
                 break;
+
             default:
                 break;
         }
     }
+
+    /**
+     * 启动DFU升级服务
+     *
+     * @param bluetoothDevice 蓝牙设备
+     * @param keepBond        升级后是否保持连接
+     * @param force           将DFU设置为true将防止跳转到DFU Bootloader引导加载程序模式
+     * @param PacketsReceipt  启用或禁用数据包接收通知（PRN）过程。
+     *                        默认情况下，在使用Android Marshmallow或更高版本的设备上禁用PEN，并在旧设备上启用。
+     * @param numberOfPackets 如果启用分组接收通知过程，则此方法设置在接收PEN之前要发送的分组数。 PEN用于同步发射器和接收器。
+     * @param filePath        约定匹配的ZIP文件的路径。
+     */
+    private void startDFU(BluetoothDevice bluetoothDevice, boolean keepBond, boolean force,
+                          boolean PacketsReceipt, int numberOfPackets, String filePath) {
+        final DfuServiceInitiator stater = new DfuServiceInitiator(bluetoothDevice.getAddress())
+                .setDeviceName(bluetoothDevice.getName())
+                .setKeepBond(keepBond)
+                .setForceDfu(force)
+                .setPacketsReceiptNotificationsEnabled(PacketsReceipt)
+                .setPacketsReceiptNotificationsValue(numberOfPackets);
+        stater.setZip(R.raw.update);//这个方法可以传入raw文件夹中的文件、也可以是文件的string或者url路径。
+        stater.start(context, DfuService.class);
+    }
+
 
     /**
      * 显示确认结束弹窗
@@ -517,6 +568,59 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     }
 
     /**
+     * 检测版本号，包括APP的，箱体的，腕表的
+     * {"appFileName":"boxlock-3.apk",
+     * "appVersion":"3","boxFileName":"20171129.hex",
+     * "boxVersion":"0.0.1","code":0,"watchFileName":"20171129.hex",
+     * "watchVersion":"0.0.2"}
+     */
+    public void checkVersion(final NetSucceedCallBack callBack) {
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
+        NetApi.checkVersion(getToken(), getUserName(), new ResultCallBack<CheckVersionModel>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Headers headers, CheckVersionModel model) {
+                super.onSuccess(statusCode, headers, model);
+                if (model != null) {
+                    switch (model.code) {
+                        case Constants.API.API_OK:
+                            RLog.d(model.toString());
+                            callBack.onSuccess(model);
+                            break;
+                        case Constants.API.API_FAIL:
+                            RLog.d("网络连接失败");
+                            CommonKit.showErrorShort(context, "网络连接失败");
+                            break;
+                        default:
+                            if (model.info != null) {
+                                RLog.d(model.info);
+                                CommonKit.showErrorShort(context, model.info);
+                            } else {
+                                RLog.d("网络连接失败");
+                                CommonKit.showErrorShort(context, "网络连接失败");
+                            }
+                            break;
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Request request, Exception e) {
+                super.onFailure(statusCode, request, e);
+                RLog.d("网络连接失败");
+                CommonKit.showErrorShort(context, "网络连接失败");
+            }
+        });
+    }
+
+    /**
      * 获取扫码后的设备MAC
      *
      * @param uuid
@@ -624,6 +728,99 @@ public class LockFragment extends BaseFragment implements OnClickListener {
             }
         });
     }
+
+
+    DfuProgressListener mDfuProgressListener = new DfuProgressListener() {
+
+        @Override
+        public void onDeviceConnecting(String deviceAddress) {
+            //当DFU服务开始与DFU目标连接时调用的方法//升级服务开始与硬件设备连接
+            Log.d("debug", "DFU服务开始与DFU目标连接," + deviceAddress);
+        }
+
+        @Override
+        public void onDeviceConnected(String deviceAddress) {
+            //方法在服务成功连接时调用，发现服务并在DFU目标上找到DFU服务。//升级服务连接成功
+            Log.d("debug", "服务成功连接,发现服务并在DFU目标上找到DFU服务." + deviceAddress);
+
+        }
+
+        @Override
+        public void onDfuProcessStarting(String deviceAddress) {
+            //当DFU进程启动时调用的方法。 这包括读取DFU版本特性，发送DFU START命令以及Init数据包（如果设置）。
+            Log.d("debug", "DFU进程启动," + deviceAddress);//升级进程启动
+        }
+
+        @Override
+        public void onDfuProcessStarted(String deviceAddress) {
+            //当DFU进程启动和要发送的字节时调用的方法。
+            Log.d("debug", "DFU进程启动和要发送的字节," + deviceAddress);
+        }
+
+        @Override
+        public void onEnablingDfuMode(String deviceAddress) {
+            //当服务发现DFU目标处于应用程序模式并且必须切换到DFU模式时调用的方法。 将发送开关命令，并且DFU过程应该再次开始。 此调用后不会有onDeviceDisconnected（String）事件。
+            Log.d("debug", "当服务发现DFU目标处于应用程序模式并且必须切换到DFU模式时调用的方");
+            //硬件设备切换到升级模式
+        }
+
+        /**
+         * @param deviceAddress
+         * @param percent  进度
+         * @param speed
+         * @param avgSpeed
+         * @param currentPart
+         * @param partsTotal
+         */
+        @Override
+        public void onProgressChanged(String deviceAddress, int percent, float speed, float avgSpeed, int currentPart, int partsTotal) {
+            //在上传固件期间调用的方法。 它不会使用相同的百分比值调用两次，但是在小型固件文件的情况下，可能会省略一些值。\
+            mProgressBarOtaUpload.setVisibility(View.VISIBLE);
+            mProgressBarOtaUpload.setProgress(percent);//状态：升级中...
+            Log.d("debug", "percent:" + percent + " partsTotal:" + partsTotal + " speed=" + speed);
+        }
+
+        @Override
+        public void onFirmwareValidating(String deviceAddress) {
+            //在目标设备上验证新固件时调用的方法。
+            Log.d("debug", "目标设备上验证新固件时调用的方法");
+        }
+
+        @Override
+        public void onDeviceDisconnecting(String deviceAddress) {
+            //服务开始断开与目标设备的连接时调用的方法。
+            Log.d("debug", "服务开始断开与目标设备的连接时调用的方法");
+        }
+
+        @Override
+        public void onDeviceDisconnected(String deviceAddress) {
+            //当服务从设备断开连接时调用的方法。 设备已重置。
+            Log.d("debug", "当服务从设备断开连接时调用的方法。 设备已重置。");
+            DfuServiceListenerHelper.unregisterProgressListener(context, mDfuProgressListener);
+        }
+
+        @Override
+        public void onDfuCompleted(String deviceAddress) {
+            //Method called when the DFU process succeeded.
+            Log.d("debug", "DFU已完成");//升级成功！
+            mProgressBarOtaUpload.setVisibility(View.GONE);
+            DfuServiceListenerHelper.unregisterProgressListener(context, mDfuProgressListener);
+        }
+
+        @Override
+        public void onDfuAborted(String deviceAddress) {
+            //当DFU进程已中止时调用的方法。
+            Log.d("debug", "当DFU进程已中止时调用的方法。");//升级进程已中止.
+            DfuServiceListenerHelper.unregisterProgressListener(context, mDfuProgressListener);
+        }
+
+        @Override
+        public void onError(String deviceAddress, int error, int errorType, String message) {
+            //发生错误时调用的方法。
+            Log.d("debug", "发生错误时调用的方法onError");//升级发生错误.
+            DfuServiceListenerHelper.unregisterProgressListener(context, mDfuProgressListener);
+        }
+    };
 
     BroadcastReceiver dataUpdateRecevice = new BroadcastReceiver() {
 

@@ -74,7 +74,7 @@ public class NetApi {
     /**
      * 获取审核结果
      *
-     * @param username     手机号
+     * @param username 手机号
      * @param callBack
      */
     public static void getCheckResult(String token, String username, ResultCallBack<ResultModel> callBack) {
@@ -226,13 +226,13 @@ public class NetApi {
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
 
-    public static void movepath(String token, String username,String uuid, ResultCallBack<BoxMovePathModel> callBack){
+    public static void movepath(String token, String username, String uuid, ResultCallBack<BoxMovePathModel> callBack) {
         Headers headers = new Headers.Builder()
                 .add("token", token)
                 .build();
         RequestParams params = RequestParams.newInstance()
                 .put("username", username)
-                .put("uuid",uuid);
+                .put("uuid", uuid);
         String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_MOVEPATH);
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
@@ -629,12 +629,38 @@ public class NetApi {
         new OkRequest.Builder().url(url).headers(headers).destFileDir(path).destFileName(appFileName).download(callBack);
     }
 
-    public static String getBoxUpadeUrl(String boxFileName) {
-        return getUrl(UrlTool.BOX_UPDATA_URL, boxFileName);
+    /**
+     * 获取APP安装包的下载路径
+     *
+     * @param token
+     * @param path        APK的安装路径
+     * @param boxFileName
+     * @param callBack
+     */
+    public static void downloadBoxHex(String token, String path, String boxFileName, ResultCallBack callBack) {
+        Headers headers = new Headers.Builder()
+                .add("token", token)
+                .build();
+
+        String url = getUrl(UrlTool.BOX_UPDATA_URL, boxFileName);
+        new OkRequest.Builder().url(url).headers(headers).destFileDir(path).destFileName(boxFileName).download(callBack);
     }
 
-    public static String getWatchUpadeUrl(String watchFileName) {
-        return getUrl(UrlTool.WATCH_UPDATA_URL, watchFileName);
+    /**
+     * 获取APP安装包的下载路径
+     *
+     * @param token
+     * @param path          APK的安装路径
+     * @param watchFileName
+     * @param callBack
+     */
+    public static void downloadWatchHex(String token, String path, String watchFileName, ResultCallBack callBack) {
+        Headers headers = new Headers.Builder()
+                .add("token", token)
+                .build();
+
+        String url = getUrl(UrlTool.WATCH_UPDATA_URL, watchFileName);
+        new OkRequest.Builder().url(url).headers(headers).destFileDir(path).destFileName(watchFileName).download(callBack);
     }
 
     /**

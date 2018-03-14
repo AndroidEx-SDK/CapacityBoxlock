@@ -211,12 +211,10 @@ public class BoxDetailActivity extends BaseActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     become = "A";
-                    //选中
                     Log.e(TAG, "静默开关A");
                 } else {
                     become = "B";
                     Log.e(TAG, "静默开关B");
-                    //未选中
                 }
             }
         });
@@ -244,10 +242,13 @@ public class BoxDetailActivity extends BaseActivity {
                             police = model.data.police;//报警开启A和关闭B
                             policeDiatance = model.data.policeDiatance;////报警距离：0脱距、1较近、2近、3较远、4远
                             heartbeatRate = model.data.heartbeatRate;//心跳更新频率60秒
+                            locationRate = model.data.locationRate;//定位更新频率60秒
                             if (heartbeatRate <= 20) {
                                 heartbeatRate = 60;
                             }
-                            locationRate = model.data.locationRate;//定位更新频率60秒
+                            if (locationRate <= 30) {
+                                locationRate = 60;
+                            }
                             if (status == 2) {
                                 setDeviceCaryyStarts(true);//保存携行状态
                                 tv_boxConfig.setEnabled(false);
@@ -256,9 +257,6 @@ public class BoxDetailActivity extends BaseActivity {
                                 setDeviceCaryyStarts(false);//退出携行状态
                                 tv_boxConfig.setEnabled(true);
                                 tv_startCarryScort.setText("启动携行押运");
-                            }
-                            if (locationRate <= 30) {
-                                locationRate = 60;
                             }
                             highestTemp = model.data.highestTemp;//最高温
                             lowestTemp = model.data.lowestTemp;//最低温
