@@ -142,9 +142,6 @@
             android:name="com.androidex.capbox.ui.activity.BoxSettingActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.androidex.capbox.ui.activity.LockActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name="com.androidex.capbox.ui.activity.ConnectDeviceListActivity"
             android:screenOrientation="portrait" />
         <activity
