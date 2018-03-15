@@ -30,6 +30,7 @@ public class Constants extends BleConstants {
      */
     public static class CONFIG {
         public static final boolean DEBUG = BuildConfig.DEBUG; //调试模式
+        public static final boolean OPEN_DFU_UPDATE = false; //是否开启空中升级
         public static final String API_CACHE_DIR = "api";    //api缓存目录
         public static final String IMG_CACHE_DIR = "img";     //图片缓存目录
         public static final String IMG_COMPRESS_CACHE_DIR = "imgCompress";     //图片压缩缓存目录

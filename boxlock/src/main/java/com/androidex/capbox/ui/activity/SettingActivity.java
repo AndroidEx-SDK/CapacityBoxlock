@@ -3,14 +3,15 @@ package com.androidex.capbox.ui.activity;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.androidex.capbox.R;
-import com.androidex.capbox.base.BaseSettingActivity;
+import com.androidex.capbox.base.UserBaseActivity;
 import com.androidex.capbox.base.imageloader.UILKit;
-import com.androidex.capbox.callback.NetSucceedCallBack;
 import com.androidex.capbox.data.Event;
 import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
@@ -32,7 +33,7 @@ import okhttp3.Request;
 /**
  * @title 设置界面
  */
-public class SettingActivity extends BaseSettingActivity {
+public class SettingActivity extends UserBaseActivity {
     @Bind(R.id.title)
     SecondTitleBar title;
     @Bind(R.id.ll_notification)
@@ -152,17 +153,7 @@ public class SettingActivity extends BaseSettingActivity {
                 break;
 
             case R.id.ll_searchVersion:
-                checkVersion(new NetSucceedCallBack() {
-                    @Override
-                    public void onSuccess(CheckVersionModel model) {
-                        if (model.appVersion > CommonKit.getAppVersionCode(context)) {
-                            RLog.d("发现新版本");
-                            downloadAppApk(model.appFileName);
-                        } else {
-                            CommonKit.showOkShort(context, "已经是最新版本");
-                        }
-                    }
-                });
+                checkVersion();
                 break;
             case R.id.ll_changePassword:
                 ModifiActivtiy.lauch(context);
@@ -173,6 +164,105 @@ public class SettingActivity extends BaseSettingActivity {
             default:
                 break;
         }
+    }
+
+    /**
+     * 检测版本号，包括APP的，箱体的，腕表的
+     * {"appFileName":"boxlock-3.apk",
+     * "appVersion":"3","boxFileName":"20171129.hex",
+     * "boxVersion":"0.0.1","code":0,"watchFileName":"20171129.hex",
+     * "watchVersion":"0.0.2"}
+     */
+    public void checkVersion() {
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
+        NetApi.checkVersion(getToken(), getUserName(), new ResultCallBack<CheckVersionModel>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Headers headers, CheckVersionModel model) {
+                super.onSuccess(statusCode, headers, model);
+                if (model != null) {
+                    switch (model.code) {
+                        case Constants.API.API_OK:
+                            RLog.d(model.toString());
+                            if (model.appVersion > CommonKit.getAppVersionCode(context)) {
+                                RLog.d("发现新版本");
+                                downloadAppApk(model.appFileName);
+                            } else {
+                                CommonKit.showOkShort(context, "已经是最新版本");
+                            }
+                            break;
+                        case Constants.API.API_FAIL:
+                            RLog.d("网络连接失败");
+                            CommonKit.showErrorShort(context, "网络连接失败");
+                            break;
+                        default:
+                            if (model.info != null) {
+                                RLog.d(model.info);
+                                CommonKit.showErrorShort(context, model.info);
+                            } else {
+                                RLog.d("网络连接失败");
+                                CommonKit.showErrorShort(context, "网络连接失败");
+                            }
+                            break;
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Request request, Exception e) {
+                super.onFailure(statusCode, request, e);
+                RLog.d("网络连接失败");
+                CommonKit.showErrorShort(context, "网络连接失败");
+            }
+        });
+    }
+
+    /**
+     * 下载Apk
+     *
+     * @param appFireName
+     */
+    public void downloadAppApk(final String appFireName) {
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
+        final String SDCard = Environment.getExternalStorageDirectory() + "/androidex";
+        Log.v("downloadFile", "File path: " + SDCard);
+        NetApi.downloadAppApk(getToken(), SDCard, appFireName, new ResultCallBack() {
+            @Override
+            public void onStart() {
+                super.onStart();
+                RLog.d("开始下载新版本");
+                CommonKit.showOkShort(context, "开始下载新版本");
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Headers headers, Object model) {
+                super.onSuccess(statusCode, headers, model);
+                RLog.d("下载完成");
+                CommonKit.installNormal(context, SDCard + "/" + appFireName);
+            }
+
+            @Override
+            public void onProgress(long bytesWritten, long totalSize) {
+                super.onProgress(bytesWritten, totalSize);
+                RLog.d("bytesWritten=" + bytesWritten + "\ntotalSize=" + totalSize);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Request request, Exception e) {
+                super.onFailure(statusCode, request, e);
+                RLog.d("下载失败" + e.getMessage());
+            }
+        });
     }
 
     /**

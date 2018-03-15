@@ -19,7 +19,6 @@ import android.widget.TextView;
 import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseFragment;
-import com.androidex.capbox.callback.NetSucceedCallBack;
 import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
@@ -82,6 +81,7 @@ import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ELECTRIC_QUANTITY;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_HUM;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_TEMP;
+import static com.androidex.capbox.utils.Constants.CONFIG.OPEN_DFU_UPDATE;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
 import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
@@ -237,20 +237,8 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                         ConnectDeviceListActivity.lauch(context);
                         break;
                     case 2:
-                        checkVersion(new NetSucceedCallBack() {
-                            @Override
-                            public void onSuccess(CheckVersionModel model) {
-                                super.onSuccess(model);
 
-                                DfuServiceListenerHelper.registerProgressListener(context, mDfuProgressListener);
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                    //大于等于6.0的时候，禁用PEN
-                                    startDFU(bluetoothDevice, true, false, false, 0, "");
-                                } else {
-                                    startDFU(bluetoothDevice, true, false, true, 0, "");
-                                }
-                            }
-                        });
+                        checkVersion();
                         break;
                     default:
                         break;
@@ -574,7 +562,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
      * "boxVersion":"0.0.1","code":0,"watchFileName":"20171129.hex",
      * "watchVersion":"0.0.2"}
      */
-    public void checkVersion(final NetSucceedCallBack callBack) {
+    public void checkVersion() {
         if (!CommonKit.isNetworkAvailable(context)) {
             CommonKit.showErrorShort(context, "设备未连接网络");
             return;
@@ -592,7 +580,17 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     switch (model.code) {
                         case Constants.API.API_OK:
                             RLog.d(model.toString());
-                            callBack.onSuccess(model);
+                            if (!OPEN_DFU_UPDATE) {
+                                CommonKit.showOkShort(context, "该功能尚未开启");
+                            } else {
+                                DfuServiceListenerHelper.registerProgressListener(context, mDfuProgressListener);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    //大于等于6.0的时候，禁用PEN
+                                    startDFU(bluetoothDevice, true, false, false, 0, "");
+                                } else {
+                                    startDFU(bluetoothDevice, true, false, true, 0, "");
+                                }
+                            }
                             break;
                         case Constants.API.API_FAIL:
                             RLog.d("网络连接失败");
