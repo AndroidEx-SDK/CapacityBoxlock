@@ -308,8 +308,9 @@ public class RegisterActivity extends UserBaseActivity {
 
             @Override
             public void action() {
-                isRegist(true);//提交审核后显示刷新页面
-                getCheckResult();
+                LoginActivity.lauch(context);
+                //isRegist(true);//提交审核后显示刷新页面
+                //getCheckResult();
             }
         });
     }
