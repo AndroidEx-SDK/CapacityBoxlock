@@ -455,7 +455,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                 }
             };
             if (timer_location == null) timer_location = new Timer();
-            timer_location.schedule(timer_getlocation, 1000, 1 * 60 * 1000);
+            timer_location.schedule(timer_getlocation, 100, 1 * 30 * 1000);
         } else {
             if (timer_getlocation != null) {
                 timer_getlocation.cancel();
@@ -619,7 +619,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     }
 
     /**
-     * 获取扫码后的设备MAC
+     * 获取设备信息
      *
      * @param uuid
      */
