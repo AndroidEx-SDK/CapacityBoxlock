@@ -1,6 +1,8 @@
 package com.androidex.capbox.module;
 
 /**
+ * 获取报警信息开关
+ * <p>
  * Created by cts on 17/10/13.
  */
 

@@ -1,6 +1,8 @@
 package com.androidex.capbox.module;
 
 /**
+ * 获取指纹信息
+ *
  * Created by cts on 17/10/13.
  */
 

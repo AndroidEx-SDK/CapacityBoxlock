@@ -1,6 +1,8 @@
 package com.androidex.capbox.module;
 
 /**
+ * 获取开锁模式
+ * <p>
  * Created by cts on 17/10/13.
  */
 
