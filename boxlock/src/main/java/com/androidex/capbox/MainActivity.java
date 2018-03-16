@@ -90,7 +90,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     @Override
     public void initData(Bundle savedInstanceState) {
         registerEventBusSticky();
-        boxlist(true);
+        boxlist(0);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     /**
      * 初始化fragment
      */
-    private void initPager() {
+    private void initPager(int tag) {
         homepage_tab1.setOnClickListener(this);
         homepage_tab2.setOnClickListener(this);
         homepage_tab3.setOnClickListener(this);
@@ -124,9 +124,17 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                 bundle.putString(EXTRA_BOX_UUID, getIntent().getStringExtra(EXTRA_BOX_UUID));
                 main_index = getIntent().getIntExtra(EXTRA_ITEM_POSITION, -1);
             } else {
-                bundle.putString(EXTRA_ITEM_ADDRESS, mylist.get(0).get(EXTRA_ITEM_ADDRESS));
-                bundle.putString(EXTRA_BOX_NAME, mylist.get(0).get(EXTRA_BOX_NAME));
-                bundle.putString(EXTRA_BOX_UUID, mylist.get(0).get(EXTRA_BOX_UUID));
+                if (tag == 1) {
+                    RLog.e("最后一个绑定设备");
+                    bundle.putString(EXTRA_ITEM_ADDRESS, mylist.get(mylist.size() - 1).get(EXTRA_ITEM_ADDRESS));
+                    bundle.putString(EXTRA_BOX_NAME, mylist.get(mylist.size() - 1).get(EXTRA_BOX_NAME));
+                    bundle.putString(EXTRA_BOX_UUID, mylist.get(mylist.size() - 1).get(EXTRA_BOX_UUID));
+                } else {
+                    RLog.e("第一个绑定设备");
+                    bundle.putString(EXTRA_ITEM_ADDRESS, mylist.get(0).get(EXTRA_ITEM_ADDRESS));
+                    bundle.putString(EXTRA_BOX_NAME, mylist.get(0).get(EXTRA_BOX_NAME));
+                    bundle.putString(EXTRA_BOX_UUID, mylist.get(0).get(EXTRA_BOX_UUID));
+                }
             }
             lockFragment = new LockFragment();
             lockFragment.setArguments(bundle);
@@ -355,7 +363,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     /**
      * 获取设备列表
      */
-    public void boxlist(final boolean isBind) {
+    public void boxlist(final int tag) {
         if (!CommonKit.isNetworkAvailable(context)) {
             CommonKit.showErrorShort(context, "设备未连接网络");
             return;
@@ -403,8 +411,18 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                             break;
                     }
                 }
-                if (isBind) {
-                    initPager();
+                switch (tag) {
+                    case 0://程序启动时执行
+                        initPager(tag);
+                        break;
+                    case 1://绑定成功
+                        initPager(tag);
+                        break;
+                    case 2://解绑成功
+
+                        break;
+                    default:
+                        break;
                 }
                 initBmb();
             }
@@ -414,7 +432,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                 super.onFailure(statusCode, request, e);
                 dismissSpinnerDlg(true);
                 CommonKit.showErrorShort(context, getString(R.string.label_intnet_fail));
-                initPager();
+                initPager(-1);
                 initBmb();
             }
 
@@ -435,7 +453,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
         doAfterLogin(new UserBaseActivity.CallBackAction() {
             @Override
             public void action() {
-                boxlist(true);
+                boxlist(1);
             }
         });
     }
@@ -449,7 +467,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
         doAfterLogin(new UserBaseActivity.CallBackAction() {
             @Override
             public void action() {
-                boxlist(false);
+                boxlist(2);
             }
         });
     }
