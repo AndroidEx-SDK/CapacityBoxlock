@@ -10,11 +10,15 @@ import com.androidex.capbox.module.AuthCodeModel;
 import com.androidex.capbox.module.BaiduModel;
 import com.androidex.capbox.module.BaseModel;
 import com.androidex.capbox.module.BoxDetailModel;
+import com.androidex.capbox.module.BoxDetailModel2;
 import com.androidex.capbox.module.BoxDeviceModel;
 import com.androidex.capbox.module.BoxMovePathModel;
 import com.androidex.capbox.module.CheckVersionModel;
 import com.androidex.capbox.module.DeviceMacModel;
 import com.androidex.capbox.module.DeviceWatchModel;
+import com.androidex.capbox.module.GetFingerInfoModel;
+import com.androidex.capbox.module.GetLockTypeModel;
+import com.androidex.capbox.module.GetPoliceInfoModel;
 import com.androidex.capbox.module.LocationModel;
 import com.androidex.capbox.module.LoginModel;
 import com.androidex.capbox.module.ResultModel;
@@ -226,17 +230,6 @@ public class NetApi {
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
 
-    public static void movepath(String token, String username, String uuid, ResultCallBack<BoxMovePathModel> callBack) {
-        Headers headers = new Headers.Builder()
-                .add("token", token)
-                .build();
-        RequestParams params = RequestParams.newInstance()
-                .put("username", username)
-                .put("uuid", uuid);
-        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_MOVEPATH);
-        new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
-    }
-
     /**
      * 获取腕表设备列表
      * token
@@ -271,7 +264,6 @@ public class NetApi {
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
 
-
     /**
      * 箱体详情
      * token
@@ -291,6 +283,191 @@ public class NetApi {
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
 
+    /**
+     * 箱体详情  //第二版
+     * token
+     * username
+     * uuid   //B型号时该值为空字符串
+     * mac   //当设备型号为B时使用MAC
+     */
+    public static void boxDetail2(String token, String username, String uuid, ResultCallBack<BoxDetailModel2> callBack) {
+        Headers headers = new Headers.Builder()
+                .add("token", token)
+                .build();
+        RequestParams params = RequestParams.newInstance()
+                .put("username", username)
+                .put("uuid", uuid);
+
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_BOXDETAIL);
+        new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
+    }
+
+    /**
+     * 4.2.14	设置报警控制参数  //第二版
+     * token
+     * username:’13828840464’,
+     * uuid:’9a75bca04593464d95b4266cc5e0bc27’, //箱体的uuid
+     * police:’A’,          //报警开启A和关闭B
+     * policeDiatance:’A’     //距离报警， 开启A 关闭B
+     * dismountPolice:’A’,   //破拆报警的开启A和关闭B
+     * tamperPolice:’A’,      //防拆报警，开启A和关闭B
+     * tempPolice:’A’,         //温度报警开关，开启A 关闭B
+     * humPolice:’A’          //湿度报警开关，开启A 关闭B
+     * highestTemp:”80”,       //最高温度，超出报警
+     * lowestTemp:”0”，       //最低温
+     * highestHum:’80’,        //最高湿度
+     * lowestHum:’20’         //最低湿度
+     */
+    public static void setPoliceInfo(String token, String username, String uuid, String police,
+                                     String policeDiatance,
+                                     String dismountPolice, String tamperPolice,
+                                     String tempPolice, String humPolice, String highestTemp, String lowestTemp,
+                                     String highestHum, String lowestHum,
+                                     ResultCallBack<BaseModel> callBack) {
+        Headers headers = new Headers.Builder()
+                .add("token", token)
+                .build();
+        RequestParams params = RequestParams.newInstance()
+                .put("username", username)
+                .put("uuid", uuid)
+                .put("police", police)
+                .put("policeDiatance", policeDiatance)
+                .put("dismountPolice", dismountPolice)
+                .put("tamperPolice", tamperPolice)
+                .put("tempPolice", tempPolice)
+                .put("humPolice", humPolice)
+                .put("highestTemp", highestTemp)
+                .put("lowestTemp", lowestTemp)
+                .put("highestHum", highestHum)
+                .put("lowestHum", lowestHum);
+
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_SET_POLICE_INFO);
+        new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
+    }
+
+    /**
+     * 4.2.15	获取报警控制参数  //第二版
+     */
+    public static void getPoliceInfo(String token, String username, ResultCallBack<GetPoliceInfoModel> callBack) {
+        Headers headers = new Headers.Builder()
+                .add("token", token)
+                .build();
+        RequestParams params = RequestParams.newInstance()
+                .put("username", username);
+
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_GET_POLICE_INFO);
+        new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
+    }
+
+    /**
+     * 4.2.14	设置报警控制参数  //第二版
+     * token
+     * username:’13828840464’,
+     * uuid:’9a75bca04593464d95b4266cc5e0bc27’, //箱体的uuid
+     * possessorFinger1: ‘fffffff’，   //箱体所有人的指纹信息或指纹id
+     * possessorFinger2:’fffffff’,     //箱体所有人的指纹信息或id
+     * possessorFinger3:’fffffff’,     //箱体所有人的指纹信息或id
+     * becomeFinger1:’fffffff’,      //静默功能的指纹信息或id
+     * becomeFinger2:’fffffff’，     //静默功能的指纹信息或id
+     * becomeFinger3:’fffffff’’      //静默功能的指纹信息或id
+     */
+    public static void setFingerInfo(String token, String username, String uuid, String possessorFinger1,
+                                     String possessorFinger2, String possessorFinger3, String becomeFinger1,
+                                     String becomeFinger2, String becomeFinger3,
+                                     ResultCallBack<BaseModel> callBack) {
+        Headers headers = new Headers.Builder()
+                .add("token", token)
+                .build();
+        RequestParams params = RequestParams.newInstance()
+                .put("username", username)
+                .put("uuid", uuid)
+                .put("possessorFinger1", possessorFinger1)
+                .put("possessorFinger2", possessorFinger2)
+                .put("possessorFinger3", possessorFinger3)
+                .put("becomeFinger1", becomeFinger1)
+                .put("becomeFinger2", becomeFinger2)
+                .put("becomeFinger3", becomeFinger3);
+
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_SET_FINGER_INFO);
+        new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
+    }
+
+    /**
+     * 4.2.17	获取箱体的指纹信息 //第二版
+     */
+    public static void getFingerInfo(String token, String username, String uuid, ResultCallBack<GetFingerInfoModel> callBack) {
+        Headers headers = new Headers.Builder()
+                .add("token", token)
+                .build();
+        RequestParams params = RequestParams.newInstance()
+                .put("username", username)
+                .put("uuid", uuid);
+
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_GET_FINGER_INFO);
+        new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
+    }
+
+    /**
+     * 4.2.18	设置开锁配置  //第二版
+     * token
+     * username:’13828840464’,
+     * uuid:’9a75bca04593464d95b4266cc5e0bc27’, //箱体的uuid
+     * bluetoothUnlocking:’A’,  //蓝牙开锁 开启”A”关闭”B”
+     * fingerUnlocking:’A’,     //指纹开锁 开启”A”关闭”B”
+     * remoteUnlocking:’A’     //远程开锁 开启”A”关闭”B”
+     */
+    public static void setLockType(String token, String username, String uuid, String bluetoothUnlocking,
+                                   String fingerUnlocking, String remoteUnlocking,
+                                   ResultCallBack<BaseModel> callBack) {
+        Headers headers = new Headers.Builder()
+                .add("token", token)
+                .build();
+        RequestParams params = RequestParams.newInstance()
+                .put("username", username)
+                .put("uuid", uuid)
+                .put("bluetoothUnlocking", bluetoothUnlocking)
+                .put("fingerUnlocking", fingerUnlocking)
+                .put("remoteUnlocking", remoteUnlocking);
+
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_SET_LOCK_TYPE);
+        new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
+    }
+
+    /**
+     * 4.2.19	获取开锁配置信息 //第二版
+     */
+    public static void getLockType(String token, String username, String uuid, ResultCallBack<GetLockTypeModel> callBack) {
+        Headers headers = new Headers.Builder()
+                .add("token", token)
+                .build();
+        RequestParams params = RequestParams.newInstance()
+                .put("username", username)
+                .put("uuid", uuid);
+
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_GET_LOCK_TYPE);
+        new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
+    }
+
+    /**
+     * 4.2.20	设置箱体的昵称  //第二版
+     * token
+     * username:’13828840464’,
+     * uuid:’9a75bca04593464d95b4266cc5e0bc27’, //箱体的uuid
+     * boxName:’密藏’           //密运箱的昵称
+     */
+    public static void setBoxName(String token, String username, String uuid, String boxName,
+                                  ResultCallBack<BaseModel> callBack) {
+        Headers headers = new Headers.Builder()
+                .add("token", token)
+                .build();
+        RequestParams params = RequestParams.newInstance()
+                .put("username", username)
+                .put("uuid", uuid)
+                .put("boxName", boxName);
+
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_SET_BOX_NAME);
+        new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
+    }
 
     /**
      * 获取箱体经纬度
@@ -335,9 +512,9 @@ public class NetApi {
     /**
      * 密管箱配置
      * token
-     * username   //该用户默认为该箱子的所有人
+     * username
      * uuid
-     * possessorFinger     //箱体所有人的指纹信息
+     * possessorFinger
      * unlocking    //多次有效A 一次有效B
      * unlockingMode  //开锁方式设定: 指纹开锁A，腕表开锁B 同时                                                                                       开锁 C
      * carryPersonNum  //携行人员人数跟腕表数量对应
@@ -356,10 +533,10 @@ public class NetApi {
 
     /**
      * @param token
-     * @param username
-     * @param uuid
+     * @param username         //该用户默认为该箱子的所有人
+     * @param uuid             //箱体所有人的指纹信息
      * @param boxName
-     * @param possessorFinger1
+     * @param possessorFinger1 //箱体所有人的指纹信息
      * @param possessorFinger2
      * @param possessorFinger3
      * @param becomeFinger1
@@ -439,7 +616,6 @@ public class NetApi {
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
     }
 
-
     /**
      * 开启押运状态
      * token
@@ -453,6 +629,36 @@ public class NetApi {
         RequestParams params = RequestParams.newInstance()
                 .put("username", username)
                 .put("uuid", uuid);
+
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_STARTESCORT);
+        new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
+    }
+
+    /**
+     * 开启押运状态
+     * token
+     * uuid:’9a75bca04593464d95b4266cc5e0bc27’
+     * carryPersonNum:2,  //携行人员人数跟腕表数量对应
+     * heartbeatRate:60,    //心跳更新频率60秒
+     * locationRate:60,     //定位更新频率为60秒
+     * become:’A’,        //静默开启A 关闭B
+     * isDefault:0，       //设置为默认设备，默认为0否为1默认设备只有一台
+     */
+    public static void startEscort2(String token, String username, String uuid,
+                                    String carryPersonNum, String heartbeatRate,
+                                    String locationRate, String become, String isDefault,
+                                    ResultCallBack<BaseModel> callBack) {
+        Headers headers = new Headers.Builder()
+                .add("token", token)
+                .build();
+        RequestParams params = RequestParams.newInstance()
+                .put("username", username)
+                .put("uuid", uuid)
+                .put("carryPersonNum", carryPersonNum)
+                .put("heartbeatRate", heartbeatRate)
+                .put("locationRate", locationRate)
+                .put("become", become)
+                .put("isDefault", isDefault);
 
         String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_STARTESCORT);
         new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
@@ -595,6 +801,23 @@ public class NetApi {
     }
 
     /**
+     * 4.2.29	APP 一键锁死
+     * token
+     * username
+     * uuid
+     */
+    public static void deadLock(String token, String username, String uuid, ResultCallBack<BaseModel> callBack) {
+        Headers headers = new Headers.Builder()
+                .add("token", token)
+                .build();
+        RequestParams params = RequestParams.newInstance()
+                .put("username", username)
+                .put("uuid", uuid);
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_DEAD_LOCK);
+        new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
+    }
+
+    /**
      * 检测版本号
      * 下载地址：
      * APP：version/app/20171129.apk
@@ -630,7 +853,7 @@ public class NetApi {
     }
 
     /**
-     * 获取APP安装包的下载路径
+     * 获取密运箱安装包的下载路径
      *
      * @param token
      * @param path        APK的安装路径
@@ -647,7 +870,7 @@ public class NetApi {
     }
 
     /**
-     * 获取APP安装包的下载路径
+     * 获取腕表安装包的下载路径
      *
      * @param token
      * @param path          APK的安装路径
@@ -664,6 +887,42 @@ public class NetApi {
     }
 
     /**
+     * 4.2.31	APP 远程开锁
+     * username:’13828840464’,
+     * uuid:’9a75bca04593464d95b4266cc5e0bc27’
+     */
+    public static void remoteOpenLock(String token, String username, String uuid, ResultCallBack<BaseModel> callBack) {
+        Headers headers = new Headers.Builder()
+                .add("token", token)
+                .build();
+        RequestParams params = RequestParams.newInstance()
+                .put("username", username)
+                .put("uuid", uuid);
+
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_REMOTE_OPENLOCK);
+        new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
+    }
+
+    /**
+     * 4.2.32	APP 获取箱体的移动轨迹
+     *
+     * @param token
+     * @param username
+     * @param uuid
+     * @param callBack
+     */
+    public static void movepath(String token, String username, String uuid, ResultCallBack<BoxMovePathModel> callBack) {
+        Headers headers = new Headers.Builder()
+                .add("token", token)
+                .build();
+        RequestParams params = RequestParams.newInstance()
+                .put("username", username)
+                .put("uuid", uuid);
+        String url = getUrl(UrlTool.LOGIC_USER, UrlTool.USER_ACTION_MOVEPATH);
+        new OkRequest.Builder().url(url).headers(headers).params(params).post(callBack);
+    }
+
+    /**
      * 获取本机蓝牙地址
      *
      * @return
@@ -673,5 +932,4 @@ public class NetApi {
         String address = bluetoothAdapter.getAddress();
         return address;
     }
-
 }

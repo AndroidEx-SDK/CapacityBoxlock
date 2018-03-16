@@ -32,6 +32,13 @@ public class UrlTool {
     public static final String USER_ACTION_WATCHLIST = "watchList";   //获取腕表设备列表
     public static final String USER_ACTION_ALL_WATCHLIST = "userWatchList";   //获取腕表设备列表
     public static final String USER_ACTION_BOXDETAIL = "boxDetail";   //箱体详情
+    public static final String USER_ACTION_SET_POLICE_INFO = "setPoliceInfo";   //4.2.14	设置报警控制参数
+    public static final String USER_ACTION_GET_POLICE_INFO = "getPoliceInfo";   //4.2.15	设置报警控制参数
+    public static final String USER_ACTION_SET_FINGER_INFO = "setFingerInfo";   //4.2.16	设置箱体的指纹信息
+    public static final String USER_ACTION_GET_FINGER_INFO = "getFingerInfo";   //4.2.17	获取箱体的指纹信息
+    public static final String USER_ACTION_SET_LOCK_TYPE = "setLockType";   //4.2.18	设置开锁配置
+    public static final String USER_ACTION_GET_LOCK_TYPE = "getLockType";   //4.2.19	获取开锁配置信息
+    public static final String USER_ACTION_SET_BOX_NAME = "setBoxName";   //4.2.20	设置箱体的昵称
     public static final String USER_ACTION_WATCHDETAIL = "watchDetail";   //腕表详情
     public static final String USER_ACTION_BOXCONFIG = "boxConfig";     //密管箱配置
     public static final String USER_ACTION_STARTESCORT = "startEscort";    //开启押运状态
@@ -40,8 +47,10 @@ public class UrlTool {
     public static final String USER_ACTION_DEFAULTDEVICE = "defaultDevice";     //设置默认设备
     public static final String USER_ACTION_GETDEVICEMAC = "getDeviceMac";    //获取箱体mac
     public static final String USER_ACTION_GETALARMLIST = "getAlarmList";    //获取箱体报警信息
+    public static final String USER_ACTION_DEAD_LOCK = "deadLock";    //4.2.29	APP 一键锁死箱体
     public static final String USER_ACTION_CHECKVERSION = "checkVersion";    //检测新版本
-    public static final String USER_ACTION_MOVEPATH = "movePath";   //获取箱体移动轨迹
+    public static final String USER_ACTION_REMOTE_OPENLOCK = "remoteOpenLock";   //4.2.31	APP 远程开锁
+    public static final String USER_ACTION_MOVEPATH = "movePath";   //4.2.32	APP 获取箱体的移动轨迹
 
     public static String getUrl(String logic, String action) {
         StringBuilder builder = new StringBuilder(Constants.CONFIG.APP_BASIC_SERVER);
