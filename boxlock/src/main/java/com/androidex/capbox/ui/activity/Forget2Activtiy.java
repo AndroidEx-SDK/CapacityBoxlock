@@ -9,7 +9,6 @@ import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.module.BaseModel;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
-import com.androidex.capbox.base.UserBaseActivity;
 
 import okhttp3.Headers;
 import okhttp3.Request;
@@ -51,13 +50,8 @@ public class Forget2Activtiy extends RegisterActivity {
                     switch (model.code) {
                         case Constants.API.API_OK:
                             CommonKit.showOkShort(context, getString(R.string.hint_find_pwd_ok));
-                            LoginActivity.lauch(context, new UserBaseActivity.CallBackAction() {
-                                @Override
-                                public void action() {
-
-                                }
-                            });
                             CommonKit.finishActivity(context);
+                            LoginActivity.lauch(context);
                             break;
 
                         case Constants.API.API_NOPERMMISION:

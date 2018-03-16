@@ -1,7 +1,7 @@
 package com.androidex.capbox.module;
 
 /**
- * @author wanglei
+ * @author liyp
  * @version 1.0.0
  * @description 用户
  * @createTime 2015/11/25

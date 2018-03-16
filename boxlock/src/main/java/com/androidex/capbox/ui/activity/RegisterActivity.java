@@ -332,7 +332,6 @@ public class RegisterActivity extends UserBaseActivity {
                 if (model != null) {
                     switch (model.code) {
                         case Constants.API.API_OK:
-                            CacheManage.getFastCache().put(Constants.PARAM.CACHE_KEY_CUR_LOGIN_USER, model);
                             LoginActivity.lauch(context);
                             break;
                         case Constants.API.API_FAIL:

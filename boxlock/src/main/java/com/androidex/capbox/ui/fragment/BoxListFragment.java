@@ -499,8 +499,8 @@ public class BoxListFragment extends BaseFragment {
                             break;
                         case Constants.API.API_FAIL:
                             CommonKit.showErrorShort(context, "账号在其他地方登录");
-                            LoginActivity.lauch(context);
                             showProgress("刷新失败");
+                            LoginActivity.lauch(context);
                             break;
                         case Constants.API.API_NOPERMMISION:
                             CommonKit.showErrorShort(context, "获取设备列表失败");

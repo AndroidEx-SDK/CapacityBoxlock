@@ -17,19 +17,17 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.androidex.capbox.R;
-import com.androidex.capbox.data.Event;
-import com.androidex.capbox.data.cache.CacheManage;
 import com.androidex.capbox.data.cache.SharedPreTool;
-import com.androidex.capbox.module.UserModel;
 import com.androidex.capbox.ui.activity.LoginActivity;
 import com.androidex.capbox.utils.BuildConfig;
 import com.androidex.capbox.utils.CommonKit;
-import com.androidex.capbox.utils.Constants;
 import com.androidex.capbox.utils.DialogUtils;
 import com.androidex.capbox.utils.SystemUtil;
 
 import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
+
+import static com.androidex.capbox.data.cache.SharedPreTool.LOGIN_STATUS;
 
 /**
  * @author liyp
@@ -151,6 +149,12 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
 
     protected String getToken() {
         String token = SharedPreTool.getInstance(context).getStringData(SharedPreTool.TOKEN, null);
+        if (token == null) {
+            CommonKit.showErrorShort(context, "账号未登录");
+            SharedPreTool.getInstance(context).setBoolData(LOGIN_STATUS, false);
+            LoginActivity.lauch(context);
+            return "";
+        }
         return token;
     }
 
@@ -162,8 +166,8 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         String username = SharedPreTool.getInstance(context).getStringData(SharedPreTool.PHONE, null);
         if (username == null) {
             CommonKit.showErrorShort(context, "账号异常");
+            SharedPreTool.getInstance(context).setBoolData(LOGIN_STATUS, false);//设置登录标识为false
             LoginActivity.lauch(context);
-            postSticky(new Event.UserLoginEvent());
             return "";
         }
         return username;
@@ -188,8 +192,8 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
      * @param callback
      */
     protected void doAfterLogin(UserBaseActivity.CallBackAction callback) {
-        if (getLoginedUser() == null) {
-            LoginActivity.lauch(context, callback);
+        if (!getLoginedUser()) {
+            LoginActivity.lauch(context);
         } else {
             if (callback != null) {
                 callback.action();
@@ -198,12 +202,12 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     }
 
     /**
-     * 获取当前登录的用户
+     * 判断当前用户是否登录
      *
      * @return
      */
-    protected UserModel getLoginedUser() {
-        return CacheManage.getFastCache().get(Constants.PARAM.CACHE_KEY_CUR_LOGIN_USER, UserModel.class);
+    protected boolean getLoginedUser() {
+        return SharedPreTool.getInstance(context).getBoolData(LOGIN_STATUS, false);
     }
 
     /**

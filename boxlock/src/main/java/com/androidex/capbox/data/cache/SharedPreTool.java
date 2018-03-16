@@ -25,6 +25,7 @@ public class SharedPreTool {
     public static final String PASSWORD = "password";
     public static final String AUTOMATIC_LOGIN = "automatic_login";//自动登录
     public static final String TOKEN = "token";
+    public static final String LOGIN_STATUS = "login_status";
     public static final String NEED_GUIDE = "need_guide"; //是否需要引导
     public static final String IS_REGISTED = "isregist"; //是否提交审核，提交后，遭到拒绝与未提交一样
     public static final String DEFAULT_MAC = "default_mac"; //默认设备的mac

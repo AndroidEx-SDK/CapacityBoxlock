@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.androidex.capbox.base.BaseActivity;
+import com.androidex.capbox.base.UserBaseActivity;
 import com.androidex.capbox.data.Event;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
@@ -106,10 +107,10 @@ public class MainActivity extends BaseActivity implements OnClickListener {
         homepage_tab3.setOnClickListener(this);
         homepage_tab4.setOnClickListener(this);
         fragmentManager = getSupportFragmentManager();
+        transaction = fragmentManager.beginTransaction();
         if (mylist.size() == 0) {
             currIndex = 0;
             initImage();
-            transaction = fragmentManager.beginTransaction();
             mainFragment = new BoxListFragment();
             transaction.replace(R.id.content, mainFragment);
             transaction.commit();
@@ -129,7 +130,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
             }
             lockFragment = new LockFragment();
             lockFragment.setArguments(bundle);
-            transaction = fragmentManager.beginTransaction();
             transaction.replace(R.id.content, lockFragment);
             transaction.commit();
         }
@@ -432,7 +432,12 @@ public class MainActivity extends BaseActivity implements OnClickListener {
      * @param event
      */
     public void onEvent(Event.BoxBindChange event) {
-        boxlist(true);    //刷新数据
+        doAfterLogin(new UserBaseActivity.CallBackAction() {
+            @Override
+            public void action() {
+                boxlist(true);
+            }
+        });
     }
 
     /**
@@ -441,7 +446,12 @@ public class MainActivity extends BaseActivity implements OnClickListener {
      * @param event
      */
     public void onEvent(Event.BoxRelieveBind event) {
-        boxlist(false);
+        doAfterLogin(new UserBaseActivity.CallBackAction() {
+            @Override
+            public void action() {
+                boxlist(false);
+            }
+        });
     }
 
     /**
@@ -450,7 +460,12 @@ public class MainActivity extends BaseActivity implements OnClickListener {
      * @param event
      */
     public void onEvent(Event.UserLoginEvent event) {
-        CommonKit.finishActivity(context);
+        doAfterLogin(new UserBaseActivity.CallBackAction() {
+            @Override
+            public void action() {
+
+            }
+        });
     }
 
     /**

@@ -30,6 +30,8 @@ import butterknife.OnClick;
 import okhttp3.Headers;
 import okhttp3.Request;
 
+import static com.androidex.capbox.data.cache.SharedPreTool.LOGIN_STATUS;
+
 /**
  * @title 设置界面
  */
@@ -53,6 +55,7 @@ public class SettingActivity extends UserBaseActivity {
 
     @Override
     public void initData(Bundle savedInstanceState) {
+        RLog.e("SettingActivity is onCreat");
         tv_versionNum.setText(getResources().getString(R.string.about_tv_versionNum) + CommonKit.getVersionName(context));
         updateCache();
     }
@@ -114,8 +117,8 @@ public class SettingActivity extends UserBaseActivity {
                     });
                 }
                 removeCacheForSp();//删除缓存
+                CommonKit.finishActivity(context);
                 postSticky(new Event.UserLoginEvent());//登录状态发生改变
-                LoginActivity.lauch(context);
                 break;
             case R.id.tv_logoff:
                 if (username != null) {
@@ -148,8 +151,8 @@ public class SettingActivity extends UserBaseActivity {
                     });
                 }
                 removeCacheForSp();//删除缓存
+                CommonKit.finishActivity(context);
                 postSticky(new Event.UserLoginEvent());//登录状态发生改变
-                LoginActivity.lauch(context);
                 break;
 
             case R.id.ll_searchVersion:
@@ -322,6 +325,7 @@ public class SettingActivity extends UserBaseActivity {
      * 删除缓存本地的账号和密码
      */
     private void removeCacheForSp() {
+        SharedPreTool.getInstance(context).setBoolData(LOGIN_STATUS, false);//设置登录标识为false
         SharedPreTool.getInstance(context).remove(SharedPreTool.TOKEN);
         SharedPreTool.getInstance(context).remove(SharedPreTool.PHONE);
         SharedPreTool.getInstance(context).remove(SharedPreTool.PASSWORD);

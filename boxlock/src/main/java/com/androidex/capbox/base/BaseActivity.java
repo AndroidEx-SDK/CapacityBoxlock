@@ -19,12 +19,9 @@ import android.widget.TextView;
 
 import com.androidex.capbox.MyApplication;
 import com.androidex.capbox.R;
-import com.androidex.capbox.data.cache.CacheManage;
 import com.androidex.capbox.data.cache.SharedPreTool;
-import com.androidex.capbox.module.UserModel;
 import com.androidex.capbox.ui.activity.LoginActivity;
 import com.androidex.capbox.utils.CommonKit;
-import com.androidex.capbox.utils.Constants;
 import com.androidex.capbox.utils.Dialog;
 import com.androidex.capbox.utils.DialogUtils;
 import com.androidex.capbox.utils.RLog;
@@ -47,6 +44,7 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.BLUTOOTH_OFF;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLUTOOTH_ON;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ISACTIVEDisConnect;
+import static com.androidex.capbox.data.cache.SharedPreTool.LOGIN_STATUS;
 import static com.androidex.capbox.utils.Constants.BASE.ACTION_RSSI_IN;
 import static com.androidex.capbox.utils.Constants.BASE.ACTION_RSSI_OUT;
 import static com.androidex.capbox.utils.Constants.BASE.ACTION_TEMP_OUT;
@@ -211,9 +209,8 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
         String token = SharedPreTool.getInstance(context).getStringData(SharedPreTool.TOKEN, null);
         if (token == null) {
             CommonKit.showErrorShort(context, "账号未登录");
+            SharedPreTool.getInstance(context).setBoolData(LOGIN_STATUS, false);
             LoginActivity.lauch(context);
-            Loge("token is null");
-            //postSticky(new Event.UserLoginEvent());
             return "";
         }
         return token;
@@ -227,9 +224,8 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
         String username = SharedPreTool.getInstance(context).getStringData(SharedPreTool.PHONE, null);
         if (username == null) {
             CommonKit.showErrorShort(context, "账号未登录");
+            SharedPreTool.getInstance(context).setBoolData(LOGIN_STATUS, false);
             LoginActivity.lauch(context);
-            Loge("username is null");
-            //postSticky(new Event.UserLoginEvent());
             return "";
         }
         return username;
@@ -368,8 +364,8 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
      * @param callback
      */
     protected void doAfterLogin(UserBaseActivity.CallBackAction callback) {
-        if (getLoginedUser() == null) {
-            LoginActivity.lauch(context, callback);
+        if (!getLoginedUser()) {
+            LoginActivity.lauch(context);
         } else {
             if (callback != null) {
                 callback.action();
@@ -378,12 +374,12 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
     }
 
     /**
-     * 获取当前登录的用户
+     * 判断当前用户是否登录
      *
      * @return
      */
-    protected UserModel getLoginedUser() {
-        return CacheManage.getFastCache().get(Constants.PARAM.CACHE_KEY_CUR_LOGIN_USER, UserModel.class);
+    protected boolean getLoginedUser() {
+        return SharedPreTool.getInstance(context).getBoolData(LOGIN_STATUS, false);
     }
 
     protected static MyApplication getApp() {

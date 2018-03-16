@@ -24,6 +24,8 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
+import static com.androidex.capbox.data.cache.SharedPreTool.LOGIN_STATUS;
+
 public class LoginActivity extends UserBaseActivity {
     @Bind(R.id.thirdtitlebar)
     ThirdTitleBar thirdtitlebar;
@@ -198,15 +200,11 @@ public class LoginActivity extends UserBaseActivity {
                         callBackAction.action();
                         callBackAction = null;
                     }
+                    SharedPreTool.getInstance(context).setBoolData(LOGIN_STATUS, true);
                     MainActivity.lauch(context);
                 }
             });
         }
-    }
-
-    public static void lauch(Activity activity, UserBaseActivity.CallBackAction callback) {
-        callBackAction = callback;
-        CommonKit.startActivity(activity, LoginActivity.class, null, true);
     }
 
     public static void lauch(Activity activity) {
