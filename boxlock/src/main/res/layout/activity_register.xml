@@ -161,7 +161,6 @@
                         android:layout_toRightOf="@id/iv_captchaLabel"
                         android:background="@android:color/transparent"
                         android:hint="@string/hint_captcha"
-                        android:inputType="number"
                         android:paddingLeft="@dimen/marginPadding14"
                         android:singleLine="true"
                         android:textColor="@color/white"

@@ -5,7 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.InputType;
 import android.text.TextUtils;
+import android.text.method.KeyListener;
+import android.text.method.NumberKeyListener;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -15,7 +18,6 @@ import android.widget.Toast;
 
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.UserBaseActivity;
-import com.androidex.capbox.data.cache.CacheManage;
 import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
@@ -147,6 +149,7 @@ public class RegisterActivity extends UserBaseActivity {
 
     @Override
     public void initData(Bundle savedInstanceState) {
+        et_cardID.setKeyListener(hexkeyListener);
         rl_title.setRightText("重新注册");
         rl_title.getRightTv().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -454,6 +457,18 @@ public class RegisterActivity extends UserBaseActivity {
             }
         });
     }
+
+    KeyListener hexkeyListener = new NumberKeyListener() {
+        public int getInputType() {
+            return InputType.TYPE_CLASS_TEXT;
+        }
+
+        @Override
+        protected char[] getAcceptedChars() {
+            return new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                    'x', 'X'};
+        }
+    };
 
     public void clearText() {
         et_name.setText("");
