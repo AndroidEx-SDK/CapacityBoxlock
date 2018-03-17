@@ -655,6 +655,7 @@ public class BoxListFragment extends BaseFragment {
                         }
                         if (flag) {
                             if (device.getName() != null) {
+                                RLog.e("搜索到的蓝牙设备22=" + device.getName());
                                 //过滤搜索到的设备的名字
                                 if (device.getName().contains(LockFragment.boxName)) {
                                     mDeviceListAdapter.addDevice(device);
@@ -663,7 +664,7 @@ public class BoxListFragment extends BaseFragment {
                         }
                     } else {
                         if (device.getName() != null) {
-                            RLog.e("搜索到的蓝牙设备=" + device.getName());
+                            RLog.e("搜索到的蓝牙设备11=" + device.getName());
                             //过滤搜索到的设备的名字
                             if (device.getName().contains(LockFragment.boxName)) {
                                 mDeviceListAdapter.addDevice(device);
