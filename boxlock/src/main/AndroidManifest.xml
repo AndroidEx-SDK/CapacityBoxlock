@@ -38,7 +38,7 @@
         android:name="com.androidex.boxlib.permission"
         android:protectionLevel="signature"></permission>
     <uses-permission android:name="com.androidex.boxlib.permission" />
-    
+
     <application
         android:name="com.androidex.capbox.MyApplication"
         android:allowBackup="true"

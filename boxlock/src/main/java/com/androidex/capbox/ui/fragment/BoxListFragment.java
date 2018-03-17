@@ -90,7 +90,7 @@ public class BoxListFragment extends BaseFragment {
     private BleBroadCast bleBroadCast;
     List<Map<String, String>> mylist = new ArrayList<>();
     private Animation animation;//动画
-    private static final long SCAN_PERIOD = 10000;
+    private static final long SCAN_PERIOD = 12000;
     private int DURATION = 1000 * 2;// 动画持续时间
     private static final int REQUEST_ENABLE_BT = 1;// 用于蓝牙setResult
     private boolean mScanning = false;//控制蓝牙扫描
@@ -104,12 +104,12 @@ public class BoxListFragment extends BaseFragment {
 
     @Override
     public void initData() {
-        initHandler();
         initAnimation();//初始化动画
         initTitleBar();
         iniRefreshView();
         initListView();
         initBle();//蓝牙连接
+        initHandler();
     }
 
     private void initTitleBar() {
@@ -663,6 +663,7 @@ public class BoxListFragment extends BaseFragment {
                         }
                     } else {
                         if (device.getName() != null) {
+                            RLog.e("搜索到的蓝牙设备=" + device.getName());
                             //过滤搜索到的设备的名字
                             if (device.getName().contains(LockFragment.boxName)) {
                                 mDeviceListAdapter.addDevice(device);
