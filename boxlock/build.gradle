@@ -6,9 +6,9 @@ android {
     defaultConfig {
         applicationId "com.androidex.capbox"
         minSdkVersion 19
-        targetSdkVersion 26
-        versionCode 33
-        versionName "0.3.6"
+        targetSdkVersion 22
+        versionCode 37
+        versionName "0.3.7"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
