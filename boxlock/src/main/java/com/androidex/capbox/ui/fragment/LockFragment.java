@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -133,6 +135,8 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     TextView minhum;
     @Bind(R.id.progressBar_dfu)
     ProgressBar mProgressBarOtaUpload;
+    @Bind(R.id.swipeRefreshLayout)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     private Timer timer_location = new Timer();// 设计定时器
     private TimerTask timer_getlocation;
@@ -158,6 +162,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         deviceName = bundle.getString(EXTRA_BOX_NAME);
         if (uuid != null) getLocation(true);
         initView();
+        iniRefreshView();
         initMap();
         initBleBroadCast();
     }
@@ -185,6 +190,25 @@ public class LockFragment extends BaseFragment implements OnClickListener {
             context.registerReceiver(dataUpdateRecevice, intentFilter);
         }
     }
+
+    private void iniRefreshView() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // 模拟刷新完成
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        boxlocation(uuid);
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 1000);
+            }
+        });
+    }
+
 
     @Override
     public void setListener() {

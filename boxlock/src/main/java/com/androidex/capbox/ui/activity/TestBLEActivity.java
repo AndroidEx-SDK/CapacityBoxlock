@@ -86,8 +86,11 @@ public class TestBLEActivity extends BaseActivity {
     public void initData(Bundle savedInstanceState) {
         allConnectDevice = MyBleService.getInstance().getAllConnectDevice();
         Loge("connected device size=" + allConnectDevice.size());
-        BluetoothDevice device = allConnectDevice.get(0);
-        address = device.getAddress();
+        if (allConnectDevice.size() > 0) {
+            address = allConnectDevice.get(0).getAddress();
+        }else {
+            CommonKit.showErrorShort(context,"请连接蓝牙");
+        }
         initBleBroadCast();
     }
 
@@ -122,7 +125,6 @@ public class TestBLEActivity extends BaseActivity {
         context.registerReceiver(dataUpdateRecevice, intentFilter);
     }
 
-
     public void startSend() {
         Runnable sendRunnable = new Runnable() {
             @Override
@@ -131,6 +133,7 @@ public class TestBLEActivity extends BaseActivity {
                     checkBoxAutoCOMA.setChecked(false);
                     return;
                 }
+                if (address == null) return;
                 while (MyBleService.getInstance().getConnectDevice(address) != null) {
                     try {
                         Thread.sleep(getDelayTime());
@@ -219,6 +222,8 @@ public class TestBLEActivity extends BaseActivity {
         public void onClick(View v) {
             if (v == ButtonClear) {
                 editTextRecDisp.setText("");
+                iRecLines = 0;
+                editTextLines.setText(String.valueOf(iRecLines));
             } else if (v == ButtonSendCOMA) {
                 sendData();
             }
@@ -314,7 +319,7 @@ public class TestBLEActivity extends BaseActivity {
                     CommonKit.showOkShort(context, "手机蓝牙开启");
                     break;
                 case ACTION_ALL_DATA:
-                    RLog.d("读取到的数据=" + Byte2HexUtil.byte2Hex(b));
+                    //RLog.d("读取到的数据=" + Byte2HexUtil.byte2Hex(b));
                     updateText(b);
                     break;
                 default:
