@@ -1,7 +1,6 @@
 package com.androidex.capbox.service;
 
 import android.content.Intent;
-import android.util.Log;
 
 import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.boxlib.service.BleService;
@@ -42,13 +41,8 @@ public class MyBleService extends BleService {
      * @return
      */
     public static BleService getInstance() {
-        try {
-            service = (MyBleService) get();
-        } catch (NullPointerException e) {
-            Log.e(TAG, e.toString());
+        if (service == null) {
             service = new MyBleService();
-            Intent bleServer = new Intent(getContext(), MyBleService.class);
-            getContext().startService(bleServer);
         }
         return service;
     }

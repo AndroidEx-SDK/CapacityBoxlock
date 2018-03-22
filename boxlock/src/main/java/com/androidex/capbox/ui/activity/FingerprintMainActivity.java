@@ -8,19 +8,24 @@ import android.support.annotation.RequiresApi;
 import android.view.View;
 import android.widget.TextView;
 
+import com.androidex.capbox.MainActivity;
 import com.androidex.capbox.R;
-import com.androidex.capbox.base.BaseActivity;
+import com.androidex.capbox.base.UserBaseActivity;
 import com.androidex.capbox.core.FingerprintCore;
 import com.androidex.capbox.core.FingerprintUtil;
 import com.androidex.capbox.core.KeyguardLockScreenManager;
+import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.utils.CommonKit;
+import com.androidex.capbox.utils.RLog;
 
 import butterknife.Bind;
+
+import static com.androidex.capbox.ui.activity.LoginActivity.callBackAction;
 
 /**
  * 调用手机指纹验证，验证成功后即可开启APP
  */
-public class FingerprintMainActivity extends BaseActivity {
+public class FingerprintMainActivity extends UserBaseActivity {
     private FingerprintCore mFingerprintCore;
     private KeyguardLockScreenManager mKeyguardLockScreenManager;
     private TextView mFingerGuideTxt;
@@ -124,8 +129,9 @@ public class FingerprintMainActivity extends BaseActivity {
         @Override
         public void onAuthenticateSuccess() {
             CommonKit.showMsgShort(context, getString(R.string.fingerprint_recognition_success));
-            LoginActivity.lauch(context);
+            autoLogin();
         }
+
 
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         @Override
@@ -151,13 +157,61 @@ public class FingerprintMainActivity extends BaseActivity {
         }
     };
 
+    /**
+     * 自动登录
+     */
+    private void autoLogin() {
+        boolean boolData = SharedPreTool.getInstance(context).getBoolData(SharedPreTool.AUTOMATIC_LOGIN, false);
+        if (boolData) {
+            RLog.e("isaulogin=" + boolData);
+            String phone = SharedPreTool.getInstance(context).getStringData(SharedPreTool.PHONE, null);
+            String md5Pwd = SharedPreTool.getInstance(context).getStringData(SharedPreTool.PASSWORD, null);
+            if (phone != null && md5Pwd != null) {
+                RLog.e("自动登录");
+                automaticLogin(phone, md5Pwd);//自动登录
+            } else {
+                LoginActivity.lauch(context);
+            }
+        }
+    }
+
+    /**
+     * 自动登录
+     *
+     * @param phone
+     * @param md5Pwd
+     */
+    private void automaticLogin(final String phone, final String md5Pwd) {
+        getAuthCode(new UserBaseActivity.CallDataBackAction() {
+            @Override
+            public void action(String authcode) {
+                if (authcode != null) {
+                    userLogin(phone, md5Pwd, authcode, new CallBackAction() {
+                        @Override
+                        public void action() {
+                            MainActivity.lauch(context);
+                            if (callBackAction != null) {
+                                callBackAction.action();
+                                callBackAction = null;
+                            }
+                        }
+                    });
+                } else {
+                    CommonKit.showErrorShort(context, "自动登录失败");
+                    LoginActivity.lauch(context);
+                }
+            }
+        });
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == KeyguardLockScreenManager.REQUEST_CODE_CONFIRM_DEVICE_CREDENTIALS) {
             if (resultCode == RESULT_OK) {
-                LoginActivity.lauch(context);
+                autoLogin();
                 CommonKit.showMsgShort(context, getString(R.string.sys_pwd_recognition_success));
             } else {
+                LoginActivity.lauch(context);
                 CommonKit.showMsgShort(context, getString(R.string.sys_pwd_recognition_failed));
             }
         }
@@ -180,7 +234,7 @@ public class FingerprintMainActivity extends BaseActivity {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.tv_usePassword:
                 startFingerprintRecognitionUnlockScreen();
                 break;

@@ -48,18 +48,7 @@ public class LoginActivity extends UserBaseActivity {
     public void initData(Bundle savedInstanceState) {
         initTitleBar();
         initView();
-        boolean boolData = SharedPreTool.getInstance(context).getBoolData(SharedPreTool.AUTOMATIC_LOGIN, false);
-        if (boolData) {
-            RLog.e("isaulogin=" + boolData);
-            String phone = SharedPreTool.getInstance(context).getStringData(SharedPreTool.PHONE, null);
-            String md5Pwd = SharedPreTool.getInstance(context).getStringData(SharedPreTool.PASSWORD, null);
-            if (phone != null && md5Pwd != null) {
-                RLog.e("自动登录");
-                automaticLogin(phone, md5Pwd);//自动登录
-            } else {
-                getAuthCode();
-            }
-        }
+        getAuthCode();
     }
 
     private void initView() {
