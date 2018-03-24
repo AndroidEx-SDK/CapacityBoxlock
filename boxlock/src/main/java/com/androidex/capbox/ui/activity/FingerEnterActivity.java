@@ -17,6 +17,7 @@ import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.utils.CommonKit;
+import com.androidex.capbox.utils.RLog;
 
 import butterknife.Bind;
 
@@ -149,11 +150,26 @@ public class FingerEnterActivity extends BaseActivity {
                     Log.d(TAG, "获取到所有人的指纹信息b=" + Byte2HexUtil.byte2Hex(b));
                     switch (b[2]) {
                         case (byte) 0x01://识别成功
-                            tv_hint_printFinger.setText("录入成功");
-                            possessorFinger1 = "1";
-                            possessorFinger2 = "2";
-                            possessorFinger3 = "3";
-                            handler.sendEmptyMessage(0);
+                            switch (b[5]) {
+                                case (byte) 0x01:
+                                    possessorFinger1 = "1";
+                                    RLog.d("指纹录入，第一次录入成功");
+                                    tv_hint_printFinger.setText("第一次录入成功");
+                                    break;
+                                case (byte) 0x02:
+                                    possessorFinger2 = "2";
+                                    RLog.d("指纹录入，第二次录入成功");
+                                    tv_hint_printFinger.setText("第二次录入成功");
+                                    break;
+                                case (byte) 0x03:
+                                    possessorFinger3 = "3";
+                                    RLog.d("指纹录入，第三次录入成功");
+                                    tv_hint_printFinger.setText("第三次录入成功");
+                                    handler.sendEmptyMessage(0);
+                                    break;
+                                default:
+                                    break;
+                            }
                             break;
                         case (byte) 0x02://识别失败
                             tv_hint_printFinger.setText("");
