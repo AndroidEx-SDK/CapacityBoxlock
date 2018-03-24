@@ -190,6 +190,22 @@
 
                                 <com.androidex.capbox.ui.view.TypeFaceText
                                     style="@style/fragment_lock_name"
+                                    android:text="定位状态：" />
+
+                                <com.androidex.capbox.ui.view.TypeFaceText
+                                    android:id="@+id/tv_locationStatus"
+                                    style="@style/fragment_lock_data"
+                                    android:text="@string/main_max_temp" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/marginPadding6">
+
+                                <com.androidex.capbox.ui.view.TypeFaceText
+                                    style="@style/fragment_lock_name"
                                     android:text="经度：" />
 
                                 <com.androidex.capbox.ui.view.TypeFaceText
@@ -270,7 +286,7 @@
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/marginPadding8">
+                                android:layout_marginTop="@dimen/marginPadding3">
 
                                 <com.androidex.capbox.ui.view.TypeFaceText
                                     style="@style/fragment_lock_name"
@@ -339,6 +355,38 @@
                                     android:id="@+id/tv_status"
                                     style="@style/fragment_lock_data"
                                     android:text="@string/setting_tv_close" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/marginPadding6">
+
+                                <com.androidex.capbox.ui.view.TypeFaceText
+                                    style="@style/fragment_lock_name"
+                                    android:text="SIM卡状态：" />
+
+                                <com.androidex.capbox.ui.view.TypeFaceText
+                                    android:id="@+id/tv_simStatus"
+                                    style="@style/fragment_lock_data"
+                                    android:text="@string/main_max_temp" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/marginPadding6">
+
+                                <com.androidex.capbox.ui.view.TypeFaceText
+                                    style="@style/fragment_lock_name"
+                                    android:text="网络信号：" />
+
+                                <com.androidex.capbox.ui.view.TypeFaceText
+                                    android:id="@+id/tv_signalIntension"
+                                    style="@style/fragment_lock_data"
+                                    android:text="@string/main_max_temp" />
 
                             </LinearLayout>
 

@@ -133,6 +133,12 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     TextView maxhum;
     @Bind(R.id.main_tv_minhum)
     TextView minhum;
+    @Bind(R.id.tv_locationStatus)
+    TextView tv_locationStatus;
+    @Bind(R.id.tv_signalIntension)
+    TextView tv_signalIntension;
+    @Bind(R.id.tv_simStatus)
+    TextView tv_simStatus;
     @Bind(R.id.progressBar_dfu)
     ProgressBar mProgressBarOtaUpload;
     @Bind(R.id.swipeRefreshLayout)
@@ -899,14 +905,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     break;
 
                 case BLE_CONN_RSSI_SUCCED://获取到信号强度值
-//                    if (intent.getIntExtra("rssi", -100) <= -90) {
-//                        if (!MyApplication.connDeviceFail) {
-//                            MyApplication.connDeviceFail = true;
-//                            sendMessage(IS_LOST);
-//                        }
-//                    } else {
-                    //MyApplication.connDeviceFail = false;
-                    //}
+
                     break;
                 case BLE_CONN_RSSI_FAIL://获取信号强度失败
 
