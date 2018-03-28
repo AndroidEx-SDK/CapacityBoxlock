@@ -89,7 +89,7 @@ public class FingerprintMainActivity extends UserBaseActivity {
             LoginActivity.lauch(context);
             return;
         } else {
-            Loge("有锁屏密码");
+            //Loge("有锁屏密码");
         }
         mKeyguardLockScreenManager.showAuthenticationScreen(this);
     }

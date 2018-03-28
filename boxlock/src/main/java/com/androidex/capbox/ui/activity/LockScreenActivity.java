@@ -58,6 +58,31 @@ import static com.androidex.capbox.utils.Constants.BASE.ACTION_RSSI_IN;
 import static com.androidex.capbox.utils.Constants.BASE.ACTION_RSSI_OUT;
 import static com.androidex.capbox.utils.Constants.BASE.ACTION_TEMP_OUT;
 
+
+/**
+ * 03-28 17:07:31.457 21574-21574/com.androidex.capbox E/liyp_: onEvent disconnect B0:91:22:69:43:6E
+ * 03-28 17:07:31.487 21574-21574/com.androidex.capbox E/liyp_: 蓝牙断开时更新 list size = 2
+ * 03-28 17:07:31.487 21574-21574/com.androidex.capbox E/liyp_: notify  is start 2
+ * 03-28 17:07:31.487 21574-21574/com.androidex.capbox E/liyp_: getItemPosition  执行了
+ * 03-28 17:07:31.487 21574-21574/com.androidex.capbox E/liyp_: getItemPosition  执行了
+ * 03-28 17:07:31.487 21574-21574/com.androidex.capbox E/liyp_: getItem position =0
+ * 03-28 17:07:31.487 21574-21574/com.androidex.capbox E/liyp_: getItem position =1
+ * 03-28 17:07:31.487 21574-21574/com.androidex.capbox E/liyp_: 蓝牙没连接
+ * 03-28 17:07:31.487 21574-21574/com.androidex.capbox E/liyp_: 蓝牙没连接
+ * 03-28 17:07:31.507 21574-21574/com.androidex.capbox E/liyp_: action=BLE_CONN_DIS插件个数=0
+ * <p>
+ * <p>
+ * 03-28 17:08:12.367 21574-21574/com.androidex.capbox E/liyp_: onEvent connect A4:34:F1:84:23:91
+ * 03-28 17:08:14.937 21574-21574/com.androidex.capbox E/liyp_: 蓝牙连接时更新 list size = 2
+ * 03-28 17:08:14.937 21574-21574/com.androidex.capbox E/liyp_: notify  is start 2
+ * 03-28 17:08:14.937 21574-21574/com.androidex.capbox E/liyp_: getItemPosition  执行了
+ * 03-28 17:08:14.937 21574-21574/com.androidex.capbox E/liyp_: getItemPosition  执行了
+ * 03-28 17:08:14.947 21574-21574/com.androidex.capbox E/liyp_: getItem position =1
+ * 03-28 17:08:14.947 21574-21574/com.androidex.capbox E/liyp_: getItem position =0
+ * 03-28 17:08:14.947 21574-21574/com.androidex.capbox E/liyp_: 蓝牙已连接
+ * 03-28 17:08:14.957 21574-21574/com.androidex.capbox E/liyp_: 蓝牙没连接
+ * 03-28 17:08:14.967 21574-21574/com.androidex.capbox E/liyp_: action=BLE_CONN_SUCCESS插件个数=0
+ */
 public class LockScreenActivity extends BaseActivity {
     @Bind(R.id.tv_time)
     TextView tv_time;

@@ -32,7 +32,8 @@ public class PagerSwitchAnimation {
 
         @Override
         public void transformPage(View page, float position) {
-            if (position < -1) {
+            RLog.e("position =" + position);
+            if (position <= -1) {
                 page.setAlpha(1);
             } else if (position <= 0) {
                 //ViewPager正在滑动时，页面左边的View       -1～0
@@ -40,14 +41,20 @@ public class PagerSwitchAnimation {
                 page.setTranslationX(0);
                 page.setScaleX(1);
                 page.setScaleY(1);
-            } else if (position <= 1) {
+            } else if (position < 1) {
                 //ViewPager正在滑动时，页面右边的View       0～1
-                page.setAlpha(1 - position);
+                page.setAlpha(1 - position);//- position
                 page.setTranslationX(0);
                 page.setScaleX((float) (1 - position * 0.8));
                 page.setScaleY((float) (1 - position * 0.8));
+            } else if (position == 1) {
+                page.setAlpha(1);//- position
+                page.setTranslationX(0);
+                page.setScaleX(1);
+                page.setScaleY(1);
             } else {
-                page.setAlpha(1);
+                page.setAlpha(0);
+
             }
         }
     }

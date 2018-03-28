@@ -1,7 +1,6 @@
 package com.androidex.capbox.ui.fragment;
 
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -43,13 +42,6 @@ public class ScreenItemFragment extends BaseFragment {
     }
 
     private void initView() {
-        ll_fragmentScreenItem.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                RLog.e("fragementScreenItem onTouch");
-                return false;
-            }
-        });
         ll_fragmentScreenItem.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
             @Override
             public void onSystemUiVisibilityChange(int i) {
