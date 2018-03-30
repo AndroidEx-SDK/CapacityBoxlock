@@ -82,13 +82,14 @@ public class FingerprintMainActivity extends UserBaseActivity {
         if (mKeyguardLockScreenManager == null) {
             return;
         }
-        //判断是否设置锁屏密码或指纹，没有设置直接进入欢迎界面
+        //判断是否设置锁屏密码，没有设置直接进入欢迎界面
         if (!mKeyguardLockScreenManager.isOpenLockScreenPwd()) {
             CommonKit.showMsgShort(context, getString(R.string.fingerprint_not_set_unlock_screen_pws));
             Loge("无锁屏密码");
             LoginActivity.lauch(context);
             return;
         } else {
+
             //Loge("有锁屏密码");
         }
         mKeyguardLockScreenManager.showAuthenticationScreen(this);
@@ -172,6 +173,8 @@ public class FingerprintMainActivity extends UserBaseActivity {
             } else {
                 LoginActivity.lauch(context);
             }
+        } else {
+            LoginActivity.lauch(context);
         }
     }
 
