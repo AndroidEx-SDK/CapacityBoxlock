@@ -3,29 +3,30 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@mipmap/background"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <com.androidex.capbox.ui.widget.SecondTitleBar
         android:id="@+id/rl_title"
+        titleText="@string/label_user_req"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        titleText="@string/label_user_req"/>
+        android:layout_height="wrap_content" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fadingEdge="none"
-        android:visibility="visible"
         android:overScrollMode="never"
-        android:scrollbars="none">
+        android:scrollbars="none"
+        android:visibility="visible">
 
         <LinearLayout
             android:id="@+id/ll_register"
-            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="19dp">
+            android:paddingBottom="19dp"
+            android:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -85,7 +86,6 @@
                         android:src="@mipmap/ic_label_sms" />
 
                     <TextView
-                        android:gravity="center_vertical"
                         android:id="@+id/et_name"
                         android:layout_width="match_parent"
                         android:layout_height="30dp"
@@ -93,6 +93,7 @@
                         android:layout_marginRight="@dimen/marginPadding6"
                         android:layout_toRightOf="@id/iv_userlabel"
                         android:background="@android:color/transparent"
+                        android:gravity="center_vertical"
                         android:hint="@string/hint_name"
                         android:inputType="textPersonName"
                         android:paddingLeft="16dp"
@@ -139,7 +140,6 @@
                         android:src="@mipmap/ic_label_sms" />
 
                     <TextView
-                        android:gravity="center_vertical"
                         android:id="@+id/et_cardID"
                         android:layout_width="match_parent"
                         android:layout_height="30dp"
@@ -147,6 +147,7 @@
                         android:layout_marginRight="@dimen/marginPadding6"
                         android:layout_toRightOf="@id/iv_captchaLabel"
                         android:background="@android:color/transparent"
+                        android:gravity="center_vertical"
                         android:hint="@string/hint_captcha"
                         android:inputType="number"
                         android:paddingLeft="16dp"

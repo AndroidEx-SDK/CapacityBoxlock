@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@mipmap/background"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context="com.androidex.capbox.ui.activity.LoginActivity">
 
     <com.androidex.capbox.ui.widget.ThirdTitleBar
@@ -143,6 +144,7 @@
                 android:paddingLeft="@dimen/marginPadding8"
                 android:scaleX="0.70"
                 android:scaleY="0.70"
+                android:shadowColor="@color/white"
                 android:text="@string/label_automatic_login"
                 android:textColor="@color/white" />
 

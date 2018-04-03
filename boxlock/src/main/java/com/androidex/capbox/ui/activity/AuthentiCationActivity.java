@@ -102,11 +102,6 @@ public class AuthentiCationActivity extends BaseActivity {
     };
 
     @Override
-    public int getLayoutId() {
-        return R.layout.activity_authentication;
-    }
-
-    @Override
     public void initData(Bundle savedInstanceState) {
         initClient();
     }
@@ -218,4 +213,10 @@ public class AuthentiCationActivity extends BaseActivity {
     public void onClick(View v) {
 
     }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_authentication;
+    }
+
 }

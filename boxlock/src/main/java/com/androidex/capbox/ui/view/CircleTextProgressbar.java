@@ -16,15 +16,15 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Build;
 import android.support.annotation.ColorInt;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 import com.androidex.capbox.R;
 
 /**
  * liyp
  */
-public class CircleTextProgressbar extends TextView {
+public class CircleTextProgressbar extends AppCompatTextView {
 
     /**
      * 外部轮廓的颜色。
@@ -111,7 +111,7 @@ public class CircleTextProgressbar extends TextView {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public CircleTextProgressbar(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
+        super(context,attrs);
         initialize(context, attrs);
     }
 
