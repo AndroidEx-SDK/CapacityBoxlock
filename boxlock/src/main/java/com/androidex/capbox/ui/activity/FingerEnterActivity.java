@@ -88,11 +88,10 @@ public class FingerEnterActivity extends BaseActivity {
         mac = getIntent().getStringExtra(EXTRA_ITEM_ADDRESS);
         initBroadCast();
         if (MyBleService.getInstance().getConnectDevice(mac) != null) {
+            tv_hint_printFinger.setText("请将手指放到箱体的指纹处");
             if (code == REQUESTCODE_FINGER_POSSESSOR) {
                 MyBleService.getInstance().getFinger(mac, "1101");
-                tv_hint_printFinger.setText("请将手指放到箱体的指纹处");
             } else if (code == REQUESTCODE_FINGER_BECOME) {
-                tv_hint_printFinger.setText("请将手指放到箱体的指纹处");
                 MyBleService.getInstance().getFinger(mac, "1301");
             } else {
 

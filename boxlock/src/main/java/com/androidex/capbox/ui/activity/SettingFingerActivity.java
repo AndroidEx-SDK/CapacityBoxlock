@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -82,15 +83,26 @@ public class SettingFingerActivity extends BaseActivity {
             return;
         }
         switch (view.getId()) {
-            case R.id.ll_becomeFinger://无线静默功能指纹信息
-                Bundle bundle = new Bundle();
-                bundle.putString(EXTRA_ITEM_ADDRESS, mac);
-                FingerEnterActivity.lauch(context, bundle, REQUESTCODE_FINGER_BECOME);
-                break;
             case R.id.ll_possessorFinger://所有人的指纹信息
+                if (!TextUtils.isEmpty(possessorFinger3)) {
+                    CommonKit.showErrorShort(context, "指纹已经录入");
+                    return;
+                }
                 Bundle bundle1 = new Bundle();
                 bundle1.putString(EXTRA_ITEM_ADDRESS, mac);
                 FingerEnterActivity.lauch(context, bundle1, REQUESTCODE_FINGER_POSSESSOR);
+                break;
+            case R.id.ll_becomeFinger://无线静默功能指纹信息
+                if (TextUtils.isEmpty(possessorFinger3)) {
+                    CommonKit.showErrorShort(context, "请先录入所有人指纹");
+                    return;
+                } else if (!TextUtils.isEmpty(becomeFinger3)) {
+                    CommonKit.showErrorShort(context, "指纹已经录入");
+                    return;
+                }
+                Bundle bundle = new Bundle();
+                bundle.putString(EXTRA_ITEM_ADDRESS, mac);
+                FingerEnterActivity.lauch(context, bundle, REQUESTCODE_FINGER_BECOME);
                 break;
             case R.id.ll_clearFinger:
                 MyBleService.getInstance().clearFinger(mac);
@@ -165,6 +177,7 @@ public class SettingFingerActivity extends BaseActivity {
                     becomeFinger1 = data.getStringExtra("becomeFinger1");
                     becomeFinger2 = data.getStringExtra("becomeFinger2");
                     becomeFinger3 = data.getStringExtra("becomeFinger3");
+                    RLog.e("becomeFinger3 = " + becomeFinger3);
                     tv_becomeFinger.setText("3");
                     break;
                 default:
@@ -223,6 +236,12 @@ public class SettingFingerActivity extends BaseActivity {
                     }
                     tv_possessorFinger.setText("0");
                     tv_becomeFinger.setText("0");
+                    possessorFinger1 = null;//所有人指纹信息或ID
+                    possessorFinger2 = null;//所有人指纹信息或ID
+                    possessorFinger3 = null;//所有人指纹信息或ID
+                    becomeFinger1 = null;////静默模式功能的指纹
+                    becomeFinger2 = null;////静默模式功能的指纹
+                    becomeFinger3 = null;////静默模式功能的指纹
                     break;
             }
         }
