@@ -10,11 +10,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.androidex.boxlib.utils.Byte2HexUtil;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.widget.SecondTitleBar;
 import com.androidex.capbox.utils.CommonKit;
+import com.androidex.capbox.utils.RLog;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -198,19 +200,19 @@ public class SettingFingerActivity extends BaseActivity {
             switch (intent.getAction()) {
                 case BLE_CONN_SUCCESS:
                 case BLE_CONN_SUCCESS_ALLCONNECTED:
-                    Log.d(TAG, "连接成功=");
+                    RLog.d("连接成功=");
                     titlebar.getRightTv().setText("已连接");
                     CommonKit.showOkShort(mContext, "连接成功");
                     break;
 
                 case BLE_CONN_DIS:
-                    Log.d(TAG, "断开连接=");
+                    RLog.d("断开连接=");
                     titlebar.getRightTv().setText("点击连接");
                     CommonKit.showErrorShort(mContext, "蓝牙已断开");
                     break;
 
                 case ACTION_CLEARFINGER://清除指纹
-                    Log.e(TAG, "收到清除指纹");
+                    RLog.d("收到清除指纹 b=" + Byte2HexUtil.byte2Hex(b));
                     switch (b[2]) {
                         case (byte) 0x00://成功
                             CommonKit.showMsgShort(mContext, "清除成功");

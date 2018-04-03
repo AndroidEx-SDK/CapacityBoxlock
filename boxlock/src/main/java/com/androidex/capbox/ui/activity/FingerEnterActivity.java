@@ -147,10 +147,10 @@ public class FingerEnterActivity extends BaseActivity {
                     CommonKit.showErrorShort(mContext, "蓝牙断开，已开始重连");
                     break;
                 case ACTION_POSSESSORFINGER://获取到所有人的指纹信息
-                    Log.d(TAG, "获取到所有人的指纹信息b=" + Byte2HexUtil.byte2Hex(b));
+                    RLog.d("获取到所有人的指纹信息 b=" + Byte2HexUtil.byte2Hex(b));
                     switch (b[2]) {
-                        case (byte) 0x01://识别成功
-                            switch (b[5]) {
+                        case (byte) 0x00://识别成功
+                            switch (b[4]) {
                                 case (byte) 0x01:
                                     possessorFinger1 = "1";
                                     RLog.d("指纹录入，第一次录入成功");
@@ -182,14 +182,29 @@ public class FingerEnterActivity extends BaseActivity {
                     }
                     break;
                 case ACTION_BECOMEFINGER://静默功能的指纹信息
-                    Log.e(TAG, "静默功能的指纹信息");
+                    RLog.d("静默功能的指纹信息 b=" + Byte2HexUtil.byte2Hex(b));
                     switch (b[2]) {
-                        case (byte) 0x01://识别成功
-                            tv_hint_printFinger.setText("录入成功");
-                            becomeFinger1 = "1";
-                            becomeFinger2 = "2";
-                            becomeFinger3 = "3";
-                            handler.sendEmptyMessage(1);
+                        case (byte) 0x00://识别成功
+                            switch (b[4]) {
+                                case (byte) 0x01:
+                                    becomeFinger1 = "1";
+                                    RLog.d("指纹录入，第一次录入成功");
+                                    tv_hint_printFinger.setText("第一次录入成功");
+                                    break;
+                                case (byte) 0x02:
+                                    becomeFinger2 = "2";
+                                    RLog.d("指纹录入，第二次录入成功");
+                                    tv_hint_printFinger.setText("第二次录入成功");
+                                    break;
+                                case (byte) 0x03:
+                                    becomeFinger3 = "3";
+                                    RLog.d("指纹录入，第三次录入成功");
+                                    tv_hint_printFinger.setText("第三次录入成功");
+                                    handler.sendEmptyMessage(1);
+                                    break;
+                                default:
+                                    break;
+                            }
                             break;
                         case (byte) 0x02://识别失败
                             tv_hint_printFinger.setText("");
