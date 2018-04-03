@@ -44,6 +44,7 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BOX_MAC;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_END_TAST;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_ONEKEYCONFIG;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_RECOVER;
+import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_START_BECOME;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_START_CARRYESCORT;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
@@ -168,6 +169,7 @@ public class BoxDetailActivity extends BaseActivity {
         intentFilter.addAction(ACTION_BOX_MAC);//发送mac给腕表
         intentFilter.addAction(ACTION_START_CARRYESCORT);//启动携行押运
         intentFilter.addAction(ACTION_END_TAST);//结束携行押运
+        intentFilter.addAction(ACTION_START_BECOME);//开启静默
         dataBroadcast = new DataBroadcast();
         context.registerReceiver(dataBroadcast, intentFilter);
     }
@@ -209,8 +211,13 @@ public class BoxDetailActivity extends BaseActivity {
         tb_becomeAlarm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (MyBleService.getInstance().getConnectDevice(mac) == null) {
+                    CommonKit.showErrorShort(context, "蓝牙未连接");
+                    return;
+                }
                 if (isChecked) {
                     become = "A";
+                    MyBleService.getInstance().startBecome(mac);
                     Log.e(TAG, "静默开关A");
                 } else {
                     become = "B";
@@ -816,6 +823,18 @@ public class BoxDetailActivity extends BaseActivity {
                             break;
                         case (byte) 0x01://失败
                             CommonKit.showErrorShort(context, "结束失败");
+                            break;
+                    }
+                    break;
+                case ACTION_START_BECOME:
+                    switch (b[2]) {
+                        case (byte) 0x00://成功
+                            tb_becomeAlarm.setEnabled(true);
+                            CommonKit.showOkShort(context, "启动静默成功");
+                            break;
+                        case (byte) 0x01://失败
+                            tb_becomeAlarm.setEnabled(false);
+                            CommonKit.showErrorShort(context, "启动静默失败");
                             break;
                     }
                     break;
