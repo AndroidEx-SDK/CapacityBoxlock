@@ -6,6 +6,7 @@
     android:background="@mipmap/fingerpint_guid"
     android:gravity="center_horizontal"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     android:paddingRight="@dimen/activity_horizontal_margin">
 
     <TextView

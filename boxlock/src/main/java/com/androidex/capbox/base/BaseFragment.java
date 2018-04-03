@@ -67,20 +67,6 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            //取消设置透明状态栏,使 ContentView 内容不再覆盖状态栏
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            //需要设置这个 flag 才能调用 setStatusBarColor 来设置状态栏颜色
-            getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            //设置状态栏颜色
-            getActivity().getWindow().setStatusBarColor(getColor(R.color.starsBar_blue));
-            ViewGroup mContentView = (ViewGroup) getActivity().findViewById(Window.ID_ANDROID_CONTENT);
-            View mChildView = mContentView.getChildAt(0);
-            if (mChildView != null) {
-                //注意不是设置 ContentView 的 FitsSystemWindows, 而是设置 ContentView 的第一个子 View . 预留出系统 View 的空间.
-                ViewCompat.setFitsSystemWindows(mChildView, true);
-            }
-        }
         setListener();
         initData();
     }

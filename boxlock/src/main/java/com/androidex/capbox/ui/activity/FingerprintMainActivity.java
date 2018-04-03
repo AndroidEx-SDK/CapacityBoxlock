@@ -214,7 +214,6 @@ public class FingerprintMainActivity extends UserBaseActivity {
                 autoLogin();
                 CommonKit.showMsgShort(context, getString(R.string.sys_pwd_recognition_success));
             } else {
-                LoginActivity.lauch(context);
                 CommonKit.showMsgShort(context, getString(R.string.sys_pwd_recognition_failed));
             }
         }

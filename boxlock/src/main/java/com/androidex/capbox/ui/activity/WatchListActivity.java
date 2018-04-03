@@ -46,11 +46,6 @@ public class WatchListActivity extends BaseActivity {
     private WatchListAdapter watchListAdapter;
 
     @Override
-    public int getLayoutId() {
-        return R.layout.activity_watch_list;
-    }
-
-    @Override
     public void initData(Bundle savedInstanceState) {
         uuid = getIntent().getStringExtra(EXTRA_BOX_UUID);
         initTitleBar();
@@ -173,4 +168,11 @@ public class WatchListActivity extends BaseActivity {
     public void onClick(View v) {
 
     }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_watch_list;
+    }
+
+
 }

@@ -70,21 +70,6 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.context = this;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            //取消设置透明状态栏,使 ContentView 内容不再覆盖状态栏
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            //需要设置这个 flag 才能调用 setStatusBarColor 来设置状态栏颜色
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            //设置状态栏颜色
-            getWindow().setStatusBarColor(loadColor(R.color.starsBar_blue));
-            ViewGroup mContentView = (ViewGroup) findViewById(Window.ID_ANDROID_CONTENT);
-            View mChildView = mContentView.getChildAt(0);
-            if (mChildView != null) {
-                //注意不是设置 ContentView 的 FitsSystemWindows, 而是设置 ContentView 的第一个子 View . 预留出系统 View 的空间.
-                ViewCompat.setFitsSystemWindows(mChildView, true);
-            }
-        }
-
         if (getLayoutId() > 0) {
             setContentView(getLayoutId());
             ButterKnife.bind(this);

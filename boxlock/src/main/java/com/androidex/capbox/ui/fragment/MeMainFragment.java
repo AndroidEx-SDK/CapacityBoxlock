@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -168,6 +169,8 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 Log.e(TAG, "pos=" + pos);
+                TextView view1 = (TextView) view;
+                view1.setTextColor(Color.WHITE);
                 switch (pos) {
                     case 0:
                         MyBleService.getInstance().setRssiMaxValue(0);
