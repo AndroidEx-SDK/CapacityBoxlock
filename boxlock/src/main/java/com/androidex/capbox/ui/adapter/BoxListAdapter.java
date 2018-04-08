@@ -23,7 +23,6 @@ import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.module.BaseModel;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.fragment.LockFragment;
-import com.androidex.capbox.ui.view.TypeFaceText;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
 
@@ -102,12 +101,12 @@ public class BoxListAdapter extends BaseAdapter {
              */
             holder.actionLayout = convertView.findViewById(R.id.ll_action);
             holder.normalItemContentLayout = convertView.findViewById(R.id.rl_normal);
-            holder.deviceName = (TypeFaceText) convertView.findViewById(R.id.device_name);
-            holder.device_address = (TypeFaceText) convertView.findViewById(R.id.device_address);
+            holder.deviceName = (TextView) convertView.findViewById(R.id.device_name);
+            holder.device_address = (TextView) convertView.findViewById(R.id.device_address);
             holder.iv_online = (ImageView) convertView.findViewById(R.id.iv_online);
-            holder.tv_status = (TypeFaceText) convertView.findViewById(tv_status);
-            holder.modify = (TypeFaceText) convertView.findViewById(R.id.tv_modify);
-            holder.unbind = (TypeFaceText) convertView.findViewById(R.id.tv_unbind);
+            holder.tv_status = (TextView) convertView.findViewById(tv_status);
+            holder.modify = (TextView) convertView.findViewById(R.id.tv_modify);
+            holder.unbind = (TextView) convertView.findViewById(R.id.tv_unbind);
 
             ViewGroup.LayoutParams lp = holder.normalItemContentLayout.getLayoutParams();
 
@@ -286,10 +285,10 @@ public class BoxListAdapter extends BaseAdapter {
     public class ViewHolder {
         private HorizontalScrollView itemHorizontalScrollView;
         private View normalItemContentLayout;
-        public TypeFaceText deviceName;
-        public TypeFaceText device_address;
+        public TextView deviceName;
+        public TextView device_address;
         public ImageView iv_online;
-        public TypeFaceText tv_status;
+        public TextView tv_status;
         private TextView modify;
         private TextView unbind;
         /**

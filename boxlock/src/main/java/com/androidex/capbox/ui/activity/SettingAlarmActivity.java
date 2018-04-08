@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.androidex.boxlib.modules.ServiceBean;
@@ -16,7 +17,7 @@ import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.module.BoxDetailModel;
 import com.androidex.capbox.service.MyBleService;
-import com.androidex.capbox.ui.view.TypeFaceText;
+
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
 import com.androidex.capbox.utils.Dialog;
@@ -40,9 +41,9 @@ import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
 
 public class SettingAlarmActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
     @Bind(R.id.tv_lowestTemp)
-    TypeFaceText tv_lowestTemp;
+    TextView tv_lowestTemp;
     @Bind(R.id.tv_highestTemp)
-    TypeFaceText tv_highestTemp;
+    TextView tv_highestTemp;
     @Bind(R.id.tb_police)
     ToggleButton tb_police;
     @Bind(R.id.tb_distanceAlarm)

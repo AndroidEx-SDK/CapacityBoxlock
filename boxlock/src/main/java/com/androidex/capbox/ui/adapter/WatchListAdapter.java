@@ -6,9 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import com.androidex.capbox.R;
-import com.androidex.capbox.ui.view.TypeFaceText;
 import com.androidex.capbox.ui.fragment.LockFragment;
 
 import java.util.List;
@@ -54,9 +54,9 @@ public class WatchListAdapter extends BaseAdapter {
             if (holder==null){
                 holder = new ViewHolder();
             }
-            holder.deviceName = (TypeFaceText) convertView.findViewById(R.id.device_name);
-            holder.device_address = (TypeFaceText) convertView.findViewById(R.id.device_address);
-            holder.tv_connect = (TypeFaceText) convertView.findViewById(R.id.tv_connect);
+            holder.deviceName = (TextView) convertView.findViewById(R.id.device_name);
+            holder.device_address = (TextView) convertView.findViewById(R.id.device_address);
+            holder.tv_connect = (TextView) convertView.findViewById(R.id.tv_connect);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -72,8 +72,8 @@ public class WatchListAdapter extends BaseAdapter {
     }
 
     public class ViewHolder {
-        public TypeFaceText deviceName;
-        public TypeFaceText device_address;
-        public TypeFaceText tv_connect;
+        public TextView deviceName;
+        public TextView device_address;
+        public TextView tv_connect;
     }
 }

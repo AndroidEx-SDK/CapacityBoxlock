@@ -39,7 +39,7 @@
                 android:paddingTop="5dp"
                 android:visibility="gone" />
 
-            <com.androidex.capbox.ui.view.TypeFaceText
+            <TextView
                 android:id="@+id/main_tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/size18" />
 
-            <com.androidex.capbox.ui.view.TypeFaceText
+            <TextView
                 android:id="@+id/tv_boxConfig"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -131,16 +131,16 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/marginPadding6">
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     style="@style/fragment_lock_name"
                                     android:text="当前温度：" />
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     android:id="@+id/current_temp"
                                     style="@style/fragment_lock_data"
                                     android:text="@string/main_max_temp" />
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     android:id="@+id/current_temp_unit"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -156,11 +156,11 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/marginPadding6">
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     style="@style/fragment_lock_name"
                                     android:text="@string/main_max_temp1" />
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     android:id="@+id/main_tv_maxtemp"
                                     style="@style/fragment_lock_data"
                                     android:text="@string/setting_tv_highesttemp" />
@@ -172,11 +172,11 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/marginPadding6">
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     style="@style/fragment_lock_name"
                                     android:text="@string/main_min_temp1" />
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     android:id="@+id/main_tv_mintemp"
                                     style="@style/fragment_lock_data"
                                     android:text="@string/setting_tv_alowesttemp" />
@@ -188,11 +188,11 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/marginPadding6">
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     style="@style/fragment_lock_name"
                                     android:text="定位状态：" />
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     android:id="@+id/tv_locationStatus"
                                     style="@style/fragment_lock_data"
                                     android:text="@string/main_max_temp" />
@@ -204,16 +204,16 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/marginPadding6">
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     style="@style/fragment_lock_name"
                                     android:text="经度：" />
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     android:id="@+id/tv_longitude"
                                     style="@style/fragment_lock_data"
                                     android:text="@string/main_max_temp" />
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     style="@style/fragment_lock_unit"
                                     android:text="°" />
 
@@ -224,16 +224,16 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/marginPadding6">
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     style="@style/fragment_lock_name"
                                     android:text="纬度：" />
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     android:id="@+id/tv_latitude"
                                     style="@style/fragment_lock_data"
                                     android:text="@string/main_max_temp" />
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     style="@style/fragment_lock_unit"
                                     android:text="°" />
 
@@ -245,16 +245,16 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/marginPadding6">
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     style="@style/fragment_lock_name"
                                     android:text="高程：" />
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     android:id="@+id/tv_elevation"
                                     style="@style/fragment_lock_data"
                                     android:text="0" />
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     style="@style/fragment_lock_unit"
                                     android:text="M" />
 
@@ -288,16 +288,16 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/marginPadding3">
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     style="@style/fragment_lock_name"
                                     android:text="当前湿度：" />
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     android:id="@+id/current_hum"
                                     style="@style/fragment_lock_data"
                                     android:text="@string/main_max_temp" />
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     style="@style/fragment_lock_unit"
                                     android:text="@string/main_min_hum2" />
 
@@ -309,16 +309,16 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/marginPadding6">
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     style="@style/fragment_lock_name"
                                     android:text="@string/main_max_hum1" />
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     android:id="@+id/main_tv_maxhum"
                                     style="@style/fragment_lock_data"
                                     android:text="@string/main_max_hum" />
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     style="@style/fragment_lock_unit"
                                     android:text="@string/main_max_hum2" />
                             </LinearLayout>
@@ -328,16 +328,16 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/marginPadding6">
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     style="@style/fragment_lock_name"
                                     android:text="@string/main_min_hum1" />
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     android:id="@+id/main_tv_minhum"
                                     style="@style/fragment_lock_data"
                                     android:text="@string/main_min_hum" />
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     style="@style/fragment_lock_unit"
                                     android:text="@string/main_min_hum2" />
                             </LinearLayout>
@@ -347,11 +347,11 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/marginPadding6">
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     style="@style/fragment_lock_name"
                                     android:text="锁状态：" />
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     android:id="@+id/tv_status"
                                     style="@style/fragment_lock_data"
                                     android:text="@string/setting_tv_close" />
@@ -363,11 +363,11 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/marginPadding6">
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     style="@style/fragment_lock_name"
                                     android:text="SIM卡状态：" />
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     android:id="@+id/tv_simStatus"
                                     style="@style/fragment_lock_data"
                                     android:text="@string/main_max_temp" />
@@ -379,11 +379,11 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/marginPadding6">
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     style="@style/fragment_lock_name"
                                     android:text="网络信号：" />
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     android:id="@+id/tv_signalIntension"
                                     style="@style/fragment_lock_data"
                                     android:text="@string/main_max_temp" />
@@ -395,16 +395,16 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/marginPadding6">
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     style="@style/fragment_lock_name"
                                     android:text="箱体电量：" />
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     android:id="@+id/tv_electric_quantity"
                                     style="@style/fragment_lock_data"
                                     android:text="@string/main_max_temp" />
 
-                                <com.androidex.capbox.ui.view.TypeFaceText
+                                <TextView
                                     style="@style/fragment_lock_unit"
                                     android:text="%" />
                             </LinearLayout>
@@ -425,11 +425,11 @@
                         android:layout_marginLeft="@dimen/marginPadding16"
                         android:layout_marginTop="@dimen/marginPadding16">
 
-                        <com.androidex.capbox.ui.view.TypeFaceText
+                        <TextView
                             style="@style/fragment_lock_name"
                             android:text="心跳时间：" />
 
-                        <com.androidex.capbox.ui.view.TypeFaceText
+                        <TextView
                             android:id="@+id/tv_lastTime"
                             style="@style/fragment_lock_data"
                             android:text="@string/main_max_temp" />
@@ -442,11 +442,11 @@
                         android:layout_marginLeft="@dimen/marginPadding16"
                         android:layout_marginTop="@dimen/marginPadding6">
 
-                        <com.androidex.capbox.ui.view.TypeFaceText
+                        <TextView
                             style="@style/fragment_lock_name"
                             android:text="定位时间：" />
 
-                        <com.androidex.capbox.ui.view.TypeFaceText
+                        <TextView
                             android:id="@+id/tv_locationTime"
                             style="@style/fragment_lock_data"
                             android:text="@string/main_max_temp" />
@@ -459,11 +459,11 @@
                         android:layout_marginLeft="@dimen/marginPadding16"
                         android:layout_marginTop="@dimen/marginPadding6">
 
-                        <com.androidex.capbox.ui.view.TypeFaceText
+                        <TextView
                             style="@style/fragment_lock_name"
                             android:text="定位位置：" />
 
-                        <com.androidex.capbox.ui.view.TypeFaceText
+                        <TextView
                             android:id="@+id/tv_address"
                             style="@style/fragment_lock_data"
                             android:text="@string/setting_tv_Nolocation" />
@@ -485,13 +485,13 @@
                     android:layout_marginLeft="@dimen/marginPadding16"
                     android:layout_marginTop="@dimen/marginPadding16">
 
-                    <com.androidex.capbox.ui.view.TypeFaceText
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/user_name0"
                         android:textColor="@color/white" />
 
-                    <com.androidex.capbox.ui.view.TypeFaceText
+                    <TextView
                         android:id="@+id/main_tv_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -506,7 +506,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/marginPadding16">
 
-                    <com.androidex.capbox.ui.view.TypeFaceText
+                    <TextView
                         android:id="@+id/main_tv_binding"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -514,7 +514,7 @@
                         android:text="@string/user_binding"
                         android:textColor="@color/white" />
 
-                    <com.androidex.capbox.ui.view.TypeFaceText
+                    <TextView
                         android:id="@+id/main_tv_device"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

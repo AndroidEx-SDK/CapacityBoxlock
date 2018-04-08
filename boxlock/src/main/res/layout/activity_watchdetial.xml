@@ -51,7 +51,7 @@
                     android:gravity="center_vertical"
                     android:paddingLeft="@dimen/marginPadding16">
 
-                    <com.androidex.capbox.ui.view.TypeFaceText
+                    <TextView
                         android:id="@+id/TextView08_function"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -90,7 +90,7 @@
                     android:gravity="center_vertical"
                     android:paddingLeft="@dimen/marginPadding16">
 
-                    <com.androidex.capbox.ui.view.TypeFaceText
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -124,7 +124,7 @@
                     android:gravity="center_vertical"
                     android:paddingLeft="@dimen/marginPadding16">
 
-                    <com.androidex.capbox.ui.view.TypeFaceText
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -161,7 +161,7 @@
                     android:gravity="center_vertical"
                     android:paddingLeft="@dimen/marginPadding16">
 
-                    <com.androidex.capbox.ui.view.TypeFaceText
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -197,7 +197,7 @@
                     android:gravity="center_vertical"
                     android:paddingLeft="@dimen/marginPadding16">
 
-                    <com.androidex.capbox.ui.view.TypeFaceText
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"

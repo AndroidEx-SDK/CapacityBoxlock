@@ -8,10 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import com.androidex.capbox.R;
 import com.androidex.capbox.ui.fragment.LockFragment;
-import com.androidex.capbox.ui.view.TypeFaceText;
 
 import java.util.List;
 
@@ -23,7 +23,6 @@ import java.util.List;
  */
 
 public class ConnectDeviceListAdapter extends BaseAdapter {
-    private static final String TAG = "BoxListAdapter";
     private List<BluetoothDevice> mContentList;
     private LayoutInflater mInflater;
     private IClick mListener;
@@ -63,8 +62,8 @@ public class ConnectDeviceListAdapter extends BaseAdapter {
              * 操作按钮层
              */
             holder.normalItemContentLayout = convertView.findViewById(R.id.rl_normal);
-            holder.deviceName = (TypeFaceText) convertView.findViewById(R.id.device_name);
-            holder.device_address = (TypeFaceText) convertView.findViewById(R.id.device_address);
+            holder.deviceName = (TextView) convertView.findViewById(R.id.device_name);
+            holder.device_address = (TextView) convertView.findViewById(R.id.device_address);
 
             ViewGroup.LayoutParams lp = holder.normalItemContentLayout.getLayoutParams();
 
@@ -103,8 +102,8 @@ public class ConnectDeviceListAdapter extends BaseAdapter {
 
     public class ViewHolder {
         private View normalItemContentLayout;
-        public TypeFaceText deviceName;
-        public TypeFaceText device_address;
+        public TextView deviceName;
+        public TextView device_address;
     }
 
     public abstract static class IClick implements View.OnClickListener {

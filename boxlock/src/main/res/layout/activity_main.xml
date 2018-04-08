@@ -37,7 +37,7 @@
                 android:layout_height="35dp"
                 android:src="@mipmap/bottom_box_gray" />
 
-            <com.androidex.capbox.ui.view.TypeFaceText
+            <TextView
                 android:id="@+id/textView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
                 android:layout_height="35dp"
                 android:src="@mipmap/bottom_watch_gray" />
 
-            <com.androidex.capbox.ui.view.TypeFaceText
+            <TextView
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -104,7 +104,7 @@
                 android:layout_height="35dp"
                 android:src="@mipmap/bottom_location_gray" />
 
-            <com.androidex.capbox.ui.view.TypeFaceText
+            <TextView
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -128,7 +128,7 @@
                 android:layout_height="35dp"
                 android:src="@mipmap/bottom_setting_gray" />
 
-            <com.androidex.capbox.ui.view.TypeFaceText
+            <TextView
                 android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.androidex.capbox.ui.view.TypeFaceText
+        <TextView
             android:id="@+id/textView1"
             android:layout_width="match_parent"
             android:layout_height="@dimen/device_title_text_height"
@@ -55,7 +55,7 @@
         android:layout_height="@dimen/tv_line_height"
         android:background="@color/line_color" />
 
-    <com.androidex.capbox.ui.view.TypeFaceText
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="@dimen/device_title_text_height"
         android:gravity="center_vertical"

@@ -29,8 +29,8 @@ public class MyApplication extends Application {
         mContext = this;
         /************初始化ImageLoader*******************/
         UILKit.init(getApplicationContext());
-        /**********设置全局字体格式*********/
-        this.setTypeface();
+//        /**********设置全局字体格式*********/
+//        this.setTypeface();
         /**********初始化蓝牙**************/
         BLESdk.get().init(mContext);
         BLESdk.get().setMaxConnect(5);

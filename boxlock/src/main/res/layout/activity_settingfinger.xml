@@ -35,7 +35,7 @@
                 android:layout_height="@dimen/adduser_ll_height"
                 android:gravity="center_vertical">
 
-                <com.androidex.capbox.ui.view.TypeFaceText
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -64,7 +64,7 @@
                 android:layout_height="@dimen/adduser_ll_height"
                 android:gravity="center_vertical">
 
-                <com.androidex.capbox.ui.view.TypeFaceText
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -101,7 +101,7 @@
                 android:layout_height="@dimen/adduser_ll_height"
                 android:gravity="center_vertical">
 
-                <com.androidex.capbox.ui.view.TypeFaceText
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
