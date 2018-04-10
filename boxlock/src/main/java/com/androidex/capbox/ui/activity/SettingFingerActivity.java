@@ -7,13 +7,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.boxlib.utils.Byte2HexUtil;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
+import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.widget.SecondTitleBar;
 import com.androidex.capbox.utils.CommonKit;
@@ -45,21 +46,20 @@ public class SettingFingerActivity extends BaseActivity {
     @Bind(R.id.tv_becomeFinger)
     TextView tv_becomeFinger;
 
-    private static final String TAG = SettingFingerActivity.class.getSimpleName();
-    private String mac;//箱体的mac
+    private String address;//箱体的mac
     private String possessorFinger1 = null;//所有人指纹信息或ID
     private String possessorFinger2 = null;//所有人指纹信息或ID
     private String possessorFinger3 = null;//所有人指纹信息或ID
-    private String becomeFinger1 = null;////静默模式功能的指纹
-    private String becomeFinger2 = null;////静默模式功能的指纹
-    private String becomeFinger3 = null;////静默模式功能的指纹
+    private String becomeFinger1 = null;//静默模式功能的指纹
+    private String becomeFinger2 = null;//静默模式功能的指纹
+    private String becomeFinger3 = null;//静默模式功能的指纹
     private DataBroadcast dataBroadcast;
     private Context mContext;
 
     @Override
     public void initData(Bundle savedInstanceState) {
         mContext = context;
-        mac = getIntent().getStringExtra(EXTRA_ITEM_ADDRESS);
+        address = getIntent().getStringExtra(EXTRA_ITEM_ADDRESS);
         String becomeNum = getIntent().getStringExtra("becomeNum");
         String possessorNum = getIntent().getStringExtra("possessorNum");
         initBroadCast();
@@ -78,7 +78,7 @@ public class SettingFingerActivity extends BaseActivity {
             R.id.ll_becomeFinger,
     })
     public void clickEvent(View view) {
-        if (MyBleService.getInstance().getConnectDevice(mac) == null) {
+        if (MyBleService.getInstance().getConnectDevice(address) == null) {
             CommonKit.showErrorShort(context, "蓝牙未连接");
             return;
         }
@@ -89,7 +89,7 @@ public class SettingFingerActivity extends BaseActivity {
                     return;
                 }
                 Bundle bundle1 = new Bundle();
-                bundle1.putString(EXTRA_ITEM_ADDRESS, mac);
+                bundle1.putString(EXTRA_ITEM_ADDRESS, address);
                 FingerEnterActivity.lauch(context, bundle1, REQUESTCODE_FINGER_POSSESSOR);
                 break;
             case R.id.ll_becomeFinger://无线静默功能指纹信息
@@ -101,11 +101,11 @@ public class SettingFingerActivity extends BaseActivity {
                     return;
                 }
                 Bundle bundle = new Bundle();
-                bundle.putString(EXTRA_ITEM_ADDRESS, mac);
+                bundle.putString(EXTRA_ITEM_ADDRESS, address);
                 FingerEnterActivity.lauch(context, bundle, REQUESTCODE_FINGER_BECOME);
                 break;
             case R.id.ll_clearFinger:
-                MyBleService.getInstance().clearFinger(mac);
+                MyBleService.getInstance().clearFinger(address);
                 break;
             default:
                 break;
@@ -127,7 +127,7 @@ public class SettingFingerActivity extends BaseActivity {
         titlebar.getLeftBtn().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (possessorFinger1 != null && becomeFinger1 != null) {
+                if (possessorFinger3 != null && becomeFinger3 != null) {
                     Intent intent = new Intent();
                     intent.putExtra("possessorFinger1", possessorFinger1);
                     intent.putExtra("possessorFinger2", possessorFinger2);
@@ -141,16 +141,16 @@ public class SettingFingerActivity extends BaseActivity {
             }
         });
 
-        if (mac != null) {
-            if (MyBleService.getInstance().getConnectDevice(mac) != null) {
+        if (address != null) {
+            if (MyBleService.getInstance().getConnectDevice(address) != null) {
                 titlebar.getRightTv().setText("已连接");
             }
         }
         titlebar.getRightTv().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (MyBleService.getInstance().getConnectDevice(mac) == null) {
-                    MyBleService.getInstance().connectionDevice(context, mac);
+                if (MyBleService.getInstance().getConnectDevice(address) == null) {
+                    MyBleService.getInstance().connectionDevice(context, address);
                 }
             }
         });
@@ -208,7 +208,7 @@ public class SettingFingerActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String deviceMac = intent.getStringExtra(BLECONSTANTS_ADDRESS);
-            if (!mac.equals(deviceMac)) return;
+            if (!address.equals(deviceMac)) return;
             byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
             switch (intent.getAction()) {
                 case BLE_CONN_SUCCESS:
@@ -239,9 +239,9 @@ public class SettingFingerActivity extends BaseActivity {
                     possessorFinger1 = null;//所有人指纹信息或ID
                     possessorFinger2 = null;//所有人指纹信息或ID
                     possessorFinger3 = null;//所有人指纹信息或ID
-                    becomeFinger1 = null;////静默模式功能的指纹
-                    becomeFinger2 = null;////静默模式功能的指纹
-                    becomeFinger3 = null;////静默模式功能的指纹
+                    becomeFinger1 = null;//静默模式功能的指纹
+                    becomeFinger2 = null;//静默模式功能的指纹
+                    becomeFinger3 = null;//静默模式功能的指纹
                     break;
             }
         }

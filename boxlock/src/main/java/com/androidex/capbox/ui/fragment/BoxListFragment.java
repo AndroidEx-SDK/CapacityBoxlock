@@ -586,8 +586,10 @@ public class BoxListFragment extends BaseFragment {
                             bindBox(uuid.trim());
                         }
                     }
-                    MyBleService.getInstance().getConnectDevice(address).setActiveDisConnect(true);
-                    MyBleService.getInstance().disConnectDevice(address);
+                    if (MyBleService.getInstance().getConnectDevice(address)!=null){
+                        MyBleService.getInstance().getConnectDevice(address).setActiveDisConnect(true);
+                        MyBleService.getInstance().disConnectDevice(address);
+                    }
                     mDeviceListAdapter.setTextHint(-1, "");
                     if (!mScanning) {
                         scanLeDeviceList(true);

@@ -331,6 +331,28 @@ public class BoxDetailActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 保存指纹是否录入
+     *
+     * @param flag0
+     * @param flag1
+     */
+    private void setFinger(boolean flag0, boolean flag1) {
+        ServiceBean device = SharedPreTool.getInstance(context).getObj(ServiceBean.class, mac);
+        if (device != null) {
+            device.setCarryFinger(flag0);
+            device.setBecomeFinger(flag1);
+        } else {
+            device = MyBleService.getInstance().getConnectDevice(mac);
+            if (device != null) {
+                device.setCarryFinger(flag0);
+                device.setBecomeFinger(flag1);
+                SharedPreTool.getInstance(context).saveObj(device, mac);
+            }
+        }
+        SharedPreTool.getInstance(context).saveObj(device, mac);
+    }
+
     @OnClick({
             R.id.tv_boxConfig,
             R.id.rl_boxset,
@@ -450,16 +472,27 @@ public class BoxDetailActivity extends BaseActivity {
                 if (isCarry()) return;//判断是否处于不可配置状态
                 if (isConnectBle()) return;//判断是否连接蓝牙
                 Bundle bundle1 = new Bundle();
-                if (becomeFinger1.trim().isEmpty() || becomeFinger1 == "null") {
-                    bundle1.putString("becomeNum", "0");
-                } else {
-                    bundle1.putString("becomeNum", "3");
-                }
-                if (possessorFinger1.trim().isEmpty() || possessorFinger1 == "null") {
-                    bundle1.putString("possessorNum", "0");
-                } else {
+                ServiceBean device = SharedPreTool.getInstance(this).getObj(ServiceBean.class, mac);
+                if (device != null && device.isCarryFinger()) {
                     bundle1.putString("possessorNum", "3");
+                } else {
+                    bundle1.putString("possessorNum", "0");
                 }
+                if (device!=null&&device.isBecomeFinger()){
+                    bundle1.putString("becomeNum", "3");
+                }else {
+                    bundle1.putString("becomeNum", "0");
+                }
+//                if (possessorFinger1.trim().isEmpty() || possessorFinger1 == "null") {
+//                    bundle1.putString("possessorNum", "0");
+//                } else {
+//                    bundle1.putString("possessorNum", "3");
+//                }
+//                if (becomeFinger1.trim().isEmpty() || becomeFinger1 == "null") {
+//                    bundle1.putString("becomeNum", "0");
+//                } else {
+//                    bundle1.putString("becomeNum", "3");
+//                }
                 bundle1.putString(EXTRA_ITEM_ADDRESS, mac);
                 SettingFingerActivity.lauch(context, bundle1);
                 break;
@@ -736,10 +769,9 @@ public class BoxDetailActivity extends BaseActivity {
                     becomeFinger1 = data.getStringExtra("becomeFinger1");
                     becomeFinger2 = data.getStringExtra("becomeFinger2");
                     becomeFinger3 = data.getStringExtra("becomeFinger3");
-                    if (possessorFinger1 != null && becomeFinger1 != null) {
-                        CommonKit.showOkShort(context, "指纹录入成功");
-                    } else {
-                        CommonKit.showOkShort(context, "指纹录入失败");
+                    setFinger(possessorFinger3 != null ? true : false, becomeFinger3 != null ? true : false);
+                    if (possessorFinger3 != null) {
+                        CommonKit.showOkShort(context, "指纹录入完成");
                     }
                     break;
                 default:
