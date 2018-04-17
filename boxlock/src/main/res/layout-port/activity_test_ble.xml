@@ -61,6 +61,18 @@
                     android:layout_height="wrap_content"
                     android:text="Txt" />
 
+                <RadioButton
+                    android:id="@+id/radioButtonTCP"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tcp" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonUDP"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Udp" />
+
             </RadioGroup>
 
 
@@ -78,7 +90,6 @@
 
                 <requestFocus />
             </EditText>
-
 
             <CheckBox
                 android:id="@+id/checkBoxAutoClear"
@@ -283,7 +294,8 @@
                 android:layout_height="40dp"
                 android:gravity="top"
                 android:imeOptions="actionDone"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:text="FB10001A9a75bca04593464d95b4266cc5e0bc2759c215ffFFFFFFFFFFFF00FE" />
 
             <LinearLayout
                 android:id="@+id/LinearLayoutTooLCOMA"

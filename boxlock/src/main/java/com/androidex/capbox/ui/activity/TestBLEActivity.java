@@ -38,6 +38,7 @@ import java.util.List;
 import butterknife.Bind;
 
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_ALL_DATA;
+import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_SOCKET_OSPF;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
@@ -49,9 +50,9 @@ import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_
 
 /**
  * @author benjaminwan
- *         串口助手
- *         程序载入时自动搜索串口设备
- *         n,8,1，没得选
+ * 串口助手
+ * 程序载入时自动搜索串口设备
+ * n,8,1，没得选
  */
 public class TestBLEActivity extends BaseActivity {
     @Bind(R.id.editTextCOMA)
@@ -74,13 +75,19 @@ public class TestBLEActivity extends BaseActivity {
     RadioButton radioButtonTxt;
     @Bind(R.id.radioButtonHex)
     RadioButton radioButtonHex;
+    @Bind(R.id.radioButtonTCP)
+    RadioButton radioButtonTCP;
+    @Bind(R.id.radioButtonUDP)
+    RadioButton radioButtonUDP;
 
     int iRecLines = 0;//接收区行数
     private int delayTime = 500;//定时发送的间隔时间
     private String address = null;
     private boolean isHex = true;
     private List<BluetoothDevice> allConnectDevice;
-    boolean isCirculation = false;
+    boolean isCirculation = false;//是否自动发送
+    boolean isTCP = false;//TCP协议发送
+    boolean isUDP = false;//UDP协议发送
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -88,8 +95,8 @@ public class TestBLEActivity extends BaseActivity {
         Loge("connected device size=" + allConnectDevice.size());
         if (allConnectDevice.size() > 0) {
             address = allConnectDevice.get(0).getAddress();
-        }else {
-            CommonKit.showErrorShort(context,"请连接蓝牙");
+        } else {
+            CommonKit.showErrorShort(context, "请连接蓝牙");
         }
         initBleBroadCast();
     }
@@ -105,6 +112,8 @@ public class TestBLEActivity extends BaseActivity {
         radioButtonHex.setOnClickListener(new radioButtonClickEvent());
         ButtonClear.setOnClickListener(new ButtonClickEvent());
         ButtonSendCOMA.setOnClickListener(new ButtonClickEvent());
+        radioButtonTCP.setOnCheckedChangeListener(new CheckBoxChangeEvent());
+        radioButtonUDP.setOnCheckedChangeListener(new CheckBoxChangeEvent());
         checkBoxAutoCOMA.setOnCheckedChangeListener(new CheckBoxChangeEvent());
 
         editTextCOMA.setKeyListener(hexkeyListener);
@@ -123,6 +132,10 @@ public class TestBLEActivity extends BaseActivity {
         intentFilter.addAction(BLUTOOTH_ON);//手机蓝牙打开
         intentFilter.addAction(ACTION_ALL_DATA);//读取调试数据
         context.registerReceiver(dataUpdateRecevice, intentFilter);
+
+        IntentFilter intentFilter1 = new IntentFilter();
+        intentFilter1.addAction("tcpClientReceiver");
+        context.registerReceiver(tcpClientReceiver, intentFilter1);
     }
 
     public void startSend() {
@@ -205,13 +218,25 @@ public class TestBLEActivity extends BaseActivity {
     //自动发送
     class CheckBoxChangeEvent implements CheckBox.OnCheckedChangeListener {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            RLog.e(buttonView.getId() + " isChecked=" + isChecked);
             if (buttonView == checkBoxAutoCOMA) {
-                RLog.e("isChecked=" + isChecked);
                 if (isChecked) {
                     isCirculation = true;
                     startSend();
                 } else {
                     isCirculation = false;
+                }
+            } else if (buttonView == radioButtonTCP) {
+                if (isChecked) {
+                    isTCP = true;
+                } else {
+                    isTCP = false;
+                }
+            } else if (buttonView == radioButtonUDP) {
+                if (isChecked) {
+                    isUDP = true;
+                } else {
+                    isUDP = false;
                 }
             }
         }
@@ -225,7 +250,13 @@ public class TestBLEActivity extends BaseActivity {
                 iRecLines = 0;
                 editTextLines.setText(String.valueOf(iRecLines));
             } else if (v == ButtonSendCOMA) {
-                sendData();
+                if (isTCP || isUDP) {
+                    if (getSendData() == null) return;
+                    MyBleService.getInstance().sendTCPData(context, getSendData());
+                    updateText(String.format("发送给服务器：%s\r\n", getSendData()));
+                } else {
+                    sendData();
+                }
             }
         }
     }
@@ -236,11 +267,11 @@ public class TestBLEActivity extends BaseActivity {
             return;
         }
         if (getSendData() == null) return;
-        MyBleService.getInstance().sendData(address, Byte2HexUtil.decodeHex(getSendData()));
+        MyBleService.getInstance().sendData(address, Byte2HexUtil.hex2Bytes(getSendData()));
     }
 
     @NonNull
-    private char[] getSendData() {
+    private String getSendData() {
         String str = editTextCOMA.getText().toString().trim();
         if (TextUtils.isEmpty(str)) {
             runOnUiThread(new Runnable() {
@@ -251,7 +282,7 @@ public class TestBLEActivity extends BaseActivity {
             });
             return null;
         }
-        return str.toCharArray();
+        return str;
     }
 
     //设置自动发送延时
@@ -265,16 +296,8 @@ public class TestBLEActivity extends BaseActivity {
         return delayTime;
     }
 
-    private void updateText(byte[] b) {
-        if (isHex) {
-            editTextRecDisp.append(String.format("%s\r\n", Byte2HexUtil.byte2Hex(b)));
-        } else {
-            try {
-                editTextRecDisp.append(String.format("%s\r\n", new String(b, "UTF-8")));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-        }
+    private void updateText(String str) {
+        editTextRecDisp.append(str);
         iRecLines++;
         editTextLines.setText(String.valueOf(iRecLines));
         if ((iRecLines > 200) && (checkBoxAutoClear.isChecked())) {//达到200项自动清除
@@ -300,7 +323,6 @@ public class TestBLEActivity extends BaseActivity {
                     disProgress();
                     CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast3));
                     break;
-
                 case BLE_CONN_DIS://断开连接
                     checkBoxAutoCOMA.setChecked(false);
                     RLog.d("断开连接");
@@ -320,9 +342,39 @@ public class TestBLEActivity extends BaseActivity {
                     break;
                 case ACTION_ALL_DATA:
                     //RLog.d("读取到的数据=" + Byte2HexUtil.byte2Hex(b));
-                    updateText(b);
+                    if (isTCP || isUDP) {
+                    } else {
+                        if (isHex) {
+                            updateText(String.format("%s\r\n", Byte2HexUtil.byte2Hex(b)));
+                        } else {
+                            try {
+                                updateText(String.format("%s\r\n", new String(b, "UTF-8")));
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    break;
+                case ACTION_SOCKET_OSPF:
+                    updateText(String.format("蓝牙接收到透传指令：%s\r\n", Byte2HexUtil.byte2Hex(b)));
                     break;
                 default:
+                    break;
+            }
+        }
+    };
+
+    BroadcastReceiver tcpClientReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String mAction = intent.getAction();
+            switch (mAction) {
+                case "tcpClientReceiver":
+                    byte[] tcpData = intent.getByteArrayExtra("tcpClientReceiver");
+                    if (tcpData.length > 0) {
+                        updateText("服务器返回：" + Byte2HexUtil.byte2Hex(tcpData));
+                    }
                     break;
             }
         }
