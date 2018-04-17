@@ -16,6 +16,7 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.text.method.KeyListener;
 import android.text.method.NumberKeyListener;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -131,6 +132,7 @@ public class TestBLEActivity extends BaseActivity {
         intentFilter.addAction(BLUTOOTH_OFF);//手机蓝牙关闭
         intentFilter.addAction(BLUTOOTH_ON);//手机蓝牙打开
         intentFilter.addAction(ACTION_ALL_DATA);//读取调试数据
+        intentFilter.addAction(ACTION_SOCKET_OSPF);//读取蓝牙发送的透传指令
         context.registerReceiver(dataUpdateRecevice, intentFilter);
 
         IntentFilter intentFilter1 = new IntentFilter();
@@ -357,13 +359,32 @@ public class TestBLEActivity extends BaseActivity {
                     break;
                 case ACTION_SOCKET_OSPF:
                     updateText(String.format("蓝牙接收到透传指令：%s\r\n", Byte2HexUtil.byte2Hex(b)));
+                    if (b.length < 7) return;
+                    byte[] epcBytes = new byte[b.length - 7];
+                    System.arraycopy(b, 4, epcBytes, 0, b.length - 7);
+                    RLog.d("拆分完的数据：" + Byte2HexUtil.byte2Hex(epcBytes));
+                    if (b1 == b[4]) {
+                        dataAll += Byte2HexUtil.byte2Hex(epcBytes);
+                    } else {
+                        dataAll = null;
+                        dataAll = Byte2HexUtil.byte2Hex(epcBytes);
+                    }
+                    for (int i = 0; i < epcBytes.length; i++) {
+                        if (epcBytes[i] == (byte) 0xFE || epcBytes[i] == (byte) 0xfe) {
+                            RLog.d("合并完的数据：" + dataAll);
+                            if (dataAll == null) return;
+                            MyBleService.getInstance().sendTCPData(context, dataAll);
+                        }
+                    }
+                    b1 = b[4];
                     break;
                 default:
                     break;
             }
         }
     };
-
+    byte b1;
+    String dataAll;
     BroadcastReceiver tcpClientReceiver = new BroadcastReceiver() {
 
         @Override
