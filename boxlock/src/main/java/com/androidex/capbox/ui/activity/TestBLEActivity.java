@@ -265,7 +265,7 @@ public class TestBLEActivity extends BaseActivity {
                             RLog.e("MyBleService.getInstance() is null");
                             return;
                         }
-                        MyBleService.getInstance().sendTCPData(context, getSendData());
+                        MyBleService.getInstance().sendTCPData(context, getSendData(), null);
                     } catch (NullPointerException e) {
                         e.printStackTrace();
                     }
