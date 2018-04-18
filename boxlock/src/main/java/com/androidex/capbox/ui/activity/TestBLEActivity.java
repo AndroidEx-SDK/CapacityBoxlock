@@ -46,6 +46,8 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCONNECTED;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLUTOOTH_OFF;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLUTOOTH_ON;
+import static com.androidex.boxlib.utils.BleConstants.LOG.ACTION_LOG_TEST;
+import static com.androidex.boxlib.utils.BleConstants.NET.ACTION_NET_TCP_RECEIVE;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
 
@@ -136,7 +138,8 @@ public class TestBLEActivity extends BaseActivity {
         context.registerReceiver(dataUpdateRecevice, intentFilter);
 
         IntentFilter intentFilter1 = new IntentFilter();
-        intentFilter1.addAction("tcpClientReceiver");
+        intentFilter1.addAction(ACTION_NET_TCP_RECEIVE);
+        intentFilter1.addAction(ACTION_LOG_TEST);
         context.registerReceiver(tcpClientReceiver, intentFilter1);
     }
 
@@ -254,8 +257,18 @@ public class TestBLEActivity extends BaseActivity {
             } else if (v == ButtonSendCOMA) {
                 if (isTCP || isUDP) {
                     if (getSendData() == null) return;
-                    MyBleService.getInstance().sendTCPData(context, getSendData());
-                    updateText(String.format("发送给服务器：%s\r\n", getSendData()));
+                    try {
+                        if (context == null) {
+                            RLog.e("context is null");
+                            return;
+                        } else if (MyBleService.getInstance() == null) {
+                            RLog.e("MyBleService.getInstance() is null");
+                            return;
+                        }
+                        MyBleService.getInstance().sendTCPData(context, getSendData());
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     sendData();
                 }
@@ -359,43 +372,30 @@ public class TestBLEActivity extends BaseActivity {
                     break;
                 case ACTION_SOCKET_OSPF:
                     updateText(String.format("蓝牙接收到透传指令：%s\r\n", Byte2HexUtil.byte2Hex(b)));
-                    if (b.length < 7) return;
-                    byte[] epcBytes = new byte[b.length - 7];
-                    System.arraycopy(b, 4, epcBytes, 0, b.length - 7);
-                    RLog.d("拆分完的数据：" + Byte2HexUtil.byte2Hex(epcBytes));
-                    if (b1 == b[4]) {
-                        dataAll += Byte2HexUtil.byte2Hex(epcBytes);
-                    } else {
-                        dataAll = null;
-                        dataAll = Byte2HexUtil.byte2Hex(epcBytes);
-                    }
-                    for (int i = 0; i < epcBytes.length; i++) {
-                        if (epcBytes[i] == (byte) 0xFE || epcBytes[i] == (byte) 0xfe) {
-                            RLog.d("合并完的数据：" + dataAll);
-                            if (dataAll == null) return;
-                            MyBleService.getInstance().sendTCPData(context, dataAll);
-                        }
-                    }
-                    b1 = b[4];
                     break;
+
                 default:
                     break;
             }
         }
     };
-    byte b1;
-    String dataAll;
+
     BroadcastReceiver tcpClientReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             String mAction = intent.getAction();
             switch (mAction) {
-                case "tcpClientReceiver":
+                case ACTION_NET_TCP_RECEIVE:
                     byte[] tcpData = intent.getByteArrayExtra("tcpClientReceiver");
                     if (tcpData.length > 0) {
-                        updateText("服务器返回：" + Byte2HexUtil.byte2Hex(tcpData));
+                        updateText(String.format("服务器返回：%s\r\n", Byte2HexUtil.byte2Hex(tcpData)));
                     }
+                    break;
+
+                case ACTION_LOG_TEST:
+                    String data = intent.getStringExtra(BLECONSTANTS_DATA);
+                    updateText(String.format("发送给服务器：%s\r\n", data));
                     break;
             }
         }

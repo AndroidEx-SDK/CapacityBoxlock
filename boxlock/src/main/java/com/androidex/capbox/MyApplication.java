@@ -34,7 +34,7 @@ public class MyApplication extends Application {
         /**********初始化蓝牙**************/
         BLESdk.get().init(mContext);
         BLESdk.get().setMaxConnect(5);
-        Intent bleServer = new Intent(mContext, MyBleService.class);
+        Intent bleServer = new Intent(mContext, MyBleService.getInstance().getClass());
         startService(bleServer);
         /*********初始化百度地图***************/
         SDKInitializer.initialize(this);
