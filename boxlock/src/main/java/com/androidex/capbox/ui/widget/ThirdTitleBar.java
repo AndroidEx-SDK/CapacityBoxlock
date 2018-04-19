@@ -20,7 +20,6 @@ import com.androidex.capbox.R;
  * @editor
  */
 public class ThirdTitleBar extends RelativeLayout {
-    private RelativeLayout rl_back;
     private TextView tv_title;
     private ImageView iv_right;
     private TextView tv_right;
@@ -52,7 +51,6 @@ public class ThirdTitleBar extends RelativeLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        rl_back = (RelativeLayout) findViewById(R.id.rl_back);
         tv_title = (TextView) findViewById(R.id.tv_title);
         iv_right = (ImageView) findViewById(R.id.iv_right);
         tv_right = (TextView) findViewById(R.id.tv_right);
@@ -106,9 +104,5 @@ public class ThirdTitleBar extends RelativeLayout {
 
     public TextView getRightTv(){
         return tv_right;
-    }
-
-    public RelativeLayout getLeftBtn() {
-        return rl_back;
     }
 }

@@ -6,7 +6,6 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -22,7 +21,6 @@ import com.androidex.capbox.ui.activity.LoginActivity;
 import com.androidex.capbox.ui.widget.ThirdTitleBar;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
-import com.androidex.capbox.utils.Dialog;
 import com.androidex.capbox.utils.DrivingRouteOverlay;
 import com.androidex.capbox.utils.MapUtils;
 import com.androidex.capbox.utils.RLog;
@@ -45,9 +43,7 @@ import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.route.DrivingRouteLine;
 import com.baidu.mapapi.search.route.WalkingRouteLine;
-import com.baidu.mapapi.utils.DistanceUtil;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -191,7 +187,6 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
     @Override
     public void initData() {
         mMapUtils = new MapUtils(context,this);
-        titleBar.getLeftBtn().setVisibility(View.GONE);
         iv_location.setOnClickListener(this);
         navigationButton.setOnClickListener(this);
         routeplanButton.setOnClickListener(this);

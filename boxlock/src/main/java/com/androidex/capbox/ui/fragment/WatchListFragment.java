@@ -183,7 +183,6 @@ public class WatchListFragment extends BaseFragment {
     }
 
     private void initTitleBar() {
-        thirdtitlebar.getLeftBtn().setVisibility(View.GONE);
     }
 
     @Override

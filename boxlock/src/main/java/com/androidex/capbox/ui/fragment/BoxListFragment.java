@@ -11,11 +11,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.acker.simplezxing.activity.CaptureActivity;
 import com.androidex.boxlib.modules.ServiceBean;
@@ -26,13 +24,16 @@ import com.androidex.capbox.data.Event;
 import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
+import com.androidex.capbox.module.ActionItem;
 import com.androidex.capbox.module.BaseModel;
 import com.androidex.capbox.module.BoxDeviceModel;
 import com.androidex.capbox.service.MyBleService;
+import com.androidex.capbox.ui.activity.AddDeviceActivity;
 import com.androidex.capbox.ui.activity.BoxDetailActivity;
 import com.androidex.capbox.ui.activity.LoginActivity;
 import com.androidex.capbox.ui.adapter.BLEDeviceListAdapter;
 import com.androidex.capbox.ui.adapter.BoxListAdapter;
+import com.androidex.capbox.ui.view.TitlePopup;
 import com.androidex.capbox.ui.widget.ThirdTitleBar;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
@@ -78,8 +79,8 @@ import static com.androidex.capbox.utils.Constants.EXTRA_PAGER_SIGN;
 
 public class BoxListFragment extends BaseFragment {
     private static final String TAG = "BoxListFragment";
-    @Bind(R.id.thirdtitlebar)
-    ThirdTitleBar thirdtitlebar;
+    @Bind(R.id.titlebar)
+    ThirdTitleBar titlebar;
     @Bind(R.id.device_list_connected)
     ListView listconnected;
     @Bind(R.id.listview_search)
@@ -89,9 +90,7 @@ public class BoxListFragment extends BaseFragment {
 
     private BleBroadCast bleBroadCast;
     List<Map<String, String>> mylist = new ArrayList<>();
-    private Animation animation;//动画
     private static final long SCAN_PERIOD = 12000;
-    private int DURATION = 1000 * 2;// 动画持续时间
     private static final int REQUEST_ENABLE_BT = 1;// 用于蓝牙setResult
     private boolean mScanning = false;//控制蓝牙扫描
     private Timer timer_scanBle;// 扫描蓝牙时定时器
@@ -101,10 +100,10 @@ public class BoxListFragment extends BaseFragment {
     private Handler mHandler;
     private Runnable mRunnable;
     private String scanAddress;//正在扫描绑定的设备的mac
+    private TitlePopup titlePopup;
 
     @Override
     public void initData() {
-        initAnimation();//初始化动画
         initTitleBar();
         iniRefreshView();
         initListView();
@@ -113,33 +112,39 @@ public class BoxListFragment extends BaseFragment {
     }
 
     private void initTitleBar() {
-        thirdtitlebar.getLeftBtn().setOnClickListener(new View.OnClickListener() {
+        titlebar.getRightIv().setVisibility(View.VISIBLE);
+        titlebar.getRightTv().setVisibility(View.GONE);
+        // 实例化标题栏弹窗
+        titlePopup = new TitlePopup(context, RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        // 给标题栏弹窗添加子类
+        titlePopup.addAction(new ActionItem(context, "添加设备", R.drawable.finish_carry));
+        titlePopup.addAction(new ActionItem(context, "扫一扫", R.drawable.connectlist));
+        titlePopup.addAction(new ActionItem(context, "箱体设置", R.drawable.setting));
+        titlePopup.setItemOnClickListener(new TitlePopup.OnItemOnClickListener() {
             @Override
-            public void onClick(View v) {//扫描
-                Intent intent = new Intent(context, CaptureActivity.class);
-                startActivityForResult(intent, CaptureActivity.REQ_CODE);// ,//Activity.RESULT_FIRST_USER
-            }
-        });
-        thirdtitlebar.setRightRes(R.drawable.device_search);
-        thirdtitlebar.getRightIv().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {//搜索
-                boxlist();
-                scanLeDeviceList(true);
-            }
-        });
-    }
+            public void onItemClick(ActionItem item, int position) {
+                switch (position) {
+                    case 0:
+                        AddDeviceActivity.lauch(context, null);
+                        break;
+                    case 1:
+                        Intent intent = new Intent(context, CaptureActivity.class);
+                        startActivityForResult(intent, CaptureActivity.REQ_CODE);// ,//Activity.RESULT_FIRST_USER
+                        break;
+                    case 2:
 
-    /**
-     * 旋转动画
-     */
-    private void initAnimation() {
-        animation = AnimationUtils.loadAnimation(context, R.anim.scan_anim);
-        /** 设置旋转动画 */
-        animation.setDuration(DURATION);// 设置动画持续时间
-        animation.setInterpolator(new LinearInterpolator());
-        animation.setRepeatCount((int) ((SCAN_PERIOD / DURATION) - 1));// 设置重复次数
-        animation.setFillAfter(true);// 动画执行完后是否停留在执行完的状态
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+        titlebar.getRightIv().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                titlePopup.show(view);
+            }
+        });
     }
 
     /**
@@ -152,7 +157,6 @@ public class BoxListFragment extends BaseFragment {
             public void run() {
                 mScanning = false;
                 scanLeDeviceList(false);
-                animation.cancel();
             }
         };
     }
@@ -618,7 +622,6 @@ public class BoxListFragment extends BaseFragment {
                 mDeviceListAdapter.clear();
             }
             RLog.d("开始扫描列表");
-            thirdtitlebar.getRightIv().startAnimation(animation);
             mScanning = true;
             mHandler.postDelayed(mRunnable, SCAN_PERIOD);
             mBtAdapter.startLeScan(mLeListScanCallback);
@@ -682,8 +685,6 @@ public class BoxListFragment extends BaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-        thirdtitlebar.getRightIv().clearAnimation();
-        thirdtitlebar.getRightIv().setEnabled(false);
         mDeviceListAdapter.clear();
     }
 

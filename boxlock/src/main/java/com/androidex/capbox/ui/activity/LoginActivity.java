@@ -64,7 +64,6 @@ public class LoginActivity extends UserBaseActivity {
     }
 
     private void initTitleBar() {
-        titlebar.getLeftBtn().setVisibility(View.GONE);
     }
 
     @Override
