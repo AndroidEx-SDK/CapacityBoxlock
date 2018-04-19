@@ -27,8 +27,8 @@ import butterknife.OnTextChanged;
 import static com.androidex.capbox.data.cache.SharedPreTool.LOGIN_STATUS;
 
 public class LoginActivity extends UserBaseActivity {
-    @Bind(R.id.thirdtitlebar)
-    ThirdTitleBar thirdtitlebar;
+    @Bind(R.id.titlebar)
+    ThirdTitleBar titlebar;
     @Bind(R.id.et_phone)
     EditText et_phone;
     @Bind(R.id.et_password)
@@ -64,7 +64,7 @@ public class LoginActivity extends UserBaseActivity {
     }
 
     private void initTitleBar() {
-        thirdtitlebar.getLeftBtn().setVisibility(View.GONE);
+        titlebar.getLeftBtn().setVisibility(View.GONE);
     }
 
     @Override

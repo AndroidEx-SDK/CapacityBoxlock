@@ -10,7 +10,7 @@
     tools:context="com.androidex.capbox.ui.activity.LoginActivity">
 
     <com.androidex.capbox.ui.widget.ThirdTitleBar
-        android:id="@+id/thirdtitlebar"
+        android:id="@+id/titlebar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:titleText="@string/label_login" />

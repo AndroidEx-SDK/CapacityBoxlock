@@ -6,16 +6,19 @@ android {
     defaultConfig {
         applicationId "com.androidex.capbox"
         minSdkVersion 21
-        targetSdkVersion 26
-        versionCode 43
-        versionName "0.4.3"
+        targetSdkVersion 22
+        versionCode 44
+        versionName "0.4.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
         javaCompileOptions {
+            // 显式声明支持注解
             annotationProcessorOptions {
                 includeCompileClasspath true
             }
         }
     }
+
     buildTypes {
         release {
             minifyEnabled true
