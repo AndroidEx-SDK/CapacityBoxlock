@@ -17,7 +17,6 @@ import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.acker.simplezxing.activity.CaptureActivity;
 import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.boxlib.service.BleService;
 import com.androidex.boxlib.utils.Byte2HexUtil;
@@ -178,9 +177,9 @@ public class AddDeviceActivity extends BaseActivity {
 
             @Override
             public void listViewItemClick(int position, View v) {
+                ServiceBean device = MyBleService.get().getConnectDevice(mDeviceListAdapter.getDevice(position).getAddress());
                 switch (v.getId()) {
                     case R.id.tv_connect:
-                        ServiceBean device = MyBleService.get().getConnectDevice(mDeviceListAdapter.getDevice(position).getAddress());
                         if (device != null) {
                             RLog.d("断开连接");
                             mDeviceListAdapter.setTextHint(-1, "");//刷新列表的提醒显示
@@ -188,8 +187,8 @@ public class AddDeviceActivity extends BaseActivity {
                             MyBleService.get().disConnectDevice(mDeviceListAdapter.getDevice(position).getAddress());
                         } else {
                             RLog.d("开始绑定");
-                            showProgress(getResources().getString(R.string.device_connect));
                             stopScanLe();
+                            showProgress(getResources().getString(R.string.device_connect));
                             MyBleService.get().connectionDevice(context, mDeviceListAdapter.getDevice(position).getAddress());
                         }
                         break;
@@ -204,8 +203,8 @@ public class AddDeviceActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 RLog.d("开始绑定");
-                showProgress(getResources().getString(R.string.device_connect));
                 stopScanLe();
+                showProgress(getResources().getString(R.string.device_connect));
                 BleService.get().connectionDevice(context, mDeviceListAdapter.getDevice(position).getAddress());
 
             }
@@ -331,26 +330,6 @@ public class AddDeviceActivity extends BaseActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case CaptureActivity.REQ_CODE://二维码扫描回调
-                switch (resultCode) {
-                    case RESULT_OK:
-                        CommonKit.showMsgShort(context, "扫描成功");
-                        String uuid = data.getStringExtra(CaptureActivity.EXTRA_SCAN_RESULT);
-                        uuid = uuid.replace("", "-");
-                        RLog.e("扫描结果：" + data.getStringExtra(CaptureActivity.EXTRA_SCAN_RESULT));  //or do sth
-                        if (uuid.length() > 32) {
-                            bindBox(uuid.trim());//扫描到UUID
-                        } else {
-                            CommonKit.showMsgShort(context, "扫描失败");
-                        }
-                        break;
-                    case RESULT_CANCELED:
-                        CommonKit.showMsgShort(context, "取消扫描");
-                        break;
-                }
-                break;
-        }
         if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
             CommonKit.finishActivity(context);
             return;
@@ -402,7 +381,10 @@ public class AddDeviceActivity extends BaseActivity {
                     disProgress();
                     mDeviceListAdapter.setTextHint(-1, "");
                     break;
-
+                case BLE_CONN_FAIL:
+                    disProgress();
+                    CommonKit.showErrorShort(context, "连接错误，请重新绑定");
+                    break;
                 case ACTION_UUID:
                     byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
                     if (b.length >= 20) {
@@ -417,9 +399,11 @@ public class AddDeviceActivity extends BaseActivity {
                             bindBox(uuid.trim());
                         }
                     }
-                    MyBleService.get().getConnectDevice(mac).setActiveDisConnect(true);
-                    MyBleService.get().disConnectDevice(mac);
-                    mDeviceListAdapter.setTextHint(-1, "");
+                    if (MyBleService.get().getConnectDevice(mac) != null) {
+                        MyBleService.get().getConnectDevice(mac).setActiveDisConnect(true);
+                        MyBleService.get().disConnectDevice(mac);
+                        mDeviceListAdapter.setTextHint(-1, "");
+                    }
                     if (!mScanning) {
                         scanLeDeviceList(true);
                     }
@@ -428,6 +412,13 @@ public class AddDeviceActivity extends BaseActivity {
                     break;
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (bleBroadCast != null)
+            unregisterReceiver(bleBroadCast);
     }
 
     @Override

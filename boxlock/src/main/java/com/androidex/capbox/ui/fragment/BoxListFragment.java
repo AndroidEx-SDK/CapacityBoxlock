@@ -2,22 +2,16 @@ package com.androidex.capbox.ui.fragment;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.acker.simplezxing.activity.CaptureActivity;
-import com.androidex.boxlib.modules.ServiceBean;
-import com.androidex.boxlib.utils.Byte2HexUtil;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseFragment;
 import com.androidex.capbox.data.Event;
@@ -31,7 +25,6 @@ import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.activity.AddDeviceActivity;
 import com.androidex.capbox.ui.activity.BoxDetailActivity;
 import com.androidex.capbox.ui.activity.LoginActivity;
-import com.androidex.capbox.ui.adapter.BLEDeviceListAdapter;
 import com.androidex.capbox.ui.adapter.BoxListAdapter;
 import com.androidex.capbox.ui.view.TitlePopup;
 import com.androidex.capbox.ui.widget.ThirdTitleBar;
@@ -61,8 +54,6 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCONNECTED;
-import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
-import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
 import static com.androidex.capbox.provider.WidgetProvider.ACTION_UPDATE_ALL;
 import static com.androidex.capbox.provider.WidgetProvider.EXTRA_ITEM_POSITION;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
@@ -83,12 +74,9 @@ public class BoxListFragment extends BaseFragment {
     ThirdTitleBar titlebar;
     @Bind(R.id.device_list_connected)
     ListView listconnected;
-    @Bind(R.id.listview_search)
-    ListView listview_search;
-    @Bind(R.id.swipe_searchDevices)
-    SwipeRefreshLayout swipe_searchDevices;
+    @Bind(R.id.swipe_container)
+    SwipeRefreshLayout swipe_container;
 
-    private BleBroadCast bleBroadCast;
     List<Map<String, String>> mylist = new ArrayList<>();
     private static final long SCAN_PERIOD = 12000;
     private static final int REQUEST_ENABLE_BT = 1;// 用于蓝牙setResult
@@ -96,10 +84,6 @@ public class BoxListFragment extends BaseFragment {
     private Timer timer_scanBle;// 扫描蓝牙时定时器
     private TimerTask task_scanBle;
     private BoxListAdapter boxListAdapter;
-    private BLEDeviceListAdapter mDeviceListAdapter;
-    private Handler mHandler;
-    private Runnable mRunnable;
-    private String scanAddress;//正在扫描绑定的设备的mac
     private TitlePopup titlePopup;
 
     @Override
@@ -108,7 +92,6 @@ public class BoxListFragment extends BaseFragment {
         iniRefreshView();
         initListView();
         initBle();//蓝牙连接
-        initHandler();
     }
 
     private void initTitleBar() {
@@ -148,20 +131,6 @@ public class BoxListFragment extends BaseFragment {
     }
 
     /**
-     * 初始化搜索设备的定时器
-     */
-    private void initHandler() {
-        mHandler = new Handler();
-        mRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mScanning = false;
-                scanLeDeviceList(false);
-            }
-        };
-    }
-
-    /**
      * 初始化两个列表的ListView
      */
     private void initListView() {
@@ -192,47 +161,10 @@ public class BoxListFragment extends BaseFragment {
         });
         //设置已绑定列表的适配器
         listconnected.setAdapter(boxListAdapter);
-        //搜索列表的适配器
-        mDeviceListAdapter = new BLEDeviceListAdapter(context, new BLEDeviceListAdapter.IClick() {
-
-            @Override
-            public void listViewItemClick(int position, View v) {
-                switch (v.getId()) {
-                    case R.id.tv_connect:
-                        scanAddress = mDeviceListAdapter.getDevice(position).getAddress();
-                        ServiceBean device = MyBleService.getInstance().getConnectDevice(mDeviceListAdapter.getDevice(position).getAddress());
-                        if (device != null) {
-                            mDeviceListAdapter.setTextHint(-1, "");//刷新列表的提醒显示
-                            device.setActiveDisConnect(true);
-                            MyBleService.getInstance().disConnectDevice(scanAddress);
-                        } else {
-                            stopScanLe();
-                            showProgress(getResources().getString(R.string.device_connect));
-                            MyBleService.getInstance().connectionDevice(context, scanAddress);
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-        });
-
-        //设置搜索列表的适配器
-        listview_search.setAdapter(mDeviceListAdapter);
-        listview_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                scanAddress = mDeviceListAdapter.getDevice(position).getAddress();
-                stopScanLe();
-                showProgress(getResources().getString(R.string.device_connect));
-                MyBleService.getInstance().connectionDevice(context, mDeviceListAdapter.getDevice(position).getAddress());
-            }
-        });
     }
 
     private void iniRefreshView() {
-        swipe_searchDevices.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        swipe_container.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 // 模拟刷新完成
@@ -242,8 +174,7 @@ public class BoxListFragment extends BaseFragment {
                     public void run() {
                         // TODO Auto-generated method stub
                         boxlist();
-                        scanLeDeviceList(true);
-                        swipe_searchDevices.setRefreshing(false);
+                        swipe_container.setRefreshing(false);
                     }
                 }, 1000);
             }
@@ -370,8 +301,6 @@ public class BoxListFragment extends BaseFragment {
         intentFilter.addAction(BLE_CONN_FAIL);
         intentFilter.addAction(BLE_CONN_DIS);
         intentFilter.addAction(Constants.BLE.ACTION_UUID);//获取UUID
-        bleBroadCast = new BleBroadCast();
-        context.registerReceiver(bleBroadCast, intentFilter);
     }
 
     @Override
@@ -421,7 +350,6 @@ public class BoxListFragment extends BaseFragment {
                     switch (model.code) {
                         case Constants.API.API_OK:
                             showProgress("绑定成功，正在刷新列表...");
-                            mDeviceListAdapter.setTextHint(-1, "");
                             CommonKit.showOkShort(context, getString(R.string.hint_bind_ok));
                             boxlist();//返回成功后刷新列表
                             postSticky(new Event.BoxBindChange());
@@ -518,7 +446,6 @@ public class BoxListFragment extends BaseFragment {
                     }
                 }
                 disProgress();
-                scanLeDeviceList(true);
             }
 
             @Override
@@ -530,7 +457,6 @@ public class BoxListFragment extends BaseFragment {
                 }
                 disProgress();
                 CommonKit.showErrorShort(context, "网络连接异常");
-                scanLeDeviceList(true);
             }
 
             @Override
@@ -547,153 +473,22 @@ public class BoxListFragment extends BaseFragment {
 
     @Override
     public void onClick(View view) {
-
-    }
-
-    /**
-     * 接收广播
-     */
-    public class BleBroadCast extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String address = intent.getStringExtra(BLECONSTANTS_ADDRESS);
-            if (!address.equals(scanAddress)) return;
-            switch (intent.getAction()) {
-                case BLE_CONN_SUCCESS://连接成功
-                case BLE_CONN_SUCCESS_ALLCONNECTED://重复连接
-                    MyBleService.getInstance().enableNotify(address);
-                    disProgress();
-                    showProgress("连接成功...");
-                    RLog.e("开始获取UUID");
-                    startGetUUID(true, address);
-                    break;
-
-                case BLE_CONN_DIS://断开连接
-                    startGetUUID(false, null);
-                    disProgress();
-                    mDeviceListAdapter.setTextHint(-1, "");
-                    break;
-
-                case Constants.BLE.ACTION_UUID:
-                    byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
-                    RLog.e(Byte2HexUtil.byte2Hex(b).trim());
-                    if (b.length >= 20) {
-                        showProgress("开始绑定...");
-                        startGetUUID(false, null);
-                        byte[] b_uuid = new byte[b.length - 4];
-                        System.arraycopy(b, 4, b_uuid, 0, b.length - 4);
-                        String uuid = Byte2HexUtil.byte2Hex(b_uuid).trim();
-                        RLog.d("uuid=" + uuid);
-                        if (uuid != null) {
-                            showProgress("正在绑定...");
-                            bindBox(uuid.trim());
-                        }
-                    }
-                    if (MyBleService.getInstance().getConnectDevice(address)!=null){
-                        MyBleService.getInstance().getConnectDevice(address).setActiveDisConnect(true);
-                        MyBleService.getInstance().disConnectDevice(address);
-                    }
-                    mDeviceListAdapter.setTextHint(-1, "");
-                    if (!mScanning) {
-                        scanLeDeviceList(true);
-                    }
-                    break;
-
-                case BLE_CONN_FAIL://连接失败
-                    disProgress();
-                    CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast8));
-                    break;
-
-                default:
-                    break;
-            }
-        }
-    }
-
-    /**
-     * 搜索BLE设备：
-     *
-     * @param enable
-     */
-    private void scanLeDeviceList(final boolean enable) {
-        if (enable) {
-            if (mDeviceListAdapter.getCount() > 0) {
-                mDeviceListAdapter.clear();
-            }
-            RLog.d("开始扫描列表");
-            mScanning = true;
-            mHandler.postDelayed(mRunnable, SCAN_PERIOD);
-            mBtAdapter.startLeScan(mLeListScanCallback);
-        } else {
-            mScanning = false;
-            mHandler.removeCallbacks(mRunnable);
-            mBtAdapter.stopLeScan(mLeListScanCallback);
-        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
         boxlist();
-        scanLeDeviceList(true);
     }
-
-    /**
-     * BluetoothAdapter.LeScanCallback接口，BLE设备的搜索结果将通过这个callback返回。
-     * Device scan callback.蓝牙搜索回调
-     */
-    private BluetoothAdapter.LeScanCallback mLeListScanCallback = new BluetoothAdapter.LeScanCallback() {
-
-        @Override
-        public void onLeScan(final BluetoothDevice device, int rssi, final byte[] scanRecord) {
-            context.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (mylist.size() > 0) {
-                        boolean flag = true;
-                        for (Map map : mylist) {
-                            if (device.getAddress().equals(map.get(EXTRA_ITEM_ADDRESS))) {
-                                flag = false;
-                                break;
-                            }
-                        }
-                        if (flag) {
-                            if (device.getName() != null) {
-                                RLog.e("搜索到的蓝牙设备22=" + device.getName());
-                                //过滤搜索到的设备的名字
-                                if (device.getName().contains(LockFragment.boxName)) {
-                                    mDeviceListAdapter.addDevice(device);
-                                }
-                            }
-                        }
-                    } else {
-                        if (device.getName() != null) {
-                            RLog.e("搜索到的蓝牙设备11=" + device.getName());
-                            //过滤搜索到的设备的名字
-                            if (device.getName().contains(LockFragment.boxName)) {
-                                mDeviceListAdapter.addDevice(device);
-                            }
-                        }
-                    }
-                    mDeviceListAdapter.notifyDataSetChanged();
-                }
-            });
-        }
-    };
 
     @Override
     public void onPause() {
         super.onPause();
-        mDeviceListAdapter.clear();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (bleBroadCast != null) {
-            context.unregisterReceiver(bleBroadCast);
-        }
     }
 
     @Override

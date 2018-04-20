@@ -72,10 +72,10 @@ public class BLEDeviceListAdapter extends BaseAdapter {
         if (view == null) {
             view = mInflator.inflate(R.layout.list_search_device, null);
             viewHolder = new ViewHolder();
-            viewHolder.deviceAddress = (TextView) view.findViewById(R.id.device_address);
-            viewHolder.tv_hint = (TextView) view.findViewById(R.id.tv_hint);
-            viewHolder.deviceName = (TextView) view.findViewById(R.id.device_name);
-            viewHolder.deviceBtn = (TextView) view.findViewById(R.id.tv_connect);
+            viewHolder.deviceAddress = view.findViewById(R.id.device_address);
+            viewHolder.tv_hint = view.findViewById(R.id.tv_hint);
+            viewHolder.deviceName = view.findViewById(R.id.device_name);
+            viewHolder.deviceBtn = view.findViewById(R.id.tv_connect);
             view.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) view.getTag();

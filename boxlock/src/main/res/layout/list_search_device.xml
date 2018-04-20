@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/ll"
+        android:id="@+id/ll_bindDevice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/marginPadding16"
@@ -62,7 +62,7 @@
         android:id="@+id/textView1"
         android:layout_width="match_parent"
         android:layout_height="@dimen/tv_line_height"
-        android:layout_below="@+id/ll"
+        android:layout_below="@+id/ll_bindDevice"
         android:background="@color/line_color" />
 
 </RelativeLayout>

@@ -6,15 +6,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewCompat;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.androidex.capbox.MyApplication;
@@ -292,8 +287,8 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
         }
         TextView tv = (TextView) dialog.findViewById(R.id.msg);
         tv.setText(msg);
-        if (dialog.isShowing()) {
-            dialog.setCancelable(false);
+        if (!dialog.isShowing()) {
+            dialog.setCancelable(true);
             dialog.show();
         }
     }
