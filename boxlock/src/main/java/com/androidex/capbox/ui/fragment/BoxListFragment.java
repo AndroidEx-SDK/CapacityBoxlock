@@ -349,23 +349,19 @@ public class BoxListFragment extends BaseFragment {
                 if (model != null) {
                     switch (model.code) {
                         case Constants.API.API_OK:
-                            showProgress("绑定成功，正在刷新列表...");
                             CommonKit.showOkShort(context, getString(R.string.hint_bind_ok));
                             boxlist();//返回成功后刷新列表
                             postSticky(new Event.BoxBindChange());
                             context.sendBroadcast(new Intent(ACTION_UPDATE_ALL));
                             break;
                         case Constants.API.API_NOPERMMISION:
-                            showProgress("该设备已被绑定");
                             CommonKit.showErrorShort(context, "该设备已被绑定");
                             break;
                         case Constants.API.API_FAIL:
                             if (model.info != null) {
-                                showProgress(model.info);
                                 CommonKit.showErrorShort(context, model.info);
                             } else {
                                 CommonKit.showErrorShort(context, "绑定失败");
-                                showProgress("绑定失败");
                             }
                             break;
                         default:
@@ -427,16 +423,13 @@ public class BoxListFragment extends BaseFragment {
                                 CommonKit.showErrorShort(context, "请绑定箱体");
                                 Logd(TAG, "刷新列表无数据");
                             }
-                            showProgress("刷新完成");
                             break;
                         case Constants.API.API_FAIL:
                             CommonKit.showErrorShort(context, "账号在其他地方登录");
-                            showProgress("刷新失败");
                             LoginActivity.lauch(context);
                             break;
                         case Constants.API.API_NOPERMMISION:
                             CommonKit.showErrorShort(context, "获取设备列表失败");
-                            showProgress("刷新失败");
                             break;
                         default:
                             if (model.info != null) {

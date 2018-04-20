@@ -265,23 +265,19 @@ public class AddDeviceActivity extends BaseActivity {
                 if (model != null) {
                     switch (model.code) {
                         case Constants.API.API_OK:
-                            showProgress("绑定成功，正在刷新列表...");
                             mDeviceListAdapter.setTextHint(-1, "");
                             CommonKit.showOkShort(context, getString(R.string.hint_bind_ok));
                             postSticky(new Event.BoxBindChange());
                             CommonKit.finishActivity(context);
                             break;
                         case Constants.API.API_NOPERMMISION:
-                            showProgress("该设备已被绑定");
                             CommonKit.showErrorShort(context, "该设备已被绑定");
                             break;
                         case Constants.API.API_FAIL:
                             if (model.info != null) {
-                                showProgress(model.info);
                                 CommonKit.showErrorShort(context, model.info);
                             } else {
                                 CommonKit.showErrorShort(context, "绑定失败");
-                                showProgress("绑定失败");
                             }
                             break;
                         default:
