@@ -104,6 +104,7 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.androidex.capbox.ui.activity.RegisterActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.androidex.capbox.ui.activity.FindPwdActivity"

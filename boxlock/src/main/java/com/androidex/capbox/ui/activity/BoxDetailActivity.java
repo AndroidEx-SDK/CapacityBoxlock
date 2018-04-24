@@ -184,12 +184,14 @@ public class BoxDetailActivity extends BaseActivity {
         titlebar.getRightTv().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (pager_sign == 0) {
+                if (pager_sign == 0) {//从箱体列表页跳转过来的。
                     intentMonitorPager();
+                    CommonKit.finishActivity(context);
                 } else if (pager_sign == 1) {//从监控页面跳转过来的
                     CommonKit.finishActivity(context);
                 } else {
                     intentMonitorPager();//跳转到监控页
+                    CommonKit.finishActivity(context);
                 }
             }
         });
@@ -478,9 +480,9 @@ public class BoxDetailActivity extends BaseActivity {
                 } else {
                     bundle1.putString("possessorNum", "0");
                 }
-                if (device!=null&&device.isBecomeFinger()){
+                if (device != null && device.isBecomeFinger()) {
                     bundle1.putString("becomeNum", "3");
-                }else {
+                } else {
                     bundle1.putString("becomeNum", "0");
                 }
 //                if (possessorFinger1.trim().isEmpty() || possessorFinger1 == "null") {

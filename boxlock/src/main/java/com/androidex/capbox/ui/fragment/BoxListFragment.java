@@ -255,42 +255,6 @@ public class BoxListFragment extends BaseFragment {
     }
 
     /**
-     * 获取设备的UUID
-     *
-     * @param flag
-     */
-    private void startGetUUID(boolean flag, final String address) {
-        if (flag) {
-            RLog.d("启动自动发送获取UUID");
-            startGetUUID(false, null);
-            if (task_scanBle == null) {
-                task_scanBle = new TimerTask() {
-                    @Override
-                    public void run() {
-                        if (address != null) {
-                            MyBleService.getInstance().getUUID(address);
-                        }
-                    }
-                };
-            }
-            if (timer_scanBle == null) {
-                timer_scanBle = new Timer();
-            }
-            timer_scanBle.schedule(task_scanBle, 500, 5 * 1000);//延迟1s后执行
-        } else {
-            RLog.d("停止获取UUID");
-            if (task_scanBle != null) {
-                task_scanBle.cancel();
-                task_scanBle = null;
-            }
-            if (timer_scanBle != null) {
-                timer_scanBle.cancel();
-                timer_scanBle = null;
-            }
-        }
-    }
-
-    /**
      * 注册设备连接广播
      */
     private void initBleReceiver() {
