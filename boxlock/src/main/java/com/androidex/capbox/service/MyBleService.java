@@ -9,8 +9,9 @@ import com.androidex.capbox.ui.activity.LockScreenActivity;
 import com.androidex.capbox.utils.RLog;
 import com.androidex.capbox.utils.SystemUtil;
 
+import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
-import static com.androidex.capbox.MyApplication.sendDisBroadcast;
+import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ISACTIVEDisConnect;
 import static com.androidex.capbox.utils.Constants.BASE.ACTION_RSSI_IN;
 import static com.androidex.capbox.utils.Constants.BASE.ACTION_RSSI_OUT;
 import static com.androidex.capbox.utils.Constants.BASE.ACTION_TEMP_OUT;
@@ -168,6 +169,12 @@ public class MyBleService extends BleService {
         }
     }
 
+    private void sendDisBroadcast(String address, boolean isActive) {
+        Intent intent = new Intent(BLE_CONN_DIS);
+        intent.putExtra(BLECONSTANTS_ADDRESS, address);
+        intent.putExtra(BLECONSTANTS_ISACTIVEDisConnect, isActive);
+        sendBroadcast(intent);
+    }
 
 
     /**

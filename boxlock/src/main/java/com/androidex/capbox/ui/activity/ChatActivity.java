@@ -20,7 +20,6 @@ import com.androidex.capbox.ui.view.TitlePopup;
 import com.androidex.capbox.ui.widget.SecondTitleBar;
 import com.androidex.capbox.utils.CalendarUtil;
 import com.androidex.capbox.utils.CommonKit;
-import com.androidex.capbox.utils.RLog;
 
 import butterknife.Bind;
 
@@ -90,7 +89,6 @@ public class ChatActivity extends BaseActivity {
                             MyBleService.getInstance().connectionDevice(context, address);
                             showProgress("开始连接...");
                         } else {
-                            RLog.d("已经连接");
                             MyBleService.getInstance().disConnectDevice(address);
                         }
                         break;
