@@ -22,7 +22,7 @@ import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.module.BaseModel;
 import com.androidex.capbox.service.MyBleService;
-import com.androidex.capbox.ui.fragment.LockFragment;
+import com.androidex.capbox.utils.CalendarUtil;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
 
@@ -33,7 +33,6 @@ import de.greenrobot.event.EventBus;
 import okhttp3.Headers;
 import okhttp3.Request;
 
-import static com.androidex.capbox.R.id.tv_status;
 import static com.androidex.capbox.provider.WidgetProvider.ACTION_UPDATE_ALL;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
@@ -95,18 +94,18 @@ public class BoxListAdapter extends BaseAdapter {
             if (holder == null) {
                 holder = new ViewHolder();
             }
-            holder.itemHorizontalScrollView = (HorizontalScrollView) convertView.findViewById(R.id.hsv);
+            holder.itemHorizontalScrollView = convertView.findViewById(R.id.hsv);
             /**
              * 操作按钮层
              */
             holder.actionLayout = convertView.findViewById(R.id.ll_action);
             holder.normalItemContentLayout = convertView.findViewById(R.id.rl_normal);
-            holder.deviceName = (TextView) convertView.findViewById(R.id.device_name);
-            holder.device_address = (TextView) convertView.findViewById(R.id.device_address);
-            holder.iv_online = (ImageView) convertView.findViewById(R.id.iv_online);
-            holder.tv_status = (TextView) convertView.findViewById(tv_status);
-            holder.modify = (TextView) convertView.findViewById(R.id.tv_modify);
-            holder.unbind = (TextView) convertView.findViewById(R.id.tv_unbind);
+            holder.deviceName = convertView.findViewById(R.id.device_name);
+            holder.device_address = convertView.findViewById(R.id.device_address);
+            holder.iv_online = convertView.findViewById(R.id.iv_online);
+            holder.tv_status = convertView.findViewById(R.id.tv_status);
+            holder.modify = convertView.findViewById(R.id.tv_modify);
+            holder.unbind = convertView.findViewById(R.id.tv_unbind);
 
             ViewGroup.LayoutParams lp = holder.normalItemContentLayout.getLayoutParams();
 
@@ -124,34 +123,22 @@ public class BoxListAdapter extends BaseAdapter {
         String name = mContentList.get(position).get(EXTRA_BOX_NAME);
         String isOnLine = mContentList.get(position).get("isOnLine");
         String deviceStatus = mContentList.get(position).get("deviceStatus");
-        if (name == null || name.equals("")) {
-            holder.deviceName.setText("Box" + mac.substring(mac.length() - 2));
-        } else {
-            if (name.contains(LockFragment.boxName)) {
-                if (name.trim().equals("AndroidExBox")) {
-                    name = "Box" + mac.substring(mac.length() - 2);
-                } else {
-                    name = name.replace(LockFragment.boxName, "");
-                }
-            } else if (name.trim().equals("Box")) {
-                name = name + mac.substring(mac.length() - 2);
-            }
-            holder.deviceName.setText(name);
-        }
-        if (uuid != null) {
-            holder.device_address.setText(uuid);
+        holder.deviceName.setText(CalendarUtil.getName(name, mac));
+        if (mac != null) {
+            holder.device_address.setText(mac);
         }
         holder.iv_online.setOnClickListener(mListener);
         holder.normalItemContentLayout.setOnClickListener(mListener);
         holder.normalItemContentLayout.setTag(position);
         holder.iv_online.setTag(position);
-        if (isOnLine != null) {/**
-         {"code":0,"devicelist":[
-         {"boxName":"Box66","deviceStatus":"1","isDefault":"0",
-         "isOnLine":1,"lat":"22.619786","lon":"114.083282","mac":"B0:91:22:69:41:66","uuid":"B09122694166000000008DD041190000"},
-         {"boxName":"Box6E","deviceStatus":"1","isDefault":"0",
-         "isOnLine":1,"lat":"22.625753","lon":"114.081701","mac":"B0:91:22:69:43:6E","uuid":"B0912269436E0000000013D143190000"}]}
-         */
+        if (isOnLine != null) {
+            /**
+             {"code":0,"devicelist":[
+             {"boxName":"Box66","deviceStatus":"1","isDefault":"0",
+             "isOnLine":1,"lat":"22.619786","lon":"114.083282","mac":"B0:91:22:69:41:66","uuid":"B09122694166000000008DD041190000"},
+             {"boxName":"Box6E","deviceStatus":"1","isDefault":"0",
+             "isOnLine":1,"lat":"22.625753","lon":"114.081701","mac":"B0:91:22:69:43:6E","uuid":"B0912269436E0000000013D143190000"}]}
+             */
             if (isOnLine.equals("0")) {
                 holder.iv_online.setImageResource(R.mipmap.ic_on_line);
                 holder.tv_status.setTextColor(mContext.getResources().getColor(R.color.blue_online));

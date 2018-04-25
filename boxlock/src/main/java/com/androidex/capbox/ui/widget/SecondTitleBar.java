@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.androidex.capbox.R;
 import com.androidex.capbox.utils.CommonKit;
+import com.androidex.capbox.utils.RLog;
 
 /**
  * @author liyp
@@ -54,10 +55,10 @@ public class SecondTitleBar extends RelativeLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        rl_back = (RelativeLayout) findViewById(R.id.rl_back);
-        tv_title = (TextView) findViewById(R.id.tv_title);
-        iv_right = (ImageView) findViewById(R.id.iv_right);
-        tv_right = (TextView) findViewById(R.id.tv_right);
+        rl_back = findViewById(R.id.rl_back);
+        tv_title = findViewById(R.id.tv_title);
+        iv_right = findViewById(R.id.iv_right);
+        tv_right = findViewById(R.id.tv_right);
         setTitle(title);
         setRightRes(rightRes);
         setRightText(rightText);
@@ -89,7 +90,8 @@ public class SecondTitleBar extends RelativeLayout {
         if (resId != -1) {
             iv_right.setImageResource(resId);
         }
-        iv_right.setVisibility(resId != -1 ? VISIBLE : GONE);
+        RLog.d("resId =" + resId);
+        iv_right.setVisibility(resId == -1 ? GONE : VISIBLE);
     }
 
     /**
@@ -110,7 +112,7 @@ public class SecondTitleBar extends RelativeLayout {
         return iv_right;
     }
 
-    public TextView getRightTv(){
+    public TextView getRightTv() {
         return tv_right;
     }
 

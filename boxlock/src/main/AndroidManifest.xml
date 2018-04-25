@@ -145,6 +145,9 @@
         <activity
             android:name="com.androidex.capbox.ui.activity.AddDeviceActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="com.androidex.capbox.ui.activity.ChatActivity"
+            android:screenOrientation="portrait" />
 
         <service android:name="com.androidex.capbox.service.MyBleService"></service>
 

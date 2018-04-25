@@ -51,9 +51,9 @@ public class ThirdTitleBar extends RelativeLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        tv_title = (TextView) findViewById(R.id.tv_title);
-        iv_right = (ImageView) findViewById(R.id.iv_right);
-        tv_right = (TextView) findViewById(R.id.tv_right);
+        tv_title = findViewById(R.id.tv_title);
+        iv_right = findViewById(R.id.iv_right);
+        tv_right = findViewById(R.id.tv_right);
 
         setTitle(title);
         setRightRes(rightRes);
@@ -102,7 +102,7 @@ public class ThirdTitleBar extends RelativeLayout {
         return iv_right;
     }
 
-    public TextView getRightTv(){
+    public TextView getRightTv() {
         return tv_right;
     }
 }

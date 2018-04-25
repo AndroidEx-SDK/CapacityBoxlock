@@ -23,7 +23,7 @@ import com.androidex.capbox.module.BaseModel;
 import com.androidex.capbox.module.BoxDeviceModel;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.activity.AddDeviceActivity;
-import com.androidex.capbox.ui.activity.BoxDetailActivity;
+import com.androidex.capbox.ui.activity.ChatActivity;
 import com.androidex.capbox.ui.activity.LoginActivity;
 import com.androidex.capbox.ui.adapter.BoxListAdapter;
 import com.androidex.capbox.ui.view.TitlePopup;
@@ -40,8 +40,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.Bind;
 import okhttp3.Headers;
@@ -81,8 +79,6 @@ public class BoxListFragment extends BaseFragment {
     private static final long SCAN_PERIOD = 12000;
     private static final int REQUEST_ENABLE_BT = 1;// 用于蓝牙setResult
     private boolean mScanning = false;//控制蓝牙扫描
-    private Timer timer_scanBle;// 扫描蓝牙时定时器
-    private TimerTask task_scanBle;
     private BoxListAdapter boxListAdapter;
     private TitlePopup titlePopup;
 
@@ -95,8 +91,6 @@ public class BoxListFragment extends BaseFragment {
     }
 
     private void initTitleBar() {
-        titlebar.getRightIv().setVisibility(View.VISIBLE);
-        titlebar.getRightTv().setVisibility(View.GONE);
         // 实例化标题栏弹窗
         titlePopup = new TitlePopup(context, RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         // 给标题栏弹窗添加子类
@@ -148,7 +142,8 @@ public class BoxListFragment extends BaseFragment {
                             bundle.putString(EXTRA_ITEM_ADDRESS, mylist.get(position).get(EXTRA_ITEM_ADDRESS));
                             bundle.putInt(EXTRA_PAGER_SIGN, 0);//0表示从设备列表跳转过去的1表示从监控页跳转
                             bundle.putInt(EXTRA_ITEM_POSITION, position);//position选择的是第几个设备
-                            BoxDetailActivity.lauch(getActivity(), bundle);
+                            // BoxDetailActivity.lauch(getActivity(), bundle);
+                            ChatActivity.lauch(context, bundle);
                         } else {
                             CommonKit.showOkShort(context, "开始扫描...");
                             scanLeDevice(position);//开始扫描
@@ -223,7 +218,8 @@ public class BoxListFragment extends BaseFragment {
                         bundle.putString(EXTRA_ITEM_ADDRESS, address);
                         bundle.putInt(EXTRA_PAGER_SIGN, 0);//0表示从设备列表跳转过去的1表示从监控页跳转
                         bundle.putInt(EXTRA_ITEM_POSITION, position);//position选择的是第几个设备
-                        BoxDetailActivity.lauch(getActivity(), bundle);
+                        //BoxDetailActivity.lauch(getActivity(), bundle);
+                        ChatActivity.lauch(context, bundle);
                     }
                 }
             }

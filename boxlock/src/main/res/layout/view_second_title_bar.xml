@@ -30,14 +30,12 @@
 
     <ImageView
         android:id="@+id/iv_right"
-        android:layout_width="@dimen/width45"
-        android:layout_height="@dimen/width45"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/marginPadding16"
-        android:padding="@dimen/marginPadding5"
-        android:scaleType="fitCenter"
-        android:visibility="gone" />
+        android:paddingLeft="@dimen/marginPadding20"
+        android:paddingRight="@dimen/marginPadding25" />
 
     <TextView
         android:id="@+id/tv_right"

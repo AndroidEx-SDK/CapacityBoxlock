@@ -9,6 +9,7 @@
         android:id="@+id/titlebar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:rightRes="@mipmap/list_pop"
         app:titleText="@string/main_tv_boxlist" />
 
     <android.support.v4.widget.SwipeRefreshLayout

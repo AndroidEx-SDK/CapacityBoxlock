@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/background"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <com.androidex.capbox.ui.widget.SecondTitleBar
+        android:id="@+id/titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:rightRes="@mipmap/list_pop"
+        app:titleText="@string/setting" />
+
+    <RelativeLayout
+        android:id="@+id/rl_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/marginPadding48"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white">
+
+        <ImageButton
+            android:id="@+id/ib_voice"
+            android:layout_width="@dimen/marginPadding48"
+            android:layout_height="@dimen/marginPadding48"
+            android:layout_alignParentLeft="true" />
+
+        <ImageButton
+            android:id="@+id/ib_send"
+            android:layout_width="@dimen/marginPadding48"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:src="@android:drawable/ic_menu_send" />
+
+        <EditText
+            android:id="@+id/et_msg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_toLeftOf="@id/ib_send"
+            android:layout_toRightOf="@id/ib_voice" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/lv_msgList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/rl_bottom"
+        android:layout_below="@id/title"
+        android:layout_centerInParent="true"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        android:stackFromBottom="true"
+        android:transcriptMode="alwaysScroll" />
+
+</RelativeLayout>

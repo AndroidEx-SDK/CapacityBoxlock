@@ -28,6 +28,7 @@ public class CalendarUtil {
     public static final String YH_ID_FORMAT = "yyyyMMdd";
     public static final String YH_DATE_FORMAT = "yyyy-MM-dd";
     public static CalendarUtil mInstance = null;
+    public static String boxName = "AndroidEx";
 
     public static CalendarUtil getInstance() {
         if (mInstance == null) {
@@ -35,6 +36,27 @@ public class CalendarUtil {
         }
         return mInstance;
 
+    }
+
+    /**
+     * 组合名字Box+address后两位
+     */
+    public static String getName(String name, String address) {
+        if (name == null || name.equals("")) {
+            return "Box" + address.substring(address.length() - 2);
+        } else {
+            if (name.contains(boxName)) {
+                if (name.trim().equals("AndroidExBox")) {
+                    return "Box" + address.substring(address.length() - 2);
+                } else {
+                    return name.replace(boxName, "");
+                }
+            } else if (name.trim().equals("Box")) {
+                return name + address.substring(address.length() - 2);
+            } else {
+                return "Box";
+            }
+        }
     }
 
     /**
@@ -869,54 +891,57 @@ public class CalendarUtil {
 
     /**
      * 18位身份证校验,粗略的校验
-     * @author lyl
+     *
      * @param idCard
      * @return
+     * @author lyl
      */
-    public static boolean is18ByteIdCard(String idCard){
+    public static boolean is18ByteIdCard(String idCard) {
         Pattern pattern1 = Pattern.compile("^(\\d{6})(19|20)(\\d{2})(1[0-2]|0[1-9])(0[1-9]|[1-2][0-9]|3[0-1])(\\d{3})(\\d|X|x)?$"); //粗略的校验
         Matcher matcher = pattern1.matcher(idCard);
-        if(matcher.matches()){
+        if (matcher.matches()) {
             return true;
         }
         return false;
     }
+
     /**
      * 18位身份证校验,比较严格校验
-     * @author lyl
+     *
      * @param idCard
      * @return
+     * @author lyl
      */
-    public static boolean is18ByteIdCardComplex(String idCard){
+    public static boolean is18ByteIdCardComplex(String idCard) {
         Pattern pattern1 = Pattern.compile("^(\\d{6})(19|20)(\\d{2})(1[0-2]|0[1-9])(0[1-9]|[1-2][0-9]|3[0-1])(\\d{3})(\\d|X|x)?$");
         Matcher matcher = pattern1.matcher(idCard);
-        int[] prefix = new int[]{7,9,10,5,8,4,2,1,6,3,7,9,10,5,8,4,2};
-        int[] suffix = new int[]{ 1, 0, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
-        if(matcher.matches()){
+        int[] prefix = new int[]{7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
+        int[] suffix = new int[]{1, 0, 10, 9, 8, 7, 6, 5, 4, 3, 2};
+        if (matcher.matches()) {
             Map<String, String> cityMap = initCityMap();
-            if(cityMap.get(idCard.substring(0,2)) == null ){
+            if (cityMap.get(idCard.substring(0, 2)) == null) {
                 return false;
             }
-            int idCardWiSum=0; //用来保存前17位各自乖以加权因子后的总和
-            for(int i=0;i<17;i++){
-                idCardWiSum+=Integer.valueOf(idCard.substring(i,i+1))*prefix[i];
+            int idCardWiSum = 0; //用来保存前17位各自乖以加权因子后的总和
+            for (int i = 0; i < 17; i++) {
+                idCardWiSum += Integer.valueOf(idCard.substring(i, i + 1)) * prefix[i];
             }
 
-            int idCardMod=idCardWiSum%11;//计算出校验码所在数组的位置
-            String idCardLast=idCard.substring(17);//得到最后一位身份证号码
+            int idCardMod = idCardWiSum % 11;//计算出校验码所在数组的位置
+            String idCardLast = idCard.substring(17);//得到最后一位身份证号码
 
             //如果等于2，则说明校验码是10，身份证号码最后一位应该是X
-            if(idCardMod==2){
-                if(idCardLast.equalsIgnoreCase("x")){
+            if (idCardMod == 2) {
+                if (idCardLast.equalsIgnoreCase("x")) {
                     return true;
-                }else{
+                } else {
                     return false;
                 }
-            }else{
+            } else {
                 //用计算出的验证码与最后一位身份证号码匹配，如果一致，说明通过，否则是无效的身份证号码
-                if(idCardLast.equals(suffix[idCardMod]+"")){
+                if (idCardLast.equals(suffix[idCardMod] + "")) {
                     return true;
-                }else{
+                } else {
                     return false;
                 }
             }
@@ -924,7 +949,7 @@ public class CalendarUtil {
         return false;
     }
 
-    private static Map<String, String> initCityMap(){
+    private static Map<String, String> initCityMap() {
         Map<String, String> cityMap = new HashMap<String, String>();
         cityMap.put("11", "北京");
         cityMap.put("12", "天津");
