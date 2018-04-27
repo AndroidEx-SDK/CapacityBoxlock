@@ -12,10 +12,6 @@ import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 import com.e.ble.BLESdk;
 
-import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
-import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
-import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ISACTIVEDisConnect;
-
 public class MyApplication extends Application {
     private static MyApplication mInstance;
     protected static Context mContext;
@@ -44,14 +40,6 @@ public class MyApplication extends Application {
         SDKInitializer.initialize(this);
         SDKInitializer.setCoordType(CoordType.BD09LL);
     }
-
-    public static void sendDisBroadcast(String address, boolean isActive) {
-        Intent intent = new Intent(BLE_CONN_DIS);
-        intent.putExtra(BLECONSTANTS_ADDRESS, address);
-        intent.putExtra(BLECONSTANTS_ISACTIVEDisConnect, isActive);
-        mContext.sendBroadcast(intent);
-    }
-
 
     public Typeface getTypeface() {
         return tf;

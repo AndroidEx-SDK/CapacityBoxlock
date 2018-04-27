@@ -18,6 +18,14 @@ public class Constants extends BleConstants {
     public static final String EXTRA_USER_HEAD = "head";//存储用户头像路径
     public static final String EXTRA_PAGER_SIGN = "pager_sign";//启动页面标志，区别是哪个页面跳转到该页面的
 
+    /*Send Command Type*/
+    public static final byte VISE_COMMAND_TYPE_NONE = (byte) 0x00;
+    public static final byte VISE_COMMAND_TYPE_TEXT = (byte) 0x01;
+    public static final byte VISE_COMMAND_TYPE_FILE = (byte) 0x02;
+    public static final byte VISE_COMMAND_TYPE_IMAGE = (byte) 0x03;
+    public static final byte VISE_COMMAND_TYPE_AUDIO = (byte) 0x04;
+    public static final byte VISE_COMMAND_TYPE_VIDEO = (byte) 0x05;
+
     public static class BASE {
         public static final String ACTION_TEMP_OUT = "ACTION_TEMP_OUT";
         public static final String ACTION_RSSI_OUT = "ACTION_RSSI_OUT";

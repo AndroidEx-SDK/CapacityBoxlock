@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -15,6 +16,8 @@ import android.widget.RelativeLayout;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.module.ActionItem;
+import com.androidex.capbox.module.ChatInfoModel;
+import com.androidex.capbox.module.FriendInfoModel;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.view.TitlePopup;
 import com.androidex.capbox.ui.widget.SecondTitleBar;
@@ -22,6 +25,7 @@ import com.androidex.capbox.utils.CalendarUtil;
 import com.androidex.capbox.utils.CommonKit;
 
 import butterknife.Bind;
+import butterknife.OnClick;
 
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
@@ -131,6 +135,29 @@ public class ChatActivity extends BaseActivity {
 
     @Override
     public void onClick(View v) {
+
+    }
+
+    @OnClick({
+            R.id.ib_send,
+    })
+    public void clickEvent(View view) {
+        switch (view.getId()) {
+            case R.id.ib_send:
+                if (TextUtils.isEmpty(et_msg.getText().toString())) {
+                    CommonKit.showErrorShort(context, "发送消息不能为空");
+                } else {
+                    sendMessage();
+                }
+                break;
+        }
+    }
+
+    public void sendMessage() {
+        ChatInfoModel chatInfo = new ChatInfoModel();
+        FriendInfoModel friendInfo = new FriendInfoModel();
+
+        //friendInfo.setBluetoothDevice();
 
     }
 
