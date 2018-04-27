@@ -27,6 +27,7 @@ public class CalendarUtil {
     private int year = 0;
     public static final String YH_ID_FORMAT = "yyyyMMdd";
     public static final String YH_DATE_FORMAT = "yyyy-MM-dd";
+    public static final String DATE_AND_TIME = "yyyy-MM-dd HH:mm:ss";
     public static CalendarUtil mInstance = null;
     public static String boxName = "AndroidEx";
 

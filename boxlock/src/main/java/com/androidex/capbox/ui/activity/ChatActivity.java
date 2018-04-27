@@ -15,14 +15,20 @@ import android.widget.RelativeLayout;
 
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
+import com.androidex.capbox.base.BaseMessage;
 import com.androidex.capbox.module.ActionItem;
 import com.androidex.capbox.module.ChatInfoModel;
 import com.androidex.capbox.module.FriendInfoModel;
 import com.androidex.capbox.service.MyBleService;
+import com.androidex.capbox.ui.adapter.ChatAdapter;
 import com.androidex.capbox.ui.view.TitlePopup;
 import com.androidex.capbox.ui.widget.SecondTitleBar;
 import com.androidex.capbox.utils.CalendarUtil;
 import com.androidex.capbox.utils.CommonKit;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -38,6 +44,7 @@ import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
 import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
 import static com.androidex.capbox.utils.Constants.EXTRA_PAGER_SIGN;
+import static com.androidex.capbox.utils.Constants.VISE_COMMAND_TYPE_TEXT;
 
 public class ChatActivity extends BaseActivity {
     @Bind(R.id.titlebar)
@@ -54,6 +61,8 @@ public class ChatActivity extends BaseActivity {
     private TitlePopup titlePopup;
     private String uuid;
     private int position;
+    private List<ChatInfoModel> mChatInfoList = new ArrayList<>();
+    private ChatAdapter mChatAdapter;
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -64,6 +73,8 @@ public class ChatActivity extends BaseActivity {
         initBroadCast();
         initTitle();
         initTitlePop();
+        mChatAdapter = new ChatAdapter(context);
+        lv_msgList.setAdapter(mChatAdapter);
     }
 
     private void initTitle() {
@@ -158,7 +169,20 @@ public class ChatActivity extends BaseActivity {
         FriendInfoModel friendInfo = new FriendInfoModel();
 
         //friendInfo.setBluetoothDevice();
-
+        friendInfo.setFriendNickName(name);
+        friendInfo.setIdentificationName(name);
+        friendInfo.setDeviceAddress(address);
+        chatInfo.setFriendInfo(friendInfo);
+        chatInfo.setSend(true);
+        chatInfo.setSendTime(CalendarUtil.getFormatDateTime(new Date(), CalendarUtil.DATE_AND_TIME));
+        BaseMessage message = new BaseMessage();
+        message.setMsgType(VISE_COMMAND_TYPE_TEXT);
+        message.setMsgContent(et_msg.getText().toString());
+        message.setMsgLength(et_msg.getText().toString().length());
+        chatInfo.setMessage(message);
+        mChatInfoList.add(chatInfo);
+        mChatAdapter.setListAll(mChatInfoList);
+        et_msg.setText("");
     }
 
     public class DataBroadcast extends BroadcastReceiver {
