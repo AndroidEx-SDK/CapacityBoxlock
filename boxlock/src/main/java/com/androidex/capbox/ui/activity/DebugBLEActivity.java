@@ -16,7 +16,6 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.text.method.KeyListener;
 import android.text.method.NumberKeyListener;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -57,7 +56,7 @@ import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_
  * 程序载入时自动搜索串口设备
  * n,8,1，没得选
  */
-public class TestBLEActivity extends BaseActivity {
+public class DebugBLEActivity extends BaseActivity {
     @Bind(R.id.editTextCOMA)
     EditText editTextCOMA;
     @Bind(R.id.editTextLines)
@@ -234,14 +233,18 @@ public class TestBLEActivity extends BaseActivity {
             } else if (buttonView == radioButtonTCP) {
                 if (isChecked) {
                     isTCP = true;
+                    editTextCOMA.setText("FB10001A9a75bca04593464d95b4266cc5e0bc2759c215ffFFFFFFFFFFFF00FE");
                 } else {
                     isTCP = false;
+                    editTextCOMA.setText("");
                 }
             } else if (buttonView == radioButtonUDP) {
                 if (isChecked) {
                     isUDP = true;
+                    editTextCOMA.setText("FB10001A9a75bca04593464d95b4266cc5e0bc2759c215ffFFFFFFFFFFFF00FE");
                 } else {
                     isUDP = false;
+                    editTextCOMA.setText("");
                 }
             }
         }
@@ -321,7 +324,6 @@ public class TestBLEActivity extends BaseActivity {
             iRecLines = 0;
         }
     }
-
 
     BroadcastReceiver dataUpdateRecevice = new BroadcastReceiver() {
 
@@ -408,7 +410,7 @@ public class TestBLEActivity extends BaseActivity {
     }
 
     public static void lauch(Activity activity) {
-        CommonKit.startActivity(activity, TestBLEActivity.class, null, false);
+        CommonKit.startActivity(activity, DebugBLEActivity.class, null, false);
     }
 
     @Override

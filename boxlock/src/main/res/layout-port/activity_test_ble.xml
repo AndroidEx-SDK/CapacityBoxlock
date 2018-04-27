@@ -295,7 +295,7 @@
                 android:gravity="top"
                 android:imeOptions="actionDone"
                 android:singleLine="true"
-                android:text="FB10001A9a75bca04593464d95b4266cc5e0bc2759c215ffFFFFFFFFFFFF00FE" />
+                android:text="" />
 
             <LinearLayout
                 android:id="@+id/LinearLayoutTooLCOMA"

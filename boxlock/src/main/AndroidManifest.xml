@@ -140,7 +140,7 @@
             android:name="com.androidex.capbox.ui.activity.ModifiActivtiy"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.androidex.capbox.ui.activity.TestBLEActivity"
+            android:name="com.androidex.capbox.ui.activity.DebugBLEActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.androidex.capbox.ui.activity.AddDeviceActivity"

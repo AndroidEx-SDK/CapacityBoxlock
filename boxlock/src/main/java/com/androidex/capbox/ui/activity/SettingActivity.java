@@ -65,7 +65,7 @@ public class SettingActivity extends UserBaseActivity {
         title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TestBLEActivity.lauch(context);
+                DebugBLEActivity.lauch(context);
             }
         });
     }
