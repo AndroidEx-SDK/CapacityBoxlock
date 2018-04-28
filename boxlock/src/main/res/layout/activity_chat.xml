@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/background"
-    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <com.androidex.capbox.ui.widget.SecondTitleBar
         android:id="@+id/titlebar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/black"
+        android:fitsSystemWindows="true"
         app:rightRes="@mipmap/list_pop"
         app:titleText="@string/setting" />
 
@@ -48,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/rl_bottom"
-        android:layout_below="@id/title"
+        android:layout_below="@id/titlebar"
         android:layout_centerInParent="true"
         android:overScrollMode="never"
         android:scrollbars="none"

@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/background"
-    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <com.androidex.capbox.ui.widget.SecondTitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
         app:rightText="调试"
         app:titleText="@string/setting" />
 

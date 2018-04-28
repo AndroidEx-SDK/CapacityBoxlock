@@ -415,6 +415,6 @@ public class DebugBLEActivity extends BaseActivity {
 
     @Override
     public int getLayoutId() {
-        return R.layout.activity_test_ble;
+        return R.layout.activity_debug_ble;
     }
 }

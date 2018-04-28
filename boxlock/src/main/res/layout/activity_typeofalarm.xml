@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/background"
-    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <com.androidex.capbox.ui.widget.SecondTitleBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
         app:titleText="@string/setting_tv_mode" />
 
     <LinearLayout

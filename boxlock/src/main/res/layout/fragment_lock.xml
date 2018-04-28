@@ -6,74 +6,70 @@
     android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/rl"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:id="@+id/relativeLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_height"
+        android:background="@color/black"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/relativeLayout1"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/title_height"
-            android:orientation="vertical">
+        <ImageView
+            android:id="@+id/main_bt_ble"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingBottom="5dp"
+            android:paddingRight="@dimen/marginPadding16"
+            android:paddingTop="5dp"
+            android:src="@drawable/ble_button" />
 
-            <ImageView
-                android:id="@+id/main_bt_ble"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:paddingBottom="5dp"
-                android:paddingRight="@dimen/marginPadding16"
-                android:paddingTop="5dp"
-                android:src="@drawable/ble_button" />
+        <ImageView
+            android:id="@+id/main_bt_ble_close"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/main_bt_ble"
+            android:background="@drawable/ble_pressed"
+            android:paddingBottom="5dp"
+            android:paddingLeft="@dimen/title_button_mar"
+            android:paddingRight="5dp"
+            android:paddingTop="5dp"
+            android:visibility="gone" />
 
-            <ImageView
-                android:id="@+id/main_bt_ble_close"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@id/main_bt_ble"
-                android:background="@drawable/ble_pressed"
-                android:paddingBottom="5dp"
-                android:paddingLeft="@dimen/title_button_mar"
-                android:paddingRight="5dp"
-                android:paddingTop="5dp"
-                android:visibility="gone" />
+        <TextView
+            android:id="@+id/main_tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/main_title_tv"
+            android:textColor="@color/white"
+            android:textSize="@dimen/size18" />
 
-            <TextView
-                android:id="@+id/main_tv_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:text="@string/main_title_tv"
-                android:textColor="@color/white"
-                android:textSize="@dimen/size18" />
+        <TextView
+            android:id="@+id/tv_boxConfig"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@+id/iv_menu"
+            android:gravity="center"
+            android:paddingLeft="@dimen/marginPadding16"
+            android:paddingRight="@dimen/marginPadding16"
+            android:text="@string/setting_tv_box"
+            android:textColor="@color/white"
+            android:textSize="@dimen/size14" />
 
-            <TextView
-                android:id="@+id/tv_boxConfig"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_toLeftOf="@+id/iv_menu"
-                android:gravity="center"
-                android:paddingLeft="@dimen/marginPadding16"
-                android:paddingRight="@dimen/marginPadding16"
-                android:text="@string/setting_tv_box"
-                android:textColor="@color/white"
-                android:textSize="@dimen/size14" />
+        <ImageView
+            android:id="@+id/iv_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingBottom="5dp"
+            android:paddingLeft="@dimen/marginPadding10"
+            android:paddingRight="@dimen/marginPadding16"
+            android:paddingTop="5dp"
+            android:src="@mipmap/list_pop" />
 
-            <ImageView
-                android:id="@+id/iv_menu"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:paddingBottom="5dp"
-                android:paddingLeft="@dimen/marginPadding10"
-                android:paddingRight="@dimen/marginPadding16"
-                android:paddingTop="5dp"
-                android:src="@mipmap/list_pop" />
-
-        </RelativeLayout>
     </RelativeLayout>
 
     <View
@@ -89,7 +85,7 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/rl"
+            android:layout_below="@+id/relativeLayout1"
             android:layout_weight="1"
             android:scrollbars="none">
 

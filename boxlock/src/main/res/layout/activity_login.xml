@@ -6,13 +6,13 @@
     android:layout_height="match_parent"
     android:background="@mipmap/background"
     android:orientation="vertical"
-    android:fitsSystemWindows="true"
     tools:context="com.androidex.capbox.ui.activity.LoginActivity">
 
     <com.androidex.capbox.ui.widget.ThirdTitleBar
         android:id="@+id/titlebar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
         app:titleText="@string/label_login" />
 
     <ScrollView

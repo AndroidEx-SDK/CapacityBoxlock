@@ -35,6 +35,7 @@ import com.androidex.capbox.ui.activity.ConnectDeviceListActivity;
 import com.androidex.capbox.ui.activity.SettingActivity;
 import com.androidex.capbox.ui.activity.TypeOfAlarmActivity;
 import com.androidex.capbox.ui.widget.SingleCheckListDialog;
+import com.androidex.capbox.ui.widget.ThirdTitleBar;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.PhotoUtils;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -58,8 +59,8 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
     private static final int OUTPUT_X = 480;
     private static final int OUTPUT_Y = 480;
 
-    @Bind(R.id.settint_bt_user)
-    TextView tv_setting;
+    @Bind(R.id.titlebar)
+    ThirdTitleBar titleBar;
     @Bind(R.id.setting_alarm)
     LinearLayout setting_alarm;
     @Bind(R.id.ll_connectDevice)
@@ -102,12 +103,18 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
         if (head_uri != null) {
             uploadHead(head_uri);
         }
+        titleBar.getRightTv().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), SettingActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
     public void setListener() {
         rl_head.setOnClickListener(this);
-        tv_setting.setOnClickListener(this);
         setting_alarm.setOnClickListener(this);
         ll_connectDevice.setOnClickListener(this);
         tb_alarm.setOnCheckedChangeListener(this);
@@ -140,10 +147,6 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.settint_bt_user://
-                Intent intent = new Intent(getActivity(), SettingActivity.class);
-                startActivity(intent);
-                break;
             case R.id.setting_alarm://报警设置
                 Intent intent_1 = new Intent(context, TypeOfAlarmActivity.class);
                 startActivity(intent_1);

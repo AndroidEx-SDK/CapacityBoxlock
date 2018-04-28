@@ -3,14 +3,14 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@mipmap/background"
-    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <com.androidex.capbox.ui.widget.SecondTitleBar
         android:id="@+id/rl_title"
         titleText="@string/label_user_req"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true" />
 
     <ScrollView
         android:layout_width="match_parent"

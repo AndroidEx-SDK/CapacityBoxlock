@@ -10,7 +10,6 @@ import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.utils.CommonKit;
 
 import butterknife.Bind;
-import butterknife.OnClick;
 
 public class AboutActivity extends BaseActivity {
     public static String TAG = "AboutActivity";
@@ -20,17 +19,6 @@ public class AboutActivity extends BaseActivity {
     @Override
     public void initData(Bundle savedInstanceState) {
         versionNum.setText(getResources().getString(R.string.about_tv_versionNum) + CommonKit.getVersionName(context));
-    }
-
-    @OnClick({
-            R.id.about_btn_back,
-    })
-    public void clickEvent(View view) {
-        switch (view.getId()) {
-            case R.id.about_btn_back:
-                CommonKit.finishActivity(this);
-                break;
-        }
     }
 
     @Override

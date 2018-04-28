@@ -10,6 +10,7 @@
         android:id="@+id/titlebar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
         app:titleText="@string/main_tv_find" />
 
     <RelativeLayout

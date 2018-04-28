@@ -3,224 +3,202 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/background"
-    android:fitsSystemWindows="true"
     android:orientation="vertical">
+
+    <com.androidex.capbox.ui.widget.SecondTitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        app:titleText="@string/setting_tv_wristband">
+
+    </com.androidex.capbox.ui.widget.SecondTitleBar>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+        <!-- 防丢报警 -->
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="@dimen/tv_line_height"
+            android:background="@color/line_color" />
 
-            <com.androidex.capbox.ui.widget.SecondTitleBar
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:titleText="@string/setting_tv_wristband"></com.androidex.capbox.ui.widget.SecondTitleBar>
+        <LinearLayout
+            android:id="@+id/setting_alarm_function"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/adduser_ll_height"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/marginPadding16">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/tv_line_height"
-                android:layout_marginTop="@dimen/tv_distance"
-                android:background="@color/line_color" />
+                android:id="@+id/TextView08_function"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="@dimen/setting_tv_padding_left"
+                android:text="@string/setting_tv_alarm"
+                android:textColor="@color/white"
+                android:textSize="@dimen/setting_tv" />
+
+            <ToggleButton
+                android:id="@+id/alarm"
+                android:layout_width="@dimen/marginPadding120"
+                android:layout_height="@dimen/marginPadding35"
+                android:layout_marginRight="@dimen/marginPadding16"
+                android:background="@drawable/thumbs"
+                android:checked="true"
+                android:textOff="  "
+                android:textOn="  " />
         </LinearLayout>
 
-        <ScrollView
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="none">
+            android:layout_height="@dimen/tv_line_height"
+            android:background="@color/line_color" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
+        <!-- 静默开关 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tv_line_height"
+            android:background="@color/line_color" />
+
+        <LinearLayout
+            android:id="@+id/setting_silence"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/adduser_ll_height"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/marginPadding16">
+
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_weight="1"
+                android:paddingLeft="@dimen/setting_tv_padding_left"
+                android:text="@string/setting_tv_silence"
+                android:textColor="@color/white"
+                android:textSize="@dimen/setting_tv" />
 
-                <!-- 防丢报警 -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/tv_line_height"
-                    android:background="@color/line_color" />
+            <ToggleButton
+                android:id="@+id/silence"
+                android:layout_width="@dimen/marginPadding120"
+                android:layout_height="@dimen/marginPadding35"
+                android:layout_marginRight="@dimen/setting_tv_marginRight"
+                android:background="@drawable/thumbs"
+                android:checked="true"
+                android:textOff="  "
+                android:textOn="  " />
 
-                <LinearLayout
-                    android:id="@+id/setting_alarm_function"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/adduser_ll_height"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/marginPadding16">
+        </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/TextView08_function"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:paddingLeft="@dimen/setting_tv_padding_left"
-                        android:text="@string/setting_tv_alarm"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/setting_tv" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tv_line_height"
+            android:background="@color/line_color" />
 
-                    <ToggleButton
-                        android:id="@+id/alarm"
-                        android:layout_width="@dimen/marginPadding120"
-                        android:layout_height="@dimen/marginPadding35"
-                        android:layout_marginRight="@dimen/marginPadding16"
-                        android:background="@drawable/thumbs"
-                        android:checked="true"
-                        android:textOff="  "
-                        android:textOn="  " />
-                </LinearLayout>
+        <!--添加携行人指纹信息-->
+        <LinearLayout
+            android:id="@+id/ll_possessorFinger"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/adduser_ll_height"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/marginPadding16">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/tv_line_height"
-                    android:background="@color/line_color" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="@dimen/setting_tv_padding_left"
+                android:text="@string/setting_tv_carryFinger"
+                android:textColor="@color/white"
+                android:textSize="@dimen/setting_tv" />
 
-                <!-- 静默开关 -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/tv_line_height"
-                    android:background="@color/line_color" />
+            <TextView
+                android:id="@+id/tv_possessorFinger"
+                android:layout_width="@dimen/setting_btn_right_height"
+                android:layout_height="@dimen/setting_btn_right_height"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="@color/white" />
 
-                <LinearLayout
-                    android:id="@+id/setting_silence"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/adduser_ll_height"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/marginPadding16">
+            <ImageView
+                android:layout_width="@dimen/marginPadding20"
+                android:layout_height="@dimen/marginPadding20"
+                android:layout_marginRight="@dimen/marginPadding30"
+                android:src="@mipmap/white_right" />
+        </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:paddingLeft="@dimen/setting_tv_padding_left"
-                        android:text="@string/setting_tv_silence"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/setting_tv" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tv_line_height"
+            android:background="@color/line_color" />
 
-                    <ToggleButton
-                        android:id="@+id/silence"
-                        android:layout_width="@dimen/marginPadding120"
-                        android:layout_height="@dimen/marginPadding35"
-                        android:layout_marginRight="@dimen/setting_tv_marginRight"
-                        android:background="@drawable/thumbs"
-                        android:checked="true"
-                        android:textOff="  "
-                        android:textOn="  " />
+        <!--拍照-->
+        <LinearLayout
+            android:id="@+id/photograph"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/adduser_ll_height"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/marginPadding16">
 
-                </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="@dimen/setting_tv_padding_left"
+                android:text="@string/setting_tv_photograph"
+                android:textColor="@color/white"
+                android:textSize="@dimen/setting_tv" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/tv_line_height"
-                    android:background="@color/line_color" />
+            <ImageView
+                android:layout_width="@dimen/marginPadding20"
+                android:layout_height="@dimen/marginPadding20"
+                android:layout_marginRight="@dimen/marginPadding30"
+                android:src="@mipmap/white_right" />
 
-                <!--添加携行人指纹信息-->
-                <LinearLayout
-                    android:id="@+id/ll_possessorFinger"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/adduser_ll_height"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/marginPadding16">
+        </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:paddingLeft="@dimen/setting_tv_padding_left"
-                        android:text="@string/setting_tv_carryFinger"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/setting_tv" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0.1dp"
+            android:background="@color/line_color" />
 
-                    <TextView
-                        android:id="@+id/tv_possessorFinger"
-                        android:layout_width="@dimen/setting_btn_right_height"
-                        android:layout_height="@dimen/setting_btn_right_height"
-                        android:gravity="center"
-                        android:text="0"
-                        android:textColor="@color/white" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0.1dp"
+            android:layout_marginTop="@dimen/marginPadding16"
+            android:background="@color/line_color" />
 
-                    <ImageView
-                        android:layout_width="@dimen/marginPadding20"
-                        android:layout_height="@dimen/marginPadding20"
-                        android:layout_marginRight="@dimen/marginPadding30"
-                        android:src="@mipmap/white_right" />
-                </LinearLayout>
+        <!-- 一键重置腕表 -->
+        <LinearLayout
+            android:id="@+id/setting_factory_settings"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/adduser_ll_height"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/marginPadding16">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/tv_line_height"
-                    android:background="@color/line_color" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_weight="1"
+                android:paddingLeft="@dimen/setting_tv_padding_left"
+                android:text="@string/setting_tv_wristband_factory_setings"
+                android:textColor="@color/white"
+                android:textSize="@dimen/setting_tv" />
 
-                <!--拍照-->
-                <LinearLayout
-                    android:id="@+id/photograph"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/adduser_ll_height"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/marginPadding16">
+            <ImageView
+                android:layout_width="@dimen/marginPadding20"
+                android:layout_height="@dimen/marginPadding20"
+                android:layout_marginRight="@dimen/marginPadding30"
+                android:src="@mipmap/white_right" />
+        </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:paddingLeft="@dimen/setting_tv_padding_left"
-                        android:text="@string/setting_tv_photograph"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/setting_tv" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tv_line_height"
+            android:background="@color/line_color" />
 
-                    <ImageView
-                        android:layout_width="@dimen/marginPadding20"
-                        android:layout_height="@dimen/marginPadding20"
-                        android:layout_marginRight="@dimen/marginPadding30"
-                        android:src="@mipmap/white_right" />
-
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="0.1dp"
-                    android:background="@color/line_color" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="0.1dp"
-                    android:layout_marginTop="@dimen/marginPadding16"
-                    android:background="@color/line_color" />
-
-                <!-- 一键重置腕表 -->
-                <LinearLayout
-                    android:id="@+id/setting_factory_settings"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/adduser_ll_height"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/marginPadding16">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_weight="1"
-                        android:paddingLeft="@dimen/setting_tv_padding_left"
-                        android:text="@string/setting_tv_wristband_factory_setings"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/setting_tv" />
-
-                    <ImageView
-                        android:layout_width="@dimen/marginPadding20"
-                        android:layout_height="@dimen/marginPadding20"
-                        android:layout_marginRight="@dimen/marginPadding30"
-                        android:src="@mipmap/white_right" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/tv_line_height"
-                    android:background="@color/line_color" />
-
-            </LinearLayout>
-        </ScrollView>
     </LinearLayout>
 
     <TextView

@@ -7,13 +7,13 @@
     android:layout_height="match_parent"
     android:background="@color/violet"
     android:orientation="vertical"
-    android:fitsSystemWindows="true"
     tools:context="com.androidex.capbox.ui.activity.RegisterActivity">
 
     <com.androidex.capbox.ui.widget.SecondTitleBar
         android:id="@+id/rl_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
         app:titleText="@string/label_finger_enter" />
 
     <ImageView

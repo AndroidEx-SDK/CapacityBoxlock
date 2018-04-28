@@ -1,35 +1,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/background"
-    android:fitsSystemWindows="true"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/relativeLayout1"
+    <com.androidex.capbox.ui.widget.SecondTitleBar
+        android:id="@+id/titlebar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/title_height"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/about_btn_back"
-            android:layout_width="@dimen/title_button"
-            android:layout_height="@dimen/title_button"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/back_button" />
-
-        <TextView
-            android:id="@+id/about_title_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="@string/about_title_tv"
-            android:textColor="@color/white"
-            android:textSize="@dimen/title_tv_size" />
-    </RelativeLayout>
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        app:titleText="@string/about_title_tv" />
 
     <TextView
         android:id="@+id/TextView"
