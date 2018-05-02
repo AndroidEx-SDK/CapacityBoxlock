@@ -135,6 +135,7 @@
     <dimen name="swipe_progress_bar_height">8dp</dimen>
 
     <!-- 通用的各种间距 -->
+    <dimen name="marginPadding235">235dp</dimen>
     <dimen name="marginPadding138">138dp</dimen>
     <dimen name="marginPadding120">120dp</dimen>
     <dimen name="marginPadding100">100dp</dimen>

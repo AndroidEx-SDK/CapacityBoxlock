@@ -1,47 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="@dimen/marginPadding10">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/item_chat_left_time"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center" />
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:text="999" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/marginPadding10"
         android:layout_marginTop="@dimen/marginPadding10"
         android:orientation="horizontal">
 
-        <ImageView
+        <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/item_chat_left_icon"
             android:layout_width="@dimen/marginPadding48"
             android:layout_height="@dimen/marginPadding48"
+            android:layout_centerVertical="true"
             android:layout_gravity="bottom"
-            android:src="@mipmap/ic_box_white" />
+            android:background="@drawable/cicle_blue"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_box_white"
+            app:riv_border_color="@color/blue"
+            app:riv_border_width="0dp"
+            app:riv_mutate_background="true"
+            app:riv_oval="true" />
 
-        <TextView
+        <com.androidex.capbox.ui.view.AutoLinkTextView
             android:id="@+id/item_chat_left_msg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/marginPadding10"
-            android:background="@drawable/incoming"
-            android:gravity="center_vertical"
-            android:minHeight="@dimen/marginPadding48" />
+            android:background="@drawable/rc_ic_bubble_left"
+            app:MaxWidth="@dimen/marginPadding235"
+            android:text="9999"
+            android:textColor="@color/black" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/item_chat_left_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ellipsize="marquee"
-        android:gravity="center_vertical"
-        android:maxLines="1"
-        android:padding="@dimen/marginPadding5"
-        android:textColor="#999999"
-        android:textSize="@dimen/size12" />
 </LinearLayout>

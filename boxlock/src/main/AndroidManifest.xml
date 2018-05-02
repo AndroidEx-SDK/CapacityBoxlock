@@ -147,7 +147,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.androidex.capbox.ui.activity.ChatActivity"
-            android:screenOrientation="portrait" />
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <service android:name="com.androidex.capbox.service.MyBleService"></service>
 

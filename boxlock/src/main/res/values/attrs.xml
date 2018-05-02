@@ -64,4 +64,8 @@
         <attr name="matProg_barWidth" format="dimension" />
         <attr name="matProg_linearProgress" format="boolean" />
     </declare-styleable>
+
+    <declare-styleable name="AutoTextView">
+        <attr name="MaxWidth" format="dimension"/>
+    </declare-styleable>
 </resources>

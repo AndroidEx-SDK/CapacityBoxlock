@@ -21,11 +21,15 @@
         android:layout_alignParentBottom="true"
         android:background="@color/white">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/ib_voice"
-            android:layout_width="@dimen/marginPadding48"
-            android:layout_height="@dimen/marginPadding48"
-            android:layout_alignParentLeft="true" />
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:src="@drawable/rc_voice_toggle_selector" />
 
         <ImageButton
             android:id="@+id/ib_send"
@@ -50,9 +54,11 @@
         android:layout_above="@id/rl_bottom"
         android:layout_below="@id/titlebar"
         android:layout_centerInParent="true"
+        android:background="@android:color/transparent"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
         android:overScrollMode="never"
         android:scrollbars="none"
         android:stackFromBottom="true"
-        android:transcriptMode="alwaysScroll" />
-
+        android:transcriptMode="normal" />
 </RelativeLayout>

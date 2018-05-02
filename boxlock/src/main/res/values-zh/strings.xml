@@ -401,4 +401,7 @@
     <!--xiaozd add-->
     <string name="marker_dialog_navigation_text">导航</string>
     <string name="marker_dialog_trajectory_text">轨迹</string>
+
+    <string name="rc_audio_input">按住 说话</string>
+    <string name="rc_audio_input_hover">松开 发送</string>
 </resources>
