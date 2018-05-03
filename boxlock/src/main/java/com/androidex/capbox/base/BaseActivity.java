@@ -291,7 +291,7 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
      *
      * @param msg
      */
-    protected void showProgress(String msg) {
+    public void showProgress(String msg) {
         if (dialog == null) {
             dialog = DialogUtils.createDialog(context, msg);
         }
@@ -303,7 +303,7 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
         }
     }
 
-    protected void disProgress() {
+    public void disProgress() {
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }

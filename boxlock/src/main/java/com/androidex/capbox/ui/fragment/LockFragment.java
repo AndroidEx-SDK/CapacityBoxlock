@@ -253,9 +253,9 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         // 实例化标题栏弹窗
         titlePopup = new TitlePopup(context, RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         // 给标题栏弹窗添加子类
-        titlePopup.addAction(new ActionItem(context, "结束携行", R.drawable.finish_carry));
-        titlePopup.addAction(new ActionItem(context, "连接列表", R.drawable.connectlist));
-        titlePopup.addAction(new ActionItem(context, "版本更新", R.drawable.setting));
+        titlePopup.addAction(new ActionItem(context, "结束携行", R.mipmap.finish_carry));
+        titlePopup.addAction(new ActionItem(context, "连接列表", R.mipmap.connectlist));
+        titlePopup.addAction(new ActionItem(context, "版本更新", R.mipmap.setting));
         titlePopup.setItemOnClickListener(new TitlePopup.OnItemOnClickListener() {
             @Override
             public void onItemClick(ActionItem item, int position) {

@@ -13,7 +13,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 
 import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.capbox.R;
@@ -22,13 +21,12 @@ import com.androidex.capbox.base.BaseMessage;
 import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
-import com.androidex.capbox.module.ActionItem;
 import com.androidex.capbox.module.BaseModel;
 import com.androidex.capbox.module.ChatInfoModel;
 import com.androidex.capbox.module.FriendInfoModel;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.adapter.ChatAdapter;
-import com.androidex.capbox.ui.view.TitlePopup;
+import com.androidex.capbox.ui.widget.ChatPopWindow;
 import com.androidex.capbox.ui.widget.SecondTitleBar;
 import com.androidex.capbox.utils.CalendarUtil;
 import com.androidex.capbox.utils.CommonKit;
@@ -80,7 +78,6 @@ public class ChatActivity extends BaseActivity {
 
     private String name;
     private String address;
-    private TitlePopup titlePopup;
     private String uuid;
     private int position;
     private List<ChatInfoModel> mChatInfoList = new ArrayList<>();
@@ -141,28 +138,13 @@ public class ChatActivity extends BaseActivity {
      * 初始化右上角弹窗
      */
     private void initTitlePop() {
-        // 实例化标题栏弹窗
-        titlePopup = new TitlePopup(context, RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        // 给标题栏弹窗添加子类
-        if (MyBleService.getInstance().getConnectDevice(address) == null) {
-            titlePopup.addAction(new ActionItem(context, "连接", R.drawable.connectlist));
-        } else {
-            titlePopup.addAction(new ActionItem(context, "断开", R.drawable.connectlist));
-        }
-        titlePopup.addAction(new ActionItem(context, "配置", R.drawable.setting));
-        titlePopup.setItemOnClickListener(new TitlePopup.OnItemOnClickListener() {
+        titlebar.getRightIv().setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(ActionItem item, int position) {
-                switch (position) {
-                    case 0:
-                        if (MyBleService.getInstance().getConnectDevice(address) == null) {
-                            MyBleService.getInstance().connectionDevice(context, address);
-                            showProgress("开始连接...");
-                        } else {
-                            MyBleService.getInstance().disConnectDevice(address);
-                        }
-                        break;
-                    case 1:
+            public void onClick(View view) {
+                ChatPopWindow chatPopWindow = new ChatPopWindow(context, address, new ChatPopWindow.CallBack() {
+
+                    @Override
+                    public void callBack() {
                         Bundle bundle = new Bundle();
                         bundle.putString(EXTRA_BOX_NAME, name);
                         bundle.putString(EXTRA_BOX_UUID, uuid);
@@ -170,16 +152,9 @@ public class ChatActivity extends BaseActivity {
                         bundle.putInt(EXTRA_PAGER_SIGN, 0);//0表示从设备列表跳转过去的1表示从监控页跳转
                         bundle.putInt(EXTRA_ITEM_POSITION, position);//position选择的是第几个设备
                         BoxDetailActivity.lauch(context, bundle);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        });
-        titlebar.getRightIv().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                titlePopup.show(view);
+                    }
+                });
+                chatPopWindow.showPopupWindow(titlebar.getRightIv());
             }
         });
     }
