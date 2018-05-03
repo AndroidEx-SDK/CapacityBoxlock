@@ -69,9 +69,19 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
             setContentView(getLayoutId());
             ButterKnife.bind(this);
         }
+        initStatusBar();
         initData(savedInstanceState);
         setListener();
         initBleBroadCast();
+    }
+
+
+    /**
+     * 设置状态栏
+     */
+    protected void initStatusBar() {
+        //SystemUtil.setStatusBarColor(context, R.color.black);
+        //SystemUtil.translucentStatusBar(context, true);
     }
 
     /**

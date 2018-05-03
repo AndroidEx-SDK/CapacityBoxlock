@@ -250,7 +250,9 @@ public class DebugBLEActivity extends BaseActivity {
         }
     }
 
-    //清除按钮、发送按钮
+    /**
+     * 清除按钮、发送按钮
+     */
     class ButtonClickEvent implements View.OnClickListener {
         public void onClick(View v) {
             if (v == ButtonClear) {

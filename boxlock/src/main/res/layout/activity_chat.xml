@@ -2,15 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <com.androidex.capbox.ui.widget.SecondTitleBar
         android:id="@+id/titlebar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/black"
-        android:fitsSystemWindows="true"
         app:rightRes="@mipmap/list_pop"
         app:titleText="@string/setting" />
 
@@ -47,6 +45,12 @@
             android:layout_toRightOf="@id/ib_voice" />
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_below="@+id/lv_msgList"
+        android:background="@color/rc_divider_color" />
+
     <ListView
         android:id="@+id/lv_msgList"
         android:layout_width="match_parent"
@@ -54,7 +58,7 @@
         android:layout_above="@id/rl_bottom"
         android:layout_below="@id/titlebar"
         android:layout_centerInParent="true"
-        android:background="@android:color/transparent"
+        android:background="@android:color/white"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"
         android:overScrollMode="never"

@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.androidex.boxlib.modules.ServiceBean;
@@ -36,7 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import butterknife.OnClick;
 import okhttp3.Headers;
 import okhttp3.Request;
 
@@ -60,28 +58,7 @@ import static com.androidex.capbox.utils.Constants.BASE.ACTION_TEMP_OUT;
 
 
 /**
- * 03-28 17:07:31.457 21574-21574/com.androidex.capbox E/liyp_: onEvent disconnect B0:91:22:69:43:6E
- * 03-28 17:07:31.487 21574-21574/com.androidex.capbox E/liyp_: 蓝牙断开时更新 list size = 2
- * 03-28 17:07:31.487 21574-21574/com.androidex.capbox E/liyp_: notify  is start 2
- * 03-28 17:07:31.487 21574-21574/com.androidex.capbox E/liyp_: getItemPosition  执行了
- * 03-28 17:07:31.487 21574-21574/com.androidex.capbox E/liyp_: getItemPosition  执行了
- * 03-28 17:07:31.487 21574-21574/com.androidex.capbox E/liyp_: getItem position =0
- * 03-28 17:07:31.487 21574-21574/com.androidex.capbox E/liyp_: getItem position =1
- * 03-28 17:07:31.487 21574-21574/com.androidex.capbox E/liyp_: 蓝牙没连接
- * 03-28 17:07:31.487 21574-21574/com.androidex.capbox E/liyp_: 蓝牙没连接
- * 03-28 17:07:31.507 21574-21574/com.androidex.capbox E/liyp_: action=BLE_CONN_DIS插件个数=0
- * <p>
- * <p>
- * 03-28 17:08:12.367 21574-21574/com.androidex.capbox E/liyp_: onEvent connect A4:34:F1:84:23:91
- * 03-28 17:08:14.937 21574-21574/com.androidex.capbox E/liyp_: 蓝牙连接时更新 list size = 2
- * 03-28 17:08:14.937 21574-21574/com.androidex.capbox E/liyp_: notify  is start 2
- * 03-28 17:08:14.937 21574-21574/com.androidex.capbox E/liyp_: getItemPosition  执行了
- * 03-28 17:08:14.937 21574-21574/com.androidex.capbox E/liyp_: getItemPosition  执行了
- * 03-28 17:08:14.947 21574-21574/com.androidex.capbox E/liyp_: getItem position =1
- * 03-28 17:08:14.947 21574-21574/com.androidex.capbox E/liyp_: getItem position =0
- * 03-28 17:08:14.947 21574-21574/com.androidex.capbox E/liyp_: 蓝牙已连接
- * 03-28 17:08:14.957 21574-21574/com.androidex.capbox E/liyp_: 蓝牙没连接
- * 03-28 17:08:14.967 21574-21574/com.androidex.capbox E/liyp_: action=BLE_CONN_SUCCESS插件个数=0
+ * 悬浮在锁屏界面之上界面
  */
 public class LockScreenActivity extends BaseActivity {
     @Bind(R.id.tv_time)
@@ -90,8 +67,6 @@ public class LockScreenActivity extends BaseActivity {
     TextView tv_date;
     @Bind(R.id.textView1)
     ZItem xitem;
-    @Bind(R.id.rl_lockscreen)
-    RelativeLayout rl_lockscreen;
     @Bind(R.id.viewPager)
     ViewPager viewPager;
 
@@ -254,16 +229,6 @@ public class LockScreenActivity extends BaseActivity {
             } else {
                 CommonKit.showOkShort(context, context.getResources().getString(R.string.bledevice_toast10));
             }
-        }
-    }
-
-    @OnClick({
-            R.id.rl_lockscreen
-    })
-    public void clickEvent(View view) {
-        switch (view.getId()) {
-            case R.id.rl_lockscreen:
-                break;
         }
     }
 

@@ -7,17 +7,19 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.base.BaseMessage;
+import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.module.ActionItem;
@@ -32,6 +34,8 @@ import com.androidex.capbox.utils.CalendarUtil;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
 import com.androidex.capbox.utils.RLog;
+import com.androidex.capbox.utils.SoftHideKeyBoardUtil;
+import com.androidex.capbox.utils.SystemUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -86,6 +90,8 @@ public class ChatActivity extends BaseActivity {
 
     @Override
     public void initData(Bundle savedInstanceState) {
+        SoftHideKeyBoardUtil.assistActivity(this);
+        SystemUtil.setImmerseLayout(context, titlebar);
         name = getIntent().getStringExtra(EXTRA_BOX_NAME);
         uuid = getIntent().getStringExtra(EXTRA_BOX_UUID);
         address = getIntent().getStringExtra(EXTRA_ITEM_ADDRESS);
@@ -107,6 +113,17 @@ public class ChatActivity extends BaseActivity {
         friendInfo.setFriendNickName(name);
         friendInfo.setIdentificationName(getUserName());
         friendInfo.setDeviceAddress(address);
+
+        et_msg.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    //隐藏系统软键盘
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(et_msg.getWindowToken(), 0);
+                }
+            }
+        });
     }
 
     /**
@@ -362,7 +379,6 @@ public class ChatActivity extends BaseActivity {
         });
     }
 
-
     /**
      * 设置是否携行状态
      *
@@ -382,6 +398,52 @@ public class ChatActivity extends BaseActivity {
         }
         Object obj1 = SharedPreTool.getInstance(context).getObj(ServiceBean.class, address);
         RLog.e("存储携行状态" + obj1.toString());
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (isShouldHideInput(v, ev)) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+            }
+            return super.dispatchTouchEvent(ev);
+        }
+        // 必不可少，否则所有的组件都不会有TouchEvent了
+        if (getWindow().superDispatchTouchEvent(ev)) {
+            return true;
+        }
+        return onTouchEvent(ev);
+    }
+
+    /**
+     * 点击输入框以外区域时隐藏输入法
+     *
+     * @param v
+     * @param event
+     * @return
+     */
+    public boolean isShouldHideInput(View v, MotionEvent event) {
+        if (v != null && (v instanceof EditText)) {
+            int[] leftTop = {0, 0};
+            //获取输入框当前的location位置
+            v.getLocationInWindow(leftTop);
+            int left = leftTop[0];
+            int top = leftTop[1];
+            int bottom = top + v.getHeight();
+            int right = left + v.getWidth();
+            if (event.getX() > left && event.getX() < right
+                    && event.getY() > top && event.getY() < bottom) {
+                // 点击的是输入框区域，保留点击EditText的事件
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
