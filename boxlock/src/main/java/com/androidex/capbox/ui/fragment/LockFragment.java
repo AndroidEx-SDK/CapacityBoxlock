@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.androidex.boxlib.modules.ServiceBean;
+import com.androidex.boxlib.utils.Byte2HexUtil;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseFragment;
 import com.androidex.capbox.data.cache.SharedPreTool;
@@ -915,6 +916,29 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     current_temp.setText(intent.getStringExtra(BLECONSTANTS_TEMP) != null ? intent.getStringExtra(BLECONSTANTS_TEMP) : "");
                     current_hum.setText(intent.getStringExtra(BLECONSTANTS_HUM) != null ? intent.getStringExtra(BLECONSTANTS_HUM) : "");
                     tv_electric_quantity.setText(intent.getStringExtra(BLECONSTANTS_ELECTRIC_QUANTITY) != null ? intent.getStringExtra(BLECONSTANTS_ELECTRIC_QUANTITY) : "");
+                    tv_signalIntension.setText(String.valueOf(Byte2HexUtil.byte2Int(b[12])));
+                    switch (b[11]) {
+                        case (byte) 0x01://有卡
+                            tv_simStatus.setText("有卡");
+                            break;
+                        case (byte) 0x02://无卡
+                            tv_simStatus.setText("未插卡");
+                            break;
+                        default:
+                            tv_simStatus.setText("未知");
+                            break;
+                    }
+                    switch (b[13]) {
+                        case (byte) 0x01://定位正常
+                            tv_locationStatus.setText("正常");
+                            break;
+                        case (byte) 0x02://定位异常
+                            tv_locationStatus.setText("异常");
+                            break;
+                        default:
+                            tv_locationStatus.setText("未知");
+                            break;
+                    }
                     break;
 
                 case ACTION_END_TAST://结束携行押运

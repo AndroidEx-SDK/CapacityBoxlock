@@ -1,5 +1,6 @@
 package com.androidex.capbox.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,8 +11,10 @@ import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.androidex.boxlib.modules.ServiceBean;
@@ -75,6 +78,10 @@ public class ChatActivity extends BaseActivity {
     ImageButton ib_send;
     @Bind(R.id.et_msg)
     EditText et_msg;
+    @Bind(R.id.rc_audio_input_toggle)
+    Button rc_audio_input_toggle;
+    @Bind(R.id.ib_voice)
+    ImageView ib_voice;
 
     private String name;
     private String address;
@@ -84,6 +91,7 @@ public class ChatActivity extends BaseActivity {
     private ChatAdapter mChatAdapter;
     private FriendInfoModel friendInfo;
     private DataBroadcast dataBroadcast;
+    boolean isKeyBoardActive = false;//输入法状态
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -96,9 +104,15 @@ public class ChatActivity extends BaseActivity {
         initBroadCast();
         initTitle();
         initTitlePop();
+        initView();
         mChatAdapter = new ChatAdapter(context);
         lv_msgList.setAdapter(mChatAdapter);
         initUserInfo();
+    }
+
+    private void initView() {
+        hideVoiceInputToggle();
+        showInputKeyBoard();
     }
 
     /**
@@ -189,6 +203,7 @@ public class ChatActivity extends BaseActivity {
 
     @OnClick({
             R.id.ib_send,
+            R.id.ib_voice,
     })
     public void clickEvent(View view) {
         switch (view.getId()) {
@@ -203,7 +218,46 @@ public class ChatActivity extends BaseActivity {
                 }
                 sendMessage();
                 break;
+            case R.id.ib_voice:
+                if (isKeyBoardActive) {
+                    hideVoiceInputToggle();
+                    showInputKeyBoard();
+                } else {
+                    showVoiceInputToggle();
+                    hideInputKeyBoard();
+                }
+                break;
         }
+    }
+
+    private void hideVoiceInputToggle() {
+        et_msg.setVisibility(View.VISIBLE);
+        this.ib_voice.setImageResource(R.drawable.rc_voice_toggle_selector);
+        this.rc_audio_input_toggle.setVisibility(View.GONE);
+        et_msg.setSelected(true);
+    }
+
+    private void showVoiceInputToggle() {
+        ib_voice.setImageResource(R.drawable.rc_keyboard_selector);
+        rc_audio_input_toggle.setVisibility(View.VISIBLE);
+        et_msg.setVisibility(View.GONE);
+        et_msg.setSelected(false);
+    }
+
+    private void hideInputKeyBoard() {
+        @SuppressLint("WrongConstant")
+        InputMethodManager imm = (InputMethodManager) getSystemService("input_method");
+        imm.hideSoftInputFromWindow(this.et_msg.getWindowToken(), 0);
+        this.et_msg.clearFocus();
+        this.isKeyBoardActive = true;
+    }
+
+    private void showInputKeyBoard() {
+        this.et_msg.requestFocus();
+        @SuppressLint("WrongConstant")
+        InputMethodManager imm = (InputMethodManager) getSystemService("input_method");
+        imm.showSoftInput(this.et_msg, 0);
+        this.isKeyBoardActive = false;
     }
 
     /**
