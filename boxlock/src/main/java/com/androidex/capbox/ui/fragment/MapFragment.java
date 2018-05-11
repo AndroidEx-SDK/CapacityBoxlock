@@ -348,9 +348,8 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent 
             routeplanButton.setVisibility(View.VISIBLE);
             cleanMap(); //清除其他Overlay
             OverlayOptions ooPolyline = new PolylineOptions().width(10)
-                    .color(0xFF0000).points(mBoxMovePath);
+                    .color(0xAAFF0000).points(mBoxMovePath);
             mBaiduMap.addOverlay(ooPolyline);
-            RLog.d("数据==" + mBoxMovePath.size());
         } else {
             CommonKit.showErrorShort(context, "未获取轨迹信息");
         }
