@@ -7,6 +7,12 @@ import android.content.res.AssetManager;
 import android.graphics.Typeface;
 
 import com.androidex.capbox.base.imageloader.UILKit;
+
+import org.greenrobot.greendao.database.Database;
+
+import com.androidex.capbox.db.DaoMaster;
+import com.androidex.capbox.db.DaoMaster.DevOpenHelper;
+import com.androidex.capbox.db.DaoSession;
 import com.androidex.capbox.service.MyBleService;
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
@@ -17,6 +23,7 @@ public class MyApplication extends Application {
     protected static Context mContext;
     AssetManager mgr;
     Typeface tf;
+    private DaoSession daoSession;
 
     public static synchronized MyApplication getInstance() {
         return mInstance;
@@ -39,6 +46,11 @@ public class MyApplication extends Application {
         /*********初始化百度地图***************/
         SDKInitializer.initialize(this);
         SDKInitializer.setCoordType(CoordType.BD09LL);
+
+        /*********GreenDao************/
+        DevOpenHelper helper = new DevOpenHelper(this, "notes-db");
+        Database db = helper.getWritableDb();
+        daoSession = new DaoMaster(db).newSession();
     }
 
     public Typeface getTypeface() {
@@ -48,5 +60,9 @@ public class MyApplication extends Application {
     public void setTypeface() {
         mgr = getAssets();//得到AssetManager
         tf = Typeface.createFromAsset(mgr, "fonts/ibontenyouyuan.ttf");//根据路径得到Typeface
+    }
+
+    public DaoSession getDaoSession() {
+        return daoSession;
     }
 }

@@ -15,8 +15,10 @@ import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseFragment;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
+import com.androidex.capbox.db.Note;
 import com.androidex.capbox.module.BoxDeviceModel;
 import com.androidex.capbox.module.BoxMovePathModel;
+import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.activity.LoginActivity;
 import com.androidex.capbox.ui.widget.ThirdTitleBar;
 import com.androidex.capbox.utils.CommonKit;
@@ -59,7 +61,7 @@ import okhttp3.Request;
  * Created by Administrator on 2018/1/26.
  */
 
-public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
+public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent {
     private static final String TAG = "MapFragment";
     @Bind(R.id.bmapView)
     MapView airpotrtmapView;
@@ -77,8 +79,8 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
     private ProgressDialog progressDialog;
     private boolean isOverTime = false;
     private MapMode mapMode = MapMode.NORMAL;
-    private final int UPDATE_TIME = 60*1000;
-    private final int DELAY_TIME = 10*1000;
+    private final int UPDATE_TIME = 60 * 1000;
+    private final int DELAY_TIME = 10 * 1000;
 
     //地图位置参数
     private BaiduMap mBaiduMap = null;
@@ -96,24 +98,24 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
         @Override
         public boolean onMarkerClick(final Marker marker) {
             showLocation(marker.getPosition());
-            if(markerDialog == null){
+            if (markerDialog == null) {
                 markerDialog = LayoutInflater.from(context).inflate(R.layout.marker_dialog, null);
             }
             markerDialog.findViewById(R.id.marker_dialog_navigation).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(location!=null){
-                        LatLng start = new LatLng(location.getLatitude(),location.getLongitude());
+                    if (location != null) {
+                        LatLng start = new LatLng(location.getLatitude(), location.getLongitude());
                         LatLng end = marker.getPosition();
                         isOverTime = false;
                         wrl = null;
                         drl = null;
-                        mMapUtils.RoutePlan(start,end);
-                        progressDialog = ProgressDialog.show(context,null,"正在规划路线...");
+                        mMapUtils.RoutePlan(start, end);
+                        progressDialog = ProgressDialog.show(context, null, "正在规划路线...");
                         progressDialog.setCanceledOnTouchOutside(false);
-                        mHandler.sendEmptyMessageDelayed(END_OVERTIME_WHAT,DELAY_TIME); //10s超时
-                    }else{
-                        CommonKit.showErrorShort(context,"未获取定位信息，请到开阔地带");
+                        mHandler.sendEmptyMessageDelayed(END_OVERTIME_WHAT, DELAY_TIME); //10s超时
+                    } else {
+                        CommonKit.showErrorShort(context, "未获取定位信息，请到开阔地带");
                     }
                     mBaiduMap.hideInfoWindow();
                 }
@@ -122,8 +124,9 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
                 @Override
                 public void onClick(View view) {
                     String uuid = mBoxDevices.get(marker.getExtraInfo().getInt("id")).get("uuid");
-                    if(uuid!=null && uuid.length()>0){
-                        getDeviceMovePath(uuid);
+                    String address = mBoxDevices.get(marker.getExtraInfo().getInt("id")).get("mac");
+                    if (uuid != null && uuid.length() > 0) {
+                        getDeviceMovePath(uuid, address);
                     }
                     mBaiduMap.hideInfoWindow();
                 }
@@ -140,7 +143,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
     private final int END_DRIVING_WHAT = 0x03;
     private final int END_OVERTIME_WHAT = 0x04;
     private final int END_MOVEPATH_WHAT = 0x05;
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -148,14 +151,14 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
                     //成功获取设备列表
                     showBoxDevice();
                     //每隔一分钟获取箱体坐标
-                    if(timer == null){
+                    if (timer == null) {
                         timer = new Timer();
                         timer.schedule(new TimerTask() {
                             @Override
                             public void run() {
                                 getBoxDevices();
                             }
-                        },UPDATE_TIME,UPDATE_TIME);
+                        }, UPDATE_TIME, UPDATE_TIME);
                     }
                     break;
                 case END_WALKING_WHAT:
@@ -163,21 +166,34 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
                     if (progressDialog != null) {
                         progressDialog.dismiss();
                     }
-                    if(wrl != null){
+                    if (wrl != null) {
                         showWalkingRouteLine(wrl);
-                    }else if(drl!=null){
+                    } else if (drl != null) {
                         showDrivingRouteLine(drl);
                     }
                     break;
-                case END_OVERTIME_WHAT: {
+                case END_OVERTIME_WHAT:
                     isOverTime = true;
                     if (progressDialog != null) {
                         progressDialog.dismiss();
                     }
-                    CommonKit.showErrorShort(context,"路线规划失败");
-                    }break;
+                    CommonKit.showErrorShort(context, "路线规划失败");
+                    break;
                 case END_MOVEPATH_WHAT:
                     //获取移动轨迹完成
+                    String address = (String) msg.obj;
+                    if (mBoxMovePath != null && mBoxMovePath.size() <= 0) {
+                        RLog.d("读取设备的数据库数据 = " + address);
+                        List<Note> locList = MyBleService.getLocListData(address);
+                        for (Note note : locList) {
+                            RLog.d("map liyp_" + "读取数据到数据库=" + note.toString());
+                            //note.getLat().substring(0, note.getLat().length());
+                            String lat = note.getLat().replace("N", "");
+                            String lon = note.getLon().replace("E", "");
+                            LatLng ll = new LatLng(Double.valueOf(lat), Double.valueOf(lon));
+                            mBoxMovePath.add(ll);
+                        }
+                    }
                     showBoxDeviceMovePath();
                     break;
             }
@@ -186,7 +202,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
 
     @Override
     public void initData() {
-        mMapUtils = new MapUtils(context,this);
+        mMapUtils = new MapUtils(context, this);
         iv_location.setOnClickListener(this);
         navigationButton.setOnClickListener(this);
         routeplanButton.setOnClickListener(this);
@@ -196,7 +212,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
 
     /**
      * 初始化地图，并获取设备列表
-     * */
+     */
     private void initMap() {
         mBaiduMap = airpotrtmapView.getMap();
         mBaiduMap.setMyLocationEnabled(true);
@@ -208,7 +224,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
 
     /**
      * 回到指定的位置
-     * */
+     */
     private void showLocation(LatLng ll) {
         MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
         mBaiduMap.animateMapStatus(u);
@@ -216,35 +232,39 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
 
     /**
      * 根据账户&uuid获取设备移动轨迹
-     * */
-    private void getDeviceMovePath(String uuid){
+     */
+    private void getDeviceMovePath(String uuid, final String address) {
         mBoxMovePath.clear();
-        NetApi.movepath(getToken(), getUserName(),uuid,new ResultCallBack<BoxMovePathModel>(){
+        NetApi.movepath(getToken(), getUserName(), uuid, new ResultCallBack<BoxMovePathModel>() {
             @Override
             public void onSuccess(int statusCode, Headers headers, BoxMovePathModel model) {
                 super.onSuccess(statusCode, headers, model);
                 if (model != null) {
-                    switch(model.code){
-                        case Constants.API.API_OK:{
+                    switch (model.code) {
+                        case Constants.API.API_OK:
                             LatLng ll = null;
                             for (BoxMovePathModel.LatLng latLng : model.datalist) {
-                                ll = new LatLng(Double.valueOf(latLng.getLatitude()),Double.valueOf(latLng.getLongitude()));
+                                ll = new LatLng(Double.valueOf(latLng.getLatitude()), Double.valueOf(latLng.getLongitude()));
                                 mBoxMovePath.add(ll);
                             }
                             ll = null;
-                            }break;
-                        case Constants.API.API_FAIL:{
+                            break;
+                        case Constants.API.API_FAIL:
                             CommonKit.showErrorShort(context, "账号在其他地方登录");
                             LoginActivity.lauch(context);
-                        }break;
-                        case Constants.API.API_NOPERMMISION:{
+                            break;
+                        case Constants.API.API_NOPERMMISION:
                             CommonKit.showErrorShort(context, "获取设备轨迹失败");
-                        }break;
+                            break;
                         default:
                             break;
                     }
                 }
-                mHandler.sendEmptyMessage(END_MOVEPATH_WHAT);
+                RLog.d("读取设备的数据库数据 收到的address = " + address);
+                Message msg = Message.obtain();
+                msg.obj = address;
+                msg.what = END_MOVEPATH_WHAT;
+                mHandler.sendMessage(msg);
             }
 
             @Override
@@ -253,48 +273,54 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
                 if (context != null && !CommonKit.isNetworkAvailable(context)) {
                     CommonKit.showErrorShort(context, "网络出现异常");
                 }
-                mHandler.sendEmptyMessage(END_MOVEPATH_WHAT);
+                Message msg = Message.obtain();
+                msg.obj = address;
+                msg.what = END_MOVEPATH_WHAT;
+                mHandler.sendMessage(msg);
             }
         });
     }
 
     /**
      * 根据账户获取绑定设备列表
-     * */
-    private void getBoxDevices(){
+     */
+    private void getBoxDevices() {
         mBoxDevices.clear();
         NetApi.boxlist(getToken(), getUserName(), new ResultCallBack<BoxDeviceModel>() {
             @Override
             public void onSuccess(int statusCode, Headers headers, BoxDeviceModel model) {
                 super.onSuccess(statusCode, headers, model);
                 if (model != null) {
-                    switch(model.code){
-                        case Constants.API.API_OK:{
+                    switch (model.code) {
+                        case Constants.API.API_OK: {
                             LatLng ll = null;
                             RLog.i("============箱子坐标=====================");
                             for (BoxDeviceModel.device device : model.devicelist) {
-                                RLog.i("lat = "+device.lat+"  lon =  "+device.lon);
-                                ll = new LatLng(Double.valueOf(device.lat),Double.valueOf(device.lon));
+                                RLog.i("lat = " + device.lat + "  lon =  " + device.lon);
+                                ll = new LatLng(Double.valueOf(device.lat), Double.valueOf(device.lon));
                                 ll = mMapUtils.GpsToBD(ll);
                                 Map<String, String> map = new HashMap<>();
                                 map.put("name", device.boxName);
                                 map.put("uuid", device.uuid);
                                 map.put("mac", device.mac);
-                                map.put("lat", ll.latitude+"");
-                                map.put("lon", ll.longitude+"");
+                                map.put("lat", ll.latitude + "");
+                                map.put("lon", ll.longitude + "");
                                 mBoxDevices.add(map);
                             }
                             RLog.i("============end=====================");
                             ll = null;
                             mHandler.sendEmptyMessage(END_DEVICES_WHAT);
-                        }break;
-                        case Constants.API.API_FAIL:{
+                        }
+                        break;
+                        case Constants.API.API_FAIL: {
                             CommonKit.showErrorShort(context, "账号在其他地方登录");
                             LoginActivity.lauch(context);
-                        }break;
-                        case Constants.API.API_NOPERMMISION:{
+                        }
+                        break;
+                        case Constants.API.API_NOPERMMISION: {
                             CommonKit.showErrorShort(context, "获取设备列表失败");
-                        }break;
+                        }
+                        break;
                         default:
                             break;
                     }
@@ -315,31 +341,32 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
 
     /**
      * 将获取的移动轨迹显示在地图
-     * */
-    private void showBoxDeviceMovePath(){
-        if(mBoxMovePath!=null && mBoxMovePath.size()>0){
+     */
+    private void showBoxDeviceMovePath() {
+        if (mBoxMovePath != null && mBoxMovePath.size() > 0) {
             mapMode = MapMode.ROUTEPLAN;
             routeplanButton.setVisibility(View.VISIBLE);
             cleanMap(); //清除其他Overlay
             OverlayOptions ooPolyline = new PolylineOptions().width(10)
-                    .color(0xAAFF0000).points(mBoxMovePath);
+                    .color(0xFF0000).points(mBoxMovePath);
             mBaiduMap.addOverlay(ooPolyline);
-        }else{
-            CommonKit.showErrorShort(context,"未获取轨迹信息");
+            RLog.d("数据==" + mBoxMovePath.size());
+        } else {
+            CommonKit.showErrorShort(context, "未获取轨迹信息");
         }
     }
 
     /**
      * 将设备位置显示在地图
-     * */
-    private void showBoxDevice(){
-        if(mBoxDevices!=null && mBoxDevices.size()>0 && mapMode == MapMode.NORMAL){
+     */
+    private void showBoxDevice() {
+        if (mBoxDevices != null && mBoxDevices.size() > 0 && mapMode == MapMode.NORMAL) {
             mapMode = MapMode.NORMAL;
             cleanMap(); //清除上次添加的Overlay
             LatLng ll = null;
-            for(int i=0;i<mBoxDevices.size();i++){
+            for (int i = 0; i < mBoxDevices.size(); i++) {
                 ll = new LatLng(Double.valueOf(mBoxDevices.get(i).get("lat"))
-                        ,Double.valueOf(mBoxDevices.get(i).get("lon")));
+                        , Double.valueOf(mBoxDevices.get(i).get("lon")));
                 MarkerOptions option = new MarkerOptions()
                         .position(ll)
                         .icon(bitmap)
@@ -348,10 +375,10 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
                         .draggable(true);
                 Marker k = (Marker) mBaiduMap.addOverlay(option);
                 Bundle bundle = new Bundle();
-                bundle.putInt("id",i);
+                bundle.putInt("id", i);
                 k.setExtraInfo(bundle);
                 mBaiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(ll));
-                if(i == 0){
+                if (i == 0) {
                     showLocation(ll);
                 }
             }
@@ -360,7 +387,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
         }
     }
 
-    private void showWalkingRouteLine(WalkingRouteLine line){
+    private void showWalkingRouteLine(WalkingRouteLine line) {
         mapMode = MapMode.NAVIGATION;
         navigationButton.setVisibility(View.VISIBLE);
         shockBox.setVisibility(View.VISIBLE);
@@ -371,7 +398,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
         overlay.zoomToSpan();
     }
 
-    private void showDrivingRouteLine(DrivingRouteLine line){
+    private void showDrivingRouteLine(DrivingRouteLine line) {
         mapMode = MapMode.NAVIGATION;
         navigationButton.setVisibility(View.VISIBLE);
         shockBox.setVisibility(View.VISIBLE);
@@ -382,8 +409,8 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
         overlay.zoomToSpan();
     }
 
-    private void cleanMap(){
-        if(mBaiduMap!=null){
+    private void cleanMap() {
+        if (mBaiduMap != null) {
             mBaiduMap.clear();
             mBaiduMap.removeMarkerClickListener(onMarkerClickListener);
         }
@@ -391,11 +418,11 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
 
     @Override
     public void onPause() {
-        if(mMapUtils!=null){
+        if (mMapUtils != null) {
             mMapUtils.stopLocation();
             mMapUtils.stopSensor();
         }
-        if(airpotrtmapView!=null){
+        if (airpotrtmapView != null) {
             airpotrtmapView.onPause();
         }
         super.onPause();
@@ -403,11 +430,11 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
 
     @Override
     public void onResume() {
-        if(mMapUtils!=null){
+        if (mMapUtils != null) {
             mMapUtils.startLocation();
             mMapUtils.startSensor();
         }
-        if(airpotrtmapView!=null){
+        if (airpotrtmapView != null) {
             airpotrtmapView.onResume();
         }
         super.onResume();
@@ -415,7 +442,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
 
     @Override
     public void onDestroy() {
-        if(mMapUtils!=null){
+        if (mMapUtils != null) {
             mMapUtils.stopLocation();
             mMapUtils.stopSensor();
         }
@@ -436,12 +463,12 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.iv_location:
-                if(location!=null){
-                    showLocation(new LatLng(location.getLatitude(),location.getLongitude()));
-                }else{
-                    CommonKit.showErrorShort(context,"未获取定位信息");
+                if (location != null) {
+                    showLocation(new LatLng(location.getLatitude(), location.getLongitude()));
+                } else {
+                    CommonKit.showErrorShort(context, "未获取定位信息");
                 }
                 break;
             case R.id.navigation_exit:
@@ -468,7 +495,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
                 .direction(mCurrentDirection).latitude(location.getLatitude())
                 .longitude(location.getLongitude()).build();
         mBaiduMap.setMyLocationData(locData);
-        if(first){
+        if (first) {
             LatLng ll = new LatLng(bdLocation.getLatitude(),
                     bdLocation.getLongitude());
             MapStatus.Builder builder = new MapStatus.Builder();
@@ -482,7 +509,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
         double x = sensorEvent.values[SensorManager.DATA_X];
         if (Math.abs(x - lastX) > 1.0) {
             mCurrentDirection = (int) x;
-            if(location!=null){
+            if (location != null) {
                 locData = new MyLocationData.Builder()
                         .accuracy(location.getRadius())
                         .direction(mCurrentDirection).latitude(location.getLatitude())
@@ -495,7 +522,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
 
     @Override
     public void onWalking(WalkingRouteLine line) {
-        if(!isOverTime){
+        if (!isOverTime) {
             wrl = line;
             mHandler.removeMessages(END_OVERTIME_WHAT);
             mHandler.sendEmptyMessage(END_WALKING_WHAT);
@@ -504,7 +531,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
 
     @Override
     public void onDriving(DrivingRouteLine line) {
-        if(!isOverTime){
+        if (!isOverTime) {
             drl = line;
             mHandler.removeMessages(END_OVERTIME_WHAT);
             mHandler.sendEmptyMessage(END_DRIVING_WHAT);
@@ -512,7 +539,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent{
 
     }
 
-    public enum MapMode{
-        NAVIGATION,ROUTEPLAN,NORMAL
+    public enum MapMode {
+        NAVIGATION, ROUTEPLAN, NORMAL
     }
 }
