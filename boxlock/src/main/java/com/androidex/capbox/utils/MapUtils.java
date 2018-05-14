@@ -59,11 +59,20 @@ public class MapUtils implements BDLocationListener,SensorEventListener,OnGetRou
             mLocClient.start();
         }
     }
+
     public void stopLocation(){
         if(mLocClient!=null){
             mLocClient.stop();
             mLocClient = null;
         }
+    }
+
+    public static Double degreeToDB(String data) {
+        //a=  (2237.594232 - (int)a/100*100）/60+(int)a/100
+        Double value = Double.valueOf(data);
+        int a = (int) (value / 100);
+        double result = ((value - a * 100) / 60) + a;
+        return result;
     }
 
     public LatLng GpsToBD(LatLng ll){

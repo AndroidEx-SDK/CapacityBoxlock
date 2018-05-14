@@ -57,6 +57,8 @@ import butterknife.Bind;
 import okhttp3.Headers;
 import okhttp3.Request;
 
+import static com.androidex.capbox.utils.MapUtils.degreeToDB;
+
 /**
  * Created by Administrator on 2018/1/26.
  */
@@ -183,14 +185,12 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent 
                     //获取移动轨迹完成
                     String address = (String) msg.obj;
                     if (mBoxMovePath != null && mBoxMovePath.size() <= 0) {
-                        RLog.d("读取设备的数据库数据 = " + address);
                         List<Note> locList = MyBleService.getLocListData(address);
                         for (Note note : locList) {
-                            RLog.d("map liyp_" + "读取数据到数据库=" + note.toString());
-                            //note.getLat().substring(0, note.getLat().length());
-                            String lat = note.getLat().replace("N", "");
-                            String lon = note.getLon().replace("E", "");
-                            LatLng ll = new LatLng(Double.valueOf(lat), Double.valueOf(lon));
+                            String lat = note.getLat().replace("N", "");//.substring(0, 9)
+                            String lon = note.getLon().replace("E", "");//.substring(0, 10)
+                            LatLng ll = new LatLng(MapUtils.degreeToDB(lat), MapUtils.degreeToDB(lon));
+                            ll = mMapUtils.GpsToBD(ll);
                             mBoxMovePath.add(ll);
                         }
                     }
@@ -219,6 +219,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent 
         mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
         mBaiduMap.setMyLocationConfiguration(new MyLocationConfiguration(
                 MyLocationConfiguration.LocationMode.NORMAL, true, null));
+        mBaiduMap.setMapStatus(MapStatusUpdateFactory.newMapStatus(new MapStatus.Builder().zoom(19).build()));
         getBoxDevices();
     }
 
@@ -292,7 +293,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent 
                 super.onSuccess(statusCode, headers, model);
                 if (model != null) {
                     switch (model.code) {
-                        case Constants.API.API_OK: {
+                        case Constants.API.API_OK:
                             LatLng ll = null;
                             RLog.i("============箱子坐标=====================");
                             for (BoxDeviceModel.device device : model.devicelist) {
@@ -310,17 +311,15 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent 
                             RLog.i("============end=====================");
                             ll = null;
                             mHandler.sendEmptyMessage(END_DEVICES_WHAT);
-                        }
-                        break;
-                        case Constants.API.API_FAIL: {
+
+                            break;
+                        case Constants.API.API_FAIL:
                             CommonKit.showErrorShort(context, "账号在其他地方登录");
                             LoginActivity.lauch(context);
-                        }
-                        break;
-                        case Constants.API.API_NOPERMMISION: {
+                            break;
+                        case Constants.API.API_NOPERMMISION:
                             CommonKit.showErrorShort(context, "获取设备列表失败");
-                        }
-                        break;
+                            break;
                         default:
                             break;
                     }
