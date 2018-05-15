@@ -96,6 +96,11 @@ public class MyBleService extends BleService {
         RLog.d("插入数据到数据库" + note.toString());
     }
 
+    /**
+     * 根据mac地址查询设备数据
+     * @param address
+     * @return
+     */
     public static List<Note> getLocListData(String address) {
         RLog.d("开始读取数据库数据");
         //notesQuery = noteDao.queryBuilder().orderAsc(NoteDao.Properties.Address).build();

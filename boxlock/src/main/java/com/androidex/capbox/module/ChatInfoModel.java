@@ -15,7 +15,17 @@ public class ChatInfoModel implements Serializable {
     private BaseMessage message;
     private boolean isSend;
     private String sendTime;
-    private String receiveTime;
+
+    @Override
+    public String toString() {
+        return "ChatInfoModel{" +
+                "chatId=" + chatId +
+                ", FriendInfoModel=" + FriendInfoModel +
+                ", message=" + message +
+                ", isSend=" + isSend +
+                ", sendTime='" + sendTime + '\'' +
+                '}';
+    }
 
     public int getChatId() {
         return chatId;
@@ -53,33 +63,14 @@ public class ChatInfoModel implements Serializable {
         return this;
     }
 
-    public String getSendTime() {
+    public String getTime() {
         return sendTime;
     }
 
-    public ChatInfoModel setSendTime(String sendTime) {
+    public ChatInfoModel setTime(String sendTime) {
         this.sendTime = sendTime;
         return this;
     }
 
-    public String getReceiveTime() {
-        return receiveTime;
-    }
 
-    public ChatInfoModel setReceiveTime(String receiveTime) {
-        this.receiveTime = receiveTime;
-        return this;
-    }
-
-    @Override
-    public String toString() {
-        return "ChatInfoModel{" +
-                "chatId=" + chatId +
-                ", FriendInfoModel=" + FriendInfoModel +
-                ", message=" + message +
-                ", isSend=" + isSend +
-                ", sendTime='" + sendTime + '\'' +
-                ", receiveTime='" + receiveTime + '\'' +
-                '}';
-    }
 }

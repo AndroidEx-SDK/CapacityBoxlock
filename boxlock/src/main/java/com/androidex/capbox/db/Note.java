@@ -30,10 +30,6 @@ public class Note {
     @Convert(converter = NoteTypeConverter.class, columnType = String.class)
     private NoteType type;
 
-    @Generated(hash = 1272611929)
-    public Note() {
-    }
-
     @Override
     public String toString() {
         return "Note{" +
@@ -47,8 +43,14 @@ public class Note {
                 '}';
     }
 
-    @Keep()
-    public Note(Long id, @NotNull String address, Long time, @NotNull String lat, @NotNull String lon, String alt, NoteType type) {
+    public Note(Long id) {
+        this.id = id;
+    }
+
+    @Keep
+    @Generated(hash = 83414189)
+    public Note(Long id, @NotNull String address, @NotNull Long time,
+                @NotNull String lat, @NotNull String lon, String alt, NoteType type) {
         this.id = id;
         this.address = address;
         this.time = time;
@@ -58,8 +60,8 @@ public class Note {
         this.type = type;
     }
 
-    public Note(Long id) {
-        this.id = id;
+    @Generated(hash = 1272611929)
+    public Note() {
     }
 
     public Long getId() {

@@ -18,12 +18,16 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.androidex.boxlib.modules.ServiceBean;
+import com.androidex.capbox.MyApplication;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.base.BaseMessage;
 import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
+import com.androidex.capbox.db.ChatRecord;
+import com.androidex.capbox.db.ChatRecordDao;
+import com.androidex.capbox.db.DaoSession;
 import com.androidex.capbox.module.BaseModel;
 import com.androidex.capbox.module.ChatInfoModel;
 import com.androidex.capbox.module.FriendInfoModel;
@@ -87,11 +91,12 @@ public class ChatActivity extends BaseActivity {
     private String address;
     private String uuid;
     private int position;
-    private List<ChatInfoModel> mChatInfoList = new ArrayList<>();
+    private List<ChatRecord> mChatInfoList = new ArrayList<>();
     private ChatAdapter mChatAdapter;
     private FriendInfoModel friendInfo;
     private DataBroadcast dataBroadcast;
     boolean isKeyBoardActive = false;//输入法状态
+    private ChatRecordDao chatRecordDao;
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -108,6 +113,28 @@ public class ChatActivity extends BaseActivity {
         mChatAdapter = new ChatAdapter(context);
         lv_msgList.setAdapter(mChatAdapter);
         initUserInfo();
+        initDB();
+        updataChatRecord();
+    }
+
+    private void updataChatRecord() {
+        mChatInfoList.clear();
+        List<ChatRecord> chatRecordList = getChatRecord();
+        for (ChatRecord chatRecord : chatRecordList) {
+            RLog.d("读取到的聊天数据 = " + chatRecord.toString());
+//            ChatInfoModel chatInfo = new ChatInfoModel();
+//            chatInfo.setFriendInfo(friendInfo);
+//            chatInfo.setSend(chatRecord.getIsSend().equals("0") ? true : false);
+//            chatInfo.setTime(CalendarUtil.getDateToString(chatRecord.getTime(), CalendarUtil.DATE_AND_TIME));
+//            BaseMessage message = new BaseMessage();
+//            message.setMsgType(chatRecord.getMsgType());
+//            message.setMsgContent(chatRecord.getMsgContent());
+//            message.setMsgLength(chatRecord.getMsgContent().toString().length());
+//            chatInfo.setMessage(message);
+//
+            mChatInfoList.add(chatRecord);
+            mChatAdapter.setListAll(mChatInfoList);
+        }
     }
 
     private void initView() {
@@ -135,6 +162,14 @@ public class ChatActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    /**
+     * 初始化数据库
+     */
+    public void initDB() {
+        DaoSession daoSession = ((MyApplication) getApplication()).getDaoSession();
+        chatRecordDao = daoSession.getChatRecordDao();
     }
 
     /**
@@ -264,19 +299,62 @@ public class ChatActivity extends BaseActivity {
      * 发送数据
      */
     public void sendMessage() {
-        ChatInfoModel chatInfo = new ChatInfoModel();
-        chatInfo.setFriendInfo(friendInfo);
-        chatInfo.setSend(true);
-        chatInfo.setSendTime(CalendarUtil.getFormatDateTime(new Date(), CalendarUtil.DATE_AND_TIME));
-        BaseMessage message = new BaseMessage();
-        message.setMsgType(VISE_COMMAND_TYPE_TEXT);
-        message.setMsgContent(et_msg.getText().toString());
-        message.setMsgLength(et_msg.getText().toString().length());
-        chatInfo.setMessage(message);
-        mChatInfoList.add(chatInfo);
-        mChatAdapter.setListAll(mChatInfoList);
+//        ChatInfoModel chatInfo = new ChatInfoModel();
+//        chatInfo.setFriendInfo(friendInfo);
+//        chatInfo.setSend(true);
+
+//        chatInfo.setTime(CalendarUtil.getFormatDateTime(date, CalendarUtil.DATE_AND_TIME));
+//        BaseMessage message = new BaseMessage();
+//        message.setMsgType(VISE_COMMAND_TYPE_TEXT);
+//
+//        message.setMsgContent(content);
+//        message.setMsgLength(et_msg.getText().toString().length());
+//        chatInfo.setMessage(message);
+        Date date = new Date();
+        String content = et_msg.getText().toString();
         et_msg.setText("");
-        sendData(message.getMsgContent());
+        insertSendDB(content, date.getTime());
+    }
+
+    /**
+     * 插入发送的信息
+     *
+     * @param content
+     * @param time
+     */
+    private void insertSendDB(String content, Long time) {
+        ChatRecord chatRecord = new ChatRecord();
+        chatRecord.setAddress(address)
+                .setIsRead("1")
+                .setIsSend("0")
+                .setDeleteChat("0")
+                .setMsgContent(content)
+                .setNickName(name)
+                .setMsgType(VISE_COMMAND_TYPE_TEXT)
+                .setTime(time)
+                .setUuid(uuid);
+        RLog.d("msg 发送的数据 = " + chatRecord.toString());
+        mChatInfoList.add(chatRecord);
+        mChatAdapter.setListAll(mChatInfoList);
+        sendData(content);
+        chatRecordDao.insert(chatRecord);
+    }
+
+    private void insertReceiveData(String content, Long time) {
+        ChatRecord chatRecord = new ChatRecord();
+        chatRecord.setAddress(address)
+                .setIsRead("1")
+                .setIsSend("1")
+                .setDeleteChat("0")
+                .setMsgContent(content)
+                .setNickName(name)
+                .setMsgType(VISE_COMMAND_TYPE_TEXT)
+                .setTime(time)
+                .setUuid(uuid);
+        RLog.d("msg 接收到的数据 = " + chatRecord.toString());
+        mChatInfoList.add(chatRecord);
+        mChatAdapter.setListAll(mChatInfoList);
+        chatRecordDao.insert(chatRecord);
     }
 
     /**
@@ -298,17 +376,23 @@ public class ChatActivity extends BaseActivity {
      * @param data
      */
     public void receiveData(String data) {
-        BaseMessage message = new BaseMessage();
-        message.setMsgType(VISE_COMMAND_TYPE_NONE);
-        message.setMsgLength(data.length());
-        message.setMsgContent(data);
-        ChatInfoModel chatInfo = new ChatInfoModel();
-        chatInfo.setMessage(message);
-        chatInfo.setReceiveTime(CalendarUtil.getFormatDateTime(new Date(), CalendarUtil.DATE_AND_TIME));
-        chatInfo.setSend(false);
-        chatInfo.setFriendInfo(friendInfo);
-        mChatInfoList.add(chatInfo);
-        mChatAdapter.setListAll(mChatInfoList);
+//        BaseMessage message = new BaseMessage();
+//        message.setMsgType(VISE_COMMAND_TYPE_NONE);
+//        message.setMsgLength(data.length());
+//        message.setMsgContent(data);
+//        ChatInfoModel chatInfo = new ChatInfoModel();
+//        chatInfo.setMessage(message);
+        Date date = new Date();
+//        chatInfo.setTime(CalendarUtil.getFormatDateTime(date, CalendarUtil.DATE_AND_TIME));
+//        chatInfo.setSend(false);
+//        chatInfo.setFriendInfo(friendInfo);
+
+        insertReceiveData(data, date.getTime());
+    }
+
+    private List<ChatRecord> getChatRecord() {
+        return chatRecordDao.queryBuilder().where(ChatRecordDao.Properties.Address.eq(address), ChatRecordDao.Properties.DeleteChat.eq("0"))
+                .orderAsc(ChatRecordDao.Properties.Time).list();
     }
 
     /**
