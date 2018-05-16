@@ -404,4 +404,21 @@
 
     <string name="rc_audio_input">按住 说话</string>
     <string name="rc_audio_input_hover">松开 发送</string>
+
+    <string name="rc_daybreak_format">AM</string>
+    <string name="rc_morning_format">AM</string>
+    <string name="rc_noon_format">PM</string>
+    <string name="rc_afternoon_format">PM</string>
+    <string name="rc_night_format">PM</string>
+    <string name="rc_monday_format">Mon</string>
+    <string name="rc_tuesday_format">Tue</string>
+    <string name="rc_wednesday_format">Wed</string>
+    <string name="rc_thuresday_format">Thu</string>
+    <string name="rc_friday_format">Fri</string>
+    <string name="rc_saturday_format">Sat</string>
+    <string name="rc_sunsay_format">Sun</string>
+    <string name="rc_year_format"></string>
+    <string name="rc_month_format"></string>
+    <string name="rc_day_format"></string>
+    <string name="rc_yesterday_format">Yesterday</string>
 </resources>

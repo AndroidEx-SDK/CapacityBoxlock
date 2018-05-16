@@ -21,7 +21,6 @@ import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.capbox.MyApplication;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
-import com.androidex.capbox.base.BaseMessage;
 import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
@@ -29,8 +28,6 @@ import com.androidex.capbox.db.ChatRecord;
 import com.androidex.capbox.db.ChatRecordDao;
 import com.androidex.capbox.db.DaoSession;
 import com.androidex.capbox.module.BaseModel;
-import com.androidex.capbox.module.ChatInfoModel;
-import com.androidex.capbox.module.FriendInfoModel;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.adapter.ChatAdapter;
 import com.androidex.capbox.ui.widget.ChatPopWindow;
@@ -51,6 +48,8 @@ import butterknife.OnClick;
 import okhttp3.Headers;
 import okhttp3.Request;
 
+import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BOX_POLICE_CHANGE;
+import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BOX_STARTS_CHANGE;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_END_TAST;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_OPEN_SUCCED;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_STARTS;
@@ -70,7 +69,6 @@ import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
 import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
 import static com.androidex.capbox.utils.Constants.EXTRA_PAGER_SIGN;
-import static com.androidex.capbox.utils.Constants.VISE_COMMAND_TYPE_NONE;
 import static com.androidex.capbox.utils.Constants.VISE_COMMAND_TYPE_TEXT;
 
 public class ChatActivity extends BaseActivity {
@@ -93,7 +91,6 @@ public class ChatActivity extends BaseActivity {
     private int position;
     private List<ChatRecord> mChatInfoList = new ArrayList<>();
     private ChatAdapter mChatAdapter;
-    private FriendInfoModel friendInfo;
     private DataBroadcast dataBroadcast;
     boolean isKeyBoardActive = false;//输入法状态
     private ChatRecordDao chatRecordDao;
@@ -122,16 +119,6 @@ public class ChatActivity extends BaseActivity {
         List<ChatRecord> chatRecordList = getChatRecord();
         for (ChatRecord chatRecord : chatRecordList) {
             RLog.d("读取到的聊天数据 = " + chatRecord.toString());
-//            ChatInfoModel chatInfo = new ChatInfoModel();
-//            chatInfo.setFriendInfo(friendInfo);
-//            chatInfo.setSend(chatRecord.getIsSend().equals("0") ? true : false);
-//            chatInfo.setTime(CalendarUtil.getDateToString(chatRecord.getTime(), CalendarUtil.DATE_AND_TIME));
-//            BaseMessage message = new BaseMessage();
-//            message.setMsgType(chatRecord.getMsgType());
-//            message.setMsgContent(chatRecord.getMsgContent());
-//            message.setMsgLength(chatRecord.getMsgContent().toString().length());
-//            chatInfo.setMessage(message);
-//
             mChatInfoList.add(chatRecord);
             mChatAdapter.setListAll(mChatInfoList);
         }
@@ -146,12 +133,6 @@ public class ChatActivity extends BaseActivity {
      * 初始化用户信息
      */
     private void initUserInfo() {
-        friendInfo = new FriendInfoModel();
-        //friendInfo.setBluetoothDevice();
-        friendInfo.setFriendNickName(name);
-        friendInfo.setIdentificationName(getUserName());
-        friendInfo.setDeviceAddress(address);
-
         et_msg.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -222,6 +203,8 @@ public class ChatActivity extends BaseActivity {
         intentFilter.addAction(ACTION_LOCK_OPEN_SUCCED);//开锁成功
         intentFilter.addAction(BLUTOOTH_OFF);//手机蓝牙关闭
         intentFilter.addAction(BLUTOOTH_ON);//手机蓝牙打开
+        intentFilter.addAction(ACTION_BOX_STARTS_CHANGE);//箱体状态变更报告
+        intentFilter.addAction(ACTION_BOX_POLICE_CHANGE);//箱体报警信息变更报告
         dataBroadcast = new DataBroadcast();
         registerReceiver(dataBroadcast, intentFilter);
     }
@@ -299,17 +282,6 @@ public class ChatActivity extends BaseActivity {
      * 发送数据
      */
     public void sendMessage() {
-//        ChatInfoModel chatInfo = new ChatInfoModel();
-//        chatInfo.setFriendInfo(friendInfo);
-//        chatInfo.setSend(true);
-
-//        chatInfo.setTime(CalendarUtil.getFormatDateTime(date, CalendarUtil.DATE_AND_TIME));
-//        BaseMessage message = new BaseMessage();
-//        message.setMsgType(VISE_COMMAND_TYPE_TEXT);
-//
-//        message.setMsgContent(content);
-//        message.setMsgLength(et_msg.getText().toString().length());
-//        chatInfo.setMessage(message);
         Date date = new Date();
         String content = et_msg.getText().toString();
         et_msg.setText("");
@@ -376,17 +348,7 @@ public class ChatActivity extends BaseActivity {
      * @param data
      */
     public void receiveData(String data) {
-//        BaseMessage message = new BaseMessage();
-//        message.setMsgType(VISE_COMMAND_TYPE_NONE);
-//        message.setMsgLength(data.length());
-//        message.setMsgContent(data);
-//        ChatInfoModel chatInfo = new ChatInfoModel();
-//        chatInfo.setMessage(message);
         Date date = new Date();
-//        chatInfo.setTime(CalendarUtil.getFormatDateTime(date, CalendarUtil.DATE_AND_TIME));
-//        chatInfo.setSend(false);
-//        chatInfo.setFriendInfo(friendInfo);
-
         insertReceiveData(data, date.getTime());
     }
 
@@ -434,13 +396,87 @@ public class ChatActivity extends BaseActivity {
                     }
                     break;
                 case ACTION_END_TAST://结束携行押运
-                    RLog.e("结束携行押运");
                     switch (b[2]) {
                         case (byte) 0x00://成功
                             endTask();
                             break;
                         case (byte) 0x01://失败
                             CommonKit.showErrorShort(context, "结束失败");
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case ACTION_BOX_STARTS_CHANGE://箱体状态变更报告
+                    switch (b[4]) {
+                        case (byte) 0x01://空闲
+                            receiveData("更改空闲状态");
+                            break;
+                        case (byte) 0x02://配置
+                            receiveData("更改为配置状态");
+                            break;
+                        case (byte) 0x03://携行
+                            receiveData("更改为携行状态");
+                            break;
+                        case (byte) 0x04://开箱
+                            receiveData("已开箱");
+                            break;
+                        case (byte) 0x05://关箱
+                            receiveData("已关箱");
+                            break;
+                        case (byte) 0x06://APP开锁
+                            receiveData("APP开锁");
+                            break;
+                        case (byte) 0x07://APP关锁
+                            receiveData("APP关锁");
+                            break;
+                        case (byte) 0x08://指纹开锁
+                            receiveData("指纹开锁");
+                            break;
+                        case (byte) 0x09://指纹关锁
+                            receiveData("指纹关锁");
+                            break;
+                        case (byte) 0x0a://进入静默
+                            receiveData("APP关锁");
+                            break;
+                        case (byte) 0x0b://退出静默
+                            receiveData("退出静默");
+                            break;
+                        case (byte) 0x0c://开始充电
+                            receiveData("开始充电");
+                            break;
+                        case (byte) 0x0d://充电完成
+                            receiveData("充电完成");
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case ACTION_BOX_POLICE_CHANGE://箱体报警信息变更报告
+                    switch (b[4]) {
+                        case (byte) 0x01://电量低
+                            receiveData("电量低");
+                            break;
+                        case (byte) 0x02://超距（包括脱距、较近）
+                            receiveData("超距报警");
+                            break;
+                        case (byte) 0x03://温度超范围
+                            receiveData("温度超范围报警");
+                            break;
+                        case (byte) 0x04://湿度超范围
+                            receiveData("湿度超范围报警");
+                            break;
+                        case (byte) 0x05://破拆
+                            receiveData("破拆报警");
+                            break;
+                        case (byte) 0x06://通讯破解
+                            receiveData("通讯破解报警");
+                            break;
+                        case (byte) 0x07://锁异常
+                            receiveData("锁异常报警");
+                            break;
+                        case (byte) 0x08://异动
+                            receiveData("异动报警");
                             break;
                         default:
                             break;

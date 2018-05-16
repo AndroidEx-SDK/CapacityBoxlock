@@ -1,19 +1,17 @@
 package com.androidex.capbox.ui.adapter;
 
 import android.content.Context;
+import android.view.View;
 import android.widget.TextView;
 
 import com.androidex.capbox.R;
-import com.androidex.capbox.base.FileMessage;
 import com.androidex.capbox.base.adapter.HelperAdapter;
 import com.androidex.capbox.base.adapter.HelperViewHolder;
 import com.androidex.capbox.db.ChatRecord;
-import com.androidex.capbox.module.ChatInfoModel;
 import com.androidex.capbox.ui.view.AutoLinkTextView;
-import com.androidex.capbox.utils.CalendarUtil;
+import com.androidex.capbox.utils.ChatUtil;
 import com.makeramen.roundedimageview.RoundedImageView;
 
-import static com.androidex.capbox.utils.Constants.VISE_COMMAND_TYPE_FILE;
 import static com.androidex.capbox.utils.Constants.VISE_COMMAND_TYPE_TEXT;
 
 /**
@@ -23,8 +21,11 @@ import static com.androidex.capbox.utils.Constants.VISE_COMMAND_TYPE_TEXT;
  * @Date: 2018/4/27
  */
 public class ChatAdapter extends HelperAdapter<ChatRecord> {
+    private Context context;
+
     public ChatAdapter(Context context) {
         super(context, R.layout.item_chat_info_left, R.layout.item_chat_info_right);
+        this.context = context;
     }
 
     @Override
@@ -44,11 +45,22 @@ public class ChatAdapter extends HelperAdapter<ChatRecord> {
             msgTv = viewHolder.getView(R.id.item_chat_left_msg);
             iv_FriendHead.setImageResource(R.mipmap.ic_box_white);
         }
-        timeTv.setText(CalendarUtil.getDateToString(chatInfo.getTime(), CalendarUtil.DATE_AND_TIME));
         if (chatInfo.getMsgContent() != null) {
             if (chatInfo.getMsgType() == VISE_COMMAND_TYPE_TEXT) {
                 msgTv.setText(chatInfo.getMsgContent());
             } else {
+            }
+        }
+
+        timeTv.setText(ChatUtil.getConversationFormatDate(chatInfo.getTime(), context));
+        if (position == 0) {
+            timeTv.setVisibility(View.VISIBLE);
+        } else {
+            ChatRecord record = (ChatRecord) getItem(position - 1);
+            if (ChatUtil.isShowChatTime(chatInfo.getTime(), record.getTime(), 30)) {
+                timeTv.setVisibility(View.VISIBLE);
+            } else {
+                timeTv.setVisibility(View.GONE);
             }
         }
     }

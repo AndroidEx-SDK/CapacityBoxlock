@@ -19,7 +19,7 @@ android {
     buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.androidex.capbox"
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 22
         versionCode 50
         versionName "0.5.0"
