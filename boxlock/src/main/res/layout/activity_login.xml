@@ -140,6 +140,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
+                android:checked="true"
                 android:layout_marginRight="@dimen/marginPadding16"
                 android:paddingLeft="@dimen/marginPadding8"
                 android:scaleX="0.70"

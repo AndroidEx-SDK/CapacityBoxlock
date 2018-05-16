@@ -36,7 +36,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/title_button_mar"
-                android:background="@drawable/device_search" />
+                android:background="@mipmap/device_search" />
         </LinearLayout>
 
         <TextView

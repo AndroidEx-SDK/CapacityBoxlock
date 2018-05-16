@@ -1,6 +1,7 @@
 package com.androidex.capbox.ui.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -27,6 +28,7 @@ import butterknife.OnTextChanged;
 import static com.androidex.capbox.data.cache.SharedPreTool.LOGIN_STATUS;
 
 public class LoginActivity extends UserBaseActivity {
+    public static final int LOGIN_FORGET = 10001;//跳转到忘记密码界面请求码
     @Bind(R.id.titlebar)
     ThirdTitleBar titlebar;
     @Bind(R.id.et_phone)
@@ -55,12 +57,18 @@ public class LoginActivity extends UserBaseActivity {
         cb_automatic_login.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                RLog.e("compounbtn change b = " + b);
                 SharedPreTool.getInstance(context).setBoolData(SharedPreTool.AUTOMATIC_LOGIN, b);
             }
         });
-        boolean boolData = SharedPreTool.getInstance(context).getBoolData(SharedPreTool.AUTOMATIC_LOGIN, false);
-        cb_automatic_login.setChecked(boolData);
+
+        String username = SharedPreTool.getInstance(context).getStringData(SharedPreTool.PHONE, null);
+        if (username != null) {
+            boolean boolData = SharedPreTool.getInstance(context).getBoolData(SharedPreTool.AUTOMATIC_LOGIN, false);
+            cb_automatic_login.setChecked(boolData);
+        } else {
+            cb_automatic_login.setChecked(true);
+            SharedPreTool.getInstance(context).setBoolData(SharedPreTool.AUTOMATIC_LOGIN, true);
+        }
     }
 
     private void initTitleBar() {
@@ -88,7 +96,8 @@ public class LoginActivity extends UserBaseActivity {
                 break;
 
             case R.id.tv_forgetPassword:
-                Forget2Activtiy.lauch(context);
+
+                Forget2Activtiy.lauch(context, LOGIN_FORGET);
                 break;
             case R.id.tv_authcode:
                 getAuthCode();
@@ -192,6 +201,14 @@ public class LoginActivity extends UserBaseActivity {
                     MainActivity.lauch(context);
                 }
             });
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == LOGIN_FORGET) {
+            getAuthCode();
         }
     }
 

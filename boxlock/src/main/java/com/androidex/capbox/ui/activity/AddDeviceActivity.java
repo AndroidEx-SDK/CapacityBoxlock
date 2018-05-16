@@ -81,7 +81,7 @@ public class AddDeviceActivity extends BaseActivity {
     }
 
     private void initTitle() {
-        titlebar.setRightRes(R.drawable.device_search);
+        titlebar.setRightRes(R.mipmap.device_search);
         titlebar.getRightIv().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

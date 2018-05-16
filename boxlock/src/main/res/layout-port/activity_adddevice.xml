@@ -10,7 +10,7 @@
         android:fitsSystemWindows="true"
         android:id="@+id/titlebar"
         android:layout_width="match_parent"
-        android:layout_height="49dp"
+        android:layout_height="wrap_content"
         app:titleText="@string/device_title_text2" />
 
     <android.support.v4.widget.SwipeRefreshLayout
