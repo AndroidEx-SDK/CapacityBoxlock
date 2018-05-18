@@ -31,11 +31,12 @@
 
     <ImageView
         android:id="@+id/iv_right"
-        android:layout_width="@dimen/title_button"
-        android:layout_height="@dimen/title_button"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/title_button_mar" />
+        android:paddingLeft="@dimen/marginPadding20"
+        android:paddingRight="@dimen/marginPadding20" />
 
     <TextView
         android:id="@+id/tv_right"
