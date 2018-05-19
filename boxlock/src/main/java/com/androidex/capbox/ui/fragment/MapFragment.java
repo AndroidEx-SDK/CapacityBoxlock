@@ -40,6 +40,7 @@ import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.map.Overlay;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
@@ -75,6 +76,8 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent 
     Button navigationButton;
     @Bind(R.id.routeplan_exit)
     Button routeplanButton;
+    @Bind(R.id.navigation_animation)
+    Button navigation_animation;
     @Bind(R.id.shock_box)
     Button shockBox;
     private View markerDialog;
@@ -95,6 +98,8 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent 
     private MyLocationData locData;
     private int mCurrentDirection = 0;
     private Double lastX = 0.0;
+    int position;//标记动画跳转到哪个地理节点
+    private Marker marker;//动画绘制
     private BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.mipmap.icon_map);
     private BaiduMap.OnMarkerClickListener onMarkerClickListener = new BaiduMap.OnMarkerClickListener() {
         @Override
@@ -145,6 +150,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent 
     private final int END_DRIVING_WHAT = 0x03;
     private final int END_OVERTIME_WHAT = 0x04;
     private final int END_MOVEPATH_WHAT = 0x05;
+    private final int END_ANMATION_WHAT = 0x06;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -196,6 +202,16 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent 
                     }
                     showBoxDeviceMovePath();
                     break;
+                case END_ANMATION_WHAT:
+                    marker.setPosition(mBoxMovePath.get(position));
+                    if (position == (mBoxMovePath.size() - 1)) {
+                        position = 0;
+                        stopDrawTrack();
+                    }
+                    position++;
+                    break;
+                default:
+                    break;
             }
         }
     };
@@ -207,6 +223,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent 
         navigationButton.setOnClickListener(this);
         routeplanButton.setOnClickListener(this);
         shockBox.setOnClickListener(this);
+        navigation_animation.setOnClickListener(this);
         initMap();
     }
 
@@ -345,13 +362,50 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent 
         if (mBoxMovePath != null && mBoxMovePath.size() > 0) {
             mapMode = MapMode.ROUTEPLAN;
             routeplanButton.setVisibility(View.VISIBLE);
+            navigation_animation.setVisibility(View.VISIBLE);
             cleanMap(); //清除其他Overlay
+            /****************轨迹绘制**********************/
             OverlayOptions ooPolyline = new PolylineOptions().width(10)
                     .color(0xAAFF0000).points(mBoxMovePath);
             mBaiduMap.addOverlay(ooPolyline);
+            /****************轨迹回放**********************/
+            position = 0;
+            OverlayOptions ooA = new MarkerOptions().position(mBoxMovePath.get(position)).icon(bitmap);
+            marker = (Marker) (mBaiduMap.addOverlay(ooA));
+            startDrawTrack();
         } else {
             CommonKit.showErrorShort(context, "未获取轨迹信息");
         }
+    }
+
+
+    TimerTask task;
+    Timer timerDraw;
+
+    /**
+     * 开始回放
+     */
+    public void startDrawTrack() {
+        task = new TimerTask() {
+            public void run() {
+                Message message = new Message();
+                message.what = END_ANMATION_WHAT;
+                mHandler.sendMessage(message);
+            }
+        };
+        timerDraw = new Timer(true);
+        timerDraw.schedule(task, 300, 1000);
+    }
+
+    public void stopDrawTrack() {
+        if (timerDraw != null) {
+            timerDraw.cancel();
+        }
+        if (task != null) {
+            task.cancel();
+        }
+        timerDraw = null;
+        task = null;
     }
 
     /**
@@ -414,50 +468,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent 
         }
     }
 
-    @Override
-    public void onPause() {
-        if (mMapUtils != null) {
-            mMapUtils.stopLocation();
-            mMapUtils.stopSensor();
-        }
-        if (airpotrtmapView != null) {
-            airpotrtmapView.onPause();
-        }
-        super.onPause();
-    }
 
-    @Override
-    public void onResume() {
-        if (mMapUtils != null) {
-            mMapUtils.startLocation();
-            mMapUtils.startSensor();
-        }
-        if (airpotrtmapView != null) {
-            airpotrtmapView.onResume();
-        }
-        super.onResume();
-    }
-
-    @Override
-    public void onDestroy() {
-        if (mMapUtils != null) {
-            mMapUtils.stopLocation();
-            mMapUtils.stopSensor();
-        }
-        cleanMap();
-        airpotrtmapView.onDestroy();
-        super.onDestroy();
-    }
-
-    @Override
-    public void setListener() {
-
-    }
-
-    @Override
-    public int getLayoutId() {
-        return R.layout.fragment_map;
-    }
 
     @Override
     public void onClick(View view) {
@@ -480,7 +491,15 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent 
                 mapMode = MapMode.NORMAL;
                 cleanMap();
                 routeplanButton.setVisibility(View.GONE);
+                navigation_animation.setVisibility(View.GONE);
                 showBoxDevice();
+                break;
+            case R.id.navigation_animation:
+                position = 0;
+                stopDrawTrack();
+                startDrawTrack();
+                break;
+            default:
                 break;
         }
     }
@@ -539,5 +558,50 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent 
 
     public enum MapMode {
         NAVIGATION, ROUTEPLAN, NORMAL
+    }
+
+    @Override
+    public void onPause() {
+        if (mMapUtils != null) {
+            mMapUtils.stopLocation();
+            mMapUtils.stopSensor();
+        }
+        if (airpotrtmapView != null) {
+            airpotrtmapView.onPause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        if (mMapUtils != null) {
+            mMapUtils.startLocation();
+            mMapUtils.startSensor();
+        }
+        if (airpotrtmapView != null) {
+            airpotrtmapView.onResume();
+        }
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mMapUtils != null) {
+            mMapUtils.stopLocation();
+            mMapUtils.stopSensor();
+        }
+        cleanMap();
+        airpotrtmapView.onDestroy();
+        super.onDestroy();
+    }
+
+    @Override
+    public void setListener() {
+
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.fragment_map;
     }
 }
