@@ -136,6 +136,8 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     TextView minhum;
     @Bind(R.id.tv_locationStatus)
     TextView tv_locationStatus;
+    @Bind(R.id.tv_chargingState)
+    TextView tv_chargingState;
     @Bind(R.id.tv_signalIntension)
     TextView tv_signalIntension;
     @Bind(R.id.tv_simStatus)
@@ -951,6 +953,20 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                             break;
                         default:
                             tv_locationStatus.setText("未知");
+                            break;
+                    }
+                    switch (b[14]) {
+                        case (byte) 0x01://充电中
+                            tv_chargingState.setText("充电中");
+                            break;
+                        case (byte) 0x02://未充电器
+                            tv_chargingState.setText("未充电");
+                            break;
+                        case (byte) 0x03://充满0x03
+                            tv_chargingState.setText("充满");
+                            break;
+                        default:
+                            tv_chargingState.setText("未知");
                             break;
                     }
                     break;
