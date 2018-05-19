@@ -1,6 +1,7 @@
 package com.androidex.capbox.ui.activity;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -117,6 +118,7 @@ public class BoxDetailActivity extends BaseActivity {
     private int status;
     private int pager_sign;//跳转页标识，0代表从列表页跳转到此类，1代表从监控页跳转到此类
     private int position;//用户选中的第几个设备
+    private static ChatActivity chatActivity;
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -184,15 +186,13 @@ public class BoxDetailActivity extends BaseActivity {
         titlebar.getRightTv().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (pager_sign == 0) {//从箱体列表页跳转过来的。
+                if (pager_sign == 0) {//0从箱体列表页跳转过来的  1从监控页面跳转过来的
                     intentMonitorPager();
-                    CommonKit.finishActivity(context);
-                } else if (pager_sign == 1) {//从监控页面跳转过来的
-                    CommonKit.finishActivity(context);
-                } else {
-                    intentMonitorPager();//跳转到监控页
-                    CommonKit.finishActivity(context);
+                    if (chatActivity != null) {
+                        CommonKit.finishActivity(chatActivity);
+                    }
                 }
+                CommonKit.finishActivity(context);
             }
         });
     }
@@ -970,6 +970,9 @@ public class BoxDetailActivity extends BaseActivity {
     }
 
     public static void lauch(Activity activity, Bundle bundle) {
+        if (bundle.getInt(EXTRA_PAGER_SIGN) == 0) {
+            chatActivity = (ChatActivity) activity;
+        }
         CommonKit.startActivity(activity, BoxDetailActivity.class, bundle, false);
     }
 

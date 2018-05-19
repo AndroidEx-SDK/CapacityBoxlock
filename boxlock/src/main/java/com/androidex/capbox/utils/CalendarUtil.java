@@ -421,6 +421,38 @@ public class CalendarUtil {
     }
 
     /**
+     * 时间戳转换成字符窜
+     *
+     * @param time
+     * @param format 时间格式，如yyyy-MM-dd HH:mm:ss
+     * @return
+     */
+    public static String getDateToString(long time, String format) {
+        Date d = new Date(time);
+        SimpleDateFormat sf = new SimpleDateFormat(format);
+        return sf.format(d);
+    }
+
+    /**
+     * 将字符串转为时间戳
+     *
+     * @param time
+     * @param format 时间格式，如yyyy-MM-dd HH:mm:ss
+     * @return
+     */
+    public static long getStringToDate(String time, String format) {
+        SimpleDateFormat sf = new SimpleDateFormat(format);
+        Date date = new Date();
+        try {
+            date = sf.parse(time);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return date.getTime();
+    }
+
+    /**
      * 获得指定日期的前一天
      *
      * @param specifiedDay

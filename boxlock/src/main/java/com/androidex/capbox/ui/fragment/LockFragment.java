@@ -136,6 +136,8 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     TextView minhum;
     @Bind(R.id.tv_locationStatus)
     TextView tv_locationStatus;
+    @Bind(R.id.tv_chargingState)
+    TextView tv_chargingState;
     @Bind(R.id.tv_signalIntension)
     TextView tv_signalIntension;
     @Bind(R.id.tv_simStatus)
@@ -734,8 +736,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     if (model.error == 0) {
                         String str_lat = new String(Base64.decode(model.y, Base64.DEFAULT));
                         String str_lon = new String(Base64.decode(model.x, Base64.DEFAULT));
-                        Logd(TAG, "Base64--lat-->" + str_lat);
-                        Logd(TAG, "Base64--lon-->" + str_lon);
                         if (!str_lat.equals("0") && !str_lat.equals("") && !str_lon.equals("0") && !str_lon.equals("")) {
                             getAddress(str_lat, str_lon);
                         } else {
@@ -916,7 +916,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     current_temp.setText(intent.getStringExtra(BLECONSTANTS_TEMP) != null ? intent.getStringExtra(BLECONSTANTS_TEMP) : "");
                     current_hum.setText(intent.getStringExtra(BLECONSTANTS_HUM) != null ? intent.getStringExtra(BLECONSTANTS_HUM) : "");
                     tv_electric_quantity.setText(intent.getStringExtra(BLECONSTANTS_ELECTRIC_QUANTITY) != null ? intent.getStringExtra(BLECONSTANTS_ELECTRIC_QUANTITY) : "");
-                    tv_signalIntension.setText(String.valueOf(Byte2HexUtil.byte2Int(b[12])));
                     switch (b[11]) {
                         case (byte) 0x01://有卡
                             tv_simStatus.setText("有卡");
@@ -928,6 +927,23 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                             tv_simStatus.setText("未知");
                             break;
                     }
+                    switch (b[12]) {
+                        case (byte) 0x01://差
+                            tv_signalIntension.setText("差");
+                            break;
+                        case (byte) 0x02://
+                            tv_signalIntension.setText("一般");
+                            break;
+                        case (byte) 0x03://
+                            tv_signalIntension.setText("较强");
+                            break;
+                        case (byte) 0x04://
+                            tv_signalIntension.setText("强");
+                            break;
+                        default:
+                            tv_signalIntension.setText("无网络");
+                            break;
+                    }
                     switch (b[13]) {
                         case (byte) 0x01://定位正常
                             tv_locationStatus.setText("正常");
@@ -937,6 +953,20 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                             break;
                         default:
                             tv_locationStatus.setText("未知");
+                            break;
+                    }
+                    switch (b[14]) {
+                        case (byte) 0x01://充电中
+                            tv_chargingState.setText("充电中");
+                            break;
+                        case (byte) 0x02://未充电器
+                            tv_chargingState.setText("未充电");
+                            break;
+                        case (byte) 0x03://充满0x03
+                            tv_chargingState.setText("充满");
+                            break;
+                        default:
+                            tv_chargingState.setText("未知");
                             break;
                     }
                     break;

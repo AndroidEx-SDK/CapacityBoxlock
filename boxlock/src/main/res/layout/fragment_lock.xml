@@ -393,6 +393,22 @@
 
                                 <TextView
                                     style="@style/fragment_lock_name"
+                                    android:text="充电状态：" />
+
+                                <TextView
+                                    android:id="@+id/tv_chargingState"
+                                    style="@style/fragment_lock_data"
+                                    android:text="@string/main_max_temp" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/marginPadding6">
+
+                                <TextView
+                                    style="@style/fragment_lock_name"
                                     android:text="箱体电量：" />
 
                                 <TextView

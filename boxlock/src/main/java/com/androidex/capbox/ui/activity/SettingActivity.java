@@ -326,7 +326,7 @@ public class SettingActivity extends UserBaseActivity {
      */
     private void removeCacheForSp() {
         SharedPreTool.getInstance(context).setBoolData(LOGIN_STATUS, false);//设置登录标识为false
-        SharedPreTool.getInstance(context).remove(SharedPreTool.TOKEN);
+        //SharedPreTool.getInstance(context).remove(SharedPreTool.TOKEN);
         SharedPreTool.getInstance(context).remove(SharedPreTool.PHONE);
         SharedPreTool.getInstance(context).remove(SharedPreTool.PASSWORD);
         SharedPreTool.getInstance(context).remove(SharedPreTool.AUTOMATIC_LOGIN);

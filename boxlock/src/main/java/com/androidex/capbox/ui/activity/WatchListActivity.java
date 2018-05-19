@@ -55,12 +55,11 @@ public class WatchListActivity extends BaseActivity {
     }
 
     private void initTitleBar() {
-        secondtitlebar.setRightRes(R.drawable.device_search);
+        secondtitlebar.setRightRes(R.mipmap.device_search);
         //搜索
         secondtitlebar.getRightIv().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SearchDeviceActivity.lauch(context, null);
             }
         });
     }

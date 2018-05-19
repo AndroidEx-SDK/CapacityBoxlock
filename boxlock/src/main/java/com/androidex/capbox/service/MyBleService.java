@@ -1,13 +1,22 @@
 package com.androidex.capbox.service;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.boxlib.service.BleService;
+import com.androidex.capbox.MyApplication;
 import com.androidex.capbox.data.cache.SharedPreTool;
+import com.androidex.capbox.db.DaoSession;
+import com.androidex.capbox.db.Note;
+import com.androidex.capbox.db.NoteDao;
 import com.androidex.capbox.ui.activity.LockScreenActivity;
 import com.androidex.capbox.utils.RLog;
 import com.androidex.capbox.utils.SystemUtil;
+import com.androidex.boxlib.modules.LocationModules;
+
+import java.util.List;
 
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
@@ -22,7 +31,7 @@ import static com.baidu.mapapi.BMapManager.getContext;
 
 /**
  * @author liyp
- *         应用的服务类
+ * 应用的服务类
  * @editTime 2017/12/4
  */
 
@@ -35,6 +44,7 @@ public class MyBleService extends BleService {
         super.onCreate();
         RLog.e("MyBleService 启动");
         setLockScreenActivity(LockScreenActivity.class);//设置锁屏界面的Activity
+        initDB();
     }
 
     /**
@@ -45,6 +55,57 @@ public class MyBleService extends BleService {
             service = new MyBleService();
         }
         return service;
+    }
+
+    private static NoteDao noteDao;
+
+    public void initDB() {
+        DaoSession daoSession = ((MyApplication) getApplication()).getDaoSession();
+        noteDao = daoSession.getNoteDao();
+    }
+
+    /**
+     * -keep class org.greenrobot.greendao.**{*;}
+     * -keep public interface org.greenrobot.greendao.**
+     * -keep class org.greenrobot.greendao.database.Database
+     * -keepclassmembers class * extends org.greenrobot.greendao.AbstractDao {
+     * public static java.lang.String TABLENAME;
+     * }
+     * -keep class **$Properties
+     * -keep class net.sqlcipher.database.**{*;}
+     * -keep public interface net.sqlcipher.database.**
+     * -dontwarn net.sqlcipher.database.**
+     * -dontwarn org.greenrobot.greendao.**
+     * 插入定位数据到数据库
+     * <p>
+     * 插入数据到数据库Note{id=1, address='A4:34:F1:84:25:29', time=1526025586, lat='2237.601437N', lon='11404.916731E', alt='116.0M', type=null}
+     *
+     * @param address
+     * @param modules
+     * @param longTime
+     */
+    @Override
+    protected void insertLocData(String address, LocationModules modules, long longTime) {
+        Note note = new Note();
+        note.setAddress(address);
+        note.setLat(modules.getLat());
+        note.setLon(modules.getLon());
+        note.setAlt(modules.getAlt());
+        note.setTime(longTime);
+        noteDao.insert(note);
+        RLog.d("插入数据到数据库" + note.toString());
+    }
+
+    /**
+     * 根据mac地址查询设备数据
+     * @param address
+     * @return
+     */
+    public static List<Note> getLocListData(String address) {
+        RLog.d("开始读取数据库数据");
+        //notesQuery = noteDao.queryBuilder().orderAsc(NoteDao.Properties.Address).build();
+        return noteDao.queryBuilder().where(NoteDao.Properties.Address.eq(address))
+                .orderAsc(NoteDao.Properties.Time).list();
     }
 
     /**

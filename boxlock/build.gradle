@@ -1,14 +1,28 @@
 apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao'
+
+buildscript {
+    repositories {
+        jcenter()
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.1.1'
+        classpath 'org.greenrobot:greendao-gradle-plugin:3.2.2'
+    }
+}
 
 android {
     compileSdkVersion 26
     buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.androidex.capbox"
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 22
-        versionCode 46
-        versionName "0.4.6"
+        versionCode 52
+        versionName "0.5.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
@@ -30,6 +44,12 @@ android {
             dirs 'libs'
         }
     }
+}
+
+greendao {
+    schemaVersion 2
+    daoPackage "com.androidex.capbox.db"
+    targetGenDir "src/main/java"
 }
 
 dependencies {
@@ -54,4 +74,5 @@ dependencies {
     implementation 'com.makeramen:roundedimageview:2.2.0'
     implementation 'no.nordicsemi.android:dfu:1.0.4'
     implementation project(':boommenu')
+    api 'org.greenrobot:greendao:3.2.2'
 }

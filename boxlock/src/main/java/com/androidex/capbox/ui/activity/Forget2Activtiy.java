@@ -1,6 +1,7 @@
 package com.androidex.capbox.ui.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.androidex.capbox.R;
@@ -9,6 +10,7 @@ import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.module.BaseModel;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
+import com.androidex.capbox.utils.RLog;
 
 import okhttp3.Headers;
 import okhttp3.Request;
@@ -51,7 +53,7 @@ public class Forget2Activtiy extends RegisterActivity {
                         case Constants.API.API_OK:
                             CommonKit.showOkShort(context, getString(R.string.hint_find_pwd_ok));
                             CommonKit.finishActivity(context);
-                            LoginActivity.lauch(context);
+                            // LoginActivity.lauch(context);
                             break;
 
                         case Constants.API.API_NOPERMMISION:
@@ -59,7 +61,12 @@ public class Forget2Activtiy extends RegisterActivity {
                             break;
 
                         case Constants.API.API_FAIL:
-                            CommonKit.showErrorShort(context, "提交信息失败");
+                            if (model.info != null) {
+                                CommonKit.showErrorShort(context, model.info);
+                                RLog.d(model.toString());
+                            } else {
+                                CommonKit.showErrorShort(context, "提交信息失败");
+                            }
                             break;
 
                         default:
@@ -80,7 +87,7 @@ public class Forget2Activtiy extends RegisterActivity {
         });
     }
 
-    public static void lauch(Activity activity) {
-        CommonKit.startActivity(activity, Forget2Activtiy.class, null, false);
+    public static void lauch(Activity activity, int requestCode) {
+        CommonKit.startActivityForResult(activity, Forget2Activtiy.class, null, requestCode);
     }
 }

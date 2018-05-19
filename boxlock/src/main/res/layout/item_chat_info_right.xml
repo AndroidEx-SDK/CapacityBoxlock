@@ -14,6 +14,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/marginPadding10"
         android:layout_marginTop="@dimen/marginPadding10">
 
         <ImageView
