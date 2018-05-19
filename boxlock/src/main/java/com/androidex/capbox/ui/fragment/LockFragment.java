@@ -65,6 +65,7 @@ import okhttp3.Request;
 import static com.androidex.boxlib.cache.SharedPreTool.HIGHEST_TEMP;
 import static com.androidex.boxlib.cache.SharedPreTool.IS_BIND_NUM;
 import static com.androidex.boxlib.cache.SharedPreTool.LOWEST_TEMP;
+import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BOX_VERSION;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_END_TAST;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_HEART;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_OPEN_SUCCED;
@@ -195,6 +196,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
             intentFilter.addAction(ACTION_LOCK_OPEN_SUCCED);//开锁成功
             intentFilter.addAction(BLUTOOTH_OFF);//手机蓝牙关闭
             intentFilter.addAction(BLUTOOTH_ON);//手机蓝牙打开
+            intentFilter.addAction(ACTION_BOX_VERSION);//获取箱体的版本号
             mReceiverTag = true;    //标识值 赋值为 true 表示广播已被注册
             context.registerReceiver(dataUpdateRecevice, intentFilter);
         }
@@ -270,8 +272,15 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                         ConnectDeviceListActivity.lauch(context);
                         break;
                     case 2:
-
-                        checkVersion();
+                        if (!OPEN_DFU_UPDATE) {
+                            CommonKit.showOkShort(context, "该功能尚未开启");
+                        } else {
+                            if (MyBleService.getInstance().getConnectDevice(address) == null) {
+                                CommonKit.showErrorShort(context, "请先连接设备");
+                                return;
+                            }
+                            MyBleService.getInstance().getBoxVersion(address);
+                        }
                         break;
                     default:
                         break;
@@ -612,18 +621,13 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                 if (model != null) {
                     switch (model.code) {
                         case Constants.API.API_OK:
-                            RLog.d(model.toString());
-                            if (!OPEN_DFU_UPDATE) {
-                                CommonKit.showOkShort(context, "该功能尚未开启");
-                            } else {
-                                DfuServiceListenerHelper.registerProgressListener(context, mDfuProgressListener);
+                            DfuServiceListenerHelper.registerProgressListener(context, mDfuProgressListener);
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                     //大于等于6.0的时候，禁用PEN
                                     startDFU(bluetoothDevice, true, false, false, 0, "");
                                 } else {
                                     startDFU(bluetoothDevice, true, false, true, 0, "");
                                 }
-                            }
                             break;
                         case Constants.API.API_FAIL:
                             RLog.d("网络连接失败");
@@ -983,6 +987,9 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                         default:
                             break;
                     }
+                    break;
+                case ACTION_BOX_VERSION://获取箱体的版本号
+                    checkVersion();
                     break;
                 default:
                     break;
