@@ -286,8 +286,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                         break;
                 }
             }
-
-
         });
     }
 

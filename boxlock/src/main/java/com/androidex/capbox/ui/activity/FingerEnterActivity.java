@@ -147,7 +147,7 @@ public class FingerEnterActivity extends BaseActivity {
                     break;
                 case ACTION_POSSESSORFINGER://获取到所有人的指纹信息
                     RLog.d("获取到所有人的指纹信息 b=" + Byte2HexUtil.byte2Hex(b));
-                    switch (b[2]) {
+                    switch (b[2]) {//FB11 01 010100FE
                         case (byte) 0x00://识别成功
                             switch (b[4]) {
                                 case (byte) 0x01:

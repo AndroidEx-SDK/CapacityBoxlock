@@ -344,6 +344,7 @@ public class BoxDetailActivity extends BaseActivity {
         if (device != null) {
             device.setCarryFinger(flag0);
             device.setBecomeFinger(flag1);
+            SharedPreTool.getInstance(context).saveObj(device, mac);
         } else {
             device = MyBleService.getInstance().getConnectDevice(mac);
             if (device != null) {
@@ -352,7 +353,6 @@ public class BoxDetailActivity extends BaseActivity {
                 SharedPreTool.getInstance(context).saveObj(device, mac);
             }
         }
-        SharedPreTool.getInstance(context).saveObj(device, mac);
     }
 
     @OnClick({
@@ -474,27 +474,6 @@ public class BoxDetailActivity extends BaseActivity {
                 if (isCarry()) return;//判断是否处于不可配置状态
                 if (isConnectBle()) return;//判断是否连接蓝牙
                 Bundle bundle1 = new Bundle();
-                ServiceBean device = SharedPreTool.getInstance(this).getObj(ServiceBean.class, mac);
-                if (device != null && device.isCarryFinger()) {
-                    bundle1.putString("possessorNum", "3");
-                } else {
-                    bundle1.putString("possessorNum", "0");
-                }
-                if (device != null && device.isBecomeFinger()) {
-                    bundle1.putString("becomeNum", "3");
-                } else {
-                    bundle1.putString("becomeNum", "0");
-                }
-//                if (possessorFinger1.trim().isEmpty() || possessorFinger1 == "null") {
-//                    bundle1.putString("possessorNum", "0");
-//                } else {
-//                    bundle1.putString("possessorNum", "3");
-//                }
-//                if (becomeFinger1.trim().isEmpty() || becomeFinger1 == "null") {
-//                    bundle1.putString("becomeNum", "0");
-//                } else {
-//                    bundle1.putString("becomeNum", "3");
-//                }
                 bundle1.putString(EXTRA_ITEM_ADDRESS, mac);
                 SettingFingerActivity.lauch(context, bundle1);
                 break;
@@ -774,10 +753,11 @@ public class BoxDetailActivity extends BaseActivity {
                     setFinger(possessorFinger3 != null ? true : false, becomeFinger3 != null ? true : false);
                     if (possessorFinger3 != null) {
                         CommonKit.showOkShort(context, "指纹录入完成");
+                    } else {
+                        CommonKit.showOkShort(context, "指纹录入取消");
                     }
                     break;
                 default:
-                    CommonKit.showOkShort(context, "指纹录入取消");
                     break;
             }
         }
