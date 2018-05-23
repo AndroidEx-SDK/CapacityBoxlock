@@ -68,6 +68,11 @@ android {
                 includeCompileClasspath true
             }
         }
+        android.applicationVariants.all { variant ->
+            variant.outputs.all {
+                outputFileName = "boxlock_" + buildType.name + "_v${defaultConfig.versionCode}.apk"
+            }
+        }
     }
 
     buildTypes {
