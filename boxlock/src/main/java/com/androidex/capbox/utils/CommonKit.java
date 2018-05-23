@@ -294,14 +294,12 @@ public class CommonKit {
      * @return
      */
     public static String getVersionName(Context context) {
-        PackageManager pManager = context.getPackageManager();
-        PackageInfo packageInfo = null;
-        try {
-            packageInfo = pManager.getPackageInfo(context.getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return packageInfo.versionName;
+        float versionCode = (float) getAppVersionCode(context) / 1000;
+        String versionName = String.valueOf(versionCode).trim().replace(".", "");
+        versionName = versionName.replace("", ".");
+        versionName = versionName.substring(1, versionName.length());
+        versionName = versionName.substring(0, versionName.length() - 1);
+        return versionName;
     }
 
 
