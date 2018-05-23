@@ -15,6 +15,14 @@ buildscript {
 }
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'androidex'
+            keyPassword 'androidex'
+            storeFile file('D:/server/CapacityBoxlock/boxlock.jks')
+            storePassword 'AndroidEx28435491'
+        }
+    }
     compileSdkVersion 26
     buildToolsVersion '27.0.3'
     defaultConfig {
@@ -34,15 +42,28 @@ android {
     }
 
     buildTypes {
+        debug {
+            minifyEnabled false
+            debuggable true
+        }
+
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+            debuggable false
         }
     }
     repositories {
         flatDir {
             dirs 'libs'
         }
+    }
+    //项目中使用了注解插件 比如butterknife   升级3.1之后打包编译  出现以下错误提示
+    //由于在内部类中使用了 注解    这样的内部类注解在打包编译的时候  是被忽略的 下面是解决方法
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
     }
 }
 
@@ -74,5 +95,6 @@ dependencies {
     implementation 'com.makeramen:roundedimageview:2.2.0'
     implementation 'no.nordicsemi.android:dfu:1.0.4'
     implementation project(':boommenu')
-    api 'org.greenrobot:greendao:3.2.2'
+    implementation 'org.greenrobot:greendao:3.2.2'
+    implementation files('libs/BaiduLBS_Android.jar')
 }
