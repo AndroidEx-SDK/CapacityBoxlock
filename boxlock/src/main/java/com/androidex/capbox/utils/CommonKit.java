@@ -276,6 +276,7 @@ public class CommonKit {
                 try {
                     pi = pm.getPackageInfo(context.getPackageName(), 0);
                     if (pi != null) {
+                        RLog.d("versionCode = " + pi.versionCode + "versionName=" + pi.versionName);
                         return pi.versionCode;
                     }
                 } catch (PackageManager.NameNotFoundException e) {

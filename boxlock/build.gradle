@@ -23,14 +23,43 @@ android {
             storePassword 'AndroidEx28435491'
         }
     }
+    def getVersionCode = { ->
+        try {
+            def stdout = new ByteArrayOutputStream()
+            exec {
+                commandLine 'git', 'rev-list', '--all', '--count'
+                standardOutput = stdout
+            }
+            return Integer.parseInt(stdout.toString().trim()) + 400
+        }
+        catch (ignored) {
+            return -1
+        }
+    }
+
+    def getVersionName = { ->
+        try {
+            def stdout = new ByteArrayOutputStream()
+            exec {
+                commandLine 'git', 'describe', '--tags', '--dirty'
+                standardOutput = stdout
+            }
+            return stdout.toString().trim()
+        } catch (ignored) {
+            return null
+        }
+    }
+
     compileSdkVersion 26
     buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.androidex.capbox"
         minSdkVersion 19
         targetSdkVersion 22
-        versionCode 54
-        versionName "0.5.4"
+        /* versionCode 54
+         versionName "0.5.4"*/
+        versionCode getVersionCode()
+        versionName getVersionName()
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
@@ -59,6 +88,7 @@ android {
             dirs 'libs'
         }
     }
+
     //项目中使用了注解插件 比如butterknife   升级3.1之后打包编译  出现以下错误提示
     //由于在内部类中使用了 注解    这样的内部类注解在打包编译的时候  是被忽略的 下面是解决方法
     lintOptions {
