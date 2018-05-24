@@ -85,6 +85,10 @@ public class SettingActivity extends UserBaseActivity {
             case R.id.ll_about:
                 String url = "http://www.lockaxial.com/about/aboutandroidex.html";
                 if (!TextUtils.isEmpty(url)) {
+                    if (!CommonKit.isNetworkAvailable(context)) {
+                        CommonKit.showErrorShort(context, "请检查网络");
+                        return;
+                    }
                     WebViewActivity.lauch(context, url);
                 }
                 break;

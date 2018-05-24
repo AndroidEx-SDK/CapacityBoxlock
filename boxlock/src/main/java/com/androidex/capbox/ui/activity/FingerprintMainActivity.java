@@ -216,8 +216,8 @@ public class FingerprintMainActivity extends UserBaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == KeyguardLockScreenManager.REQUEST_CODE_CONFIRM_DEVICE_CREDENTIALS) {
             if (resultCode == RESULT_OK) {
-                autoLogin();
                 CommonKit.showMsgShort(context, getString(R.string.sys_pwd_recognition_success));
+                autoLogin();
             } else {
                 CommonKit.showMsgShort(context, getString(R.string.sys_pwd_recognition_failed));
             }
