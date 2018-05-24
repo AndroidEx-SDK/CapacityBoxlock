@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -82,7 +83,10 @@ public class SettingActivity extends UserBaseActivity {
         String username = SharedPreTool.getInstance(context).getStringData(SharedPreTool.PHONE, null);
         switch (view.getId()) {
             case R.id.ll_about:
-                AboutActivity.lauch(context);
+                String url = "http://www.lockaxial.com/about/aboutandroidex.html";
+                if (!TextUtils.isEmpty(url)) {
+                    WebViewActivity.lauch(context, url);
+                }
                 break;
             case R.id.tv_logout:
                 if (username != null) {

@@ -77,9 +77,6 @@
             android:name="com.androidex.capbox.ui.activity.TypeOfAlarmActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.androidex.capbox.ui.activity.AboutActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name="com.androidex.capbox.ui.activity.AuthentiCationActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -149,6 +146,9 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name="com.androidex.capbox.ui.activity.WebViewActivity"
+            android:screenOrientation="portrait" />
 
         <service android:name="com.androidex.capbox.service.MyBleService"></service>
 

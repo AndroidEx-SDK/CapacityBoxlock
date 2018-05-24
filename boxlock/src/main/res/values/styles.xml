@@ -120,5 +120,10 @@
         <item name="android:textSize">@dimen/size14</item>
     </style>
 
+    <style name="noCornerProgressBar" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:progressDrawable">@drawable/bg_no_corner_progress_bar_horizontal</item>
+    </style>
+
 
 </resources>

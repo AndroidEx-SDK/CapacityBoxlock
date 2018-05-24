@@ -56,8 +56,6 @@ android {
         applicationId "com.androidex.capbox"
         minSdkVersion 19
         targetSdkVersion 22
-        /* versionCode 54
-         versionName "0.5.4"*/
         versionCode getVersionCode()
         versionName getVersionName()
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

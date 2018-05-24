@@ -12,8 +12,6 @@
         app:rightText="设置"
         app:titleText="@string/settint_title_tv" />
 
-
-
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
