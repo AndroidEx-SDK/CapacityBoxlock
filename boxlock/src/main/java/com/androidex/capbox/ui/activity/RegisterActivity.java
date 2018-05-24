@@ -455,6 +455,11 @@ public class RegisterActivity extends UserBaseActivity {
                     CommonKit.showErrorShort(context, "获取验证码失败");
                 }
             }
+
+            @Override
+            public void noInternet() {
+                CommonKit.showErrorShort(context, "设备未连接网络");
+            }
         });
     }
 

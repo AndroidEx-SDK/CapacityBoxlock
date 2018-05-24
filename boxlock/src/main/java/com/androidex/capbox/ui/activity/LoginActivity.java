@@ -108,35 +108,6 @@ public class LoginActivity extends UserBaseActivity {
     }
 
     /**
-     * 自动登录
-     *
-     * @param phone
-     * @param md5Pwd
-     */
-    private void automaticLogin(final String phone, final String md5Pwd) {
-        getAuthCode(new CallDataBackAction() {
-            @Override
-            public void action(String authcode) {
-                if (authcode != null) {
-                    userLogin(phone, md5Pwd, authcode, new CallBackAction() {
-                        @Override
-                        public void action() {
-                            MainActivity.lauch(context);
-                            if (callBackAction != null) {
-                                callBackAction.action();
-                                callBackAction = null;
-                            }
-                        }
-                    });
-                } else {
-                    CommonKit.showErrorShort(context, "自动登录失败");
-                    initView();
-                }
-            }
-        });
-    }
-
-    /**
      * 获取验证码
      */
     private void getAuthCode() {
@@ -150,6 +121,11 @@ public class LoginActivity extends UserBaseActivity {
                 } else {
                     CommonKit.showErrorShort(context, "获取验证码失败");
                 }
+            }
+
+            @Override
+            public void noInternet() {
+                CommonKit.showErrorShort(context, "设备未连接网络");
             }
         });
     }

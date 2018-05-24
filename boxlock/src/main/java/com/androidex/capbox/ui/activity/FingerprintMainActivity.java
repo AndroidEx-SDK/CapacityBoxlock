@@ -204,6 +204,11 @@ public class FingerprintMainActivity extends UserBaseActivity {
                     LoginActivity.lauch(context);
                 }
             }
+
+            @Override
+            public void noInternet() {
+                CommonKit.showErrorShort(context, "设备未连接网络");
+            }
         });
     }
 

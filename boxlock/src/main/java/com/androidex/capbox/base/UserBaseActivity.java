@@ -173,7 +173,7 @@ public abstract class UserBaseActivity extends BaseActivity {
 
     protected void getAuthCode(final CallDataBackAction callDataBackAction) {
         if (!CommonKit.isNetworkAvailable(context)) {
-            CommonKit.showErrorShort(context, "设备未连接网络");
+            callDataBackAction.noInternet();
             return;
         }
         NetApi.getAuthCode("no", "", new ResultCallBack<AuthCodeModel>() {
@@ -229,6 +229,7 @@ public abstract class UserBaseActivity extends BaseActivity {
      */
     public interface CallDataBackAction {
         void action(String authcode);
+        void noInternet();
     }
 
     @Override
