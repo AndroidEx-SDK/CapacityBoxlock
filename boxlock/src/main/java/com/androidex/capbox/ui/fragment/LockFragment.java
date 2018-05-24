@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.UiThread;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Base64;
 import android.util.Log;
@@ -660,7 +661,12 @@ public class LockFragment extends BaseFragment implements OnClickListener {
      */
     private void boxlocation(String uuid) {
         if (!CommonKit.isNetworkAvailable(context)) {
-            CommonKit.showErrorShort(context, "设备未连接网络");
+            context.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    CommonKit.showErrorShort(context, "设备未连接网络");
+                }
+            });
             return;
         }
         NetApi.getboxLocation(getToken(), getUserName(), uuid,
