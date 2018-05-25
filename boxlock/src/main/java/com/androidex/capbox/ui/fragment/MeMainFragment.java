@@ -34,11 +34,11 @@ import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.activity.ConnectDeviceListActivity;
 import com.androidex.capbox.ui.activity.SettingActivity;
 import com.androidex.capbox.ui.activity.TypeOfAlarmActivity;
+import com.androidex.capbox.ui.view.CircleImageView;
 import com.androidex.capbox.ui.widget.SingleCheckListDialog;
 import com.androidex.capbox.ui.widget.ThirdTitleBar;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.PhotoUtils;
-import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.File;
 
@@ -74,7 +74,7 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
     @Bind(R.id.tb_lockscreen)
     ToggleButton tb_lockscreen;
     @Bind(R.id.iv_head)
-    RoundedImageView iv_head;
+    CircleImageView iv_head;
     @Bind(R.id.rl_head)
     RelativeLayout rl_head;
 

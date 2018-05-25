@@ -126,7 +126,6 @@ dependencies {
     implementation 'io.github.lizhangqu:coreprogress:1.0.2'
     implementation 'de.greenrobot:eventbus:2.4.0'
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
-    implementation 'com.makeramen:roundedimageview:2.2.0'
     implementation 'no.nordicsemi.android:dfu:1.0.4'
     implementation project(':boommenu')
     implementation 'org.greenrobot:greendao:3.2.2'

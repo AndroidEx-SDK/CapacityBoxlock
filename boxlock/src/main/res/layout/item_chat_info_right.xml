@@ -17,7 +17,7 @@
         android:layout_marginRight="@dimen/marginPadding10"
         android:layout_marginTop="@dimen/marginPadding10">
 
-        <ImageView
+        <com.androidex.capbox.ui.view.CircleImageView
             android:id="@+id/item_chat_right_icon"
             android:layout_width="@dimen/marginPadding48"
             android:layout_height="@dimen/marginPadding48"

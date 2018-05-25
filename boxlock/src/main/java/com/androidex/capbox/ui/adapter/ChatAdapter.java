@@ -9,8 +9,8 @@ import com.androidex.capbox.base.adapter.HelperAdapter;
 import com.androidex.capbox.base.adapter.HelperViewHolder;
 import com.androidex.capbox.db.ChatRecord;
 import com.androidex.capbox.ui.view.AutoLinkTextView;
+import com.androidex.capbox.ui.view.CircleImageView;
 import com.androidex.capbox.utils.ChatUtil;
-import com.makeramen.roundedimageview.RoundedImageView;
 
 import static com.androidex.capbox.utils.Constants.VISE_COMMAND_TYPE_TEXT;
 
@@ -35,7 +35,7 @@ public class ChatAdapter extends HelperAdapter<ChatRecord> {
         }
         TextView timeTv;
         AutoLinkTextView msgTv;
-        RoundedImageView iv_FriendHead;
+        CircleImageView iv_FriendHead;
         if (chatInfo.getIsSend().equals("0")) {
             timeTv = viewHolder.getView(R.id.item_chat_right_time);
             msgTv = viewHolder.getView(R.id.item_chat_right_msg);

@@ -20,7 +20,7 @@
         android:layout_marginTop="@dimen/marginPadding10"
         android:orientation="horizontal">
 
-        <com.makeramen.roundedimageview.RoundedImageView
+        <com.androidex.capbox.ui.view.CircleImageView
             android:id="@+id/item_chat_left_icon"
             android:layout_width="@dimen/marginPadding48"
             android:layout_height="@dimen/marginPadding48"
@@ -29,10 +29,8 @@
             android:background="@drawable/cicle_blue"
             android:scaleType="centerCrop"
             android:src="@mipmap/ic_box_white"
-            app:riv_border_color="@color/blue"
-            app:riv_border_width="0dp"
-            app:riv_mutate_background="true"
-            app:riv_oval="true" />
+            app:civ_border_color="@color/blue"
+            app:civ_border_width="0dp" />
 
         <com.androidex.capbox.ui.view.AutoLinkTextView
             android:id="@+id/item_chat_left_msg"
