@@ -43,6 +43,11 @@ public class CalendarUtil {
      * 组合名字Box+address后两位
      */
     public static String getName(String name, String address) {
+        if (address == null) {
+            if (name != null){
+                return name;
+            }else return "";
+        }
         if (name == null || name.equals("")) {
             return "Box" + address.substring(address.length() - 2);
         } else {

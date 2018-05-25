@@ -37,6 +37,7 @@ import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.activity.BoxDetailActivity;
 import com.androidex.capbox.ui.activity.ConnectDeviceListActivity;
 import com.androidex.capbox.ui.view.TitlePopup;
+import com.androidex.capbox.utils.CalendarUtil;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
 import com.androidex.capbox.utils.Dialog;
@@ -243,9 +244,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
 
     private void initView() {
         tv_deviceMac.setText(address);
-        if (deviceName.equals("Box")) {
-            deviceName = deviceName + address.substring(address.length() - 2);
-        }
+        deviceName=CalendarUtil.getName(deviceName, address);
         name.setText(deviceName);
         if (address == null || address.equals("")) {
             tv_deviceMac.setText("FF:FF:FF:FF:FF:FF");

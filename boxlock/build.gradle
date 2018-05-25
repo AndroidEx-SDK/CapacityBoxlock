@@ -86,6 +86,7 @@ android {
             debuggable false
         }
     }
+
     repositories {
         flatDir {
             dirs 'libs'
