@@ -1,5 +1,6 @@
 package com.androidex.capbox.ui.activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.widget.Button;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.data.cache.SharedPreTool;
+import com.androidex.capbox.utils.CommonKit;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -163,4 +165,7 @@ public class TypeOfAlarmActivity extends BaseActivity {
         return R.layout.activity_typeofalarm;
     }
 
+    public static void lauch(Activity activity) {
+        CommonKit.startActivity(activity, TypeOfAlarmActivity.class, null, false);
+    }
 }

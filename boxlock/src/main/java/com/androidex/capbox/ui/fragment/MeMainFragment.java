@@ -148,8 +148,7 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.setting_alarm://报警设置
-                Intent intent_1 = new Intent(context, TypeOfAlarmActivity.class);
-                startActivity(intent_1);
+                TypeOfAlarmActivity.lauch(context);
                 break;
             case R.id.ll_connectDevice://已连接设备
                 ConnectDeviceListActivity.lauch(context);

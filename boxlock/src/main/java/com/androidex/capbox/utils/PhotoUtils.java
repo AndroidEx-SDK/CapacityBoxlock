@@ -1,6 +1,7 @@
 package com.androidex.capbox.utils;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -43,6 +44,17 @@ public class PhotoUtils {
         photoPickerIntent.setType("image/*");
         fragment.startActivityForResult(photoPickerIntent, requestCode);
     }
+
+    /**
+     * @param activity    当前fragment
+     * @param requestCode 打开相册的请求码
+     */
+    public static void openPic(Activity activity, int requestCode) {
+        Intent photoPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        photoPickerIntent.setType("image/*");
+        activity.startActivityForResult(photoPickerIntent, requestCode);
+    }
+
     /**
      * @param fragment    当前fragment
      * @param orgUri      剪裁原图的Uri
