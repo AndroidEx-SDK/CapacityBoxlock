@@ -16,6 +16,9 @@ import com.androidex.capbox.utils.RLog;
 import com.androidex.capbox.utils.SystemUtil;
 import com.androidex.boxlib.modules.LocationModules;
 
+import org.greenrobot.greendao.query.DeleteQuery;
+import org.greenrobot.greendao.query.Query;
+
 import java.util.List;
 
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
@@ -92,6 +95,7 @@ public class MyBleService extends BleService {
         note.setLon(modules.getLon());
         note.setAlt(modules.getAlt());
         note.setTime(longTime);
+        note.setIsshow(0);
         noteDao.insert(note);
         RLog.d("插入数据到数据库" + note.toString());
     }
@@ -104,9 +108,57 @@ public class MyBleService extends BleService {
     public static List<Note> getLocListData(String address) {
         RLog.d("开始读取数据库数据");
         //notesQuery = noteDao.queryBuilder().orderAsc(NoteDao.Properties.Address).build();
-        return noteDao.queryBuilder().where(NoteDao.Properties.Address.eq(address))
+        List<Note> list = noteDao.queryBuilder().where(NoteDao.Properties.Address.eq(address)).orderAsc(NoteDao.Properties.Time).list();
+        for (Note note : list) {
+            RLog.d(note.toString());
+        }
+        return noteDao.queryBuilder().where(NoteDao.Properties.Address.eq(address), NoteDao.Properties.Isshow.eq(0))
                 .orderAsc(NoteDao.Properties.Time).list();
     }
+
+    /**
+     * 彻底删除轨迹
+     *
+     * @param address
+     * @return
+     */
+    public static int deleateData(String address) {
+        DeleteQuery<Note> deleteQuery = noteDao.queryBuilder().where(NoteDao.Properties.Address.eq(address)).buildDelete();
+
+        deleteQuery.executeDeleteWithoutDetachingEntities();
+        return noteDao.queryBuilder().where(NoteDao.Properties.Address.eq(address)).list().size();
+    }
+
+    /**
+     * 设置之前的轨迹不显示
+     */
+    public static int updateNoShowStatusData(String address) {
+        Query<Note> query = noteDao.queryBuilder().where(NoteDao.Properties.Address.eq(address)).build();
+        List<Note> list = query.list();
+        if (list.size() > 0) {
+            for (Note note : list) {
+                note.setIsshow(1);
+                noteDao.update(note);
+            }
+        }
+        return list.size();
+    }
+
+    /**
+     * 设置之前的轨迹显示
+     */
+    public static int updateShowStatusData(String address) {
+        Query<Note> query = noteDao.queryBuilder().where(NoteDao.Properties.Address.eq(address)).build();
+        List<Note> list = query.list();
+        if (list.size() > 0) {
+            for (Note note : list) {
+                note.setIsshow(0);
+                noteDao.update(note);
+            }
+        }
+        return list.size();
+    }
+
 
     /**
      * 异常断开后调用，主动断开需要调用以下方法可不收到断开信息，不必做处理。

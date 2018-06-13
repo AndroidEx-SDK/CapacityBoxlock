@@ -12,7 +12,7 @@ import org.greenrobot.greendao.annotation.NotNull;
  * Entity mapped to table "NOTE".
  */
 @Entity(indexes = {
-        @Index(value = "address, time DESC", unique = true)
+        @Index(value = "time DESC", unique = true)
 })
 public class Note {
     @Id
@@ -26,6 +26,7 @@ public class Note {
     @NotNull
     private String lon;
     private String alt;
+    private int isshow;//是否显示该条信息 0显示 1不显示
 
     @Convert(converter = NoteTypeConverter.class, columnType = String.class)
     private NoteType type;
@@ -62,6 +63,19 @@ public class Note {
 
     @Generated(hash = 1272611929)
     public Note() {
+    }
+
+    @Generated(hash = 234096687)
+    public Note(Long id, @NotNull String address, @NotNull Long time, @NotNull String lat,
+            @NotNull String lon, String alt, int isshow, NoteType type) {
+        this.id = id;
+        this.address = address;
+        this.time = time;
+        this.lat = lat;
+        this.lon = lon;
+        this.alt = alt;
+        this.isshow = isshow;
+        this.type = type;
     }
 
     public Long getId() {
@@ -118,5 +132,13 @@ public class Note {
 
     public void setType(NoteType type) {
         this.type = type;
+    }
+
+    public int getIsshow() {
+        return this.isshow;
+    }
+
+    public void setIsshow(int isshow) {
+        this.isshow = isshow;
     }
 }

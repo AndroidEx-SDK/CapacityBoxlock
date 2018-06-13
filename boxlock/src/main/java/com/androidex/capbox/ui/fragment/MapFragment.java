@@ -6,10 +6,12 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseFragment;
@@ -76,6 +78,8 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent 
     Button navigationButton;
     @Bind(R.id.routeplan_exit)
     Button routeplanButton;
+    @Bind(R.id.btn_clear)
+    Button btn_clear;
     @Bind(R.id.navigation_animation)
     Button navigation_animation;
     @Bind(R.id.shock_box)
@@ -200,7 +204,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent 
                             mBoxMovePath.add(ll);
                         }
                     }
-                    showBoxDeviceMovePath();
+                    showBoxDeviceMovePath(address);
                     break;
                 case END_ANMATION_WHAT:
                     marker.setPosition(mBoxMovePath.get(position));
@@ -215,6 +219,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent 
             }
         }
     };
+    private static String address;
 
     @Override
     public void initData() {
@@ -222,6 +227,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent 
         iv_location.setOnClickListener(this);
         navigationButton.setOnClickListener(this);
         routeplanButton.setOnClickListener(this);
+        btn_clear.setOnClickListener(this);
         shockBox.setOnClickListener(this);
         navigation_animation.setOnClickListener(this);
         initMap();
@@ -358,15 +364,16 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent 
     /**
      * 将获取的移动轨迹显示在地图
      */
-    private void showBoxDeviceMovePath() {
-        if (mBoxMovePath != null && mBoxMovePath.size() > 0) {
+    private void showBoxDeviceMovePath(String address) {
+        if (mBoxMovePath != null && mBoxMovePath.size() > 1) {//轨迹超过或等于两个才可以绘制
+            this.address = address;
             mapMode = MapMode.ROUTEPLAN;
             routeplanButton.setVisibility(View.VISIBLE);
             navigation_animation.setVisibility(View.VISIBLE);
+            btn_clear.setVisibility(View.VISIBLE);
             cleanMap(); //清除其他Overlay
             /****************轨迹绘制**********************/
-            OverlayOptions ooPolyline = new PolylineOptions().width(10)
-                    .color(0xAAFF0000).points(mBoxMovePath);
+            OverlayOptions ooPolyline = new PolylineOptions().width(10).color(0xAAFF0000).points(mBoxMovePath);
             mBaiduMap.addOverlay(ooPolyline);
             /****************轨迹回放**********************/
             position = 0;
@@ -378,6 +385,14 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent 
         }
     }
 
+    /**
+     * 获取正在查看轨迹的设备MAC
+     *
+     * @return
+     */
+    private String getAddress() {
+        return address;
+    }
 
     TimerTask task;
     Timer timerDraw;
@@ -492,6 +507,18 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent 
                 cleanMap();
                 routeplanButton.setVisibility(View.GONE);
                 navigation_animation.setVisibility(View.GONE);
+                btn_clear.setVisibility(View.GONE);
+                showBoxDevice();
+                break;
+            case R.id.btn_clear:
+                if (TextUtils.isEmpty(getAddress())) return;
+                MyBleService.updateNoShowStatusData(getAddress());
+                //清理之后显示全部设备
+                mapMode = MapMode.NORMAL;
+                cleanMap();
+                routeplanButton.setVisibility(View.GONE);
+                navigation_animation.setVisibility(View.GONE);
+                btn_clear.setVisibility(View.GONE);
                 showBoxDevice();
                 break;
             case R.id.navigation_animation:
