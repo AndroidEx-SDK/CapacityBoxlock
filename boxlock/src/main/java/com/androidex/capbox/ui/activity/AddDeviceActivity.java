@@ -367,7 +367,7 @@ public class AddDeviceActivity extends BaseActivity {
                 case BLE_CONN_SUCCESS://连接成功
                 case BLE_CONN_SUCCESS_ALLCONNECTED://重复连接
                     BleService.get().enableNotify(mac);
-                    showProgress("连接成功...");
+                    showProgress("正在绑定...");
                     RLog.d("开始获取UUID");
                     startGetUUID(true, mac);
                     break;

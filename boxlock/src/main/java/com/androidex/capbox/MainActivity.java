@@ -194,7 +194,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     /**
      * viewPager切换时，图片设置
      */
-
     private void initImage() {
         homepage_tab1.setBackgroundColor(Color.TRANSPARENT);
         homepage_tab2.setBackgroundColor(Color.TRANSPARENT);

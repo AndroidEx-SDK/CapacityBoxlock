@@ -1,5 +1,6 @@
 package com.androidex.capbox.utils;
 
+import android.text.TextUtils;
 import android.text.format.Time;
 
 import java.text.ParseException;
@@ -43,26 +44,14 @@ public class CalendarUtil {
      * 组合名字Box+address后两位
      */
     public static String getName(String name, String address) {
-        if (address == null) {
-            if (name != null){
-                return name;
-            }else return "";
-        }
-        if (name == null || name.equals("")) {
-            return "Box" + address.substring(address.length() - 2);
-        } else {
-            if (name.contains(boxName)) {
-                if (name.trim().equals("AndroidExBox")) {
-                    return "Box" + address.substring(address.length() - 2);
-                } else {
-                    return name.replace(boxName, "");
-                }
-            } else if (name.trim().equals("Box")) {
-                return name + address.substring(address.length() - 2);
-            } else {
-                return "Box";
+        if (TextUtils.isEmpty(address)) {
+            if (TextUtils.isEmpty(name)){
+                name="Box";
             }
+        }else {
+            name="Box" + address.substring(address.length() - 2);
         }
+        return name;
     }
 
     /**

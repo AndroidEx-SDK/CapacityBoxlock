@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -499,7 +500,7 @@ public class BoxDetailActivity extends BaseActivity {
                 MyBleService.getInstance().connectionDevice(context, mac);
                 break;
             case R.id.tv_startCarryScort://启动/结束携行押运
-                if (becomeFinger1.trim().isEmpty() || becomeFinger1.equals("null") || possessorFinger1.trim().isEmpty() || possessorFinger1.equals("null")) {
+                if (TextUtils.isEmpty(becomeFinger1)  || TextUtils.isEmpty(possessorFinger1)) {
                     CommonKit.showErrorShort(context, "请先配置箱体");
                     return;
                 }

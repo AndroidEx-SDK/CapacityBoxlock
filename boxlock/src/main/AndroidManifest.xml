@@ -83,9 +83,6 @@
             android:name="com.androidex.capbox.ui.activity.CameraActivity"
             android:screenOrientation="landscape" /> <!-- landscape -->
         <activity
-            android:name="com.androidex.capbox.ui.activity.SearchDeviceActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name="com.androidex.capbox.ui.activity.BoxDetailActivity"
             android:screenOrientation="portrait" />
         <activity

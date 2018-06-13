@@ -7,4 +7,5 @@ build
 CapacityBoxlock/build
 local.properties
 gradle/
-boxlock/release
+boxlock/release/
+boxlock/debug/
