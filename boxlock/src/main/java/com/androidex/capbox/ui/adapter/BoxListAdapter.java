@@ -235,6 +235,7 @@ public class BoxListAdapter extends BaseAdapter {
                                         MyBleService.getInstance().disConnectDevice(mac);
                                     }
                                     SharedPreTool.getInstance(mContext).remove(mac);
+                                    MyBleService.deleateData(mac);//删除轨迹
                                     EventBus.getDefault().postSticky(new Event.BoxRelieveBind());
                                     mContext.sendBroadcast(new Intent(ACTION_UPDATE_ALL));//发送广播给桌面插件，更新列表
                                     break;
@@ -262,7 +263,6 @@ public class BoxListAdapter extends BaseAdapter {
                         super.onFailure(statusCode, request, e);
                     }
                 });
-
             }
         });
 

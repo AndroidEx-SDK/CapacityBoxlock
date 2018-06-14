@@ -266,12 +266,10 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent 
                 if (model != null) {
                     switch (model.code) {
                         case Constants.API.API_OK:
-                            LatLng ll = null;
                             for (BoxMovePathModel.LatLng latLng : model.datalist) {
-                                ll = new LatLng(Double.valueOf(latLng.getLatitude()), Double.valueOf(latLng.getLongitude()));
+                                LatLng ll = new LatLng(Double.valueOf(latLng.getLatitude()), Double.valueOf(latLng.getLongitude()));
                                 mBoxMovePath.add(ll);
                             }
-                            ll = null;
                             break;
                         case Constants.API.API_FAIL:
                             CommonKit.showErrorShort(context, "账号在其他地方登录");
@@ -512,7 +510,10 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent 
                 break;
             case R.id.btn_clear:
                 if (TextUtils.isEmpty(getAddress())) return;
-                MyBleService.updateNoShowStatusData(getAddress());
+                int num = MyBleService.updateNoShowStatusData(getAddress());
+                if (num==0){
+                    CommonKit.showOkShort(context,"清除成功" );
+                }
                 //清理之后显示全部设备
                 mapMode = MapMode.NORMAL;
                 cleanMap();

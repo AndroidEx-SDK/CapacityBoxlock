@@ -124,7 +124,6 @@ public class MyBleService extends BleService {
      */
     public static int deleateData(String address) {
         DeleteQuery<Note> deleteQuery = noteDao.queryBuilder().where(NoteDao.Properties.Address.eq(address)).buildDelete();
-
         deleteQuery.executeDeleteWithoutDetachingEntities();
         return noteDao.queryBuilder().where(NoteDao.Properties.Address.eq(address)).list().size();
     }
@@ -141,7 +140,7 @@ public class MyBleService extends BleService {
                 noteDao.update(note);
             }
         }
-        return list.size();
+        return getLocListData(address).size();
     }
 
     /**
