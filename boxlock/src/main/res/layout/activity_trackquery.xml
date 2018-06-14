@@ -9,10 +9,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        app:rightRes="@mipmap/list_pop"
+        app:rightRes="@mipmap/icon_settings"
         app:titleText="@string/track_query_title" />
 
     <com.baidu.mapapi.map.MapView
+        android:layout_below="@id/titlebar"
         android:id="@+id/track_query_mapView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

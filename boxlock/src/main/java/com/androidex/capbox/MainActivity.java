@@ -24,6 +24,7 @@ import com.androidex.capbox.module.BoxDeviceModel;
 import com.androidex.capbox.ui.fragment.BoxListFragment;
 import com.androidex.capbox.ui.fragment.LockFragment;
 import com.androidex.capbox.ui.fragment.MapFragment;
+import com.androidex.capbox.ui.fragment.MapFragment2;
 import com.androidex.capbox.ui.fragment.MeMainFragment;
 import com.androidex.capbox.ui.fragment.WatchListFragment;
 import com.androidex.capbox.utils.CommonKit;
@@ -171,7 +172,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                     currIndex = 3;
                     initImage();
                     transaction = fragmentManager.beginTransaction();
-                    Fragment mapfragment = new MapFragment();
+                    Fragment mapfragment = new MapFragment2();
                     transaction.replace(R.id.content, mapfragment);
                     transaction.commit();
                 }

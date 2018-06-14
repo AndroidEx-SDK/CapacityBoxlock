@@ -21,6 +21,7 @@ import com.androidex.capbox.module.BoxDeviceModel;
 import com.androidex.capbox.module.BoxMovePathModel;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.activity.LoginActivity;
+import com.androidex.capbox.ui.activity.TrackQueryActivity;
 import com.androidex.capbox.ui.widget.ThirdTitleBar;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
@@ -135,7 +136,7 @@ public class MapFragment2 extends BaseFragment implements MapUtils.MapUtilsEvent
                     if (uuid != null && uuid.length() > 0) {
 
                         //跳转到查看轨迹页面
-
+                        CommonKit.startActivity(context, TrackQueryActivity.class, null, false);
                         //getDeviceMovePath(uuid, address);
                     }
                     mBaiduMap.hideInfoWindow();

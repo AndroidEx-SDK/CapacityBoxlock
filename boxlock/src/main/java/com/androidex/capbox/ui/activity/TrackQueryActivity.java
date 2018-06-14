@@ -10,6 +10,7 @@ import android.widget.CompoundButton;
 import com.androidex.capbox.MyApplication;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
+import com.androidex.capbox.ui.widget.SecondTitleBar;
 import com.androidex.capbox.ui.widget.ThirdTitleBar;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
@@ -62,7 +63,7 @@ public class TrackQueryActivity extends BaseActivity
         implements CompoundButton.OnCheckedChangeListener, View.OnClickListener, BaiduMap.OnMarkerClickListener {
 
     @Bind(R.id.titlebar)
-    ThirdTitleBar titlebar;
+    SecondTitleBar titlebar;
 
     private MyApplication trackApp = null;
 
@@ -216,6 +217,7 @@ public class TrackQueryActivity extends BaseActivity
     @Override
     public void initData(Bundle savedInstanceState) {
         trackApp = (MyApplication) getApplicationContext();
+        BitmapUtil.init();
         init();
     }
 
