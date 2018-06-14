@@ -421,4 +421,81 @@
     <string name="rc_month_format"></string>
     <string name="rc_day_format"></string>
     <string name="rc_yesterday_format">Yesterday</string>
+
+
+    <string name="track_query_title">轨迹查询</string>
+    <string name="track_analysis_title">轨迹分析</string>
+    <string name="track_setting_title">轨迹设置</string>
+    <!-- 轨迹分析子选项 -->
+    <string name="speeding">超 速</string>
+    <string name="harsh_breaking">急刹车</string>
+    <string name="harsh_accel">急变速</string>
+    <string name="harsh_steering">急转弯</string>
+    <string name="stay_point">停留点</string>
+    <string name="all_cancel">取消</string>
+    <string name="all_sure">确定</string>
+
+    <string name="track_analysis_speeding_title">超速详情</string>
+    <string name="track_analysis_breaking_title">急刹车详情</string>
+    <string name="track_analysis_accel_title">急变速详情</string>
+    <string name="track_analysis_steering_title">急转弯详情</string>
+    <string name="track_analysis_stay_title">停留点详情</string>
+
+    <string name="actual_speed">实际行驶速度：</string>
+    <string name="limit_speed">限定最高时速：</string>
+    <string name="acceleration">实际加速度：</string>
+    <string name="initial_speed_1">加速前时速：</string>
+    <string name="end_speed_1">加速后时速：</string>
+    <string name="initial_speed_2">刹车前时速：</string>
+    <string name="end_speed_2">刹车后时速：</string>
+    <string name="centripetal_acceleration">向心加速度：</string>
+    <string name="turn_type">转向类型：</string>
+    <string name="turn_speed">转向时速：</string>
+    <string name="stay_start_time">开始时间：</string>
+    <string name="stay_end_time">结束时间：</string>
+    <string name="stay_duration">停留时长：</string>
+
+    <string name="no_track_data">未查询到轨迹</string>
+    <string name="track_query_option_time">起止时间:</string>
+    <string name="track_query_option_process">纠偏与数据分析:</string>
+    <string name="track_query_option_radius_threshold">精度过滤(单位:米):</string>
+    <string name="track_query_option_transport_mode">交通方式:</string>
+    <string name="track_query_option_sort_type">排序规则:</string>
+
+    <!-- 纠偏与数据分析子选项 -->
+    <string name="processed">纠偏</string>
+    <string name="denoise">去噪</string>
+    <string name="vacuate">抽稀</string>
+    <string name="mapmatch">绑路</string>
+
+    <!-- 精度过滤子选项-->
+    <string name="radius_value">过滤值：</string>
+    <string name="radius_hint">0</string>
+
+    <!-- 交通方式子选项 -->
+    <string name="driving_mode">驾车</string>
+    <string name="riding_mode">骑行</string>
+    <string name="walking_mode">步行</string>
+
+    <string name="all_supplement_model">里程补偿方式:</string>
+    <string name="all_coord_type">坐标类型:</string>
+
+    <!-- 公共字符串 里程补偿选项 -->
+    <string name="no_supplement">不补充</string>
+    <string name="straight">直线距离</string>
+    <string name="driving">最短驾车路线</string>
+    <string name="riding">最短骑行路线</string>
+    <string name="walking">最短步行路线</string>
+
+    <!-- 排序规则子选项 -->
+    <string name="asc">升序</string>
+    <string name="desc">降序</string>
+
+    <!-- 公共字符串 坐标类型 -->
+    <string name="bd09ll">百度经纬度坐标</string>
+    <string name="gcj02">国测局加密坐标</string>
+
+    <string name="start_time">开始：</string>
+    <string name="end_time">结束：</string>
+
 </resources>

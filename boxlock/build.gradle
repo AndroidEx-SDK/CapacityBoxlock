@@ -136,4 +136,5 @@ dependencies {
     implementation project(':boommenu')
     implementation 'org.greenrobot:greendao:3.2.2'
     implementation files('libs/BaiduLBS_Android.jar')
+    implementation files('libs/BaiduTraceSDK_v3_0_7.jar')
 }

@@ -8,7 +8,6 @@
         android:id="@+id/titlebar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/black"
         app:rightRes="@mipmap/list_pop"
         app:titleText="@string/setting" />
 

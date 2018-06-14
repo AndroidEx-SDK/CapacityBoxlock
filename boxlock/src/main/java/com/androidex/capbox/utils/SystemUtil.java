@@ -22,11 +22,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 
 import com.androidex.capbox.R;
 import com.androidex.capbox.data.net.base.L;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -41,17 +45,17 @@ public class SystemUtil {
      * @param context
      * @return 屏幕宽度
      */
-    public static int getScreenW(Context context) {
-        WindowManager manager = (WindowManager) context
-                .getSystemService(Context.WINDOW_SERVICE);
-        // Display display = manager.getDefaultDisplay();
+    public static int getScreenW() {
+//        WindowManager manager = (WindowManager) context
+//                .getSystemService(Context.WINDOW_SERVICE);
+//        // Display display = manager.getDefaultDisplay();
         // int width =display.getWidth();
         // int height=display.getHeight();
         // Log.d("width", String.valueOf(width));
         // Log.d("height", String.valueOf(height)); //第一种
 
         DisplayMetrics dm = new DisplayMetrics();
-        manager.getDefaultDisplay().getMetrics(dm);
+        //manager.getDefaultDisplay().getMetrics(dm);
         int width2 = dm.widthPixels;// 宽
         // int height2=dm.heightPixels;//高
         // Log.d("width2", String.valueOf(width2));
@@ -65,17 +69,17 @@ public class SystemUtil {
      * @param context
      * @return 屏幕高度
      */
-    public static int getScreenH(Context context) {
-        WindowManager manager = (WindowManager) context
-                .getSystemService(Context.WINDOW_SERVICE);
-        // Display display = manager.getDefaultDisplay();
+    public static int getScreenH() {
+//        WindowManager manager = (WindowManager) context
+//                .getSystemService(Context.WINDOW_SERVICE);
+//        // Display display = manager.getDefaultDisplay();
         // int width =display.getWidth();
         // int height=display.getHeight();
         // Log.d("width", String.valueOf(width));
         // Log.d("height", String.valueOf(height)); //第一种
 
         DisplayMetrics dm = new DisplayMetrics();
-        manager.getDefaultDisplay().getMetrics(dm);
+        //manager.getDefaultDisplay().getMetrics(dm);
         // int width2=dm.widthPixels;//宽
         int height2 = dm.heightPixels;// 高
         // Log.d("width2", String.valueOf(width2));

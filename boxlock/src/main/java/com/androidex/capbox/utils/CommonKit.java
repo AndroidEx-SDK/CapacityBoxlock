@@ -34,8 +34,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.widget.AbsListView;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 import android.widget.PopupWindow;
 
 import com.androidex.capbox.R;
@@ -1087,6 +1090,55 @@ public class CommonKit {
             hex.append(Integer.toHexString(b & 0xFF));
         }
         return hex.toString();
+    }
+
+    /**
+     * 调整Picker布局
+     *
+     * @param frameLayout
+     */
+    public static void resizePicker(FrameLayout frameLayout) {
+        List<NumberPicker> numberPickers = findNumberPicker(frameLayout);
+        for (NumberPicker numberPicker : numberPickers) {
+            resizeNumberPicker(numberPicker);
+        }
+    }
+
+    /**
+     * 获取ViewGroup中的NumberPicker组件
+     *
+     * @param viewGroup
+     *
+     * @return
+     */
+    private static List<NumberPicker> findNumberPicker(ViewGroup viewGroup) {
+        List<NumberPicker> numberPickers = new ArrayList<>();
+        View child;
+        if (null != viewGroup) {
+            for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                child = viewGroup.getChildAt(i);
+                if (child instanceof NumberPicker) {
+                    numberPickers.add((NumberPicker) child);
+                } else if (child instanceof LinearLayout) {
+                    List<NumberPicker> result = findNumberPicker((ViewGroup) child);
+                    if (result.size() > 0) {
+                        return result;
+                    }
+                }
+            }
+        }
+        return numberPickers;
+    }
+
+    /**
+     * 调整NumberPicker大小
+     *
+     * @param numberPicker
+     */
+    private static void resizeNumberPicker(NumberPicker numberPicker) {
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(150, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMargins(15, 0, 15, 0);
+        numberPicker.setLayoutParams(params);
     }
 
 }

@@ -146,8 +146,21 @@
         <activity
             android:name="com.androidex.capbox.ui.activity.WebViewActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.TrackQueryActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.TrackQueryOptionsActivity"
+            android:screenOrientation="portrait" />
 
         <service android:name="com.androidex.capbox.service.MyBleService"></service>
+
+        <service
+            android:name="com.baidu.trace.LBSTraceService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":remote"
+            />
 
         <service
             android:name="com.baidu.location.f"
