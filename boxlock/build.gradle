@@ -99,6 +99,12 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
+    //将so包引用到libs
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
 }
 
 greendao {
