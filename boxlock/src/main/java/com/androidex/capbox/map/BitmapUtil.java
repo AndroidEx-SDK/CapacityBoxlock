@@ -1,4 +1,4 @@
-package com.androidex.capbox.utils.map;
+package com.androidex.capbox.map;
 
 import android.content.Context;
 import android.content.res.Resources;

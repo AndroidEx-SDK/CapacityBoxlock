@@ -10,7 +10,7 @@ import android.support.annotation.RequiresApi;
 import com.androidex.capbox.utils.RLog;
 
 /**
- * Created by popfisher on 2016/11/8.
+ * Created by liyp on 2016/11/8.
  */
 
 public class KeyguardLockScreenManager {

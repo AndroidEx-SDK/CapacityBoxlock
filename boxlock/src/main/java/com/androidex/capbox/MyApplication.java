@@ -15,7 +15,7 @@ import com.androidex.capbox.db.DaoMaster;
 import com.androidex.capbox.db.DaoMaster.DevOpenHelper;
 import com.androidex.capbox.db.DaoSession;
 import com.androidex.capbox.service.MyBleService;
-import com.androidex.capbox.utils.map.CommonUtil;
+import com.androidex.capbox.map.CommonUtil;
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.trace.LBSTraceClient;

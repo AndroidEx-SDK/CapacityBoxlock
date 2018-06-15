@@ -1,4 +1,4 @@
-package com.androidex.capbox.utils.map;
+package com.androidex.capbox.map;
 
 import android.app.ActivityManager;
 import android.content.Context;
@@ -7,7 +7,7 @@ import android.telephony.TelephonyManager;
 
 import com.androidex.capbox.MyApplication;
 import com.androidex.capbox.utils.Constants;
-import com.androidex.capbox.utils.map.model.CurrentLocation;
+import com.androidex.capbox.map.model.CurrentLocation;
 import com.baidu.mapapi.model.LatLng;
 
 import java.sql.Timestamp;

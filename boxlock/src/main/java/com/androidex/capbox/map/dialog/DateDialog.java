@@ -1,4 +1,4 @@
-package com.androidex.capbox.utils.map.dialog;
+package com.androidex.capbox.map.dialog;
 
 import android.app.Activity;
 import android.app.Dialog;

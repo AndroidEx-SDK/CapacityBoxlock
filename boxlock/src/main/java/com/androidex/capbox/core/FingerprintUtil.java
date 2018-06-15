@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 /**
- * Created by popfisher on 2016/11/7.
+ * Created by liyp on 2016/11/7.
  */
 
 public class FingerprintUtil {

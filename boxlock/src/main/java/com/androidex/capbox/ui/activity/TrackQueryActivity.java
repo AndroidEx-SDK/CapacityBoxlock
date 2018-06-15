@@ -11,14 +11,13 @@ import com.androidex.capbox.MyApplication;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.ui.widget.SecondTitleBar;
-import com.androidex.capbox.ui.widget.ThirdTitleBar;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
-import com.androidex.capbox.utils.map.BitmapUtil;
-import com.androidex.capbox.utils.map.CommonUtil;
-import com.androidex.capbox.utils.map.MapUtil;
-import com.androidex.capbox.utils.map.dialog.TrackAnalysisDialog;
-import com.androidex.capbox.utils.map.dialog.TrackAnalysisInfoLayout;
+import com.androidex.capbox.map.BitmapUtil;
+import com.androidex.capbox.map.CommonUtil;
+import com.androidex.capbox.map.MapUtil;
+import com.androidex.capbox.map.dialog.TrackAnalysisDialog;
+import com.androidex.capbox.map.dialog.TrackAnalysisInfoLayout;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.InfoWindow;
 import com.baidu.mapapi.map.MapView;
@@ -539,8 +538,7 @@ public class TrackQueryActivity extends BaseActivity
                 if (StatusCodes.SUCCESS != response.getStatus()) {
                     CommonKit.showOkShort(context, response.getMessage());
                 } else if (0 == total) {
-                    CommonKit.showOkShort(context,
-                            getString(R.string.no_track_data));
+                    CommonKit.showOkShort(context, getString(R.string.no_track_data));
                 } else {
                     List<TrackPoint> points = response.getTrackPoints();
                     if (null != points) {

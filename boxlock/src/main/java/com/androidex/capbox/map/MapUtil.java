@@ -1,4 +1,4 @@
-package com.androidex.capbox.utils.map;
+package com.androidex.capbox.map;
 
 import android.graphics.Color;
 import android.graphics.Point;
@@ -8,7 +8,7 @@ import android.text.TextUtils;
 import com.androidex.capbox.MyApplication;
 import com.androidex.capbox.utils.Constants;
 import com.androidex.capbox.utils.SystemUtil;
-import com.androidex.capbox.utils.map.model.CurrentLocation;
+import com.androidex.capbox.map.model.CurrentLocation;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.MapStatus;

@@ -1,4 +1,4 @@
-package com.androidex.capbox.utils.map.model;
+package com.androidex.capbox.map.model;
 
 
 import com.androidex.capbox.base.BaseActivity;

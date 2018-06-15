@@ -1,4 +1,4 @@
-package com.androidex.capbox.utils.map.dialog;
+package com.androidex.capbox.map.dialog;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
