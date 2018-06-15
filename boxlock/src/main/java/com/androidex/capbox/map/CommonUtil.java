@@ -180,8 +180,8 @@ public class CommonUtil {
     /**
      * 保存当前定位点
      */
-    public static void saveCurrentLocation(MyApplication trackApp) {
-        SharedPreferences.Editor editor = trackApp.trackConf.edit();
+    public static void saveCurrentLocation(Context context) {
+        SharedPreferences.Editor editor =  MapManager.getInstance(context).getTrackConf().edit();
         StringBuffer locationInfo = new StringBuffer();
         locationInfo.append(CurrentLocation.locTime);
         locationInfo.append(";");

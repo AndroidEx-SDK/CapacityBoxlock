@@ -29,7 +29,7 @@ import com.baidu.mapapi.utils.CoordinateConverter;
 import com.baidu.mapapi.utils.DistanceUtil;
 
 /**
- * Created by Administrator on 2018/1/26.
+ * Created by liyp on 2018/1/26.
  */
 
 public class MapUtils implements BDLocationListener,SensorEventListener,OnGetRoutePlanResultListener {

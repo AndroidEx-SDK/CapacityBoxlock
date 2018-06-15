@@ -10,6 +10,7 @@ import android.widget.CompoundButton;
 import com.androidex.capbox.MyApplication;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
+import com.androidex.capbox.map.MapManager;
 import com.androidex.capbox.ui.widget.SecondTitleBar;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
@@ -18,6 +19,7 @@ import com.androidex.capbox.map.CommonUtil;
 import com.androidex.capbox.map.MapUtil;
 import com.androidex.capbox.map.dialog.TrackAnalysisDialog;
 import com.androidex.capbox.map.dialog.TrackAnalysisInfoLayout;
+import com.androidex.capbox.utils.RLog;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.InfoWindow;
 import com.baidu.mapapi.map.MapView;
@@ -55,6 +57,9 @@ import java.util.List;
 
 import butterknife.Bind;
 
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
+import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
+
 /**
  * 轨迹查询
  */
@@ -63,8 +68,6 @@ public class TrackQueryActivity extends BaseActivity
 
     @Bind(R.id.titlebar)
     SecondTitleBar titlebar;
-
-    private MyApplication trackApp = null;
 
     /**
      * 地图工具
@@ -209,13 +212,18 @@ public class TrackQueryActivity extends BaseActivity
     private int pageIndex = 1;
 
     /**
+     * 设备UUID
+     */
+    private String entityName = null;
+
+    /**
      * 轨迹分析上一次请求时间
      */
     private long lastQueryTime = 0;
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        trackApp = (MyApplication) getApplicationContext();
+        entityName = getIntent().getStringExtra(EXTRA_BOX_UUID);
         BitmapUtil.init();
         init();
         initSetting();
@@ -233,7 +241,7 @@ public class TrackQueryActivity extends BaseActivity
         mapUtil = MapUtil.getInstance();
         mapUtil.init((MapView) findViewById(R.id.track_query_mapView));
         mapUtil.baiduMap.setOnMarkerClickListener(this);
-        mapUtil.setCenter(trackApp);
+        mapUtil.setCenter(context);
         trackAnalysisInfoLayout = new TrackAnalysisInfoLayout(this, mapUtil.baiduMap);
         initListener();
         titlebar.getRightIv().setOnClickListener(new View.OnClickListener() {
@@ -268,7 +276,6 @@ public class TrackQueryActivity extends BaseActivity
             queryDrivingBehavior();
             queryStayPoint();
         }
-
     }
 
     /**
@@ -288,7 +295,6 @@ public class TrackQueryActivity extends BaseActivity
         processOption.setNeedMapMatch(true);
         historyTrackRequest.setProcessOption(processOption);
         historyTrackRequest.setSupplementMode(SupplementMode.driving);//里程补偿方式：不补充/直线距离/最短驾车路线/最短骑行路线/最短步行路线
-        //sortType = SortType.valueOf(SortType.asc.name());
         historyTrackRequest.setSortType(SortType.asc);//升序/降序
         historyTrackRequest.setCoordTypeOutput(CoordType.bd09ll);//百度经纬度坐标/国测局加密坐标
         historyTrackRequest.setProcessed(true);//纠偏
@@ -357,36 +363,37 @@ public class TrackQueryActivity extends BaseActivity
      * 查询历史轨迹
      */
     private void queryHistoryTrack() {
-        trackApp.initRequest(historyTrackRequest);
-        historyTrackRequest.setEntityName(trackApp.entityName);
+        MapManager.getInstance(context).initRequest(historyTrackRequest);
+        historyTrackRequest.setEntityName(entityName);
         historyTrackRequest.setStartTime(startTime);
         historyTrackRequest.setEndTime(endTime);
         historyTrackRequest.setPageIndex(pageIndex);
         historyTrackRequest.setPageSize(Constants.baiduMap.PAGE_SIZE);
-        trackApp.mClient.queryHistoryTrack(historyTrackRequest, mTrackListener);
+        MapManager.getInstance(context).getmClient().queryHistoryTrack(historyTrackRequest, mTrackListener);
     }
 
     /**
      * 查询驾驶行为
      */
     private void queryDrivingBehavior() {
-        trackApp.initRequest(drivingBehaviorRequest);
-        drivingBehaviorRequest.setEntityName(trackApp.entityName);
+        MapManager.getInstance(context).initRequest(drivingBehaviorRequest);
+        drivingBehaviorRequest.setEntityName(entityName);
         drivingBehaviorRequest.setStartTime(startTime);
         drivingBehaviorRequest.setEndTime(endTime);
-        trackApp.mClient.queryDrivingBehavior(drivingBehaviorRequest, mAnalysisListener);
+        MapManager.getInstance(context).getmClient().queryDrivingBehavior(drivingBehaviorRequest, mAnalysisListener);
     }
 
     /**
      * 查询停留点
+     * trackApp.entityName
      */
     private void queryStayPoint() {
-        trackApp.initRequest(stayPointRequest);
-        stayPointRequest.setEntityName(trackApp.entityName);
+        MapManager.getInstance(context).initRequest(stayPointRequest);
+        stayPointRequest.setEntityName(entityName);
         stayPointRequest.setStartTime(startTime);
         stayPointRequest.setEndTime(endTime);
         stayPointRequest.setStayTime(Constants.baiduMap.STAY_TIME);
-        trackApp.mClient.queryStayPoint(stayPointRequest, mAnalysisListener);
+        MapManager.getInstance(context).getmClient().queryStayPoint(stayPointRequest, mAnalysisListener);
     }
 
     /**
@@ -536,6 +543,7 @@ public class TrackQueryActivity extends BaseActivity
             public void onHistoryTrackCallback(HistoryTrackResponse response) {
                 int total = response.getTotal();
                 if (StatusCodes.SUCCESS != response.getStatus()) {
+                    RLog.e(response.getMessage());
                     CommonKit.showOkShort(context, response.getMessage());
                 } else if (0 == total) {
                     CommonKit.showOkShort(context, getString(R.string.no_track_data));

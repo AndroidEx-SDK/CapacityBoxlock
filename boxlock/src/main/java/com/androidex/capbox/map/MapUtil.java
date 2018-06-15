@@ -1,5 +1,6 @@
 package com.androidex.capbox.map;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import com.baidu.trace.model.CoordType;
 import com.baidu.trace.model.SortType;
 import com.baidu.trace.model.TraceLocation;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by baidu on 17/2/9.
@@ -151,13 +153,14 @@ public class MapUtil {
      *
      * @param trackApp
      */
-    public void setCenter(MyApplication trackApp) {
+    public void setCenter(Context context) {
         if (!CommonUtil.isZeroPoint(CurrentLocation.latitude, CurrentLocation.longitude)) {
             LatLng currentLatLng = new LatLng(CurrentLocation.latitude, CurrentLocation.longitude);
             updateStatus(currentLatLng, false);
             return;
         }
-        String lastLocation = trackApp.trackConf.getString(Constants.baiduMap.LAST_LOCATION, null);
+        String lastLocation = MapManager.getInstance(context).getTrackConf().getString(Constants.baiduMap.LAST_LOCATION, null);
+        // String lastLocation = trackApp.trackConf.getString(Constants.baiduMap.LAST_LOCATION, null);
         if (!TextUtils.isEmpty(lastLocation)) {
             String[] locationInfo = lastLocation.split(";");
             if (!CommonUtil.isZeroPoint(Double.parseDouble(locationInfo[1]),

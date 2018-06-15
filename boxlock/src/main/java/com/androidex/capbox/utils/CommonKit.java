@@ -28,6 +28,7 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -485,11 +486,15 @@ public class CommonKit {
      * @return
      */
     public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        try {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
         if (info != null) {
-            return info.isAvailable();
+            return info.isConnected()&&info.isAvailable();
+        }
+        } catch (Exception e) {
+            RLog.e("current network is not available");
+            return false;
         }
         return false;
     }
