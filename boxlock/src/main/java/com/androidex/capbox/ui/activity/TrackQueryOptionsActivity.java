@@ -15,6 +15,7 @@ import com.androidex.capbox.MyApplication;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.utils.Constants;
+import com.androidex.capbox.utils.RLog;
 import com.androidex.capbox.utils.map.CommonUtil;
 import com.androidex.capbox.utils.map.dialog.DateDialog;
 import com.baidu.trace.api.track.SupplementMode;
@@ -40,12 +41,12 @@ public class TrackQueryOptionsActivity extends BaseActivity
     private TextView radiusText = null;
     private DateDialog.Callback startTimeCallback = null;
     private DateDialog.Callback endTimeCallback = null;
-    private long startTime = CommonUtil.getCurrentTime();
+    private long startTime = CommonUtil.getCurrentTime() - 24 * 60 * 60;
     private long endTime = CommonUtil.getCurrentTime();
     private boolean isProcessed = true;
-    private boolean isDenoise = false;
+    private boolean isDenoise = true;
     private boolean isVacuate = false;
-    private boolean isMapmatch = false;
+    private boolean isMapmatch = true;
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -70,7 +71,7 @@ public class TrackQueryOptionsActivity extends BaseActivity
 
         StringBuilder startTimeBuilder = new StringBuilder();
         startTimeBuilder.append(getResources().getString(R.string.start_time));
-        startTimeBuilder.append(simpleDateFormat.format(System.currentTimeMillis()));
+        startTimeBuilder.append(simpleDateFormat.format(System.currentTimeMillis() - 24 * 60 * 60 * 1000));
         startTimeBtn.setText(startTimeBuilder.toString());
 
         StringBuilder endTimeBuilder = new StringBuilder();
@@ -99,7 +100,7 @@ public class TrackQueryOptionsActivity extends BaseActivity
             };
         }
         if (null == dateDialog) {
-            dateDialog = new DateDialog(this, startTimeCallback);
+            dateDialog = new DateDialog(this, startTimeCallback, startTime*1000);
         } else {
             dateDialog.setCallback(startTimeCallback);
         }
@@ -120,7 +121,7 @@ public class TrackQueryOptionsActivity extends BaseActivity
             };
         }
         if (null == dateDialog) {
-            dateDialog = new DateDialog(this, endTimeCallback);
+            dateDialog = new DateDialog(this, endTimeCallback, endTime*1000);
         } else {
             dateDialog.setCallback(endTimeCallback);
         }
@@ -170,9 +171,8 @@ public class TrackQueryOptionsActivity extends BaseActivity
         result.putExtra("transportMode", transportMode.name());
 
         RadioGroup supplementModeOptionGroup = (RadioGroup) findViewById(R.id.supplement_mode);
-        RadioButton supplementModeOptionRadio =
-                (RadioButton) findViewById(supplementModeOptionGroup.getCheckedRadioButtonId());
-        SupplementMode supplementMode = SupplementMode.no_supplement;
+        RadioButton supplementModeOptionRadio = (RadioButton) findViewById(supplementModeOptionGroup.getCheckedRadioButtonId());
+        SupplementMode supplementMode = SupplementMode.driving;
         switch (supplementModeOptionRadio.getId()) {
             case R.id.no_supplement:
                 supplementMode = SupplementMode.no_supplement;
@@ -183,7 +183,7 @@ public class TrackQueryOptionsActivity extends BaseActivity
                 break;
 
             case R.id.riding:
-                supplementMode = SupplementMode.driving;
+                supplementMode = SupplementMode.riding;
                 break;
 
             case R.id.walking:
@@ -252,7 +252,6 @@ public class TrackQueryOptionsActivity extends BaseActivity
             case R.id.mapmatch:
                 isMapmatch = isChecked;
                 break;
-
             default:
                 break;
         }

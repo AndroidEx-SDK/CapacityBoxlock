@@ -219,6 +219,7 @@ public class TrackQueryActivity extends BaseActivity
         trackApp = (MyApplication) getApplicationContext();
         BitmapUtil.init();
         init();
+        initSetting();
     }
 
     @Override
@@ -269,6 +270,30 @@ public class TrackQueryActivity extends BaseActivity
             queryStayPoint();
         }
 
+    }
+
+    /**
+     * 初始化设置，默认直接显示24小时内的轨迹
+     */
+    private void initSetting() {
+        trackPoints.clear();
+        pageIndex = 1;
+        startTime = CommonUtil.getCurrentTime() - 24 * 60 * 60;
+        endTime = CommonUtil.getCurrentTime();
+
+        ProcessOption processOption = new ProcessOption();
+        processOption.setRadiusThreshold(Constants.baiduMap.DEFAULT_RADIUS_THRESHOLD);
+        processOption.setTransportMode(TransportMode.driving);
+        processOption.setNeedDenoise(true);
+        processOption.setNeedVacuate(false);
+        processOption.setNeedMapMatch(true);
+        historyTrackRequest.setProcessOption(processOption);
+        historyTrackRequest.setSupplementMode(SupplementMode.driving);//里程补偿方式：不补充/直线距离/最短驾车路线/最短骑行路线/最短步行路线
+        //sortType = SortType.valueOf(SortType.asc.name());
+        historyTrackRequest.setSortType(SortType.asc);//升序/降序
+        historyTrackRequest.setCoordTypeOutput(CoordType.bd09ll);//百度经纬度坐标/国测局加密坐标
+        historyTrackRequest.setProcessed(true);//纠偏
+        queryHistoryTrack();
     }
 
     /**

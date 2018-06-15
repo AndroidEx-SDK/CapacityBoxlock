@@ -771,6 +771,12 @@ public class NetApi {
         new OkRequest.Builder().url(url).params(params).post(callBack);
     }
 
+    /**
+     * 地理位置纠偏接口
+     * @param lat
+     * @param lon
+     * @param callBack
+     */
     public static void getLocation(String lat, String lon, ResultCallBack<BaiduModel> callBack) {
         //http://api.map.baidu.com/ag/coord/convert?from=0&to=4&x=113.540124&y=23.517846
         RequestParams params = RequestParams.newInstance()

@@ -118,6 +118,7 @@
                             android:text="@string/denoise"
                             android:textColor="@color/Gray_66"
                             android:textSize="12dp"
+                        android:checked="true"
                             android:button="@drawable/chk_selector"/>
 
                     <CheckBox
@@ -135,6 +136,7 @@
                     <CheckBox
                             android:id="@+id/mapmatch"
                             android:layout_width="0dp"
+                        android:checked="true"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.25"
                             android:text="@string/mapmatch"
@@ -278,7 +280,6 @@
                             android:id="@+id/no_supplement"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:checked="true"
                             android:text="@string/no_supplement"
                             android:textColor="@color/Gray_33"
                             android:minHeight="25dp"
@@ -297,6 +298,7 @@
 
                     <RadioButton
                             android:id="@+id/driving"
+                            android:checked="true"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/driving"
