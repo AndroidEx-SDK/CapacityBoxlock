@@ -17,6 +17,7 @@ import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.utils.Constants;
 import com.androidex.capbox.map.CommonUtil;
 import com.androidex.capbox.map.dialog.DateDialog;
+import com.androidex.capbox.utils.RLog;
 import com.baidu.trace.api.track.SupplementMode;
 import com.baidu.trace.model.CoordType;
 import com.baidu.trace.model.SortType;
@@ -30,7 +31,8 @@ public class TrackQueryOptionsActivity extends BaseActivity
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
     private MyApplication trackApp = null;
     private Intent result = null;
-    private DateDialog dateDialog = null;
+    private DateDialog startDateDialog = null;
+    private DateDialog endDateDialog = null;
     private Button startTimeBtn = null;
     private Button endTimeBtn = null;
     private CheckBox processedCBx = null;
@@ -98,12 +100,12 @@ public class TrackQueryOptionsActivity extends BaseActivity
                 }
             };
         }
-        if (null == dateDialog) {
-            dateDialog = new DateDialog(this, startTimeCallback, startTime*1000);
+        if (null == startDateDialog) {
+            startDateDialog = new DateDialog(this, startTimeCallback, startTime*1000,false);
         } else {
-            dateDialog.setCallback(startTimeCallback);
+            startDateDialog.setCallback(startTimeCallback);
         }
-        dateDialog.show();
+        startDateDialog.show();
     }
 
     public void onEndTime(View v) {
@@ -119,12 +121,12 @@ public class TrackQueryOptionsActivity extends BaseActivity
                 }
             };
         }
-        if (null == dateDialog) {
-            dateDialog = new DateDialog(this, endTimeCallback, endTime*1000);
+        if (null == endDateDialog) {
+            endDateDialog = new DateDialog(this, endTimeCallback, endTime*1000,true);
         } else {
-            dateDialog.setCallback(endTimeCallback);
+            endDateDialog.setCallback(endTimeCallback);
         }
-        dateDialog.show();
+        endDateDialog.show();
     }
 
     public void onCancel(View v) {

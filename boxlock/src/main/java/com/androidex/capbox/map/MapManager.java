@@ -40,15 +40,9 @@ public class MapManager {
      */
     private long serviceId = 200366;
 
-    /**
-     * 轨迹客户端
-     */
-    private LBSTraceClient mClient = null;
-
     private MapManager(Context context) {
         this.context=context;
         trackConf = context.getSharedPreferences("track_conf", MODE_PRIVATE);
-        mClient = new LBSTraceClient(MyApplication.mContext);//该处如果使用getApplicationContext()会导致百度鉴权错误。
         locRequest = new LocRequest(serviceId);
         clearTraceStatus();
     }
@@ -79,9 +73,9 @@ public class MapManager {
             processOption.setNeedDenoise(true);
             processOption.setRadiusThreshold(100);
             request.setProcessOption(processOption);
-            mClient.queryLatestPoint(request, trackListener);
+            MyApplication.getInstance().getmClient().queryLatestPoint(request, trackListener);
         } else {
-            mClient.queryRealTimeLoc(locRequest, entityListener);
+            MyApplication.getInstance().getmClient().queryRealTimeLoc(locRequest, entityListener);
         }
     }
 
@@ -120,9 +114,5 @@ public class MapManager {
 
     public SharedPreferences getTrackConf() {
         return trackConf;
-    }
-
-    public LBSTraceClient getmClient() {
-        return mClient;
     }
 }

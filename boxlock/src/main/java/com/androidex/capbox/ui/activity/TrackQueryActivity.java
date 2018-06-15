@@ -369,7 +369,7 @@ public class TrackQueryActivity extends BaseActivity
         historyTrackRequest.setEndTime(endTime);
         historyTrackRequest.setPageIndex(pageIndex);
         historyTrackRequest.setPageSize(Constants.baiduMap.PAGE_SIZE);
-        MapManager.getInstance(context).getmClient().queryHistoryTrack(historyTrackRequest, mTrackListener);
+        MyApplication.getInstance().getmClient().queryHistoryTrack(historyTrackRequest, mTrackListener);
     }
 
     /**
@@ -380,7 +380,7 @@ public class TrackQueryActivity extends BaseActivity
         drivingBehaviorRequest.setEntityName(entityName);
         drivingBehaviorRequest.setStartTime(startTime);
         drivingBehaviorRequest.setEndTime(endTime);
-        MapManager.getInstance(context).getmClient().queryDrivingBehavior(drivingBehaviorRequest, mAnalysisListener);
+        MyApplication.getInstance().getmClient().queryDrivingBehavior(drivingBehaviorRequest, mAnalysisListener);
     }
 
     /**
@@ -393,7 +393,7 @@ public class TrackQueryActivity extends BaseActivity
         stayPointRequest.setStartTime(startTime);
         stayPointRequest.setEndTime(endTime);
         stayPointRequest.setStayTime(Constants.baiduMap.STAY_TIME);
-        MapManager.getInstance(context).getmClient().queryStayPoint(stayPointRequest, mAnalysisListener);
+        MyApplication.getInstance().getmClient().queryStayPoint(stayPointRequest, mAnalysisListener);
     }
 
     /**

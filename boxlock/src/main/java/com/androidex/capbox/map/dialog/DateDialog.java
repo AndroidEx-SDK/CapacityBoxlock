@@ -36,9 +36,12 @@ public class DateDialog extends Dialog implements DatePicker.OnDateChangedListen
     /**
      * @param activity ：调用的父activity
      */
-    public DateDialog(Activity activity, Callback callback,long time) {
+    public DateDialog(Activity activity, Callback callback,long time,boolean isEnd) {
         super(activity, android.R.style.Theme_Holo_Light_Dialog);
         calendar = Calendar.getInstance();
+        if (!isEnd){
+            calendar.add(Calendar.DATE, -1);// 日期减1
+        }
         simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
         dateTime = simpleDateFormat.format(time);
         this.setTitle(dateTime);

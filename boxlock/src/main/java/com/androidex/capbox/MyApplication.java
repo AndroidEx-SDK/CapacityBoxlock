@@ -33,6 +33,12 @@ public class MyApplication extends Application {
     private DaoSession daoSession;
 
     /**
+     * 轨迹客户端
+     */
+    private LBSTraceClient mClient = null;
+
+
+    /**
      * Entity标识
      */
     public static synchronized MyApplication getInstance() {
@@ -64,6 +70,8 @@ public class MyApplication extends Application {
         DevOpenHelper helper = new DevOpenHelper(this, "notes-db");
         Database db = helper.getWritableDb();
         daoSession = new DaoMaster(db).newSession();
+
+        mClient = new LBSTraceClient(this);//该处如果使用getApplicationContext()会导致百度鉴权错误。
     }
 
     /**
@@ -82,5 +90,9 @@ public class MyApplication extends Application {
 
     public DaoSession getDaoSession() {
         return daoSession;
+    }
+
+    public LBSTraceClient getmClient() {
+        return mClient;
     }
 }
