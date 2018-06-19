@@ -2,9 +2,13 @@ package com.androidex.capbox.map;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.PowerManager;
 
 import com.androidex.capbox.MyApplication;
+import com.androidex.capbox.map.receiver.TrackReceiver;
 import com.androidex.capbox.utils.CommonKit;
 import com.baidu.trace.LBSTraceClient;
 import com.baidu.trace.api.entity.LocRequest;
@@ -13,6 +17,7 @@ import com.baidu.trace.api.track.LatestPointRequest;
 import com.baidu.trace.api.track.OnTrackListener;
 import com.baidu.trace.model.BaseRequest;
 import com.baidu.trace.model.ProcessOption;
+import com.baidu.trace.model.StatusCodes;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -39,6 +44,10 @@ public class MapManager {
      * 轨迹服务ID
      */
     private long serviceId = 200366;
+
+    private TrackReceiver trackReceiver = null;
+
+    private PowerManager.WakeLock wakeLock = null;
 
     private MapManager(Context context) {
         this.context=context;
@@ -77,6 +86,41 @@ public class MapManager {
         } else {
             MyApplication.getInstance().getmClient().queryRealTimeLoc(locRequest, entityListener);
         }
+    }
+
+    /**
+     * 注册广播（电源锁、GPS状态）
+     */
+    private void registerReceiver(PowerManager powerManager) {
+        if (MyApplication.getInstance().isRegisterReceiver) {
+            return;
+        }
+
+        if (null == wakeLock) {
+            wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "track upload");
+        }
+        if (null == trackReceiver) {
+            trackReceiver = new TrackReceiver(wakeLock);
+        }
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        filter.addAction(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_USER_PRESENT);
+        filter.addAction(StatusCodes.GPS_STATUS_ACTION);
+        MyApplication.getInstance().registerReceiver(trackReceiver, filter);
+        MyApplication.getInstance().isRegisterReceiver = true;
+
+    }
+
+    private void unregisterPowerReceiver() {
+        if (!MyApplication.getInstance().isRegisterReceiver) {
+            return;
+        }
+        if (null != trackReceiver) {
+            MyApplication.getInstance().unregisterReceiver(trackReceiver);
+        }
+        MyApplication.getInstance().isRegisterReceiver = false;
     }
 
     /**

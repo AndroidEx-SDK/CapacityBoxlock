@@ -33,6 +33,11 @@ public class MyApplication extends Application {
     private DaoSession daoSession;
 
     /**
+     * 注册广播（电源锁、GPS状态）的标志
+     */
+    public boolean isRegisterReceiver = false;
+
+    /**
      * 轨迹客户端
      */
     private LBSTraceClient mClient = null;
@@ -71,6 +76,7 @@ public class MyApplication extends Application {
         Database db = helper.getWritableDb();
         daoSession = new DaoMaster(db).newSession();
 
+        /**************百度鹰眼轨迹**************/
         mClient = new LBSTraceClient(this);//该处如果使用getApplicationContext()会导致百度鉴权错误。
     }
 

@@ -3,7 +3,11 @@ package com.androidex.capbox;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -528,6 +532,20 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     protected void onResume() {
         super.onResume();
         RLog.e("onResume");
+        PowerManager powerManager = (PowerManager) MyApplication.getInstance().getSystemService(POWER_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            String packageName = MyApplication.getInstance().getPackageName();
+            boolean isIgnoring = powerManager.isIgnoringBatteryOptimizations(packageName);
+            if (!isIgnoring) {
+                Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setData(Uri.parse("package:" + packageName));
+                try {
+                    startActivity(intent);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
     }
 
     @Override
