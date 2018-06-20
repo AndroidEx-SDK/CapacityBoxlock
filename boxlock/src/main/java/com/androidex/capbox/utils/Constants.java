@@ -158,12 +158,15 @@ public class Constants extends BleConstants {
         public static final int SPLASH_TIME = 3000;
 
         /**
-         * 默认采集周期
+         * 解释 http://wiki.lbsyun.baidu.com/index.php?title=android-yingyan/guide/uploadtrack
+         */
+        /**
+         * 默认采集周期 定位周期：多久定位一次，在定位周期大于15s时，SDK会将定位周期设置为5的倍数（如设置采集周期为18s，SDK会调整为15s；设置为33s，SDK会调整为30s）
          */
         public static final int DEFAULT_GATHER_INTERVAL = 2;
 
         /**
-         * 默认打包周期
+         * 默认打包周期 回传周期：鹰眼为节省电量和流量，并不是定位一次就回传一次数据，而是隔段时间将一批定位数据打包压缩回传。（回传周期最大不要超过定位周期的10倍，例如，定位周期为5s，则回传周期最好不要大于50s）
          */
         public static final int DEFAULT_PACK_INTERVAL = 10;
 

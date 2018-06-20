@@ -78,6 +78,10 @@ public class MyApplication extends Application {
 
         /**************百度鹰眼轨迹**************/
         mClient = new LBSTraceClient(this);//该处如果使用getApplicationContext()会导致百度鉴权错误。
+        // 设置协议类型，0为http，1为https
+        // int protocoType = 1;
+        // mClient.setProtocolType(protocoType);
+        //上传轨迹  http://lbsyun.baidu.com/index.php?title=yingyan/api/v3/trackupload
     }
 
     /**
