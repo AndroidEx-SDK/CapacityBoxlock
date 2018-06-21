@@ -134,6 +134,18 @@ public class Constants extends BleConstants {
     }
 
     public static class baiduMap{
+
+        public static final String API_KEY = "fc51UqGugQUOwzhBuan3UHSZ1MUERHXz";
+
+        public static final String SK_DEBUG = "27:F3:FC:9F:0E:08:74:CE:4E:3E:F6:9E:A6:D9:33:26:4F:4B:80:F9;com.androidex.capbox";
+
+        public static final String SK_RELAESE="C5:3A:9F:63:54:D7:03:DC:E0:9E:53:6B:B1:52:B9:EF:66:81:B5:00;com.androidex.capbox";
+
+        /**
+         * 轨迹服务ID
+         */
+        public static final long serviceId = 200366;
+
         public static final int REQUEST_CODE = 1;
 
         public static final int RESULT_CODE = 1;

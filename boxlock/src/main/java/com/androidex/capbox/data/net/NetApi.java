@@ -5,9 +5,11 @@ import android.bluetooth.BluetoothAdapter;
 import com.androidex.capbox.data.net.base.OkRequest;
 import com.androidex.capbox.data.net.base.RequestParams;
 import com.androidex.capbox.data.net.base.ResultCallBack;
+import com.androidex.capbox.map.SnCal;
 import com.androidex.capbox.module.AlarmListModel;
 import com.androidex.capbox.module.AuthCodeModel;
 import com.androidex.capbox.module.BaiduModel;
+import com.androidex.capbox.module.BaiduPointModel;
 import com.androidex.capbox.module.BaseModel;
 import com.androidex.capbox.module.BoxDetailModel;
 import com.androidex.capbox.module.BoxDetailModel2;
@@ -23,11 +25,18 @@ import com.androidex.capbox.module.LocationModel;
 import com.androidex.capbox.module.LoginModel;
 import com.androidex.capbox.module.ResultModel;
 import com.androidex.capbox.module.WatchDetailModel;
+import com.baidu.trace.model.CoordType;
+
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 
 import okhttp3.Headers;
 
 import static com.androidex.capbox.data.net.UrlTool.USER_ACTION_REGISTER;
 import static com.androidex.capbox.data.net.UrlTool.getUrl;
+import static com.androidex.capbox.utils.Constants.baiduMap.API_KEY;
+import static com.androidex.capbox.utils.Constants.baiduMap.SK_DEBUG;
+import static com.androidex.capbox.utils.Constants.baiduMap.serviceId;
 
 /**
  * @author liyp
@@ -773,6 +782,8 @@ public class NetApi {
 
     /**
      * 地理位置纠偏接口
+     * http://api.map.baidu.com/ag/coord/convert?from=0&to=4&x=113.540124&y=23.517846
+     *
      * @param lat
      * @param lon
      * @param callBack
@@ -787,6 +798,66 @@ public class NetApi {
         String url = UrlTool.getUrl1("", "");
         new OkRequest.Builder().url(url).params(params).get(callBack);
     }
+
+    /**
+     * 上传单个轨迹点
+     * 接口 http://yingyan.baidu.com/api/v3/track/addpoint //POST请求
+     *
+     * @param lat
+     * @param lon
+     * @param callBack
+     */
+    public static void addpoint(String uuid, String lat, String lon, String loc_time, ResultCallBack<BaiduModel> callBack) {
+        String url="http://yingyan.baidu.com/api/v3/track/addpoint";
+        RequestParams params = RequestParams.newInstance()
+                .put("ak", API_KEY)
+                .put("service_id", serviceId)
+                .put("entity_name", uuid)
+                .put("latitude", lat)
+                .put("longitude", lon)
+                .put("loc_time", loc_time)
+                .put("coord_type_input", CoordType.bd09ll)//坐标类型
+                // .put("speed", lon)//速度
+                // .put("direction", lon)//方向
+                // .put("height", lon)//高度
+                // .put("radius", lon)//定位精度，GPS或定位SDK返回的值
+                //.put("object_name", lon)//对象数据名称
+                //.put("column-key", lon)//track的自定义字段
+                .put("sn", SnCal.getBaiduSN());
+        new OkRequest.Builder().url(url).params(params).post(callBack);
+    }
+
+    /**
+     * 批量上传多个 entity 的多个轨迹点。与 v2版接口不同的是：
+     * 1. 轨迹点列表采用 json格式，而非.csv 文件；
+     * 2.一次请求可上传多个 entity 的轨迹点；
+     * <p>
+     * 接口 http://yingyan.baidu.com/api/v3/track/addpoints //POST请求
+     *
+     * @param point_list 轨迹点列表 轨迹点总数不超过100个，json 格式。轨迹点字段描述参见 addpoint 接口，其中 entity_name,latitude,longitude,loc_time,coord_type5个字段必填，其他字段可选
+     * @param callBack
+     */
+    public static void addpoints(String point_list, ResultCallBack<BaiduPointModel> callBack) {
+       String url="http://yingyan.baidu.com/api/v3/track/addpoints";
+        RequestParams params = RequestParams.newInstance()
+                .put("ak", API_KEY)
+                .put("service_id", serviceId)
+                .put("point_list", point_list)
+                .put("sn", SnCal.getBaiduSN());
+        new OkRequest.Builder().url(url).params(params).post(callBack);
+    }
+
+    /**
+     * 校验SN
+     * 校验SN方法：http://api.map.baidu.com/geocoder/v2/?address=百度大厦&output=json&ak=yourak&sn=7de5a22212ffaa9e326444c75a58f9a0
+     *
+     * @param callBack
+     */
+    public static void verifySN(ResultCallBack callBack) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+        String url = "http://api.map.baidu.com/geocoder/v2/?address=百度大厦&output=json&ak=" + API_KEY + "&mcode=" + SK_DEBUG + "&sn=" + SnCal.getBaiduSN();
+        new OkRequest.Builder().url(url).get(callBack);
+    }
+
 
 
     /**

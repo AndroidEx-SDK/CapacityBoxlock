@@ -22,6 +22,7 @@ import com.baidu.trace.model.StatusCodes;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.androidex.capbox.utils.Constants.baiduMap.serviceId;
 
 /**
  * @Description:
@@ -40,10 +41,6 @@ public class MapManager {
 
     private AtomicInteger mSequenceGenerator = new AtomicInteger();
 
-    /**
-     * 轨迹服务ID
-     */
-    private long serviceId = 200366;
 
     private TrackReceiver trackReceiver = null;
 
