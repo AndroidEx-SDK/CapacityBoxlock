@@ -808,6 +808,11 @@ public class NetApi {
      * @param lat
      * @param lon
      * @param callBack
+     * coord_type_input 默认值：bd09ll  该字段用于描述上传的坐标类型。
+     *                  可选值为：
+     *                  wgs84：GPS 坐标
+     *                  gcj02：国测局加密坐标
+     *                  bd09ll：百度经纬度坐标
      */
     public static void addpoint(String uuid, double lat, double lon, long loc_time, ResultCallBack<BaiduModel> callBack) {
         String url="http://yingyan.baidu.com/api/v3/track/addpoint";
@@ -818,14 +823,14 @@ public class NetApi {
                 .put("latitude", lat)   //纬度
                 .put("longitude", lon)  //经度
                 .put("loc_time", loc_time)
-                .put("coord_type_input", CoordType.bd09ll)//坐标类型
+                .put("coord_type_input", CoordType.wgs84)//坐标类型
                 .put("mcode", SK_DEBUG)//"&mcode=" + SK_DEBUG
                 // .put("speed", lon)//速度
                 // .put("direction", lon)//方向
                 // .put("height", lon)//高度
                 // .put("radius", lon)//定位精度，GPS或定位SDK返回的值
-                //.put("object_name", lon)//对象数据名称
-                //.put("column-key", lon)//track的自定义字段
+                // .put("object_name", lon)//对象数据名称
+                // .put("column-key", lon)//track的自定义字段
                 .put("sn", SnCal.getBaiduSN());
         RLog.e(params.toString());
         new OkRequest.Builder().url(url).params(params).post(callBack);

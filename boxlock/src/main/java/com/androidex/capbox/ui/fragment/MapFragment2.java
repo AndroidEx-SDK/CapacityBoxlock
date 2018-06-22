@@ -136,7 +136,7 @@ public class MapFragment2 extends BaseFragment implements MapUtils.MapUtilsEvent
                     String address = mBoxDevices.get(marker.getExtraInfo().getInt("id")).get("mac");
                     if (uuid != null && uuid.length() > 0) {
                         Bundle bundle = new Bundle();
-                        uuid=CommonUtil.getImei(context);//entityName = 861464030375634
+                       // uuid=CommonUtil.getImei(context);//entityName = 861464030375634
                         bundle.putString("uuid", uuid);
                         //跳转到查看轨迹页面
                         CommonKit.startActivity(context, TrackQueryActivity.class, bundle, false);
