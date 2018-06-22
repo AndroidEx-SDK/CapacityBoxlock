@@ -12,12 +12,16 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.acker.simplezxing.activity.CaptureActivity;
+import com.androidex.capbox.MyApplication;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseFragment;
 import com.androidex.capbox.data.Event;
 import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
+import com.androidex.capbox.db.DaoSession;
+import com.androidex.capbox.db.DeviceInfo;
+import com.androidex.capbox.db.DeviceInfoDao;
 import com.androidex.capbox.module.ActionItem;
 import com.androidex.capbox.module.BaseModel;
 import com.androidex.capbox.module.BoxDeviceModel;
@@ -28,6 +32,7 @@ import com.androidex.capbox.ui.activity.LoginActivity;
 import com.androidex.capbox.ui.adapter.BoxListAdapter;
 import com.androidex.capbox.ui.view.TitlePopup;
 import com.androidex.capbox.ui.widget.ThirdTitleBar;
+import com.androidex.capbox.utils.CalendarUtil;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
 import com.androidex.capbox.utils.RLog;
@@ -35,6 +40,8 @@ import com.e.ble.bean.BLEDevice;
 import com.e.ble.scan.BLEScanCfg;
 import com.e.ble.scan.BLEScanListener;
 import com.e.ble.util.BLEError;
+
+import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,13 +88,20 @@ public class BoxListFragment extends BaseFragment {
     private boolean mScanning = false;//控制蓝牙扫描
     private BoxListAdapter boxListAdapter;
     private TitlePopup titlePopup;
+    private DeviceInfoDao deviceInfoDao;
 
     @Override
     public void initData() {
         initTitleBar();
+        initDB();
         iniRefreshView();
         initListView();
         initBle();//蓝牙连接
+    }
+
+    public void initDB() {
+        DaoSession daoSession = ((MyApplication) context.getApplication()).getDaoSession();
+        deviceInfoDao = daoSession.getDeviceInfoDao();
     }
 
     private void initTitleBar() {
@@ -374,6 +388,16 @@ public class BoxListFragment extends BaseFragment {
                                     carryNum++;
                                 }
                                 mylist.add(map);
+                                if (deviceInfoDao.queryBuilder().where(DeviceInfoDao.Properties.Address.eq(device.mac)).list().size()<=0){
+                                    DeviceInfo deviceInfo = new DeviceInfo();
+                                    deviceInfo.setAddress(device.mac);
+                                    deviceInfo.setUuid(device.uuid);
+                                    deviceInfo.setName(CalendarUtil.getName(device.boxName, device.mac));
+                                    deviceInfoDao.insert(deviceInfo);
+                                    RLog.d("DeviceInfo  设备不存在");
+                                }else {
+                                    RLog.d("DeviceInfo  设备已存在");
+                                }
                             }
                             SharedPreTool.getInstance(context).setIntData(IS_BIND_NUM, model.devicelist.size());
                             if (model.devicelist.size() > 0) {

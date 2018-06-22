@@ -25,8 +25,12 @@ public class Note {
     private String lat;
     @NotNull
     private String lon;
+
     private String alt;
+
     private int isshow;//是否显示该条信息 0显示 1不显示
+
+    private int isSubmitBaidu;//是否已经上传，标志 0未上传 1上传
 
     @Convert(converter = NoteTypeConverter.class, columnType = String.class)
     private NoteType type;
@@ -40,6 +44,8 @@ public class Note {
                 ", lat='" + lat + '\'' +
                 ", lon='" + lon + '\'' +
                 ", alt='" + alt + '\'' +
+                ", isshow=" + isshow +
+                ", isSubmitBaidu=" + isSubmitBaidu +
                 ", type=" + type +
                 '}';
     }
@@ -65,9 +71,9 @@ public class Note {
     public Note() {
     }
 
-    @Generated(hash = 234096687)
+    @Generated(hash = 1287988709)
     public Note(Long id, @NotNull String address, @NotNull Long time, @NotNull String lat,
-            @NotNull String lon, String alt, int isshow, NoteType type) {
+            @NotNull String lon, String alt, int isshow, int isSubmitBaidu, NoteType type) {
         this.id = id;
         this.address = address;
         this.time = time;
@@ -75,6 +81,7 @@ public class Note {
         this.lon = lon;
         this.alt = alt;
         this.isshow = isshow;
+        this.isSubmitBaidu = isSubmitBaidu;
         this.type = type;
     }
 
@@ -140,5 +147,13 @@ public class Note {
 
     public void setIsshow(int isshow) {
         this.isshow = isshow;
+    }
+
+    public int getIsSubmitBaidu() {
+        return this.isSubmitBaidu;
+    }
+
+    public void setIsSubmitBaidu(int isSubmitBaidu) {
+        this.isSubmitBaidu = isSubmitBaidu;
     }
 }

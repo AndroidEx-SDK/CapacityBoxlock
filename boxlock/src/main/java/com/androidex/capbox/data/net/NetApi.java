@@ -25,6 +25,7 @@ import com.androidex.capbox.module.LocationModel;
 import com.androidex.capbox.module.LoginModel;
 import com.androidex.capbox.module.ResultModel;
 import com.androidex.capbox.module.WatchDetailModel;
+import com.androidex.capbox.utils.RLog;
 import com.baidu.trace.model.CoordType;
 
 import java.io.UnsupportedEncodingException;
@@ -801,22 +802,24 @@ public class NetApi {
 
     /**
      * 上传单个轨迹点
+     * 说明：http://lbsyun.baidu.com/index.php?title=yingyan/api/v3/trackupload
      * 接口 http://yingyan.baidu.com/api/v3/track/addpoint //POST请求
      *
      * @param lat
      * @param lon
      * @param callBack
      */
-    public static void addpoint(String uuid, String lat, String lon, String loc_time, ResultCallBack<BaiduModel> callBack) {
+    public static void addpoint(String uuid, double lat, double lon, long loc_time, ResultCallBack<BaiduModel> callBack) {
         String url="http://yingyan.baidu.com/api/v3/track/addpoint";
         RequestParams params = RequestParams.newInstance()
                 .put("ak", API_KEY)
                 .put("service_id", serviceId)
                 .put("entity_name", uuid)
-                .put("latitude", lat)
-                .put("longitude", lon)
+                .put("latitude", lat)   //纬度
+                .put("longitude", lon)  //经度
                 .put("loc_time", loc_time)
                 .put("coord_type_input", CoordType.bd09ll)//坐标类型
+                .put("mcode", SK_DEBUG)//"&mcode=" + SK_DEBUG
                 // .put("speed", lon)//速度
                 // .put("direction", lon)//方向
                 // .put("height", lon)//高度
@@ -824,6 +827,7 @@ public class NetApi {
                 //.put("object_name", lon)//对象数据名称
                 //.put("column-key", lon)//track的自定义字段
                 .put("sn", SnCal.getBaiduSN());
+        RLog.e(params.toString());
         new OkRequest.Builder().url(url).params(params).post(callBack);
     }
 

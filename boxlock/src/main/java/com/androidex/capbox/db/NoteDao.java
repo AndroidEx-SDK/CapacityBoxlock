@@ -29,7 +29,8 @@ public class NoteDao extends AbstractDao<Note, Long> {
         public final static Property Lon = new Property(4, String.class, "lon", false, "LON");
         public final static Property Alt = new Property(5, String.class, "alt", false, "ALT");
         public final static Property Isshow = new Property(6, int.class, "isshow", false, "ISSHOW");
-        public final static Property Type = new Property(7, String.class, "type", false, "TYPE");
+        public final static Property IsSubmitBaidu = new Property(7, int.class, "isSubmitBaidu", false, "IS_SUBMIT_BAIDU");
+        public final static Property Type = new Property(8, String.class, "type", false, "TYPE");
     }
 
     private final NoteTypeConverter typeConverter = new NoteTypeConverter();
@@ -53,7 +54,8 @@ public class NoteDao extends AbstractDao<Note, Long> {
                 "\"LON\" TEXT NOT NULL ," + // 4: lon
                 "\"ALT\" TEXT," + // 5: alt
                 "\"ISSHOW\" INTEGER NOT NULL ," + // 6: isshow
-                "\"TYPE\" TEXT);"); // 7: type
+                "\"IS_SUBMIT_BAIDU\" INTEGER NOT NULL ," + // 7: isSubmitBaidu
+                "\"TYPE\" TEXT);"); // 8: type
         // Add Indexes
         db.execSQL("CREATE UNIQUE INDEX " + constraint + "IDX_NOTE_TIME_DESC ON \"NOTE\"" +
                 " (\"TIME\" DESC);");
@@ -83,10 +85,11 @@ public class NoteDao extends AbstractDao<Note, Long> {
             stmt.bindString(6, alt);
         }
         stmt.bindLong(7, entity.getIsshow());
+        stmt.bindLong(8, entity.getIsSubmitBaidu());
  
         NoteType type = entity.getType();
         if (type != null) {
-            stmt.bindString(8, typeConverter.convertToDatabaseValue(type));
+            stmt.bindString(9, typeConverter.convertToDatabaseValue(type));
         }
     }
 
@@ -108,10 +111,11 @@ public class NoteDao extends AbstractDao<Note, Long> {
             stmt.bindString(6, alt);
         }
         stmt.bindLong(7, entity.getIsshow());
+        stmt.bindLong(8, entity.getIsSubmitBaidu());
  
         NoteType type = entity.getType();
         if (type != null) {
-            stmt.bindString(8, typeConverter.convertToDatabaseValue(type));
+            stmt.bindString(9, typeConverter.convertToDatabaseValue(type));
         }
     }
 
@@ -130,7 +134,8 @@ public class NoteDao extends AbstractDao<Note, Long> {
             cursor.getString(offset + 4), // lon
             cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // alt
             cursor.getInt(offset + 6), // isshow
-            cursor.isNull(offset + 7) ? null : typeConverter.convertToEntityProperty(cursor.getString(offset + 7)) // type
+            cursor.getInt(offset + 7), // isSubmitBaidu
+            cursor.isNull(offset + 8) ? null : typeConverter.convertToEntityProperty(cursor.getString(offset + 8)) // type
         );
         return entity;
     }
@@ -144,7 +149,8 @@ public class NoteDao extends AbstractDao<Note, Long> {
         entity.setLon(cursor.getString(offset + 4));
         entity.setAlt(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
         entity.setIsshow(cursor.getInt(offset + 6));
-        entity.setType(cursor.isNull(offset + 7) ? null : typeConverter.convertToEntityProperty(cursor.getString(offset + 7)));
+        entity.setIsSubmitBaidu(cursor.getInt(offset + 7));
+        entity.setType(cursor.isNull(offset + 8) ? null : typeConverter.convertToEntityProperty(cursor.getString(offset + 8)));
      }
     
     @Override

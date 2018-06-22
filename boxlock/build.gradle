@@ -108,7 +108,7 @@ android {
 }
 
 greendao {
-    schemaVersion 3
+    schemaVersion 4
     daoPackage "com.androidex.capbox.db"
     targetGenDir "src/main/java"
 }

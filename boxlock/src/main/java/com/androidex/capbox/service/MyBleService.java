@@ -6,11 +6,17 @@ import android.util.Log;
 
 import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.boxlib.service.BleService;
+import com.androidex.boxlib.utils.LocationUtil;
 import com.androidex.capbox.MyApplication;
 import com.androidex.capbox.data.cache.SharedPreTool;
+import com.androidex.capbox.data.net.NetApi;
+import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.db.DaoSession;
+import com.androidex.capbox.db.DeviceInfo;
+import com.androidex.capbox.db.DeviceInfoDao;
 import com.androidex.capbox.db.Note;
 import com.androidex.capbox.db.NoteDao;
+import com.androidex.capbox.module.BaiduModel;
 import com.androidex.capbox.ui.activity.LockScreenActivity;
 import com.androidex.capbox.utils.RLog;
 import com.androidex.capbox.utils.SystemUtil;
@@ -20,6 +26,9 @@ import org.greenrobot.greendao.query.DeleteQuery;
 import org.greenrobot.greendao.query.Query;
 
 import java.util.List;
+
+import okhttp3.Headers;
+import okhttp3.Request;
 
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
@@ -41,6 +50,7 @@ import static com.baidu.mapapi.BMapManager.getContext;
 public class MyBleService extends BleService {
     public static final String TAG = "MyBleService";
     private static MyBleService service;
+    private DeviceInfoDao deviceInfoDao;
 
     @Override
     public void onCreate() {
@@ -65,6 +75,8 @@ public class MyBleService extends BleService {
     public void initDB() {
         DaoSession daoSession = ((MyApplication) getApplication()).getDaoSession();
         noteDao = daoSession.getNoteDao();
+        deviceInfoDao = daoSession.getDeviceInfoDao();
+
     }
 
     /**
@@ -96,8 +108,38 @@ public class MyBleService extends BleService {
         note.setAlt(modules.getAlt());
         note.setTime(longTime);
         note.setIsshow(0);
+        List<DeviceInfo> list = deviceInfoDao.queryBuilder().where(DeviceInfoDao.Properties.Address.eq(address)).list();
+        if (list.size() > 0) {
+            DeviceInfo deviceInfo = list.get(0);
+            //latitude=2237.591142N&longitude=11404.912392E
+            addpoint(deviceInfo.getUuid(), modules, longTime);
+            note.setIsSubmitBaidu(1);
+            RLog.d("DeviceInfo  上传设备轨迹 deviceInfo.getUuid() = " + deviceInfo.getUuid());
+        } else {
+            RLog.d("DeviceInfo  设备不存在");
+        }
         noteDao.insert(note);
         RLog.d("插入数据到数据库" + note.toString());
+    }
+
+    /**
+     * 上传轨迹到百度鹰眼
+     */
+    private void addpoint(String uuid, LocationModules modules, long longTime) {
+        String  lat= modules.getLat().replace("N","" );
+        String lon = modules.getLon().replace("E", "");
+        NetApi.addpoint(uuid,LocationUtil.degreeToDB(lat),LocationUtil.degreeToDB(lon) , longTime, new ResultCallBack<BaiduModel>() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, BaiduModel model) {
+                super.onSuccess(statusCode, headers, model);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Request request, Exception e) {
+                super.onFailure(statusCode, request, e);
+            }
+        });
+
     }
 
     /**
