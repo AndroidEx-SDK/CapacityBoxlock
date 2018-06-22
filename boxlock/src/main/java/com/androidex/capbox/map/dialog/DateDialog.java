@@ -3,13 +3,16 @@ package com.androidex.capbox.map.dialog;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
 import com.androidex.capbox.R;
+import com.androidex.capbox.utils.CalendarUtil;
 import com.androidex.capbox.utils.CommonKit;
+import com.androidex.capbox.utils.RLog;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -39,18 +42,24 @@ public class DateDialog extends Dialog implements DatePicker.OnDateChangedListen
     public DateDialog(Activity activity, Callback callback,long time,boolean isEnd) {
         super(activity, android.R.style.Theme_Holo_Light_Dialog);
         calendar = Calendar.getInstance();
-        if (!isEnd){
-            calendar.add(Calendar.DATE, -1);// 日期减1
-        }
+//        if (!isEnd){
+//            calendar.add(Calendar.DATE, -1);// 日期减1
+//        }
         simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
         dateTime = simpleDateFormat.format(time);
         this.setTitle(dateTime);
         this.callback = callback;
-        this.year = calendar.get(Calendar.YEAR);
-        this.month = calendar.get(Calendar.MONTH);
-        this.day = calendar.get(Calendar.DAY_OF_MONTH);
-        this.hour = calendar.get(Calendar.HOUR_OF_DAY);
-        this.minute = calendar.get(Calendar.MINUTE);
+        this.year = CalendarUtil.getYearByTimeStamp(time);
+        this.month = CalendarUtil.getMonthByTimeStamp(time);
+        this.day = CalendarUtil.getDayByTimeStamp(time);
+        this.hour = CalendarUtil.getHourByTimeStamp(time);
+        this.minute = CalendarUtil.getMinuteByTimeStamp(time);
+//         this.year = calendar.get(Calendar.YEAR);
+//        this.month = calendar.get(Calendar.MONTH);
+//        this.day = calendar.get(Calendar.DAY_OF_MONTH);
+//        this.hour = calendar.get(Calendar.HOUR_OF_DAY);
+//        this.minute = calendar.get(Calendar.MINUTE);
+        RLog.d("44444444 Calendar= "+Calendar.YEAR +"   year = "+Calendar.MONTH+Calendar.DAY_OF_MONTH+"   "+Calendar.HOUR_OF_DAY+"  "+Calendar.MINUTE);
     }
 
     @Override

@@ -139,6 +139,54 @@ public class CalendarUtil {
     }
 
 
+    public static int getYearByTimeStamp(long timeStamp){//date=2018-06-22 19:23:47   year = 2018
+        String date = timeStampToDate(timeStamp);
+        String year = date.substring(0, 4);
+        RLog.d("44444444 date="+date +"   year = "+year);
+        return Integer.parseInt(year);
+    }
+
+    public static int getMonthByTimeStamp(long timeStamp){
+        String date = timeStampToDate(timeStamp);
+        String month = date.substring(5, 7);
+        RLog.d("44444444 date="+date +"   month = "+month);
+        return Integer.parseInt(month);
+    }
+
+    public static int getDayByTimeStamp(long timeStamp){
+        String date = timeStampToDate(timeStamp);
+        String day = date.substring(8, 10);
+        RLog.d("44444444 date="+date +"   day = "+day);
+        return Integer.parseInt(day);
+    }
+
+    public static int getHourByTimeStamp(long timeStamp){
+        String date = timeStampToDate(timeStamp);
+        String hour = date.substring(11, 13);
+        RLog.d("44444444 date="+date +"   hour = "+hour);
+        return Integer.parseInt(hour);
+    }
+
+    public static int getMinuteByTimeStamp(long timeStamp){
+        String date = timeStampToDate(timeStamp);
+        String minute = date.substring(14, 16);
+        RLog.d("44444444 date="+date +"   minute = "+minute);
+        return Integer.parseInt(minute);
+    }
+
+    public static int getSecondByTimeStamp(long timeStamp){
+        String date = timeStampToDate(timeStamp);
+        String second = date.substring(17, 19);
+        return Integer.parseInt(second);
+    }
+
+    public static String timeStampToDate(long timeStamp){
+        Date  date = new Date(timeStamp);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateStr = simpleDateFormat.format(date);
+        return dateStr;
+    }
+
     public String getCurrentYearFirst() {
         int yearPlus = this.getYearPlus();
         GregorianCalendar currentDate = new GregorianCalendar();

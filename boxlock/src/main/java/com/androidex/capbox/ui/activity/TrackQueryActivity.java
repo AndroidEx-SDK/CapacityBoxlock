@@ -10,6 +10,7 @@ import android.widget.CompoundButton;
 import com.androidex.capbox.MyApplication;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
+import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.map.MapManager;
 import com.androidex.capbox.ui.widget.SecondTitleBar;
 import com.androidex.capbox.utils.CommonKit;
@@ -57,6 +58,7 @@ import java.util.List;
 
 import butterknife.Bind;
 
+import static com.androidex.capbox.utils.Constants.CACHE.CACHE_TRACK_QUERY_TIME;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
 import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
 
@@ -763,6 +765,8 @@ public class TrackQueryActivity extends BaseActivity
         harshBreakingMarkers = null;
         stayPointMarkers = null;
         mapUtil.clear();
+
+        SharedPreTool.getInstance(context).remove(CACHE_TRACK_QUERY_TIME);
     }
 
     @Override

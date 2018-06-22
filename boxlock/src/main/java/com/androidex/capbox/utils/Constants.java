@@ -116,6 +116,12 @@ public class Constants extends BleConstants {
         public static final String REGEX_CHINESE = "^[\u4e00-\u9fa5]{1,9}$";//验证汉字(1-9个汉字)
     }
 
+    public static  class CACHE{
+        public static final String CACHE_TRACK_QUERY_TIME="CACHE_TRACK_QUERY_TIME";//查询轨迹时选择的第一个时间
+
+
+    }
+
     /**
      * 请求码requestCode
      */

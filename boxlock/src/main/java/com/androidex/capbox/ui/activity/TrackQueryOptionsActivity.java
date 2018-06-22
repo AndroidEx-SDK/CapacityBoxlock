@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.androidex.capbox.MyApplication;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
+import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.utils.Constants;
 import com.androidex.capbox.map.CommonUtil;
 import com.androidex.capbox.map.dialog.DateDialog;
@@ -24,6 +25,8 @@ import com.baidu.trace.model.SortType;
 import com.baidu.trace.model.TransportMode;
 
 import java.text.SimpleDateFormat;
+
+import static com.androidex.capbox.utils.Constants.CACHE.CACHE_TRACK_QUERY_TIME;
 
 public class TrackQueryOptionsActivity extends BaseActivity
         implements CompoundButton.OnCheckedChangeListener {
@@ -48,6 +51,7 @@ public class TrackQueryOptionsActivity extends BaseActivity
     private boolean isDenoise = true;
     private boolean isVacuate = false;
     private boolean isMapmatch = true;
+    private long lowDay;
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -72,7 +76,14 @@ public class TrackQueryOptionsActivity extends BaseActivity
 
         StringBuilder startTimeBuilder = new StringBuilder();
         startTimeBuilder.append(getResources().getString(R.string.start_time));
-        startTimeBuilder.append(simpleDateFormat.format(System.currentTimeMillis() - 24 * 60 * 60 * 1000));
+        long mTime = SharedPreTool.getInstance(context).getLongData(CACHE_TRACK_QUERY_TIME, 0) * 1000;
+        RLog.d("startTime--> time = " + mTime);
+        lowDay = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
+        if (mTime < System.currentTimeMillis() && mTime > lowDay) {
+            startTimeBuilder.append(simpleDateFormat.format(mTime));
+        } else {
+            startTimeBuilder.append(simpleDateFormat.format(lowDay));
+        }
         startTimeBtn.setText(startTimeBuilder.toString());
 
         StringBuilder endTimeBuilder = new StringBuilder();
@@ -93,6 +104,7 @@ public class TrackQueryOptionsActivity extends BaseActivity
                 @Override
                 public void onDateCallback(long timeStamp) {
                     TrackQueryOptionsActivity.this.startTime = timeStamp;
+                    SharedPreTool.getInstance(context).setLongData(CACHE_TRACK_QUERY_TIME, timeStamp);
                     StringBuilder startTimeBuilder = new StringBuilder();
                     startTimeBuilder.append(getResources().getString(R.string.start_time));
                     startTimeBuilder.append(simpleDateFormat.format(timeStamp * 1000));
@@ -101,7 +113,14 @@ public class TrackQueryOptionsActivity extends BaseActivity
             };
         }
         if (null == startDateDialog) {
-            startDateDialog = new DateDialog(this, startTimeCallback, startTime*1000,false);
+            long mTime = SharedPreTool.getInstance(context).getLongData(CACHE_TRACK_QUERY_TIME, 0) * 1000;
+            if (mTime < System.currentTimeMillis() && mTime > lowDay) {
+                RLog.d("startTime timeStamp -->111111  " + mTime);
+                startDateDialog = new DateDialog(this, startTimeCallback, mTime, false);
+            } else {
+                RLog.d("startTime timeStamp --> 22222222" + lowDay);
+                startDateDialog = new DateDialog(this, startTimeCallback, lowDay, false);
+            }
         } else {
             startDateDialog.setCallback(startTimeCallback);
         }
