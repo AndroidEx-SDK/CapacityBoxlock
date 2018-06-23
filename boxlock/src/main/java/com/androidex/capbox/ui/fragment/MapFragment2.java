@@ -258,55 +258,6 @@ public class MapFragment2 extends BaseFragment implements MapUtils.MapUtilsEvent
     }
 
     /**
-     * 根据账户&uuid获取设备移动轨迹
-     */
-    private void getDeviceMovePath(String uuid, final String address) {
-        mBoxMovePath.clear();
-        NetApi.movepath(getToken(), getUserName(), uuid, new ResultCallBack<BoxMovePathModel>() {
-            @Override
-            public void onSuccess(int statusCode, Headers headers, BoxMovePathModel model) {
-                super.onSuccess(statusCode, headers, model);
-                if (model != null) {
-                    switch (model.code) {
-                        case Constants.API.API_OK:
-                            for (BoxMovePathModel.LatLng latLng : model.datalist) {
-                                LatLng ll = new LatLng(Double.valueOf(latLng.getLatitude()), Double.valueOf(latLng.getLongitude()));
-                                mBoxMovePath.add(ll);
-                            }
-                            break;
-                        case Constants.API.API_FAIL:
-                            CommonKit.showErrorShort(context, "账号在其他地方登录");
-                            LoginActivity.lauch(context);
-                            break;
-                        case Constants.API.API_NOPERMMISION:
-                            CommonKit.showErrorShort(context, "获取设备轨迹失败");
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                RLog.d("读取设备的数据库数据 收到的address = " + address);
-                Message msg = Message.obtain();
-                msg.obj = address;
-                msg.what = END_MOVEPATH_WHAT;
-                mHandler.sendMessage(msg);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Request request, Exception e) {
-                super.onFailure(statusCode, request, e);
-                if (context != null && !CommonKit.isNetworkAvailable(context)) {
-                    CommonKit.showErrorShort(context, "网络出现异常");
-                }
-                Message msg = Message.obtain();
-                msg.obj = address;
-                msg.what = END_MOVEPATH_WHAT;
-                mHandler.sendMessage(msg);
-            }
-        });
-    }
-
-    /**
      * 根据账户获取绑定设备列表
      */
     private void getBoxDevices() {

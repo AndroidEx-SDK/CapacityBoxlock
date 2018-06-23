@@ -19,7 +19,18 @@
         android:layout_height="wrap_content"
         android:clickable="true" />
 
+    <ImageView
+        android:id="@+id/iv_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="10dip"
+        android:layout_marginLeft="40dp"
+        android:src="@mipmap/map_location" />
+
     <ImageButton
+        android:visibility="gone"
         android:id="@+id/imgBtn_track_analysis"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

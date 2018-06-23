@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 
 import com.androidex.capbox.MyApplication;
 import com.androidex.capbox.R;
@@ -21,6 +22,7 @@ import com.androidex.capbox.map.MapUtil;
 import com.androidex.capbox.map.dialog.TrackAnalysisDialog;
 import com.androidex.capbox.map.dialog.TrackAnalysisInfoLayout;
 import com.androidex.capbox.utils.RLog;
+import com.baidu.location.BDLocation;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.InfoWindow;
 import com.baidu.mapapi.map.MapView;
@@ -70,6 +72,8 @@ public class TrackQueryActivity extends BaseActivity
 
     @Bind(R.id.titlebar)
     SecondTitleBar titlebar;
+    @Bind(R.id.iv_location)
+    ImageView iv_location;
 
     /**
      * 地图工具
@@ -223,6 +227,8 @@ public class TrackQueryActivity extends BaseActivity
      */
     private long lastQueryTime = 0;
 
+    private BDLocation location;
+
     @Override
     public void initData(Bundle savedInstanceState) {
         entityName = getIntent().getStringExtra(EXTRA_BOX_UUID);
@@ -235,7 +241,7 @@ public class TrackQueryActivity extends BaseActivity
 
     @Override
     public void setListener() {
-
+        iv_location.setOnClickListener(this);
     }
 
     /**
@@ -447,6 +453,11 @@ public class TrackQueryActivity extends BaseActivity
      */
     @Override
     public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.iv_location://定位自己
+                initSetting();
+                break;
+        }
     }
 
     /**

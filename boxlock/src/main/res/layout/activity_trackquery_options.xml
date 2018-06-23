@@ -58,7 +58,6 @@
                             android:textColor="@color/theme_color"
                             android:textSize="10dp"></Button>
 
-
                     <Button
                             android:id="@+id/end_time"
                             android:layout_width="0dp"
@@ -333,6 +332,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/marginPadding16"
@@ -383,6 +383,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/marginPadding16"
@@ -399,7 +400,8 @@
                         android:textSize="14dp"/>
 
                 <RadioGroup
-                        android:id="@+id/coord_type_output"
+
+                    android:id="@+id/coord_type_output"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"

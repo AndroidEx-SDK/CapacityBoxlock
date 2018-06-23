@@ -63,7 +63,7 @@ public class MapUtil {
     public void init(MapView view) {
         mapView = view;
         baiduMap = mapView.getMap();
-        mapView.showZoomControls(false);
+        mapView.showZoomControls(true);
     }
 
     public void onPause() {
@@ -151,7 +151,7 @@ public class MapUtil {
     /**
      * 设置地图中心：使用已有定位信息；
      *
-     * @param trackApp
+     * @param
      */
     public void setCenter(Context context) {
         if (!CommonUtil.isZeroPoint(CurrentLocation.latitude, CurrentLocation.longitude)) {
