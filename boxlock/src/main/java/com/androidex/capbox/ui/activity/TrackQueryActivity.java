@@ -58,9 +58,9 @@ import java.util.List;
 
 import butterknife.Bind;
 
-import static com.androidex.capbox.utils.Constants.CACHE.CACHE_TRACK_QUERY_TIME;
+import static com.androidex.capbox.utils.Constants.CACHE.CACHE_TRACK_QUERY_END_TIME;
+import static com.androidex.capbox.utils.Constants.CACHE.CACHE_TRACK_QUERY_START_TIME;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
-import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
 
 /**
  * 轨迹查询
@@ -226,7 +226,8 @@ public class TrackQueryActivity extends BaseActivity
     @Override
     public void initData(Bundle savedInstanceState) {
         entityName = getIntent().getStringExtra(EXTRA_BOX_UUID);
-        SharedPreTool.getInstance(context).remove(CACHE_TRACK_QUERY_TIME);
+        SharedPreTool.getInstance(context).remove(CACHE_TRACK_QUERY_START_TIME);
+        SharedPreTool.getInstance(context).remove(CACHE_TRACK_QUERY_END_TIME);
         BitmapUtil.init();
         init();
         initSetting();
@@ -767,7 +768,8 @@ public class TrackQueryActivity extends BaseActivity
         stayPointMarkers = null;
         mapUtil.clear();
 
-        SharedPreTool.getInstance(context).remove(CACHE_TRACK_QUERY_TIME);
+        SharedPreTool.getInstance(context).remove(CACHE_TRACK_QUERY_START_TIME);
+        SharedPreTool.getInstance(context).remove(CACHE_TRACK_QUERY_END_TIME);
     }
 
     @Override

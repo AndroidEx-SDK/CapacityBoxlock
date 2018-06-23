@@ -3,6 +3,7 @@ package com.androidex.capbox.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -18,7 +19,6 @@ import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.utils.Constants;
 import com.androidex.capbox.map.CommonUtil;
 import com.androidex.capbox.map.dialog.DateDialog;
-import com.androidex.capbox.utils.RLog;
 import com.baidu.trace.api.track.SupplementMode;
 import com.baidu.trace.model.CoordType;
 import com.baidu.trace.model.SortType;
@@ -26,7 +26,8 @@ import com.baidu.trace.model.TransportMode;
 
 import java.text.SimpleDateFormat;
 
-import static com.androidex.capbox.utils.Constants.CACHE.CACHE_TRACK_QUERY_TIME;
+import static com.androidex.capbox.utils.Constants.CACHE.CACHE_TRACK_QUERY_END_TIME;
+import static com.androidex.capbox.utils.Constants.CACHE.CACHE_TRACK_QUERY_START_TIME;
 
 public class TrackQueryOptionsActivity extends BaseActivity
         implements CompoundButton.OnCheckedChangeListener {
@@ -51,7 +52,6 @@ public class TrackQueryOptionsActivity extends BaseActivity
     private boolean isDenoise = true;
     private boolean isVacuate = false;
     private boolean isMapmatch = true;
-    private long lowDay;
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -76,19 +76,22 @@ public class TrackQueryOptionsActivity extends BaseActivity
 
         StringBuilder startTimeBuilder = new StringBuilder();
         startTimeBuilder.append(getResources().getString(R.string.start_time));
-        long mTime = SharedPreTool.getInstance(context).getLongData(CACHE_TRACK_QUERY_TIME, 0) * 1000;
-        RLog.d("startTime--> time = " + mTime);
-        lowDay = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-        if (mTime < System.currentTimeMillis() && mTime > lowDay) {
+        long mTime = SharedPreTool.getInstance(context).getLongData(CACHE_TRACK_QUERY_START_TIME, 0) * 1000;
+        if (mTime > System.currentTimeMillis() - 12 * 24 * 60 * 60 * 1000) {
             startTimeBuilder.append(simpleDateFormat.format(mTime));
         } else {
-            startTimeBuilder.append(simpleDateFormat.format(lowDay));
+            startTimeBuilder.append(simpleDateFormat.format(System.currentTimeMillis() - 24 * 60 * 60 * 1000));
         }
         startTimeBtn.setText(startTimeBuilder.toString());
 
         StringBuilder endTimeBuilder = new StringBuilder();
         endTimeBuilder.append(getResources().getString(R.string.end_time));
-        endTimeBuilder.append(simpleDateFormat.format(System.currentTimeMillis()));
+        long mEndTime = SharedPreTool.getInstance(context).getLongData(CACHE_TRACK_QUERY_END_TIME, -1) * 1000;
+        if (mEndTime > System.currentTimeMillis() - 12 * 24 * 60 * 60 * 1000) {
+            endTimeBuilder.append(simpleDateFormat.format(mEndTime));
+        } else {
+            endTimeBuilder.append(simpleDateFormat.format(System.currentTimeMillis()));
+        }
         endTimeBtn.setText(endTimeBuilder.toString());
 
         processedCBx.setOnCheckedChangeListener(this);
@@ -104,7 +107,7 @@ public class TrackQueryOptionsActivity extends BaseActivity
                 @Override
                 public void onDateCallback(long timeStamp) {
                     TrackQueryOptionsActivity.this.startTime = timeStamp;
-                    SharedPreTool.getInstance(context).setLongData(CACHE_TRACK_QUERY_TIME, timeStamp);
+                    SharedPreTool.getInstance(context).setLongData(CACHE_TRACK_QUERY_START_TIME, timeStamp);
                     StringBuilder startTimeBuilder = new StringBuilder();
                     startTimeBuilder.append(getResources().getString(R.string.start_time));
                     startTimeBuilder.append(simpleDateFormat.format(timeStamp * 1000));
@@ -112,15 +115,16 @@ public class TrackQueryOptionsActivity extends BaseActivity
                 }
             };
         }
-        if (null == startDateDialog) {
-            long mTime = SharedPreTool.getInstance(context).getLongData(CACHE_TRACK_QUERY_TIME, 0) * 1000;
-            if (mTime < System.currentTimeMillis() && mTime > lowDay) {
-                startDateDialog = new DateDialog(this, startTimeCallback, mTime);
-            } else {
-                startDateDialog = new DateDialog(this, startTimeCallback, lowDay);
-            }
+        long mStartTime = SharedPreTool.getInstance(context).getLongData(CACHE_TRACK_QUERY_START_TIME, 0) * 1000;
+        long lowTime = System.currentTimeMillis() - 12 * 24 * 60 * 60 * 1000;
+        if (mStartTime > lowTime && null == startDateDialog) {
+            startDateDialog = new DateDialog(this, startTimeCallback, mStartTime);
+        } else if (mStartTime <= lowTime && null == startDateDialog) {
+            startDateDialog = new DateDialog(this, startTimeCallback, System.currentTimeMillis() - 24 * 60 * 60 * 1000);
+        } else if (mStartTime > lowTime && null != startDateDialog) {
+            startDateDialog.init(mStartTime).setCallback(startTimeCallback);
         } else {
-            startDateDialog.setCallback(startTimeCallback);
+            startDateDialog.init(System.currentTimeMillis() - 24 * 60 * 60 * 1000).setCallback(startTimeCallback);
         }
         startDateDialog.show();
     }
@@ -130,6 +134,7 @@ public class TrackQueryOptionsActivity extends BaseActivity
             endTimeCallback = new DateDialog.Callback() {
                 @Override
                 public void onDateCallback(long timeStamp) {
+                    SharedPreTool.getInstance(context).setLongData(CACHE_TRACK_QUERY_END_TIME, timeStamp);
                     TrackQueryOptionsActivity.this.endTime = timeStamp;
                     StringBuilder endTimeBuilder = new StringBuilder();
                     endTimeBuilder.append(getResources().getString(R.string.end_time));
@@ -138,10 +143,16 @@ public class TrackQueryOptionsActivity extends BaseActivity
                 }
             };
         }
-        if (null == endDateDialog) {
-            endDateDialog = new DateDialog(this, endTimeCallback, endTime*1000);
-        } else {
-            endDateDialog.setCallback(endTimeCallback);
+        long mEndTime = SharedPreTool.getInstance(context).getLongData(CACHE_TRACK_QUERY_END_TIME, 0) * 1000;
+        long lowTime = System.currentTimeMillis() - 12 * 24 * 60 * 60 * 1000;
+        if (mEndTime > lowTime && null == endDateDialog) {
+            endDateDialog = new DateDialog(this, endTimeCallback, mEndTime);
+        } else if (mEndTime <= lowTime && null == endDateDialog) {
+            endDateDialog = new DateDialog(this, endTimeCallback, System.currentTimeMillis());
+        } else if (mEndTime > lowTime && null != endDateDialog) {
+            endDateDialog.init(mEndTime).setCallback(endTimeCallback);
+        }else {
+            endDateDialog.init(System.currentTimeMillis()).setCallback(endTimeCallback);
         }
         endDateDialog.show();
     }

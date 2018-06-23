@@ -117,7 +117,8 @@ public class Constants extends BleConstants {
     }
 
     public static  class CACHE{
-        public static final String CACHE_TRACK_QUERY_TIME="CACHE_TRACK_QUERY_TIME";//查询轨迹时选择的第一个时间
+        public static final String CACHE_TRACK_QUERY_START_TIME="CACHE_TRACK_QUERY_START_TIME";//查询轨迹时选择的开始时间
+        public static final String CACHE_TRACK_QUERY_END_TIME="CACHE_TRACK_QUERY_END_TIME";//查询轨迹时选择的结束时间
 
 
     }

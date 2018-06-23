@@ -2,11 +2,9 @@ package com.androidex.capbox.map.dialog;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
-import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
@@ -14,11 +12,9 @@ import android.widget.TimePicker;
 import com.androidex.capbox.R;
 import com.androidex.capbox.utils.CalendarUtil;
 import com.androidex.capbox.utils.CommonKit;
-import com.androidex.capbox.utils.RLog;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Set;
 
 /**
  * 日期对话框
@@ -82,12 +78,27 @@ public class DateDialog extends Dialog implements DatePicker.OnDateChangedListen
                 DateDialog.this.dismiss();
             }
         });
-
+        calendar.set(this.year, this.month, this.day, this.hour, this.minute);
+        datePicker.setDescendantFocusability(DatePicker.FOCUS_BLOCK_DESCENDANTS);
         datePicker.init(this.year, this.month, this.day, this);
-        timePicker.setOnTimeChangedListener(this);
-        timePicker.setIs24HourView(true);
+        timePicker.setDescendantFocusability(TimePicker.FOCUS_BLOCK_DESCENDANTS);//设置不可点击编辑
         timePicker.setCurrentHour(this.hour);
-        timePicker.setCurrentMinute(this.minute); }
+        timePicker.setCurrentMinute(this.minute);
+        timePicker.setIs24HourView(true);
+        timePicker.setOnTimeChangedListener(this);
+    }
+
+    public DateDialog init(long time){
+
+        this.year = CalendarUtil.getYearByTimeStamp(time);
+        this.month = CalendarUtil.getMonthByTimeStamp(time) - 1;
+        this.day = CalendarUtil.getDayByTimeStamp(time);
+        this.hour = CalendarUtil.getHourByTimeStamp(time);
+        this.minute = CalendarUtil.getMinuteByTimeStamp(time);
+        calendar.set(this.year, this.month, this.day, this.hour, this.minute);
+
+        return this;
+    }
 
     @Override
     public void onDateChanged(DatePicker datePicker, int year, int month, int day) {
@@ -101,7 +112,6 @@ public class DateDialog extends Dialog implements DatePicker.OnDateChangedListen
     public void onTimeChanged(TimePicker timePicker, int hour, int minute) {
         this.hour = hour;
         this.minute = minute;
-        RLog.d("44444444 Calendar= " + Calendar.YEAR + "   year = " + Calendar.MONTH + Calendar.DAY_OF_MONTH + "   " + Calendar.HOUR_OF_DAY + "  " + Calendar.MINUTE);
         updateDate();
     }
 
