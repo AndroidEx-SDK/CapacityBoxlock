@@ -70,8 +70,8 @@ public class TitlePopup extends PopupWindow {
         setOutsideTouchable(true);
 
         //获得屏幕的宽度和高度
-        mScreenWidth = SystemUtil.getScreenW();
-        mScreenHeight = SystemUtil.getScreenH();
+        mScreenWidth = SystemUtil.getScreenW(mContext);
+        mScreenHeight = SystemUtil.getScreenH(mContext);
 
         //设置弹窗的宽度和高度
         setWidth(width);

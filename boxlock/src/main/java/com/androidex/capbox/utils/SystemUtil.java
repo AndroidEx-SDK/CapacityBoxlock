@@ -88,6 +88,54 @@ public class SystemUtil {
     }
 
     /**
+     * 获取屏幕宽度
+     *
+     * @param context
+     * @return 屏幕宽度
+     */
+    public static int getScreenW(Context context) {
+        WindowManager manager = (WindowManager) context
+                .getSystemService(Context.WINDOW_SERVICE);
+        // Display display = manager.getDefaultDisplay();
+        // int width =display.getWidth();
+        // int height=display.getHeight();
+        // Log.d("width", String.valueOf(width));
+        // Log.d("height", String.valueOf(height)); //第一种
+
+        DisplayMetrics dm = new DisplayMetrics();
+        manager.getDefaultDisplay().getMetrics(dm);
+        int width2 = dm.widthPixels;// 宽
+        // int height2=dm.heightPixels;//高
+        // Log.d("width2", String.valueOf(width2));
+        // Log.d("height2", String.valueOf(height2)); //第二种
+        return width2;
+    }
+
+    /**
+     * 获取屏幕高度
+     *
+     * @param context
+     * @return 屏幕高度
+     */
+    public static int getScreenH(Context context) {
+        WindowManager manager = (WindowManager) context
+                .getSystemService(Context.WINDOW_SERVICE);
+        // Display display = manager.getDefaultDisplay();
+        // int width =display.getWidth();
+        // int height=display.getHeight();
+        // Log.d("width", String.valueOf(width));
+        // Log.d("height", String.valueOf(height)); //第一种
+
+        DisplayMetrics dm = new DisplayMetrics();
+        manager.getDefaultDisplay().getMetrics(dm);
+        // int width2=dm.widthPixels;//宽
+        int height2 = dm.heightPixels;// 高
+        // Log.d("width2", String.valueOf(width2));
+        // Log.d("height2", String.valueOf(height2)); //第二种
+        return height2;
+    }
+
+    /**
      * Android 5.0 改变状态栏颜色
      *
      * @param activity
