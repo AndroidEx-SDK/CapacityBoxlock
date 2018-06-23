@@ -226,6 +226,7 @@ public class TrackQueryActivity extends BaseActivity
     @Override
     public void initData(Bundle savedInstanceState) {
         entityName = getIntent().getStringExtra(EXTRA_BOX_UUID);
+        SharedPreTool.getInstance(context).remove(CACHE_TRACK_QUERY_TIME);
         BitmapUtil.init();
         init();
         initSetting();

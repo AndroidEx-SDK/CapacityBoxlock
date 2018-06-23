@@ -115,11 +115,9 @@ public class TrackQueryOptionsActivity extends BaseActivity
         if (null == startDateDialog) {
             long mTime = SharedPreTool.getInstance(context).getLongData(CACHE_TRACK_QUERY_TIME, 0) * 1000;
             if (mTime < System.currentTimeMillis() && mTime > lowDay) {
-                RLog.d("startTime timeStamp -->111111  " + mTime);
-                startDateDialog = new DateDialog(this, startTimeCallback, mTime, false);
+                startDateDialog = new DateDialog(this, startTimeCallback, mTime);
             } else {
-                RLog.d("startTime timeStamp --> 22222222" + lowDay);
-                startDateDialog = new DateDialog(this, startTimeCallback, lowDay, false);
+                startDateDialog = new DateDialog(this, startTimeCallback, lowDay);
             }
         } else {
             startDateDialog.setCallback(startTimeCallback);
@@ -141,7 +139,7 @@ public class TrackQueryOptionsActivity extends BaseActivity
             };
         }
         if (null == endDateDialog) {
-            endDateDialog = new DateDialog(this, endTimeCallback, endTime*1000,true);
+            endDateDialog = new DateDialog(this, endTimeCallback, endTime*1000);
         } else {
             endDateDialog.setCallback(endTimeCallback);
         }
