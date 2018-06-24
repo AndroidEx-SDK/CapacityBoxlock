@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.androidex.boxlib.utils.LocationUtil;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseFragment;
 import com.androidex.capbox.data.net.NetApi;
@@ -74,12 +75,7 @@ public class MapFragment2 extends BaseFragment implements MapUtils.MapUtilsEvent
     ImageView iv_location;
     @Bind(R.id.navigation_exit)
     Button navigationButton;
-    @Bind(R.id.routeplan_exit)
-    Button routeplanButton;
-    @Bind(R.id.btn_clear)
-    Button btn_clear;
-    @Bind(R.id.navigation_animation)
-    Button navigation_animation;
+
     @Bind(R.id.shock_box)
     Button shockBox;
     private View markerDialog;
@@ -202,7 +198,7 @@ public class MapFragment2 extends BaseFragment implements MapUtils.MapUtilsEvent
                         for (Note note : locList) {
                             String lat = note.getLat().replace("N", "");//.substring(0, 9)
                             String lon = note.getLon().replace("E", "");//.substring(0, 10)
-                            LatLng ll = new LatLng(MapUtils.degreeToDB(lat), MapUtils.degreeToDB(lon));
+                            LatLng ll = new LatLng(LocationUtil.degreeToDB(lat), LocationUtil.degreeToDB(lon));
                             ll = mMapUtils.GpsToBD(ll);
                             mBoxMovePath.add(ll);
                         }
@@ -229,10 +225,7 @@ public class MapFragment2 extends BaseFragment implements MapUtils.MapUtilsEvent
         mMapUtils = new MapUtils(context, this);
         iv_location.setOnClickListener(this);
         navigationButton.setOnClickListener(this);
-        routeplanButton.setOnClickListener(this);
-        btn_clear.setOnClickListener(this);
         shockBox.setOnClickListener(this);
-        navigation_animation.setOnClickListener(this);
         initMap();
     }
 
@@ -320,9 +313,6 @@ public class MapFragment2 extends BaseFragment implements MapUtils.MapUtilsEvent
         if (mBoxMovePath != null && mBoxMovePath.size() > 1) {//轨迹超过或等于两个才可以绘制
             this.address = address;
             mapMode = MapMode.ROUTEPLAN;
-            routeplanButton.setVisibility(View.VISIBLE);
-            navigation_animation.setVisibility(View.VISIBLE);
-            btn_clear.setVisibility(View.VISIBLE);
             cleanMap(); //清除其他Overlay
             /****************轨迹绘制**********************/
             OverlayOptions ooPolyline = new PolylineOptions().width(10).color(0xAAFF0000).points(mBoxMovePath);
@@ -406,6 +396,11 @@ public class MapFragment2 extends BaseFragment implements MapUtils.MapUtilsEvent
         }
     }
 
+    /**
+     * 显示步行路线的overlay
+     *
+     * @param line
+     */
     private void showWalkingRouteLine(WalkingRouteLine line) {
         mapMode = MapMode.NAVIGATION;
         navigationButton.setVisibility(View.VISIBLE);
@@ -417,6 +412,10 @@ public class MapFragment2 extends BaseFragment implements MapUtils.MapUtilsEvent
         overlay.zoomToSpan();
     }
 
+    /**
+     * 显示一条驾车路线的overlay
+     * @param line
+     */
     private void showDrivingRouteLine(DrivingRouteLine line) {
         mapMode = MapMode.NAVIGATION;
         navigationButton.setVisibility(View.VISIBLE);
@@ -428,14 +427,15 @@ public class MapFragment2 extends BaseFragment implements MapUtils.MapUtilsEvent
         overlay.zoomToSpan();
     }
 
+    /**
+     * 清除Marker
+     */
     private void cleanMap() {
         if (mBaiduMap != null) {
             mBaiduMap.clear();
             mBaiduMap.removeMarkerClickListener(onMarkerClickListener);
         }
     }
-
-
 
     @Override
     public void onClick(View view) {
@@ -453,33 +453,6 @@ public class MapFragment2 extends BaseFragment implements MapUtils.MapUtilsEvent
                 navigationButton.setVisibility(View.GONE);
                 shockBox.setVisibility(View.GONE);
                 showBoxDevice();
-                break;
-            case R.id.routeplan_exit://退出轨迹
-                mapMode = MapMode.NORMAL;
-                cleanMap();
-                routeplanButton.setVisibility(View.GONE);
-                navigation_animation.setVisibility(View.GONE);
-                btn_clear.setVisibility(View.GONE);
-                showBoxDevice();
-                break;
-            case R.id.btn_clear://清理轨迹
-                if (TextUtils.isEmpty(getAddress())) return;
-                int num = MyBleService.updateNoShowStatusData(getAddress());
-                if (num==0){
-                    CommonKit.showOkShort(context,"清除成功" );
-                }
-                //清理之后显示全部设备
-                mapMode = MapMode.NORMAL;
-                cleanMap();
-                routeplanButton.setVisibility(View.GONE);
-                navigation_animation.setVisibility(View.GONE);
-                btn_clear.setVisibility(View.GONE);
-                showBoxDevice();
-                break;
-            case R.id.navigation_animation://轨迹回放
-                position = 0;
-                stopDrawTrack();
-                startDrawTrack();
                 break;
             default:
                 break;

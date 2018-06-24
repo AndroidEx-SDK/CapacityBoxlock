@@ -11,8 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
+import com.androidex.boxlib.utils.LocationUtil;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseFragment;
 import com.androidex.capbox.data.net.NetApi;
@@ -42,7 +42,6 @@ import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
-import com.baidu.mapapi.map.Overlay;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
@@ -59,8 +58,6 @@ import java.util.TimerTask;
 import butterknife.Bind;
 import okhttp3.Headers;
 import okhttp3.Request;
-
-import static com.androidex.capbox.utils.MapUtils.degreeToDB;
 
 /**
  * Created by Administrator on 2018/1/26.
@@ -199,7 +196,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent 
                         for (Note note : locList) {
                             String lat = note.getLat().replace("N", "");//.substring(0, 9)
                             String lon = note.getLon().replace("E", "");//.substring(0, 10)
-                            LatLng ll = new LatLng(MapUtils.degreeToDB(lat), MapUtils.degreeToDB(lon));
+                            LatLng ll = new LatLng(LocationUtil.degreeToDB(lat), LocationUtil.degreeToDB(lon));
                             ll = mMapUtils.GpsToBD(ll);
                             mBoxMovePath.add(ll);
                         }

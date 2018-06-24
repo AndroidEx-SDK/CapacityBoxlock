@@ -1,6 +1,5 @@
 package com.androidex.capbox.utils;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -35,7 +34,6 @@ import com.baidu.mapapi.utils.DistanceUtil;
 public class MapUtils implements BDLocationListener,SensorEventListener,OnGetRoutePlanResultListener {
     private Context mContext;
     private MapUtilsEvent event;
-    private boolean isFirstLocation = true;
     private CoordinateConverter converter;
     public MapUtils(Context context,MapUtilsEvent event){
         this.event= event;
@@ -67,14 +65,11 @@ public class MapUtils implements BDLocationListener,SensorEventListener,OnGetRou
         }
     }
 
-    public static Double degreeToDB(String data) {
-        //a=  (2237.594232 - (int)a/100*100）/60+(int)a/100
-        Double value = Double.valueOf(data);
-        int a = (int) (value / 100);
-        double result = ((value - a * 100) / 60) + a;
-        return result;
-    }
-
+    /**
+     * GPS坐标转换为百度坐标
+     * @param ll
+     * @return
+     */
     public LatLng GpsToBD(LatLng ll){
         if(converter == null){
             converter = new CoordinateConverter();
@@ -83,6 +78,7 @@ public class MapUtils implements BDLocationListener,SensorEventListener,OnGetRou
         converter.coord(ll);
         return converter.convert();
     }
+
     //=========================Sensor=======================================
     private SensorManager mSensorManager;
     public void startSensor(){
@@ -116,11 +112,6 @@ public class MapUtils implements BDLocationListener,SensorEventListener,OnGetRou
     }
     @Override
     public void onReceiveLocation(BDLocation bdLocation) {
-//        if(isFirstLocation){
-//            isFirstLocation = false;
-//            this.event.onLocationEvent(bdLocation,true);
-//            return;
-//        }
         this.event.onLocationEvent(bdLocation,false);
     }
     @Override
@@ -142,12 +133,15 @@ public class MapUtils implements BDLocationListener,SensorEventListener,OnGetRou
         }
         this.event.onWalking(null);
     }
+
     @Override
     public void onGetTransitRouteResult(TransitRouteResult transitRouteResult) {
     }
+
     @Override
     public void onGetMassTransitRouteResult(MassTransitRouteResult massTransitRouteResult) {
     }
+
     @Override
     public void onGetDrivingRouteResult(DrivingRouteResult drivingRouteResult) {
         if(drivingRouteResult!=null){
@@ -160,12 +154,15 @@ public class MapUtils implements BDLocationListener,SensorEventListener,OnGetRou
         }
         this.event.onDriving(null);
     }
+
     @Override
     public void onGetIndoorRouteResult(IndoorRouteResult indoorRouteResult) {
     }
+
     @Override
     public void onGetBikingRouteResult(BikingRouteResult bikingRouteResult) {
     }
+
     public interface MapUtilsEvent{
         void onLocationEvent(BDLocation bdLocation,boolean first);
         void ononSensorChangedEvent(SensorEvent sensorEvent);

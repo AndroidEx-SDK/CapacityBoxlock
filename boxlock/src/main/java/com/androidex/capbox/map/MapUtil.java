@@ -181,8 +181,8 @@ public class MapUtil {
         if (null != baiduMap.getProjection()) {
             Point screenPoint = baiduMap.getProjection().toScreenLocation(currentPoint);
             // 点在屏幕上的坐标超过限制范围，则重新聚焦底图
-            if (screenPoint.y < 200 || screenPoint.y > SystemUtil.getScreenH() - 500
-                    || screenPoint.x < 200 || screenPoint.x > SystemUtil.getScreenW() - 200
+            if (screenPoint.y < 200 || screenPoint.y > SystemUtil.getScreenH(MyApplication.getInstance()) - 500
+                    || screenPoint.x < 200 || screenPoint.x > SystemUtil.getScreenW(MyApplication.getInstance()) - 200
                     || null == mapStatus) {
                 animateMapStatus(currentPoint, 15.0f);
             }
@@ -190,11 +190,9 @@ public class MapUtil {
             // 第一次定位时，聚焦底图
             setMapStatus(currentPoint, 15.0f);
         }
-
         if (showMarker) {
             addMarker(currentPoint);
         }
-
     }
 
     public Marker addOverlay(LatLng currentPoint, BitmapDescriptor icon, Bundle bundle) {
