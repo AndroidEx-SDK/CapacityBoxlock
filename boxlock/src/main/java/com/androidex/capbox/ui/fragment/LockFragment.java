@@ -906,9 +906,11 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     break;
                 case ACTION_LOCK_STARTS://锁状态FB 32 00 01 00 00 FE
                     if (b[4] == (byte) 0x01) {
-                        tv_status.setText("已打开");
-                    } else {
-                        tv_status.setText("已关闭");
+                        if (b[5] == (byte) 0x01) {
+                            tv_status.setText("已打开");
+                        } else {
+                            tv_status.setText("已关闭");
+                        }
                     }
                     break;
 

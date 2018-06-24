@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -382,18 +383,25 @@ public class AddDeviceActivity extends BaseActivity {
                     CommonKit.showErrorShort(context, "连接错误，请重新绑定");
                     break;
                 case ACTION_UUID:
-                    byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
-                    if (b.length >= 20) {
-                        showProgress("开始绑定...");
-                        startGetUUID(false, null);
-                        byte[] b_uuid = new byte[b.length - 4];
-                        System.arraycopy(b, 4, b_uuid, 0, b.length - 4);
-                        String uuid = Byte2HexUtil.byte2Hex(b_uuid).trim();
+//                    byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
+//                    if (b.length >= 20) {
+//                        showProgress("开始绑定...");
+//                        startGetUUID(false, null);
+//                        byte[] b_uuid = new byte[b.length - 4];
+//                        System.arraycopy(b, 4, b_uuid, 0, b.length - 4);
+//                        String uuid = Byte2HexUtil.byte2Hex(b_uuid).trim();
+//                        RLog.e("uuid=" + uuid);
+//                        if (uuid != null) {
+//                            showProgress("正在绑定...");
+//                            bindBox(uuid.trim());
+//                        }
+//                    }
+                    String uuid = intent.getStringExtra(BLECONSTANTS_DATA);
+                    if (!TextUtils.isEmpty(uuid)&&uuid.length()>=32){
                         RLog.e("uuid=" + uuid);
-                        if (uuid != null) {
-                            showProgress("正在绑定...");
-                            bindBox(uuid.trim());
-                        }
+                        startGetUUID(false, null);
+                        showProgress("正在绑定...");
+                        bindBox(uuid.trim());
                     }
                     if (MyBleService.get().getConnectDevice(mac) != null) {
                         MyBleService.get().getConnectDevice(mac).setActiveDisConnect(true);
