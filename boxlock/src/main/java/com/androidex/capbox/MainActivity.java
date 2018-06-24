@@ -534,20 +534,20 @@ public class MainActivity extends BaseActivity implements OnClickListener {
         RLog.e("onResume");
 
         // 在Android 6.0及以上系统，若定制手机使用到doze模式，请求将应用添加到白名单。
-        PowerManager powerManager = (PowerManager) MyApplication.getInstance().getSystemService(POWER_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            String packageName = MyApplication.getInstance().getPackageName();
-            boolean isIgnoring = powerManager.isIgnoringBatteryOptimizations(packageName);
-            if (!isIgnoring) {
-                Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                intent.setData(Uri.parse("package:" + packageName));
-                try {
-                    startActivity(intent);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }
+//        PowerManager powerManager = (PowerManager) MyApplication.getInstance().getSystemService(POWER_SERVICE);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            String packageName = MyApplication.getInstance().getPackageName();
+//            boolean isIgnoring = powerManager.isIgnoringBatteryOptimizations(packageName);
+//            if (!isIgnoring) {
+//                Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+//                intent.setData(Uri.parse("package:" + packageName));
+//                try {
+//                    startActivity(intent);
+//                } catch (Exception ex) {
+//                    ex.printStackTrace();
+//                }
+//            }
+//        }
     }
 
     @Override
