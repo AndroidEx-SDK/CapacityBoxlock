@@ -22,8 +22,12 @@ import android.widget.TextView;
 import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.base.UserBaseActivity;
 import com.androidex.capbox.data.Event;
+import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
+import com.androidex.capbox.db.DaoSession;
+import com.androidex.capbox.db.DeviceInfo;
+import com.androidex.capbox.db.DeviceInfoDao;
 import com.androidex.capbox.module.BoxDeviceModel;
 import com.androidex.capbox.ui.fragment.BoxListFragment;
 import com.androidex.capbox.ui.fragment.LockFragment;
@@ -31,6 +35,7 @@ import com.androidex.capbox.ui.fragment.MapFragment;
 import com.androidex.capbox.ui.fragment.MapFragment2;
 import com.androidex.capbox.ui.fragment.MeMainFragment;
 import com.androidex.capbox.ui.fragment.WatchListFragment;
+import com.androidex.capbox.utils.CalendarUtil;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
 import com.androidex.capbox.utils.RLog;
@@ -49,6 +54,7 @@ import butterknife.Bind;
 import okhttp3.Headers;
 import okhttp3.Request;
 
+import static com.androidex.boxlib.cache.SharedPreTool.IS_BIND_NUM;
 import static com.androidex.capbox.provider.WidgetProvider.EXTRA_ITEM_POSITION;
 import static com.androidex.capbox.ui.fragment.LockFragment.boxName;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
@@ -91,10 +97,12 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     private Fragment lockFragment;
     private static List<Map<String, String>> mylist = new ArrayList<>();
     private int main_index = -1;
+    private DeviceInfoDao deviceInfoDao;
 
     @Override
     public void initData(Bundle savedInstanceState) {
         registerEventBusSticky();
+        initDB();
         boxlist(0);
     }
 
@@ -146,6 +154,11 @@ public class MainActivity extends BaseActivity implements OnClickListener {
             transaction.replace(R.id.content, lockFragment);
             transaction.commit();
         }
+    }
+
+    public void initDB() {
+        DaoSession daoSession = ((MyApplication) context.getApplication()).getDaoSession();
+        deviceInfoDao = daoSession.getDeviceInfoDao();
     }
 
     @Override
@@ -394,7 +407,18 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                                 map.put("isdefault", "" + device.isDefault);
                                 map.put("isOnLine", "" + device.isOnLine);
                                 mylist.add(map);
+                                if (deviceInfoDao.queryBuilder().where(DeviceInfoDao.Properties.Address.eq(device.mac)).list().size()<=0){
+                                    DeviceInfo deviceInfo = new DeviceInfo();
+                                    deviceInfo.setAddress(device.mac);
+                                    deviceInfo.setUuid(device.uuid);
+                                    deviceInfo.setName(CalendarUtil.getName(device.boxName, device.mac));
+                                    deviceInfoDao.insert(deviceInfo);
+                                    RLog.d("DeviceInfo  设备不存在");
+                                }else {
+                                    RLog.d("DeviceInfo  设备已存在");
+                                }
                             }
+                            SharedPreTool.getInstance(context).setIntData(IS_BIND_NUM, model.devicelist.size());
                             if (model.devicelist.size() == 0) {
                                 CommonKit.showErrorShort(context, "未绑定任何设备");
                                 RLog.e(TAG + "刷新列表无数据");

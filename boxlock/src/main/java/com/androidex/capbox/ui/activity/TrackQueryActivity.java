@@ -298,7 +298,7 @@ public class TrackQueryActivity extends BaseActivity
         endTime = CommonUtil.getCurrentTime();
 
         ProcessOption processOption = new ProcessOption();
-        processOption.setRadiusThreshold(Constants.baiduMap.DEFAULT_RADIUS_THRESHOLD);
+        processOption.setRadiusThreshold(Constants.baiduMap.DEFAULT_RADIUS_THRESHOLD);//精度过滤
         processOption.setTransportMode(TransportMode.driving);
         processOption.setNeedDenoise(true);
         processOption.setNeedVacuate(false);
