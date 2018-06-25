@@ -901,18 +901,34 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     scanLeDevice();
                     break;
                 case ACTION_LOCK_OPEN_SUCCED:
-                    CommonKit.showOkShort(context, "开锁成功");
+                    if (b[3] == (byte) 0x00) {//协议4.7.1
+                        if (b[2] == (byte) 0x00) {
+                            CommonKit.showOkShort(context, "开锁成功");
+                        } else {
+                            CommonKit.showOkShort(context, "开锁失败");
+                        }
+                    } else {//协议4.8.0
+                        if (b[4] == (byte) 0x01) {
+                            CommonKit.showOkShort(context, "开锁成功");
+                        } else {
+                            CommonKit.showOkShort(context, "开锁失败");
+                        }
+                    }
                     MyBleService.getInstance().getLockStatus(address);
                     break;
-                case ACTION_LOCK_STARTS://锁状态FB 32 00 01 00 00 FE
-                    if (b[4] == (byte) 0x01) {
-                        //if (b[5] == (byte) 0x01) {
+                case ACTION_LOCK_STARTS:
+                    if (b[3] == (byte) 0x02) {//协议4.8.0
+                        if (b[5] == (byte) 0x01) {
                             tv_status.setText("已打开");
-//                        } else {
-//                            tv_status.setText("已关闭");
-//                        }
-                    } else {
-                        tv_status.setText("已关闭");
+                        } else {
+                            tv_status.setText("已关闭");
+                        }
+                    } else {////协议4.7.1
+                        if (b[4] == (byte) 0x01) {
+                            tv_status.setText("已打开");
+                        } else {
+                            tv_status.setText("已关闭");
+                        }
                     }
                     break;
 
@@ -939,16 +955,16 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                             break;
                     }
                     switch (b[12]) {
-                        case (byte) 0x01://差
+                        case (byte) 0x01:
                             tv_signalIntension.setText("差");
                             break;
-                        case (byte) 0x02://
+                        case (byte) 0x02:
                             tv_signalIntension.setText("一般");
                             break;
-                        case (byte) 0x03://
+                        case (byte) 0x03:
                             tv_signalIntension.setText("较强");
                             break;
-                        case (byte) 0x04://
+                        case (byte) 0x04:
                             tv_signalIntension.setText("强");
                             break;
                         default:
