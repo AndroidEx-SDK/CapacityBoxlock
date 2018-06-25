@@ -36,13 +36,11 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-
             <Button
                 android:id="@+id/ButtonClear"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="清除" />
-
 
             <RadioGroup
                 android:id="@+id/radioGroupOption"
@@ -61,6 +59,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Txt" />
+            </RadioGroup>
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/radioButtonDebug"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Debug" />
 
                 <RadioButton
                     android:id="@+id/radioButtonTCP"
@@ -72,10 +82,9 @@
                     android:id="@+id/radioButtonUDP"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Udp" />
+                    android:text="All" />
 
             </RadioGroup>
-
 
             <EditText
                 android:id="@+id/editTextLines"

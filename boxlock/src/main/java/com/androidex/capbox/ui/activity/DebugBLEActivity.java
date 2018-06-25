@@ -38,6 +38,7 @@ import java.util.List;
 import butterknife.Bind;
 
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_ALL_DATA;
+import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_DEBUG_LOG;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_SOCKET_OSPF;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
@@ -81,15 +82,18 @@ public class DebugBLEActivity extends BaseActivity {
     RadioButton radioButtonTCP;
     @Bind(R.id.radioButtonUDP)
     RadioButton radioButtonUDP;
+    @Bind(R.id.radioButtonDebug)
+    RadioButton radioButtonDebug;
 
     int iRecLines = 0;//接收区行数
     private int delayTime = 500;//定时发送的间隔时间
     private String address = null;
     private boolean isHex = true;
+    private boolean isDebug = true;
     private List<BluetoothDevice> allConnectDevice;
     boolean isCirculation = false;//是否自动发送
     boolean isTCP = false;//TCP协议发送
-    boolean isUDP = false;//UDP协议发送
+    boolean isAll = false;//全部协议发送
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -116,6 +120,7 @@ public class DebugBLEActivity extends BaseActivity {
         ButtonSendCOMA.setOnClickListener(new ButtonClickEvent());
         radioButtonTCP.setOnCheckedChangeListener(new CheckBoxChangeEvent());
         radioButtonUDP.setOnCheckedChangeListener(new CheckBoxChangeEvent());
+        radioButtonDebug.setOnCheckedChangeListener(new CheckBoxChangeEvent());
         checkBoxAutoCOMA.setOnCheckedChangeListener(new CheckBoxChangeEvent());
 
         editTextCOMA.setKeyListener(hexkeyListener);
@@ -134,6 +139,7 @@ public class DebugBLEActivity extends BaseActivity {
         intentFilter.addAction(BLUTOOTH_ON);//手机蓝牙打开
         intentFilter.addAction(ACTION_ALL_DATA);//读取调试数据
         intentFilter.addAction(ACTION_SOCKET_OSPF);//读取蓝牙发送的透传指令
+        intentFilter.addAction(ACTION_DEBUG_LOG);//调试接口的日志
         context.registerReceiver(dataUpdateRecevice, intentFilter);
 
         IntentFilter intentFilter1 = new IntentFilter();
@@ -240,11 +246,17 @@ public class DebugBLEActivity extends BaseActivity {
                 }
             } else if (buttonView == radioButtonUDP) {
                 if (isChecked) {
-                    isUDP = true;
-                    editTextCOMA.setText("FB10001A9a75bca04593464d95b4266cc5e0bc2759c215ffFFFFFFFFFFFF00FE");
+                    isAll = true;
                 } else {
-                    isUDP = false;
+                    isAll = false;
+                }
+                editTextCOMA.setText("");
+            } else if (buttonView == radioButtonDebug) {
+                if (isChecked) {
+                    isDebug = true;
                     editTextCOMA.setText("");
+                } else {
+                    isDebug = false;
                 }
             }
         }
@@ -260,7 +272,7 @@ public class DebugBLEActivity extends BaseActivity {
                 iRecLines = 0;
                 editTextLines.setText(String.valueOf(iRecLines));
             } else if (v == ButtonSendCOMA) {
-                if (isTCP || isUDP) {
+                if (isTCP) {
                     if (getSendData() == null) return;
                     try {
                         if (context == null) {
@@ -332,7 +344,6 @@ public class DebugBLEActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String deviceMac = intent.getStringExtra(BLECONSTANTS_ADDRESS);
-            byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
             if (deviceMac == null) return;
             if (!address.equals(deviceMac)) return;
             switch (intent.getAction()) {
@@ -360,22 +371,35 @@ public class DebugBLEActivity extends BaseActivity {
                     CommonKit.showOkShort(context, "手机蓝牙开启");
                     break;
                 case ACTION_ALL_DATA:
-                    //RLog.d("读取到的数据=" + Byte2HexUtil.byte2Hex(b));
-                    if (isTCP || isUDP) {
-                    } else {
+                    if (isAll) {
+                        byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
                         if (isHex) {
                             updateText(String.format("%s\r\n", Byte2HexUtil.byte2Hex(b)));
                         } else {
-                            try {
-                                updateText(String.format("%s\r\n", new String(b, "UTF-8")));
-                            } catch (UnsupportedEncodingException e) {
-                                e.printStackTrace();
-                            }
+                            updateText(String.format("%s\r\n", Byte2HexUtil.convertHexToString(Byte2HexUtil.byte2Hex(b))));
                         }
                     }
                     break;
                 case ACTION_SOCKET_OSPF:
-                    updateText(String.format("蓝牙接收到透传指令：%s\r\n", Byte2HexUtil.byte2Hex(b)));
+                    if (isTCP) {
+                        byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
+                        if (isHex) {
+                            updateText(String.format("透传：%s\r\n", Byte2HexUtil.byte2Hex(b)));
+                        } else {
+                            updateText(String.format("透传：%s\r\n", Byte2HexUtil.convertHexToString(Byte2HexUtil.byte2Hex(b))));
+                        }
+                    }
+                    break;
+
+                case ACTION_DEBUG_LOG://调试接口的日志
+                    if (isDebug) {
+                        String log = intent.getStringExtra(BLECONSTANTS_DATA);
+                        if (isHex) {
+                            updateText(String.format("调试：%s\r\n", log));
+                        } else {
+                            updateText(String.format("调试：%s\r\n", Byte2HexUtil.convertHexToString(log)));
+                        }
+                    }
                     break;
 
                 default:
