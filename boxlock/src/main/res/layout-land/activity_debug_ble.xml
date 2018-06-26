@@ -7,11 +7,12 @@
     android:orientation="vertical">
 
     <com.androidex.capbox.ui.widget.SecondTitleBar
-        android:id="@+id/title"
+        android:id="@+id/titlebar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/black"
         android:fitsSystemWindows="true"
+        app:rightText="连接设备"
         app:titleText="@string/testble" />
 
     <LinearLayout

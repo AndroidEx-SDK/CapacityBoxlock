@@ -50,7 +50,7 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCO
 import static com.androidex.boxlib.utils.BleConstants.BLE.SCAN_PERIOD;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
-import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_ADD_DEVICE;
+import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_ADD_DEBUG_DEVICE;
 
 public class AddDeviceActivity extends BaseActivity {
     @Bind(R.id.deviceListView)
@@ -70,6 +70,7 @@ public class AddDeviceActivity extends BaseActivity {
     private Animation animation;//动画
     private Handler mHandler;
     private Runnable mRunnable;
+    private static int code;
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -187,7 +188,7 @@ public class AddDeviceActivity extends BaseActivity {
                             device.setActiveDisConnect(true);
                             MyBleService.get().disConnectDevice(mDeviceListAdapter.getDevice(position).getAddress());
                         } else {
-                            RLog.d("开始绑定");
+                            RLog.d("开始连接");
                             stopScanLe();
                             showProgress(getResources().getString(R.string.device_connect));
                             MyBleService.get().connectionDevice(context, mDeviceListAdapter.getDevice(position).getAddress());
@@ -203,11 +204,10 @@ public class AddDeviceActivity extends BaseActivity {
         deviceList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                RLog.d("开始绑定");
+                RLog.d("开始连接");
                 stopScanLe();
                 showProgress(getResources().getString(R.string.device_connect));
                 BleService.get().connectionDevice(context, mDeviceListAdapter.getDevice(position).getAddress());
-
             }
         });
     }
@@ -362,15 +362,27 @@ public class AddDeviceActivity extends BaseActivity {
     public class BleBroadCast extends BroadcastReceiver {
 
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(Context mContext, Intent intent) {
             String mac = intent.getStringExtra(BLECONSTANTS_ADDRESS);
             switch (intent.getAction()) {
                 case BLE_CONN_SUCCESS://连接成功
                 case BLE_CONN_SUCCESS_ALLCONNECTED://重复连接
-                    BleService.get().enableNotify(mac);
-                    showProgress("正在绑定...");
-                    RLog.d("开始获取UUID");
-                    startGetUUID(true, mac);
+                    if (code == REQUESTCODE_ADD_DEBUG_DEVICE) {
+                        Intent intent1 = context.getIntent();
+                        BleService.get().enableNotify(mac);
+                        showProgress("连接成功");
+                        Bundle bundle = new Bundle();
+                        bundle.putString("address", mac);
+                        bundle.putInt("tag", 1);
+                        intent1.putExtras(bundle);
+                        context.setResult(RESULT_OK, intent1);
+                        CommonKit.finishActivity(context);
+                    } else {
+                        BleService.get().enableNotify(mac);
+                        showProgress("正在绑定...");
+                        RLog.d("开始获取UUID");
+                        startGetUUID(true, mac);
+                    }
                     break;
 
                 case BLE_CONN_DIS://断开连接
@@ -431,7 +443,8 @@ public class AddDeviceActivity extends BaseActivity {
         return R.layout.activity_adddevice;
     }
 
-    public static void lauch(Activity activity, Bundle bundle) {
-        CommonKit.startActivityForResult(activity, AddDeviceActivity.class, bundle, REQUESTCODE_ADD_DEVICE);
+    public static void lauch(Activity activity, Bundle bundle, int requesCode) {
+        code = requesCode;
+        CommonKit.startActivityForResult(activity, AddDeviceActivity.class, bundle, requesCode);
     }
 }

@@ -61,6 +61,7 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCONNECTED;
 import static com.androidex.capbox.provider.WidgetProvider.ACTION_UPDATE_ALL;
 import static com.androidex.capbox.provider.WidgetProvider.EXTRA_ITEM_POSITION;
+import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_ADD_DEVICE;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
 import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
@@ -116,7 +117,7 @@ public class BoxListFragment extends BaseFragment {
             public void onItemClick(ActionItem item, int position) {
                 switch (position) {
                     case 0:
-                        AddDeviceActivity.lauch(context, null);
+                        AddDeviceActivity.lauch(context, null,REQUESTCODE_ADD_DEVICE);
                         break;
                     case 1:
                         Intent intent = new Intent(context, CaptureActivity.class);

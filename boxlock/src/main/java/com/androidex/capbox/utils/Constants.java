@@ -138,6 +138,8 @@ public class Constants extends BleConstants {
         public static final int REQUESTCODE_FINGER_SETTING = 0x0009;//指纹设置
         public static final int CAMERA_PERMISSIONS_REQUEST_CODE = 0x03;//请求相机权限
         public static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0x04;//请求SD卡权限
+
+        public static final int REQUESTCODE_ADD_DEBUG_DEVICE = 0x000A;//添加调试设备
     }
 
     public static class baiduMap{

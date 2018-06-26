@@ -29,6 +29,7 @@ import com.androidex.boxlib.utils.Byte2HexUtil;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.service.MyBleService;
+import com.androidex.capbox.ui.widget.SecondTitleBar;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.RLog;
 
@@ -50,6 +51,7 @@ import static com.androidex.boxlib.utils.BleConstants.LOG.ACTION_LOG_TEST;
 import static com.androidex.boxlib.utils.BleConstants.NET.ACTION_NET_TCP_RECEIVE;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
+import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_ADD_DEBUG_DEVICE;
 
 /**
  * @author benjaminwan
@@ -58,6 +60,8 @@ import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_
  * n,8,1，没得选
  */
 public class DebugBLEActivity extends BaseActivity {
+    @Bind(R.id.titlebar)
+    SecondTitleBar titlebar;
     @Bind(R.id.editTextCOMA)
     EditText editTextCOMA;
     @Bind(R.id.editTextLines)
@@ -94,6 +98,7 @@ public class DebugBLEActivity extends BaseActivity {
     boolean isCirculation = false;//是否自动发送
     boolean isTCP = false;//TCP协议发送
     boolean isAll = false;//全部协议发送
+    private int tag = 0;
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -104,7 +109,35 @@ public class DebugBLEActivity extends BaseActivity {
         } else {
             CommonKit.showErrorShort(context, "请连接蓝牙");
         }
+        initTitleBar();
         initBleBroadCast();
+    }
+
+    private void initTitleBar() {
+        titlebar.getRightTv().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddDeviceActivity.lauch(context, null, REQUESTCODE_ADD_DEBUG_DEVICE);
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUESTCODE_ADD_DEBUG_DEVICE:
+                if (data != null) {
+                    Bundle bundle = data.getExtras();
+                    if (bundle != null) {
+                        address = bundle.getString("address");
+                        tag = bundle.getInt("tag");
+                    }
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -343,20 +376,22 @@ public class DebugBLEActivity extends BaseActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            String deviceMac = intent.getStringExtra(BLECONSTANTS_ADDRESS);
-            if (deviceMac == null) return;
-            if (!address.equals(deviceMac)) return;
+            // String deviceMac = intent.getStringExtra(BLECONSTANTS_ADDRESS);
+            //if (deviceMac == null) return;
+            //if (!address.equals(deviceMac)) return;
             switch (intent.getAction()) {
                 case BLE_CONN_SUCCESS:
                 case BLE_CONN_SUCCESS_ALLCONNECTED:
                     MyBleService.getInstance().enableNotify(address);
                     disProgress();
                     CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast3));
+                    titlebar.getRightTv().setText("已连接");
                     break;
                 case BLE_CONN_DIS://断开连接
                     checkBoxAutoCOMA.setChecked(false);
                     RLog.d("断开连接");
                     CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast4));
+                    titlebar.getRightTv().setText("连接设备");
                     break;
                 case BLE_CONN_FAIL://连接失败
                     disProgress();
@@ -433,6 +468,9 @@ public class DebugBLEActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         isCirculation = false;
+        if (tag == 1) {
+            MyBleService.getInstance().disConnectDevice(address);
+        }
     }
 
     public static void lauch(Activity activity) {
