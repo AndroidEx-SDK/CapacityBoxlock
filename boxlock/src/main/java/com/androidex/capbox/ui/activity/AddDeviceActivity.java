@@ -64,8 +64,6 @@ public class AddDeviceActivity extends BaseActivity {
     private static final int REQUEST_ENABLE_BT = 1;// 用于蓝牙setResult
     private BLEDeviceListAdapter mDeviceListAdapter;
     private BleBroadCast bleBroadCast;
-    private Timer timer_scanBle;// 扫描蓝牙时定时器
-    private TimerTask task_scanBle;
     private boolean mScanning = false;//控制蓝牙扫描
     private Animation animation;//动画
     private Handler mHandler;
@@ -218,42 +216,6 @@ public class AddDeviceActivity extends BaseActivity {
     }
 
     /**
-     * 获取设备的UUID
-     *
-     * @param flag
-     */
-    private void startGetUUID(boolean flag, final String mac) {
-        if (flag) {
-            RLog.e("启动自动发送");
-            startGetUUID(false, null);
-            if (task_scanBle == null) {
-                task_scanBle = new TimerTask() {
-                    @Override
-                    public void run() {
-                        if (mac != null) {
-                            MyBleService.get().getUUID(mac);
-                        }
-                    }
-                };
-            }
-            if (timer_scanBle == null) {
-                timer_scanBle = new Timer();
-            }
-            timer_scanBle.schedule(task_scanBle, 500, 5 * 1000);//延迟1s后执行
-        } else {
-            RLog.e("停止自动发送");
-            if (task_scanBle != null) {
-                task_scanBle.cancel();
-                task_scanBle = null;
-            }
-            if (timer_scanBle != null) {
-                timer_scanBle.cancel();
-                timer_scanBle = null;
-            }
-        }
-    }
-
-    /**
      * 绑定箱体
      *
      * @param uuid
@@ -379,14 +341,13 @@ public class AddDeviceActivity extends BaseActivity {
                         CommonKit.finishActivity(context);
                     } else {
                         BleService.get().enableNotify(mac);
-                        showProgress("正在绑定...");
-                        RLog.d("开始获取UUID");
-                        startGetUUID(true, mac);
+                        showProgress("开始绑定...");
+                        RLog.d("开始绑定");
+                        MyBleService.get().getUUID(mac);
                     }
                     break;
 
                 case BLE_CONN_DIS://断开连接
-                    startGetUUID(false, null);
                     disProgress();
                     mDeviceListAdapter.setTextHint(-1, "");
                     break;
@@ -398,7 +359,6 @@ public class AddDeviceActivity extends BaseActivity {
                     String uuid = intent.getStringExtra(BLECONSTANTS_DATA);
                     if (!TextUtils.isEmpty(uuid)&&uuid.length()>=32){
                         RLog.e("uuid=" + uuid);
-                        startGetUUID(false, null);
                         showProgress("正在绑定...");
                         bindBox(uuid.trim());
                     }
