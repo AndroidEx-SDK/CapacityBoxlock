@@ -42,6 +42,7 @@ import butterknife.Bind;
 import okhttp3.Headers;
 import okhttp3.Request;
 
+import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BIND;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_UUID;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
@@ -123,7 +124,7 @@ public class AddDeviceActivity extends BaseActivity {
         intentFilter.addAction(BLE_CONN_SUCCESS_ALLCONNECTED);
         intentFilter.addAction(BLE_CONN_FAIL);
         intentFilter.addAction(BLE_CONN_DIS);
-        intentFilter.addAction(ACTION_UUID);//获取UUID
+        intentFilter.addAction(ACTION_BIND);
         bleBroadCast = new BleBroadCast();
         context.registerReceiver(bleBroadCast, intentFilter);
     }
@@ -185,6 +186,8 @@ public class AddDeviceActivity extends BaseActivity {
                             mDeviceListAdapter.setTextHint(-1, "");//刷新列表的提醒显示
                             device.setActiveDisConnect(true);
                             MyBleService.get().disConnectDevice(mDeviceListAdapter.getDevice(position).getAddress());
+
+
                         } else {
                             RLog.d("开始连接");
                             stopScanLe();
@@ -343,33 +346,22 @@ public class AddDeviceActivity extends BaseActivity {
                         BleService.get().enableNotify(mac);
                         showProgress("开始绑定...");
                         RLog.d("开始绑定");
-                        MyBleService.get().getUUID(mac);
+                        String hexStr = Long.toHexString(Long.parseLong(getUserName()));
+                        RLog.d("hexStr = " + hexStr);
+                        if (hexStr.length() >= 9) {
+                            MyBleService.get().bind(mac, hexStr);
+                        } else {
+                            showProgress("用户信息错误");
+                        }
                     }
                     break;
-
+                case ACTION_BIND:
+                    disProgress();
+                    CommonKit.showOkShort(context, "绑定成功");
+                    break;
                 case BLE_CONN_DIS://断开连接
                     disProgress();
                     mDeviceListAdapter.setTextHint(-1, "");
-                    break;
-                case BLE_CONN_FAIL:
-                    disProgress();
-                    CommonKit.showErrorShort(context, "连接错误，请重新绑定");
-                    break;
-                case ACTION_UUID:
-                    String uuid = intent.getStringExtra(BLECONSTANTS_DATA);
-                    if (!TextUtils.isEmpty(uuid)&&uuid.length()>=32){
-                        RLog.e("uuid=" + uuid);
-                        showProgress("正在绑定...");
-                        bindBox(uuid.trim());
-                    }
-                    if (MyBleService.get().getConnectDevice(mac) != null) {
-                        MyBleService.get().getConnectDevice(mac).setActiveDisConnect(true);
-                        MyBleService.get().disConnectDevice(mac);
-                        mDeviceListAdapter.setTextHint(-1, "");
-                    }
-                    if (!mScanning) {
-                        scanLeDeviceList(true);
-                    }
                     break;
                 default:
                     break;

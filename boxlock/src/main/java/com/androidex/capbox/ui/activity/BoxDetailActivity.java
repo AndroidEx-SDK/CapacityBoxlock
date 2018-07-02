@@ -364,7 +364,6 @@ public class BoxDetailActivity extends BaseActivity {
             R.id.setting_Location,
             R.id.ll_heartbeatRate,
             R.id.ll_settingFinger,
-            R.id.setting_factory_settings,
             R.id.tv_startCarryScort,
             R.id.ll_settingAlarm,
             R.id.ll_settinglock,
@@ -477,11 +476,6 @@ public class BoxDetailActivity extends BaseActivity {
                 Bundle bundle1 = new Bundle();
                 bundle1.putString(EXTRA_ITEM_ADDRESS, mac);
                 SettingFingerActivity.lauch(context, bundle1);
-                break;
-            case R.id.setting_factory_settings://恢复出厂
-                if (isCarry()) return;//判断是否处于不可配置状态
-                if (isConnectBle()) return;//判断是否连接蓝牙
-                MyBleService.getInstance().recover(mac);
                 break;
             case R.id.ll_settingAlarm://报警设置
                 if (isCarry()) return;//判断是否处于不可配置状态
