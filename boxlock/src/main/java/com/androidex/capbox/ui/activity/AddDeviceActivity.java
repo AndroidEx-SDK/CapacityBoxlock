@@ -35,6 +35,7 @@ import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
 import com.androidex.capbox.utils.RLog;
 
+import java.text.BreakIterator;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -186,8 +187,6 @@ public class AddDeviceActivity extends BaseActivity {
                             mDeviceListAdapter.setTextHint(-1, "");//刷新列表的提醒显示
                             device.setActiveDisConnect(true);
                             MyBleService.get().disConnectDevice(mDeviceListAdapter.getDevice(position).getAddress());
-
-
                         } else {
                             RLog.d("开始连接");
                             stopScanLe();
@@ -347,7 +346,6 @@ public class AddDeviceActivity extends BaseActivity {
                         showProgress("开始绑定...");
                         RLog.d("开始绑定");
                         String hexStr = Long.toHexString(Long.parseLong(getUserName()));
-                        RLog.d("hexStr = " + hexStr);
                         if (hexStr.length() >= 9) {
                             MyBleService.get().bind(mac, hexStr);
                         } else {
@@ -356,8 +354,28 @@ public class AddDeviceActivity extends BaseActivity {
                     }
                     break;
                 case ACTION_BIND:
-                    disProgress();
-                    CommonKit.showOkShort(context, "绑定成功");
+                    byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
+                    switch (b[4]) {
+                        case (byte) 0x01:
+                            //CommonKit.showErrorShort(context, "绑定成功");
+                            byte[] epcBytes = new byte[b.length - 7];
+                            System.arraycopy(b, 5, epcBytes, 0, b.length - 7);
+                            RLog.d("uuid = " + Byte2HexUtil.byte2Hex(epcBytes));
+                            bindBox(Byte2HexUtil.byte2Hex(epcBytes));
+                            break;
+                        case (byte) 0x02://已被绑定
+                            CommonKit.showErrorShort(context, "已被绑定");
+                            break;
+                        case (byte) 0x03://等待服务器确认
+                            showProgress("等待服务器确认");
+                            break;
+                        case (byte) 0x04:
+                            disProgress();
+                            CommonKit.showErrorShort(context, "连接超时");
+                            break;
+                        default:
+                            break;
+                    }
                     break;
                 case BLE_CONN_DIS://断开连接
                     disProgress();
