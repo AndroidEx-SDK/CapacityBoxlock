@@ -275,7 +275,6 @@ public class BoxListFragment extends BaseFragment {
         intentFilter.addAction(BLE_CONN_SUCCESS_ALLCONNECTED);
         intentFilter.addAction(BLE_CONN_FAIL);
         intentFilter.addAction(BLE_CONN_DIS);
-        intentFilter.addAction(Constants.BLE.ACTION_UUID);//获取UUID
     }
 
     @Override

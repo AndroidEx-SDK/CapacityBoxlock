@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.UiThread;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Base64;
 import android.util.Log;
@@ -20,7 +19,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.androidex.boxlib.modules.ServiceBean;
-import com.androidex.boxlib.utils.Byte2HexUtil;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseFragment;
 import com.androidex.capbox.data.cache.SharedPreTool;
@@ -901,34 +899,18 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     scanLeDevice();
                     break;
                 case ACTION_LOCK_OPEN_SUCCED:
-                    if (b[3] == (byte) 0x00) {//协议4.7.1
-                        if (b[2] == (byte) 0x00) {
+                    if (b[4] == (byte) 0x01) {
                             CommonKit.showOkShort(context, "开锁成功");
                         } else {
                             CommonKit.showOkShort(context, "开锁失败");
                         }
-                    } else {//协议4.8.0
-                        if (b[4] == (byte) 0x01) {
-                            CommonKit.showOkShort(context, "开锁成功");
-                        } else {
-                            CommonKit.showOkShort(context, "开锁失败");
-                        }
-                    }
                     MyBleService.getInstance().getLockStatus(address);
                     break;
                 case ACTION_LOCK_STARTS:
-                    if (b[3] == (byte) 0x02) {//协议4.8.0
-                        if (b[5] == (byte) 0x01) {
-                            tv_status.setText("已打开");
-                        } else {
+                    if (b[4] == (byte) 0x01 && b[5] == (byte) 0x01) {
+                        tv_status.setText("已打开");
+                    } else if (b[4] == (byte) 0x01 && b[5] == (byte) 0x00) {
                             tv_status.setText("已关闭");
-                        }
-                    } else {////协议4.7.1
-                        if (b[4] == (byte) 0x01) {
-                            tv_status.setText("已打开");
-                        } else {
-                            tv_status.setText("已关闭");
-                        }
                     }
                     break;
 
@@ -938,64 +920,10 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                 case BLE_CONN_RSSI_FAIL://获取信号强度失败
 
                     break;
-
                 case ACTION_HEART://温度、湿度、电量
                     current_temp.setText(intent.getStringExtra(BLECONSTANTS_TEMP) != null ? intent.getStringExtra(BLECONSTANTS_TEMP) : "");
                     current_hum.setText(intent.getStringExtra(BLECONSTANTS_HUM) != null ? intent.getStringExtra(BLECONSTANTS_HUM) : "");
                     tv_electric_quantity.setText(intent.getStringExtra(BLECONSTANTS_ELECTRIC_QUANTITY) != null ? intent.getStringExtra(BLECONSTANTS_ELECTRIC_QUANTITY) : "");
-                    switch (b[11]) {
-                        case (byte) 0x01://有卡
-                            tv_simStatus.setText("有卡");
-                            break;
-                        case (byte) 0x02://无卡
-                            tv_simStatus.setText("未插卡");
-                            break;
-                        default:
-                            tv_simStatus.setText("未知");
-                            break;
-                    }
-                    switch (b[12]) {
-                        case (byte) 0x01:
-                            tv_signalIntension.setText("差");
-                            break;
-                        case (byte) 0x02:
-                            tv_signalIntension.setText("一般");
-                            break;
-                        case (byte) 0x03:
-                            tv_signalIntension.setText("较强");
-                            break;
-                        case (byte) 0x04:
-                            tv_signalIntension.setText("强");
-                            break;
-                        default:
-                            tv_signalIntension.setText("无网络");
-                            break;
-                    }
-                    switch (b[13]) {
-                        case (byte) 0x01://定位正常
-                            tv_locationStatus.setText("正常");
-                            break;
-                        case (byte) 0x02://定位异常
-                            tv_locationStatus.setText("异常");
-                            break;
-                        default:
-                            tv_locationStatus.setText("未知");
-                            break;
-                    }
-                    switch (b[14]) {
-                        case (byte) 0x01://充电中
-                            tv_chargingState.setText("充电中");
-                            break;
-                        case (byte) 0x02://未充电器
-                            tv_chargingState.setText("未充电");
-                            break;
-                        case (byte) 0x03://充满0x03
-                            tv_chargingState.setText("充满");
-                            break;
-                        default:
-                            tv_chargingState.setText("未知");
-                            break;
-                    }
                     break;
 
                 case ACTION_END_TAST://结束携行押运

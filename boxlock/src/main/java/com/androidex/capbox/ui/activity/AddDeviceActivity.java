@@ -35,16 +35,11 @@ import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
 import com.androidex.capbox.utils.RLog;
 
-import java.text.BreakIterator;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import butterknife.Bind;
 import okhttp3.Headers;
 import okhttp3.Request;
 
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BIND;
-import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_UUID;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
@@ -361,6 +356,7 @@ public class AddDeviceActivity extends BaseActivity {
                             byte[] epcBytes = new byte[b.length - 7];
                             System.arraycopy(b, 5, epcBytes, 0, b.length - 7);
                             RLog.d("uuid = " + Byte2HexUtil.byte2Hex(epcBytes));
+                            MyBleService.getInstance().disConnectDevice(mac);
                             bindBox(Byte2HexUtil.byte2Hex(epcBytes));
                             break;
                         case (byte) 0x02://已被绑定

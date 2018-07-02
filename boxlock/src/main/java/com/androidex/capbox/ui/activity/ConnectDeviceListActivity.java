@@ -13,7 +13,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.ListView;
 
-import com.androidex.boxlib.utils.Byte2HexUtil;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.service.MyBleService;
@@ -29,7 +28,6 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCONNECTED;
-import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
 
 /**
  * 箱体列表
@@ -37,7 +35,6 @@ import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_
  * @author liyp
  * @editTime 2017/9/27
  */
-
 public class ConnectDeviceListActivity extends BaseActivity {
     private static final String TAG = "ConnectDeviceList";
     @Bind(R.id.device_list_connected)
@@ -124,7 +121,6 @@ public class ConnectDeviceListActivity extends BaseActivity {
         intentFilter.addAction(BLE_CONN_SUCCESS_ALLCONNECTED);
         intentFilter.addAction(BLE_CONN_FAIL);
         intentFilter.addAction(BLE_CONN_DIS);
-        intentFilter.addAction(Constants.BLE.ACTION_UUID);//获取UUID
         bleBroadCast = new BleBroadCast();
         context.registerReceiver(bleBroadCast, intentFilter);
     }
@@ -154,20 +150,6 @@ public class ConnectDeviceListActivity extends BaseActivity {
 
                 case BLE_CONN_DIS://断开连接
                     getConnectDeviceList();
-                    break;
-
-                case Constants.BLE.ACTION_UUID:
-                    byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
-                    if (b.length >= 20) {
-                        showProgress("开始绑定...");
-                        byte[] b_uuid = new byte[b.length - 4];
-                        System.arraycopy(b, 4, b_uuid, 0, b.length - 4);
-                        String uuid = Byte2HexUtil.byte2Hex(b_uuid).trim();
-                        Loge("uuid=" + uuid);
-                        if (uuid != null) {
-                            showProgress("正在绑定...");
-                        }
-                    }
                     break;
 
                 case Constants.BLE.BLE_CONN_FAIL:

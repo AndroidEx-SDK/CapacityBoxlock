@@ -45,7 +45,6 @@ import static com.androidex.boxlib.cache.SharedPreTool.IS_BIND_NUM;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BOX_MAC;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_END_TAST;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_ONEKEYCONFIG;
-import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_RECOVER;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_START_BECOME;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_START_CARRYESCORT;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
@@ -167,7 +166,6 @@ public class BoxDetailActivity extends BaseActivity {
         intentFilter.addAction(BLE_CONN_SUCCESS_ALLCONNECTED);
         intentFilter.addAction(BLE_CONN_FAIL);
         intentFilter.addAction(BLE_CONN_DIS);
-        intentFilter.addAction(ACTION_RECOVER);//恢复出厂
         intentFilter.addAction(ACTION_ONEKEYCONFIG);//一键配置
         intentFilter.addAction(ACTION_BOX_MAC);//发送mac给腕表
         intentFilter.addAction(ACTION_START_CARRYESCORT);//启动携行押运
@@ -777,17 +775,6 @@ public class BoxDetailActivity extends BaseActivity {
                 case BLE_CONN_DIS:
                     tv_connect_starts.setText("点击连接");
                     Log.d(TAG, "断开连接=");
-                    break;
-                case ACTION_RECOVER://恢复出厂
-                    Log.e(TAG, "恢复出厂");
-                    switch (b[2]) {
-                        case (byte) 0x00://成功
-                            CommonKit.showMsgShort(mContext, "恢复出厂成功");
-                            break;
-                        case (byte) 0x01://失败
-                            CommonKit.showErrorShort(mContext, "恢复出厂失败");
-                            break;
-                    }
                     break;
                 case ACTION_ONEKEYCONFIG://一键配置
                     Log.e(TAG, "一键配置");
