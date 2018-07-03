@@ -31,6 +31,7 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCO
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
 import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_FINGER_BECOME;
+import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_FINGER_CARRY;
 import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_FINGER_POSSESSOR;
 import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
 
@@ -90,11 +91,11 @@ public class FingerEnterActivity extends BaseActivity {
         if (MyBleService.getInstance().getConnectDevice(mac) != null) {
             tv_hint_printFinger.setText("请将手指放到箱体的指纹处");
             if (code == REQUESTCODE_FINGER_POSSESSOR) {
-                MyBleService.getInstance().getFinger(mac, "1101");
+                MyBleService.getInstance().getFinger(mac, 11);
             } else if (code == REQUESTCODE_FINGER_BECOME) {
-                MyBleService.getInstance().getFinger(mac, "1301");
-            } else {
-
+                MyBleService.getInstance().getFinger(mac, 13);
+            } else if (code == REQUESTCODE_FINGER_CARRY) {
+                MyBleService.getInstance().getFinger(mac, 12);
             }
         } else {
             CommonKit.showErrorShort(context, "正在连接蓝牙，稍后再试");
@@ -139,7 +140,6 @@ public class FingerEnterActivity extends BaseActivity {
                     MyBleService.getInstance().enableNotify(mac);
                     CommonKit.showOkShort(mContext, "连接成功");
                     break;
-
                 case BLE_CONN_DIS:
                     Log.d(TAG, "断开连接=");
                     MyBleService.getInstance().connectionDevice(context, mac);
@@ -147,34 +147,25 @@ public class FingerEnterActivity extends BaseActivity {
                     break;
                 case ACTION_POSSESSORFINGER://获取到所有人的指纹信息
                     RLog.d("获取到所有人的指纹信息 b=" + Byte2HexUtil.byte2Hex(b));
-                    switch (b[2]) {//FB11 01 010100FE
-                        case (byte) 0x00://识别成功
-                            switch (b[4]) {
-                                case (byte) 0x01:
-                                    possessorFinger1 = "1";
-                                    RLog.d("指纹录入，第一次录入成功");
-                                    tv_hint_printFinger.setText("第一次录入成功");
-                                    break;
-                                case (byte) 0x02:
-                                    possessorFinger2 = "2";
-                                    RLog.d("指纹录入，第二次录入成功");
-                                    tv_hint_printFinger.setText("第二次录入成功");
-                                    break;
-                                case (byte) 0x03:
-                                    possessorFinger3 = "3";
-                                    RLog.d("指纹录入，第三次录入成功");
-                                    tv_hint_printFinger.setText("第三次录入成功");
-                                    handler.sendEmptyMessage(0);
-                                    break;
-                                default:
-                                    break;
-                            }
+                    switch (b[4]) {
+                        case (byte) 0x01:
+                            possessorFinger1 = "1";
+                            RLog.d("指纹录入，第一次录入成功");
+                            tv_hint_printFinger.setText("第一次录入成功");
                             break;
-                        case (byte) 0x02://识别失败
-                            tv_hint_printFinger.setText("");
-                            MyBleService.getInstance().getFinger(mac, "1101");
-                            CommonKit.showErrorShort(context, "请重新录入");
-                            tv_hint_printFinger.setText("指纹录入失败，请重新录入");
+                        case (byte) 0x02:
+                            possessorFinger2 = "2";
+                            RLog.d("指纹录入，第二次录入成功");
+                            tv_hint_printFinger.setText("第二次录入成功");
+                            break;
+                        case (byte) 0x03:
+                            possessorFinger3 = "3";
+                            RLog.d("指纹录入，第三次录入成功");
+                            tv_hint_printFinger.setText("第三次录入成功");
+                            handler.sendEmptyMessage(0);
+                            break;
+                        case (byte) 0x00:
+                            tv_hint_printFinger.setText("录入失败请重新录入");
                             break;
                         default:
                             break;
@@ -182,38 +173,31 @@ public class FingerEnterActivity extends BaseActivity {
                     break;
                 case ACTION_BECOMEFINGER://静默功能的指纹信息
                     RLog.d("静默功能的指纹信息 b=" + Byte2HexUtil.byte2Hex(b));
-                    switch (b[2]) {
-                        case (byte) 0x00://识别成功
-                            switch (b[4]) {
-                                case (byte) 0x01:
-                                    becomeFinger1 = "1";
-                                    RLog.d("指纹录入，第一次录入成功");
-                                    tv_hint_printFinger.setText("第一次录入成功");
-                                    break;
-                                case (byte) 0x02:
-                                    becomeFinger2 = "2";
-                                    RLog.d("指纹录入，第二次录入成功");
-                                    tv_hint_printFinger.setText("第二次录入成功");
-                                    break;
-                                case (byte) 0x03:
-                                    becomeFinger3 = "3";
-                                    RLog.d("指纹录入，第三次录入成功");
-                                    tv_hint_printFinger.setText("第三次录入成功");
-                                    handler.sendEmptyMessage(1);
-                                    break;
-                                default:
-                                    break;
-                            }
+                    switch (b[4]) {
+                        case (byte) 0x01:
+                            becomeFinger1 = "1";
+                            RLog.d("指纹录入，第一次录入成功");
+                            tv_hint_printFinger.setText("第一次录入成功");
                             break;
-                        case (byte) 0x02://识别失败
-                            tv_hint_printFinger.setText("");
-                            MyBleService.getInstance().getFinger(mac, "1301");
-                            CommonKit.showErrorShort(context, "请重新录入");
-                            tv_hint_printFinger.setText("指纹录入失败，请重新录入");
+                        case (byte) 0x02:
+                            becomeFinger2 = "2";
+                            RLog.d("指纹录入，第二次录入成功");
+                            tv_hint_printFinger.setText("第二次录入成功");
+                            break;
+                        case (byte) 0x03:
+                            becomeFinger3 = "3";
+                            RLog.d("指纹录入，第三次录入成功");
+                            tv_hint_printFinger.setText("第三次录入成功");
+                            handler.sendEmptyMessage(1);
                             break;
                         default:
                             break;
                     }
+                    break;
+                case ACTION_CARRYFINGER://携行人指纹
+                    RLog.d("静默功能的指纹信息 b=" + Byte2HexUtil.byte2Hex(b));
+                    break;
+                default:
                     break;
             }
         }

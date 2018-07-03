@@ -119,7 +119,7 @@ public class SettingFingerActivity extends BaseActivity {
             case R.id.ll_clearFinger:
                 isClear = true;
                 showProgress("正在清除...");
-                MyBleService.getInstance().clearFinger(address);
+                MyBleService.getInstance().clearFinger(address, 15, 0);
                 TimerTask task = new TimerTask() {
                     @Override
                     public void run() {

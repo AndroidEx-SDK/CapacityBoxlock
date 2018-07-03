@@ -348,18 +348,20 @@ public class AddDeviceActivity extends BaseActivity {
                         }
                     }
                     break;
-                case ACTION_BIND:
+                case ACTION_BIND://FB100005043DE8F59E00FE
                     byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
-                    switch (b[4]) {
+                    switch (b[0]) {
                         case (byte) 0x01:
                             //CommonKit.showErrorShort(context, "绑定成功");
-                            byte[] epcBytes = new byte[b.length - 7];
-                            System.arraycopy(b, 5, epcBytes, 0, b.length - 7);
+                            byte[] epcBytes = new byte[b.length -1];
+                            System.arraycopy(b, 5, epcBytes, 0, b.length - 1);
                             RLog.d("uuid = " + Byte2HexUtil.byte2Hex(epcBytes));
                             MyBleService.getInstance().disConnectDevice(mac);
                             bindBox(Byte2HexUtil.byte2Hex(epcBytes));
                             break;
                         case (byte) 0x02://已被绑定
+                            disProgress();
+                            MyBleService.getInstance().disConnectDevice(mac);
                             CommonKit.showErrorShort(context, "已被绑定");
                             break;
                         case (byte) 0x03://等待服务器确认
@@ -367,9 +369,13 @@ public class AddDeviceActivity extends BaseActivity {
                             break;
                         case (byte) 0x04:
                             disProgress();
+                            MyBleService.getInstance().disConnectDevice(mac);
                             CommonKit.showErrorShort(context, "连接超时");
                             break;
                         default:
+                            disProgress();
+                            MyBleService.getInstance().disConnectDevice(mac);
+                            CommonKit.showErrorShort(context, "出现未知错误");
                             break;
                     }
                     break;

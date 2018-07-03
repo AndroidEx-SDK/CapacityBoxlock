@@ -51,7 +51,6 @@
                     android:src="@mipmap/white_right" />
             </LinearLayout>
 
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/tv_line_height"
