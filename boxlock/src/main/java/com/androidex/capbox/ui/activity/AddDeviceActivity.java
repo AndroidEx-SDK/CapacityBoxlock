@@ -359,15 +359,14 @@ public class AddDeviceActivity extends BaseActivity {
                         }
                     }
                     break;
-                case ACTION_BIND://FB100005043DE8F59E00FE
+                case ACTION_BIND:
                     byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
-                    RLog.d("bind data = " + Byte2HexUtil.byte2Hex(b));
-                    if (b.length >= 8) {
+                    if (b.length >= 16) {
                         switch (b[0]) {
                             case (byte) 0x01:
                                 //CommonKit.showErrorShort(context, "绑定成功");
                                 byte[] epcBytes = new byte[b.length - 1];
-                                System.arraycopy(b, 5, epcBytes, 0, b.length - 1);
+                                System.arraycopy(b, 1, epcBytes, 0, b.length - 1);
                                 RLog.d("uuid = " + Byte2HexUtil.byte2Hex(epcBytes));
                                 MyBleService.getInstance().disConnectDevice(mac);
                                 bindBox(Byte2HexUtil.byte2Hex(epcBytes));
