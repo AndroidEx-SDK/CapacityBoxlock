@@ -122,7 +122,18 @@ public class MyBleService extends BleService {
         RLog.d("插入数据到数据库" + note.toString());
     }
 
+    @Override
+    protected String getUUID(String address) {
+        String uuid = null;
+        List<DeviceInfo> list = deviceInfoDao.queryBuilder().where(DeviceInfoDao.Properties.Address.eq(address)).list();
+        if (list.size() > 0) {
+            uuid = list.get(0).getUuid();
+        }
+        return uuid;
+    }
+
     /**
+     *
      * 上传轨迹到百度鹰眼
      */
     private void addpoint(String uuid, LocationModules modules, long longTime) {
