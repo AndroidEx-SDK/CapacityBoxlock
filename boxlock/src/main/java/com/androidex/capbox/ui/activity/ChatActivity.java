@@ -53,7 +53,6 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BOX_STARTS_CHAN
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_END_TAST;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_OPEN_SUCCED;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_STARTS;
-import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_TEMP_UPDATE;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_RSSI_FAIL;
@@ -196,7 +195,6 @@ public class ChatActivity extends BaseActivity {
         intentFilter.addAction(BLE_CONN_FAIL);
         intentFilter.addAction(BLE_CONN_DIS);
         intentFilter.addAction(ACTION_LOCK_STARTS);//锁状态
-        intentFilter.addAction(ACTION_TEMP_UPDATE);//更新温度
         intentFilter.addAction(BLE_CONN_RSSI_SUCCED);
         intentFilter.addAction(BLE_CONN_RSSI_FAIL);
         intentFilter.addAction(ACTION_END_TAST);//结束携行押运
@@ -378,7 +376,6 @@ public class ChatActivity extends BaseActivity {
             switch (intent.getAction()) {
                 case BLE_CONN_SUCCESS:
                 case BLE_CONN_SUCCESS_ALLCONNECTED:
-                    MyBleService.getInstance().enableNotify(address);
                     CommonKit.showOkShort(context, "连接成功");
                     break;
                 case BLE_CONN_DIS:

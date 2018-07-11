@@ -328,6 +328,7 @@ public class AddDeviceActivity extends BaseActivity {
             switch (intent.getAction()) {
                 case BLE_CONN_SUCCESS://连接成功
                 case BLE_CONN_SUCCESS_ALLCONNECTED://重复连接
+                    RLog.d(" AddDevice   连接成功");
                     if (code == REQUESTCODE_ADD_DEBUG_DEVICE) {
                         Intent intent1 = context.getIntent();
                         showProgress("连接成功");
@@ -338,35 +339,41 @@ public class AddDeviceActivity extends BaseActivity {
                         context.setResult(RESULT_OK, intent1);
                         CommonKit.finishActivity(context);
                     } else {
-                        showProgress("开始绑定...");
-                        RLog.d("开始绑定");
-                        final String hexStr = Long.toHexString(Long.parseLong(getUserName()));
-                        if (hexStr.length() >= 9) {
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        Thread.sleep(200);
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-                                    MyBleService.get().getBleUUID(mac);
+                        showProgress("开始获取UUID...");
+                        RLog.d("开始获取UUID");
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    Thread.sleep(200);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
                                 }
-                            }).start();
-                        } else {
-                            showProgress("用户信息错误");
-                        }
+                                MyBleService.get().getBleUUID(mac);
+                            }
+                        }).start();
                     }
                     break;
                 case ACTION_UUID: {
-                    byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
-                    if (b.length >= 16) {
-                        byte[] epcBytes = new byte[b.length - 1];
-                        System.arraycopy(b, 1, epcBytes, 0, b.length - 1);
-                        uuid = Byte2HexUtil.byte2Hex(epcBytes);
-                        RLog.d("uuid = " + uuid);
-                        MyBleService.getInstance().disConnectDevice(mac);
-                        MyBleService.get().bind(mac, getUserName());
+                    long phone = Long.parseLong(getUserName().trim());
+                    String hexStr = Long.toHexString(phone);
+                    if (hexStr.length() >= 9) {
+                        byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
+                        if (b.length >= 16) {
+                            byte[] epcBytes = new byte[16];
+                            System.arraycopy(b, 0, epcBytes, 0, 16);
+                            uuid = Byte2HexUtil.byte2Hex(epcBytes);
+                            RLog.d("uuid = " + uuid);//A434F1842513000000001124810E0000
+                            //MyBleService.getInstance().disConnectDevice(mac);
+                            MyBleService.get().bind(mac, hexStr);
+                            showProgress("开始绑定");
+                        } else {
+                            RLog.d("uuid不正确");
+                            showProgress("uuid不正确");
+                        }
+                    } else {
+                        RLog.d("用户信息错误");
+                        showProgress("用户信息错误");
                     }
                 }
                 break;
@@ -375,6 +382,7 @@ public class AddDeviceActivity extends BaseActivity {
                         byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
                         switch (b[0]) {
                             case (byte) 0x01:
+                                showProgress("正在绑定");
                                 //CommonKit.showErrorShort(context, "绑定成功");
                                 bindBox(uuid);
                                 break;

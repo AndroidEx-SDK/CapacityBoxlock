@@ -41,7 +41,6 @@ import okhttp3.Request;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_HEART;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_OPEN_SUCCED;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_STARTS;
-import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_TEMP_UPDATE;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_RSSI_FAIL;
@@ -109,7 +108,6 @@ public class LockScreenActivity extends BaseActivity {
         intentFilter.addAction(BLE_CONN_FAIL);
         intentFilter.addAction(BLE_CONN_DIS);
         intentFilter.addAction(ACTION_LOCK_STARTS);
-        intentFilter.addAction(ACTION_TEMP_UPDATE);
         intentFilter.addAction(BLE_CONN_RSSI_SUCCED);
         intentFilter.addAction(BLE_CONN_RSSI_FAIL);
         intentFilter.addAction(ACTION_HEART);
@@ -309,7 +307,6 @@ public class LockScreenActivity extends BaseActivity {
             switch (intent.getAction()) {
                 case BLE_CONN_SUCCESS://重复连接
                 case BLE_CONN_SUCCESS_ALLCONNECTED://重复连接
-                    MyBleService.getInstance().enableNotify(address);
                     disProgress();
                     if (list != null) {
                         RLog.e("蓝牙连接时更新 list size = " + list.size());

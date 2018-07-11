@@ -158,7 +158,6 @@ public class WidgetProvider extends AppWidgetProvider {
                 break;
             case BLE_CONN_SUCCESS://重复连接
             case BLE_CONN_SUCCESS_ALLCONNECTED://重复连接
-                MyBleService.getInstance().enableNotify(intent.getStringExtra(EXTRA_ITEM_ADDRESS));
                 CommonKit.showOkShort(context, context.getResources().getString(R.string.bledevice_toast3));
                 appWidgetManager.notifyAppWidgetViewDataChanged(appIds, R.id.myListView);
                 break;

@@ -40,7 +40,6 @@ import butterknife.Bind;
 
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_ALL_DATA;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_DEBUG_LOG;
-import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_SOCKET_OSPF;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
@@ -49,7 +48,6 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.BLUTOOTH_OFF;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLUTOOTH_ON;
 import static com.androidex.boxlib.utils.BleConstants.LOG.ACTION_LOG_TEST;
 import static com.androidex.boxlib.utils.BleConstants.NET.ACTION_NET_TCP_RECEIVE;
-import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
 import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_ADD_DEBUG_DEVICE;
 
@@ -171,7 +169,6 @@ public class DebugBLEActivity extends BaseActivity {
         intentFilter.addAction(BLUTOOTH_OFF);//手机蓝牙关闭
         intentFilter.addAction(BLUTOOTH_ON);//手机蓝牙打开
         intentFilter.addAction(ACTION_ALL_DATA);//读取调试数据
-        intentFilter.addAction(ACTION_SOCKET_OSPF);//读取蓝牙发送的透传指令
         intentFilter.addAction(ACTION_DEBUG_LOG);//调试接口的日志
         context.registerReceiver(dataUpdateRecevice, intentFilter);
 
@@ -332,7 +329,7 @@ public class DebugBLEActivity extends BaseActivity {
             return;
         }
         if (getSendData() == null) return;
-        MyBleService.getInstance().sendData(address, Byte2HexUtil.hex2Bytes(getSendData()));
+        //MyBleService.getInstance().sendData(address, Byte2HexUtil.hex2Bytes(getSendData()), );
     }
 
     @NonNull
@@ -382,7 +379,6 @@ public class DebugBLEActivity extends BaseActivity {
             switch (intent.getAction()) {
                 case BLE_CONN_SUCCESS:
                 case BLE_CONN_SUCCESS_ALLCONNECTED:
-                    MyBleService.getInstance().enableNotify(address);
                     disProgress();
                     CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast3));
                     titlebar.getRightTv().setText("已连接");
@@ -415,17 +411,6 @@ public class DebugBLEActivity extends BaseActivity {
                         }
                     }
                     break;
-                case ACTION_SOCKET_OSPF:
-                    if (isTCP) {
-                        byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
-                        if (isHex) {
-                            updateText(String.format("透传：%s\r\n", Byte2HexUtil.byte2Hex(b)));
-                        } else {
-                            updateText(String.format("透传：%s\r\n", Byte2HexUtil.convertHexToString(Byte2HexUtil.byte2Hex(b))));
-                        }
-                    }
-                    break;
-
                 case ACTION_DEBUG_LOG://调试接口的日志
                     if (isDebug) {
                         String log = intent.getStringExtra(BLECONSTANTS_DATA);

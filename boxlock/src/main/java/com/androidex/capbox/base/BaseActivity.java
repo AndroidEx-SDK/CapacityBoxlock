@@ -28,7 +28,6 @@ import de.greenrobot.event.EventBus;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_HEART;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_OPEN_SUCCED;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_STARTS;
-import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_TEMP_UPDATE;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_RSSI_FAIL;
@@ -95,7 +94,6 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
         intentFilter.addAction(BLE_CONN_FAIL);
         intentFilter.addAction(BLE_CONN_DIS);
         intentFilter.addAction(ACTION_LOCK_STARTS);
-        intentFilter.addAction(ACTION_TEMP_UPDATE);
         intentFilter.addAction(BLE_CONN_RSSI_SUCCED);
         intentFilter.addAction(BLE_CONN_RSSI_FAIL);
         intentFilter.addAction(ACTION_HEART);

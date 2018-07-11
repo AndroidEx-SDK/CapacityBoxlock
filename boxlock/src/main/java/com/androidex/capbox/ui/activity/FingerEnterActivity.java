@@ -91,11 +91,11 @@ public class FingerEnterActivity extends BaseActivity {
         if (MyBleService.getInstance().getConnectDevice(mac) != null) {
             tv_hint_printFinger.setText("请将手指放到箱体的指纹处");
             if (code == REQUESTCODE_FINGER_POSSESSOR) {
-                MyBleService.getInstance().getFinger(mac, 11);
+                MyBleService.getInstance().setFinger(mac, 11);
             } else if (code == REQUESTCODE_FINGER_BECOME) {
-                MyBleService.getInstance().getFinger(mac, 13);
+                MyBleService.getInstance().setFinger(mac, 13);
             } else if (code == REQUESTCODE_FINGER_CARRY) {
-                MyBleService.getInstance().getFinger(mac, 12);
+                MyBleService.getInstance().setFinger(mac, 12);
             }
         } else {
             CommonKit.showErrorShort(context, "正在连接蓝牙，稍后再试");
@@ -137,7 +137,6 @@ public class FingerEnterActivity extends BaseActivity {
                 case BLE_CONN_SUCCESS:
                 case BLE_CONN_SUCCESS_ALLCONNECTED:
                     Log.d(TAG, "连接成功=");
-                    MyBleService.getInstance().enableNotify(mac);
                     CommonKit.showOkShort(mContext, "连接成功");
                     break;
                 case BLE_CONN_DIS:

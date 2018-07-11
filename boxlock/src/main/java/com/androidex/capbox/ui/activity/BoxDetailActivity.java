@@ -1,7 +1,6 @@
 package com.androidex.capbox.ui.activity;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -143,7 +142,6 @@ public class BoxDetailActivity extends BaseActivity {
                 }
             } else {
                 Log.d(TAG, "已经连接");
-                MyBleService.getInstance().enableNotify(mac);
                 tv_connect_starts.setText("已连接");
                 CommonKit.showOkShort(mContext, "设备已连接");
             }
@@ -416,7 +414,7 @@ public class BoxDetailActivity extends BaseActivity {
             case R.id.oneKeyConfig://一键配置
                 if (isCarry()) return;//判断是否处于不可配置状态
                 if (isConnectBle()) return;//判断是否连接蓝牙
-                MyBleService.getInstance().startBoxConfig(mac);
+                MyBleService.getInstance().setBoxConfig(mac, "0101");
                 break;
             case R.id.setting_carryPersonNum://携行设备
                 if (isCarry()) return;//判断是否处于不可配置状态
@@ -767,7 +765,6 @@ public class BoxDetailActivity extends BaseActivity {
                 case BLE_CONN_SUCCESS:
                 case BLE_CONN_SUCCESS_ALLCONNECTED:
                     Log.d(TAG, "连接成功=");
-                    MyBleService.getInstance().enableNotify(mac);
                     tv_connect_starts.setText("已连接");
                     CommonKit.showOkShort(mContext, "连接成功");
                     break;
