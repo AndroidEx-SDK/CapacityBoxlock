@@ -10,8 +10,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -42,6 +40,7 @@ import okhttp3.Request;
 
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BIND;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
+import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_UUID;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCONNECTED;
@@ -67,6 +66,7 @@ public class AddDeviceActivity extends BaseActivity {
     private Handler mHandler;
     private Runnable mRunnable;
     private static int code;
+    private String uuid = null;
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -121,6 +121,7 @@ public class AddDeviceActivity extends BaseActivity {
         intentFilter.addAction(BLE_CONN_SUCCESS_ALLCONNECTED);
         intentFilter.addAction(BLE_CONN_FAIL);
         intentFilter.addAction(BLE_CONN_DIS);
+        intentFilter.addAction(ACTION_UUID);
         intentFilter.addAction(ACTION_BIND);
         bleBroadCast = new BleBroadCast();
         context.registerReceiver(bleBroadCast, intentFilter);
@@ -329,7 +330,6 @@ public class AddDeviceActivity extends BaseActivity {
                 case BLE_CONN_SUCCESS_ALLCONNECTED://重复连接
                     if (code == REQUESTCODE_ADD_DEBUG_DEVICE) {
                         Intent intent1 = context.getIntent();
-                        BleService.get().enableNotify(mac);
                         showProgress("连接成功");
                         Bundle bundle = new Bundle();
                         bundle.putString("address", mac);
@@ -338,7 +338,6 @@ public class AddDeviceActivity extends BaseActivity {
                         context.setResult(RESULT_OK, intent1);
                         CommonKit.finishActivity(context);
                     } else {
-                        BleService.get().enableNotify(mac);
                         showProgress("开始绑定...");
                         RLog.d("开始绑定");
                         final String hexStr = Long.toHexString(Long.parseLong(getUserName()));
@@ -351,7 +350,7 @@ public class AddDeviceActivity extends BaseActivity {
                                     } catch (InterruptedException e) {
                                         e.printStackTrace();
                                     }
-                                    MyBleService.get().bind(mac, hexStr);
+                                    MyBleService.get().getBleUUID(mac);
                                 }
                             }).start();
                         } else {
@@ -359,17 +358,25 @@ public class AddDeviceActivity extends BaseActivity {
                         }
                     }
                     break;
-                case ACTION_BIND:
+                case ACTION_UUID: {
                     byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
                     if (b.length >= 16) {
+                        byte[] epcBytes = new byte[b.length - 1];
+                        System.arraycopy(b, 1, epcBytes, 0, b.length - 1);
+                        uuid = Byte2HexUtil.byte2Hex(epcBytes);
+                        RLog.d("uuid = " + uuid);
+                        MyBleService.getInstance().disConnectDevice(mac);
+                        MyBleService.get().bind(mac, getUserName());
+                    }
+                }
+                break;
+                case ACTION_BIND:
+                    if (uuid != null && uuid.length() >= 32) {
+                        byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
                         switch (b[0]) {
                             case (byte) 0x01:
                                 //CommonKit.showErrorShort(context, "绑定成功");
-                                byte[] epcBytes = new byte[b.length - 1];
-                                System.arraycopy(b, 1, epcBytes, 0, b.length - 1);
-                                RLog.d("uuid = " + Byte2HexUtil.byte2Hex(epcBytes));
-                                MyBleService.getInstance().disConnectDevice(mac);
-                                bindBox(Byte2HexUtil.byte2Hex(epcBytes));
+                                bindBox(uuid);
                                 break;
                             case (byte) 0x02://已被绑定
                                 disProgress();
@@ -393,7 +400,7 @@ public class AddDeviceActivity extends BaseActivity {
                     } else {
                         disProgress();
                         MyBleService.getInstance().disConnectDevice(mac);
-                        CommonKit.showErrorShort(context, "绑定失败，uuid不正确");
+                        CommonKit.showErrorShort(context, "出现未知错误");
                     }
                     break;
                 case BLE_CONN_DIS://断开连接

@@ -55,7 +55,6 @@ import okhttp3.Request;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static com.androidex.boxlib.cache.SharedPreTool.IS_BIND_NUM;
-import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCONNECTED;
@@ -274,7 +273,6 @@ public class BoxListFragment extends BaseFragment {
         intentFilter.addAction(BLE_CONN_SUCCESS);
         intentFilter.addAction(BLE_CONN_SUCCESS_ALLCONNECTED);
         intentFilter.addAction(BLE_CONN_FAIL);
-        intentFilter.addAction(BLE_CONN_DIS);
     }
 
     @Override

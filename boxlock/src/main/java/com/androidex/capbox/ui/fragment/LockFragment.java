@@ -70,7 +70,6 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_END_TAST;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_HEART;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_OPEN_SUCCED;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_STARTS;
-import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_TEMP_UPDATE;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_RSSI_FAIL;
@@ -188,7 +187,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
             intentFilter.addAction(BLE_CONN_FAIL);
             intentFilter.addAction(BLE_CONN_DIS);
             intentFilter.addAction(ACTION_LOCK_STARTS);//锁状态
-            intentFilter.addAction(ACTION_TEMP_UPDATE);//更新温度
             intentFilter.addAction(BLE_CONN_RSSI_SUCCED);
             intentFilter.addAction(BLE_CONN_RSSI_FAIL);
             intentFilter.addAction(ACTION_HEART);//收到心跳返回
@@ -277,7 +275,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                                 CommonKit.showErrorShort(context, "请先连接设备");
                                 return;
                             }
-                            MyBleService.getInstance().getBoxVersion(address);
+                            MyBleService.getInstance().getFirmWareVer(address);
                         }
                         break;
                     default:
@@ -304,7 +302,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     scanLeDevice();
                 } else {
                     CommonKit.showMsgShort(context, "设备已连接");
-                    MyBleService.getInstance().enableNotify(address);
                     updateBleView(View.GONE, View.VISIBLE);
                 }
                 break;
@@ -535,7 +532,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                 if (device.getMac().equals(address)) {
                     isScanDevice = true;
                     Log.e(TAG, "搜索到设备...");
-                    showProgress("搜索到设备...");
                     stopScanLe();
                     showProgress("正在连接设备");
                     MyBleService.getInstance().connectionDevice(context, address);
@@ -868,7 +864,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                 case BLE_CONN_SUCCESS:
                 case BLE_CONN_SUCCESS_ALLCONNECTED:
                     isConnect = true;
-                    MyBleService.getInstance().enableNotify(address);
                     disProgress();
                     updateBleView(View.GONE, View.VISIBLE);
                     CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast3));
@@ -985,7 +980,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
             isConnect = false;
         } else {
             CommonKit.showMsgShort(context, "设备已连接");
-            MyBleService.getInstance().enableNotify(address);
             updateBleView(View.GONE, View.VISIBLE);
         }
     }
