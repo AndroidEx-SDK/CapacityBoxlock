@@ -672,7 +672,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                         if (model != null) {
                             switch (model.code) {
                                 case Constants.API.API_OK:
-                                    Log.e("TAG", "get device location");
+                                    RLog.e("get device location");
                                     LocationModel.Data data = model.data;
                                     latitude = data.getLatitude();//纬度
                                     longitude = data.getLongitude();//经度
@@ -704,7 +704,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                                 default:
                                     break;
                             }
-                            Log.e("TAG", model.toString());
+                            RLog.e(model.toString());
                         }
                     }
 

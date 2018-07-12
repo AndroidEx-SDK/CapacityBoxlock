@@ -59,18 +59,6 @@ public class BoxListAdapter extends BaseAdapter {
         mListener = listener;
     }
 
-    /**
-     * 根据位置从数据集中移除一条数据 并更新listview
-     *
-     * @param position
-     */
-    public void removeItem(int position) {
-        if (position >= 0 && position < mContentList.size()) {
-            mContentList.remove(position);
-            notifyDataSetChanged();
-        }
-    }
-
     @Override
     public int getCount() {
         return mContentList.size();
@@ -104,7 +92,6 @@ public class BoxListAdapter extends BaseAdapter {
             holder.device_address = convertView.findViewById(R.id.device_address);
             holder.iv_online = convertView.findViewById(R.id.iv_online);
             holder.tv_status = convertView.findViewById(R.id.tv_status);
-            holder.modify = convertView.findViewById(R.id.tv_modify);
             holder.unbind = convertView.findViewById(R.id.tv_unbind);
 
             ViewGroup.LayoutParams lp = holder.normalItemContentLayout.getLayoutParams();
@@ -128,9 +115,13 @@ public class BoxListAdapter extends BaseAdapter {
             holder.device_address.setText(mac);
         }
         holder.iv_online.setOnClickListener(mListener);
+        holder.iv_online.setTag(position);
         holder.normalItemContentLayout.setOnClickListener(mListener);
         holder.normalItemContentLayout.setTag(position);
-        holder.iv_online.setTag(position);
+
+        holder.unbind.setOnClickListener(mListener);
+        holder.unbind.setTag(position);
+
         if (isOnLine != null) {
             /**
              {"code":0,"devicelist":[
@@ -192,80 +183,6 @@ public class BoxListAdapter extends BaseAdapter {
         if (holder.itemHorizontalScrollView.getScrollX() != 0) {
             holder.itemHorizontalScrollView.scrollTo(0, 0);
         }
-
-
-        // 设置监听事件
-        holder.modify.setOnClickListener(new View.OnClickListener() {//修改
-
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        holder.unbind.setOnClickListener(new View.OnClickListener() {//删除
-
-            @Override
-            public void onClick(View v) {
-                if (!CommonKit.isNetworkAvailable(mContext)) {
-                    CommonKit.showErrorShort(mContext, "设备未连接网络");
-                    return;
-                }
-                String token = SharedPreTool.getInstance(mContext).getStringData(SharedPreTool.TOKEN, null);
-                if (token == null) {
-                    CommonKit.showErrorShort(mContext, "账号异常");
-                    token = "";
-                }
-                NetApi.relieveBoxBind(token, ((BaseActivity) mContext).getUserName(), uuid, mac, new ResultCallBack<BaseModel>() {
-                    @Override
-                    public void onStart() {
-                        super.onStart();
-                    }
-
-                    @Override
-                    public void onSuccess(int statusCode, Headers headers, BaseModel model) {
-                        super.onSuccess(statusCode, headers, model);
-                        if (model != null) {
-                            switch (model.code) {
-                                case Constants.API.API_OK:
-                                    CommonKit.showOkShort(mContext, mContext.getString(R.string.hint_unbind_ok));
-                                    removeItem(position);
-                                    ServiceBean device = MyBleService.getInstance().getConnectDevice(mac);
-                                    if (device != null) {
-                                        device.setActiveDisConnect(true);
-                                        MyBleService.getInstance().disConnectDevice(mac);
-                                    }
-                                    SharedPreTool.getInstance(mContext).remove(mac);
-                                    MyBleService.deleateData(mac);//删除轨迹
-                                    EventBus.getDefault().postSticky(new Event.BoxRelieveBind());
-                                    mContext.sendBroadcast(new Intent(ACTION_UPDATE_ALL));//发送广播给桌面插件，更新列表
-                                    break;
-                                case Constants.API.API_FAIL:
-                                    CommonKit.showErrorShort(mContext, "解绑失败");
-                                    break;
-                                case Constants.API.API_NOPERMMISION:
-                                    if (model.info != null) {
-                                        CommonKit.showErrorShort(mContext, model.info);
-                                    } else {
-                                        CommonKit.showErrorShort(mContext, "无权限");
-                                    }
-                                    break;
-                                default:
-                                    if (model.info != null) {
-                                        CommonKit.showErrorShort(mContext, model.info);
-                                    }
-                                    break;
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Request request, Exception e) {
-                        super.onFailure(statusCode, request, e);
-                    }
-                });
-            }
-        });
-
         return convertView;
     }
 
@@ -276,7 +193,6 @@ public class BoxListAdapter extends BaseAdapter {
         public TextView device_address;
         public ImageView iv_online;
         public TextView tv_status;
-        private TextView modify;
         private TextView unbind;
         /**
          * 删除，修改操作按钮层

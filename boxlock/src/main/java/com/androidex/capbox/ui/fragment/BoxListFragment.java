@@ -2,18 +2,25 @@ package com.androidex.capbox.ui.fragment;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.acker.simplezxing.activity.CaptureActivity;
+import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.capbox.MyApplication;
 import com.androidex.capbox.R;
+import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.base.BaseFragment;
 import com.androidex.capbox.data.Event;
 import com.androidex.capbox.data.cache.SharedPreTool;
@@ -36,6 +43,7 @@ import com.androidex.capbox.utils.CalendarUtil;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
 import com.androidex.capbox.utils.RLog;
+import com.androidex.capbox.utils.SystemUtil;
 import com.e.ble.bean.BLEDevice;
 import com.e.ble.scan.BLEScanCfg;
 import com.e.ble.scan.BLEScanListener;
@@ -49,15 +57,19 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
+import de.greenrobot.event.EventBus;
 import okhttp3.Headers;
 import okhttp3.Request;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static com.androidex.boxlib.cache.SharedPreTool.IS_BIND_NUM;
+import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_UNBIND;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCONNECTED;
+import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
+import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
 import static com.androidex.capbox.provider.WidgetProvider.ACTION_UPDATE_ALL;
 import static com.androidex.capbox.provider.WidgetProvider.EXTRA_ITEM_POSITION;
 import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_ADD_DEVICE;
@@ -81,6 +93,8 @@ public class BoxListFragment extends BaseFragment {
     ListView listconnected;
     @Bind(R.id.swipe_container)
     SwipeRefreshLayout swipe_container;
+    @Bind(R.id.ll_boxlist)
+    LinearLayout ll_boxlist;
 
     List<Map<String, String>> mylist = new ArrayList<>();
     private static final long SCAN_PERIOD = 12000;
@@ -89,6 +103,10 @@ public class BoxListFragment extends BaseFragment {
     private BoxListAdapter boxListAdapter;
     private TitlePopup titlePopup;
     private DeviceInfoDao deviceInfoDao;
+    private String uuid;
+    private int unBindPosition;
+    private BleBroadCast bleBroadCast;
+    private boolean isShow = true;
 
     @Override
     public void initData() {
@@ -97,6 +115,7 @@ public class BoxListFragment extends BaseFragment {
         iniRefreshView();
         initListView();
         initBle();//蓝牙连接
+        initBleReceiver();
     }
 
     public void initDB() {
@@ -110,7 +129,7 @@ public class BoxListFragment extends BaseFragment {
         // 给标题栏弹窗添加子类
         titlePopup.addAction(new ActionItem(context, "添加设备", R.mipmap.finish_carry));
         titlePopup.addAction(new ActionItem(context, "扫一扫", R.mipmap.connectlist));
-       // titlePopup.addAction(new ActionItem(context, "箱体设置", R.mipmap.setting));
+        // titlePopup.addAction(new ActionItem(context, "箱体设置", R.mipmap.setting));
         titlePopup.setItemOnClickListener(new TitlePopup.OnItemOnClickListener() {
             @Override
             public void onItemClick(ActionItem item, int position) {
@@ -157,7 +176,21 @@ public class BoxListFragment extends BaseFragment {
                             ChatActivity.lauch(context, bundle);
                         } else {
                             CommonKit.showOkShort(context, "开始扫描...");
-                            scanLeDevice(position);//开始扫描
+                            scanLeDevice(position, 0);//开始扫描
+                        }
+                        break;
+                    case R.id.tv_unbind:
+                        String address = mylist.get(position).get(EXTRA_ITEM_ADDRESS);
+                        uuid = mylist.get(position).get(EXTRA_BOX_UUID);
+                        unBindPosition = position;
+                        if (MyBleService.getInstance().getConnectDevice(address) == null) {
+                            scanLeDevice(position, 1);
+                            showProgress("正在连接...");
+                        } else {
+                            showProgress("正在解绑...");
+                            String hexStr = Long.toHexString(Long.parseLong(getUserName().trim()));
+                            RLog.d("解绑手机 = " + hexStr);
+                            MyBleService.getInstance().unBind(address, hexStr);
                         }
                         break;
                     default:
@@ -201,8 +234,9 @@ public class BoxListFragment extends BaseFragment {
 
     /**
      * 开始扫描
+     * @param index 0 代表是点击连接后进入聊天  1代表是解除绑定
      */
-    private void scanLeDevice(final int position) {
+    private void scanLeDevice(final int position, final int index) {
         final String address = mylist.get(position).get(EXTRA_ITEM_ADDRESS);
         final String deviceUUID = mylist.get(position).get(EXTRA_BOX_UUID);
         showProgress("搜索设备...");
@@ -221,16 +255,21 @@ public class BoxListFragment extends BaseFragment {
                     showProgress("搜索到设备...");
                     stopScanLe();
                     isScanDevice = true;
-                    synchronized (this) {
-                        RLog.d("搜索到设备mScanning=" + mScanning);
-                        Bundle bundle = new Bundle();
-                        bundle.putString(EXTRA_BOX_NAME, device.getName());
-                        bundle.putString(EXTRA_BOX_UUID, deviceUUID);
-                        bundle.putString(EXTRA_ITEM_ADDRESS, address);
-                        bundle.putInt(EXTRA_PAGER_SIGN, 0);//0表示从设备列表跳转过去的1表示从监控页跳转
-                        bundle.putInt(EXTRA_ITEM_POSITION, position);//position选择的是第几个设备
-                        //BoxDetailActivity.lauch(getActivity(), bundle);
-                        ChatActivity.lauch(context, bundle);
+                    if (index == 0) {
+                        synchronized (this) {
+                            RLog.d("搜索到设备mScanning=" + mScanning);
+                            Bundle bundle = new Bundle();
+                            bundle.putString(EXTRA_BOX_NAME, device.getName());
+                            bundle.putString(EXTRA_BOX_UUID, deviceUUID);
+                            bundle.putString(EXTRA_ITEM_ADDRESS, address);
+                            bundle.putInt(EXTRA_PAGER_SIGN, 0);//0表示从设备列表跳转过去的1表示从监控页跳转
+                            bundle.putInt(EXTRA_ITEM_POSITION, position);//position选择的是第几个设备
+                            //BoxDetailActivity.lauch(getActivity(), bundle);
+                            ChatActivity.lauch(context, bundle);
+                        }
+                    } else {
+                        MyBleService.getInstance().connectionDevice(context, address);
+                        showProgress("正在连接...");
                     }
                 }
             }
@@ -270,6 +309,49 @@ public class BoxListFragment extends BaseFragment {
         intentFilter.addAction(BLE_CONN_SUCCESS);
         intentFilter.addAction(BLE_CONN_SUCCESS_ALLCONNECTED);
         intentFilter.addAction(BLE_CONN_FAIL);
+        intentFilter.addAction(ACTION_UNBIND);
+        bleBroadCast = new BleBroadCast();
+        context.registerReceiver(bleBroadCast, intentFilter);
+    }
+
+    /**
+     * 接收广播
+     */
+    public class BleBroadCast extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context mContext, Intent intent) {
+            if (!isShow) return;
+            final String address = intent.getStringExtra(BLECONSTANTS_ADDRESS);
+            switch (intent.getAction()) {
+                case BLE_CONN_SUCCESS://连接成功
+                case BLE_CONN_SUCCESS_ALLCONNECTED://重复连接
+                    RLog.e("boxlistfragment isShow=" + isShow);
+                    showProgress("连接成功...");
+                    String hexStr = Long.toHexString(Long.parseLong(getUserName().trim()));
+                    MyBleService.getInstance().unBind(address, hexStr);
+                    break;
+                case ACTION_UNBIND:
+                    disProgress();
+                    byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
+                    switch (b[1]) {
+                        case (byte) 0x01:
+                            if (uuid.length() >= 32) {
+                                unBind(unBindPosition, address, uuid);
+                            }
+                            break;
+                        case (byte) 0x00:
+                            CommonKit.showErrorShort(context, "解绑失败");
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
     }
 
     @Override
@@ -354,6 +436,69 @@ public class BoxListFragment extends BaseFragment {
         });
     }
 
+    private void unBind(final int position, final String address, String uuid) {
+        if (!CommonKit.isNetworkAvailable(context)) {
+            CommonKit.showErrorShort(context, "设备未连接网络");
+            return;
+        }
+        String token = SharedPreTool.getInstance(context).getStringData(SharedPreTool.TOKEN, null);
+        if (token == null) {
+            CommonKit.showErrorShort(context, "账号异常");
+            token = "";
+        }
+        NetApi.relieveBoxBind(token, ((BaseActivity) context).getUserName(), uuid, address, new ResultCallBack<BaseModel>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Headers headers, BaseModel model) {
+                super.onSuccess(statusCode, headers, model);
+                if (model != null) {
+                    switch (model.code) {
+                        case Constants.API.API_OK:
+                            CommonKit.showOkShort(context, getString(R.string.hint_unbind_ok));
+                            if (position >= 0 && position < mylist.size()) {
+                                mylist.remove(position);
+                                boxListAdapter.notifyDataSetChanged();
+                            }
+                            ServiceBean device = MyBleService.getInstance().getConnectDevice(address);
+                            if (device != null) {
+                                device.setActiveDisConnect(true);
+                                MyBleService.getInstance().disConnectDevice(address);
+                            }
+                            SharedPreTool.getInstance(context).remove(address);
+                            MyBleService.deleateData(address);//删除轨迹
+                            EventBus.getDefault().postSticky(new Event.BoxRelieveBind());
+                            context.sendBroadcast(new Intent(ACTION_UPDATE_ALL));//发送广播给桌面插件，更新列表
+                            break;
+                        case Constants.API.API_FAIL:
+                            CommonKit.showErrorShort(context, "解绑失败");
+                            break;
+                        case Constants.API.API_NOPERMMISION:
+                            if (model.info != null) {
+                                CommonKit.showErrorShort(context, model.info);
+                            } else {
+                                CommonKit.showErrorShort(context, "无权限");
+                            }
+                            break;
+                        default:
+                            if (model.info != null) {
+                                CommonKit.showErrorShort(context, model.info);
+                            }
+                            break;
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Request request, Exception e) {
+                super.onFailure(statusCode, request, e);
+            }
+        });
+    }
+
     /**
      * 获取设备列表
      */
@@ -383,14 +528,14 @@ public class BoxListFragment extends BaseFragment {
                                     carryNum++;
                                 }
                                 mylist.add(map);
-                                if (deviceInfoDao.queryBuilder().where(DeviceInfoDao.Properties.Address.eq(device.mac)).list().size()<=0){
+                                if (deviceInfoDao.queryBuilder().where(DeviceInfoDao.Properties.Address.eq(device.mac)).list().size() <= 0) {
                                     DeviceInfo deviceInfo = new DeviceInfo();
                                     deviceInfo.setAddress(device.mac);
                                     deviceInfo.setUuid(device.uuid);
                                     deviceInfo.setName(CalendarUtil.getName(device.boxName, device.mac));
                                     deviceInfoDao.insert(deviceInfo);
                                     RLog.d("DeviceInfo  设备不存在");
-                                }else {
+                                } else {
                                     RLog.d("DeviceInfo  设备已存在");
                                 }
                             }
@@ -450,17 +595,24 @@ public class BoxListFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        RLog.e("Boxlistfragment onResume");
         boxlist();
+        isShow = true;
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        RLog.e("Boxlistfragment onPause");
+        stopScanLe();
+        isShow = false;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (bleBroadCast != null)
+            context.unregisterReceiver(bleBroadCast);
     }
 
     @Override
