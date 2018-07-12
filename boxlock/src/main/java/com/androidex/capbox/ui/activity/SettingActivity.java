@@ -23,6 +23,7 @@ import com.androidex.capbox.ui.widget.SecondTitleBar;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
 import com.androidex.capbox.utils.RLog;
+import com.androidex.capbox.utils.SystemUtil;
 
 import java.io.File;
 
@@ -59,6 +60,15 @@ public class SettingActivity extends UserBaseActivity {
         RLog.e("SettingActivity is onCreat");
         tv_versionNum.setText(getResources().getString(R.string.about_tv_versionNum) + CommonKit.getVersionName(context));
         updateCache();
+        initView();
+    }
+
+    private void initView() {
+        if (SystemUtil.isApkInDebug(context)) {
+            title.getRightTv().setVisibility(View.VISIBLE);
+        } else {
+            title.getRightTv().setVisibility(View.GONE);
+        }
     }
 
     @Override
