@@ -35,6 +35,7 @@ import com.androidex.capbox.utils.RLog;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.UUID;
 
 import butterknife.Bind;
 
@@ -97,6 +98,7 @@ public class DebugBLEActivity extends BaseActivity {
     boolean isTCP = false;//TCP协议发送
     boolean isAll = false;//全部协议发送
     private int tag = 0;
+    UUID UUID_BIND = UUID.fromString("0000ff25-0000-1000-8000-00805f9b34fb");//3.4.1	绑定箱体
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -329,7 +331,7 @@ public class DebugBLEActivity extends BaseActivity {
             return;
         }
         if (getSendData() == null) return;
-        //MyBleService.getInstance().sendData(address, Byte2HexUtil.hex2Bytes(getSendData()), );
+        MyBleService.get().sendData(address, Byte2HexUtil.hex2Bytes(getSendData()), UUID_BIND);
     }
 
     @NonNull

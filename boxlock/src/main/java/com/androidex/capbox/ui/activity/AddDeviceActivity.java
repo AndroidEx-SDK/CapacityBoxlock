@@ -343,6 +343,7 @@ public class AddDeviceActivity extends BaseActivity {
                         context.setResult(RESULT_OK, intent1);
                         CommonKit.finishActivity(context);
                     } else {
+                        MyBleService.getInstance().enableNotifyService(mac);
                         showProgress("开始获取UUID...");
                         RLog.d("开始获取UUID");
                         new Thread(new Runnable() {
@@ -359,15 +360,14 @@ public class AddDeviceActivity extends BaseActivity {
                     }
                     break;
                 case ACTION_UUID: {
-                    long phone = Long.parseLong(getUserName().trim());
-                    String hexStr = Long.toHexString(phone);
+                    String hexStr = Long.toHexString(Long.parseLong(getUserName().trim()));
                     if (hexStr.length() >= 9) {
                         byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
                         if (b.length >= 16) {
                             byte[] epcBytes = new byte[16];
                             System.arraycopy(b, 0, epcBytes, 0, 16);
                             uuid = Byte2HexUtil.byte2Hex(epcBytes);
-                            RLog.d("uuid = " + uuid);//A434F1842513000000001124810E0000
+                            RLog.d("uuid = " + uuid);
                             MyBleService.get().bind(mac, hexStr);
                             showProgress("开始绑定");
                             isBind = false;
@@ -401,7 +401,7 @@ public class AddDeviceActivity extends BaseActivity {
                     if (uuid != null && uuid.length() >= 32) {
                         byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
                         isBind = true;
-                        switch (b[0]) {
+                        switch (b[1]) {
                             case (byte) 0x01:
                                 showProgress("正在绑定");
                                 //CommonKit.showErrorShort(context, "绑定成功");
@@ -410,7 +410,15 @@ public class AddDeviceActivity extends BaseActivity {
                             case (byte) 0x02://已被绑定
                                 disProgress();
                                 MyBleService.getInstance().disConnectDevice(mac);
-                                CommonKit.showErrorShort(context, "已被绑定");
+                                byte[] epcBytes = new byte[5];
+                                System.arraycopy(b, 2, epcBytes, 0, 5);
+                                String mobile = Byte2HexUtil.byte2Hex(epcBytes);
+                                Long phone = Long.valueOf(mobile, 16);
+                                if (Long.parseLong(getUserName().trim())==phone) {
+                                    bindBox(uuid);
+                                } else {
+                                    CommonKit.showErrorShort(context, "已被" + phone + "绑定");
+                                }
                                 break;
                             case (byte) 0x03://等待服务器确认
                                 showProgress("等待服务器确认");

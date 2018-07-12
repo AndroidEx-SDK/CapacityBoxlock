@@ -24,7 +24,6 @@
             android:orientation="vertical">
 
             <RelativeLayout
-                android:id="@+id/rl_boxset"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -38,41 +37,49 @@
                     android:src="@mipmap/ic_label_head" />
 
                 <RelativeLayout
+                    android:id="@+id/rl_boxset"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="100dp"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/iv_head">
 
-                    <TextView
-                        android:id="@+id/tv_name"
+                    <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/marginPadding16"
-                        android:text="Box"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/size16" />
+                        android:layout_centerVertical="true">
 
-                    <TextView
-                        android:id="@+id/tv_connect_starts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/tv_name"
-                        android:layout_toRightOf="@+id/tv_name"
-                        android:paddingLeft="@dimen/marginPadding16"
-                        android:text="未连接"
-                        android:textColor="@color/theme_color"
-                        android:textSize="@dimen/size10" />
+                        <TextView
+                            android:id="@+id/tv_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/marginPadding16"
+                            android:text="Box"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/size16" />
 
-                    <TextView
-                        android:id="@+id/tv_mac"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/tv_name"
-                        android:layout_marginLeft="@dimen/marginPadding16"
-                        android:layout_marginTop="@dimen/marginPadding10"
-                        android:text="FF:FF:FF:FF:FF:FF"
-                        android:textColor="@color/Gray_e5"
-                        android:textSize="@dimen/size14" />
+                        <TextView
+                            android:id="@+id/tv_connect_starts"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/tv_name"
+                            android:layout_toRightOf="@+id/tv_name"
+                            android:paddingLeft="@dimen/marginPadding16"
+                            android:text="未连接"
+                            android:textColor="@color/theme_color"
+                            android:textSize="@dimen/size10" />
+
+                        <TextView
+                            android:id="@+id/tv_mac"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tv_name"
+                            android:layout_marginLeft="@dimen/marginPadding16"
+                            android:layout_marginTop="@dimen/marginPadding10"
+                            android:text="FF:FF:FF:FF:FF:FF"
+                            android:textColor="@color/Gray_e5"
+                            android:textSize="@dimen/size14" />
+                    </RelativeLayout>
+
 
                     <ImageView
                         android:id="@+id/iv_right"

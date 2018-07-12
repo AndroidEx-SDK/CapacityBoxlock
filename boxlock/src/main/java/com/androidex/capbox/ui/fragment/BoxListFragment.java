@@ -110,7 +110,7 @@ public class BoxListFragment extends BaseFragment {
         // 给标题栏弹窗添加子类
         titlePopup.addAction(new ActionItem(context, "添加设备", R.mipmap.finish_carry));
         titlePopup.addAction(new ActionItem(context, "扫一扫", R.mipmap.connectlist));
-        titlePopup.addAction(new ActionItem(context, "箱体设置", R.mipmap.setting));
+       // titlePopup.addAction(new ActionItem(context, "箱体设置", R.mipmap.setting));
         titlePopup.setItemOnClickListener(new TitlePopup.OnItemOnClickListener() {
             @Override
             public void onItemClick(ActionItem item, int position) {
@@ -121,9 +121,6 @@ public class BoxListFragment extends BaseFragment {
                     case 1:
                         Intent intent = new Intent(context, CaptureActivity.class);
                         startActivityForResult(intent, CaptureActivity.REQ_CODE);// ,//Activity.RESULT_FIRST_USER
-                        break;
-                    case 2:
-
                         break;
                     default:
                         break;
