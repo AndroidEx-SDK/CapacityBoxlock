@@ -34,6 +34,9 @@ import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
 import com.androidex.capbox.utils.RLog;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import butterknife.Bind;
 import okhttp3.Headers;
 import okhttp3.Request;
@@ -67,6 +70,7 @@ public class AddDeviceActivity extends BaseActivity {
     private Runnable mRunnable;
     private static int code;
     private String uuid = null;
+    private boolean isBind = false;
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -364,9 +368,25 @@ public class AddDeviceActivity extends BaseActivity {
                             System.arraycopy(b, 0, epcBytes, 0, 16);
                             uuid = Byte2HexUtil.byte2Hex(epcBytes);
                             RLog.d("uuid = " + uuid);//A434F1842513000000001124810E0000
-                            //MyBleService.getInstance().disConnectDevice(mac);
                             MyBleService.get().bind(mac, hexStr);
                             showProgress("开始绑定");
+                            isBind = false;
+                            Timer timer = new Timer();
+                            timer.schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    if (!isBind) {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                MyBleService.getInstance().disConnectDevice(mac);
+                                                disProgress();
+                                                CommonKit.showErrorShort(context, "绑定失败");
+                                            }
+                                        });
+                                    }
+                                }
+                            }, 3000);
                         } else {
                             RLog.d("uuid不正确");
                             showProgress("uuid不正确");
@@ -380,6 +400,7 @@ public class AddDeviceActivity extends BaseActivity {
                 case ACTION_BIND:
                     if (uuid != null && uuid.length() >= 32) {
                         byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
+                        isBind = true;
                         switch (b[0]) {
                             case (byte) 0x01:
                                 showProgress("正在绑定");
