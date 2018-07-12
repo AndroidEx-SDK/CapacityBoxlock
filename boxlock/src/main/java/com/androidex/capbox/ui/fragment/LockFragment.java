@@ -135,14 +135,10 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     TextView maxhum;
     @Bind(R.id.main_tv_minhum)
     TextView minhum;
-    @Bind(R.id.tv_locationStatus)
-    TextView tv_locationStatus;
     @Bind(R.id.tv_chargingState)
     TextView tv_chargingState;
-    @Bind(R.id.tv_signalIntension)
-    TextView tv_signalIntension;
-    @Bind(R.id.tv_simStatus)
-    TextView tv_simStatus;
+
+
     @Bind(R.id.progressBar_dfu)
     ProgressBar mProgressBarOtaUpload;
     @Bind(R.id.swipeRefreshLayout)
@@ -896,7 +892,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     scanLeDevice();
                     break;
                 case ACTION_LOCK_OPEN_SUCCED:
-                    if (b[4] == (byte) 0x01) {
+                    if (b[1] == (byte) 0x01) {
                             CommonKit.showOkShort(context, "开锁成功");
                         } else {
                             CommonKit.showOkShort(context, "开锁失败");
@@ -904,10 +900,10 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     MyBleService.getInstance().getLockStatus(address);
                     break;
                 case ACTION_LOCK_STARTS:
-                    if (b[4] == (byte) 0x01 && b[5] == (byte) 0x01) {
+                    if (b[0] == (byte) 0x01) {
                         tv_status.setText("已打开");
-                    } else if (b[4] == (byte) 0x01 && b[5] == (byte) 0x00) {
-                            tv_status.setText("已关闭");
+                    } else {
+                        tv_status.setText("已关闭");
                     }
                     break;
 

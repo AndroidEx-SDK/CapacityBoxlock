@@ -186,22 +186,6 @@
 
                                 <TextView
                                     style="@style/fragment_lock_name"
-                                    android:text="定位状态：" />
-
-                                <TextView
-                                    android:id="@+id/tv_locationStatus"
-                                    style="@style/fragment_lock_data"
-                                    android:text="@string/main_max_temp" />
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/marginPadding6">
-
-                                <TextView
-                                    style="@style/fragment_lock_name"
                                     android:text="经度：" />
 
                                 <TextView
@@ -351,38 +335,6 @@
                                     android:id="@+id/tv_status"
                                     style="@style/fragment_lock_data"
                                     android:text="@string/setting_tv_close" />
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/marginPadding6">
-
-                                <TextView
-                                    style="@style/fragment_lock_name"
-                                    android:text="SIM卡状态：" />
-
-                                <TextView
-                                    android:id="@+id/tv_simStatus"
-                                    style="@style/fragment_lock_data"
-                                    android:text="@string/main_max_temp" />
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/marginPadding6">
-
-                                <TextView
-                                    style="@style/fragment_lock_name"
-                                    android:text="网络信号：" />
-
-                                <TextView
-                                    android:id="@+id/tv_signalIntension"
-                                    style="@style/fragment_lock_data"
-                                    android:text="@string/main_max_temp" />
 
                             </LinearLayout>
 
