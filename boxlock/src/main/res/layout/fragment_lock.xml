@@ -77,6 +77,39 @@
         android:layout_height="2dp"
         android:background="@color/blue" />
 
+    <RelativeLayout
+        android:id="@+id/rl_police"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/marginPadding40"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_police"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/marginPadding20"
+            android:src="@mipmap/ic_police" />
+
+        <TextView
+            android:id="@+id/tv_police"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/marginPadding20"
+            android:layout_toEndOf="@+id/iv_police"
+            android:text="箱体报警"
+            android:textColor="@color/white"
+            android:textSize="@dimen/size12" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/blue" />
+
+    </RelativeLayout>
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
@@ -333,6 +366,22 @@
 
                                 <TextView
                                     android:id="@+id/tv_status"
+                                    style="@style/fragment_lock_data"
+                                    android:text="@string/setting_tv_close" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/marginPadding6">
+
+                                <TextView
+                                    style="@style/fragment_lock_name"
+                                    android:text="箱状态：" />
+
+                                <TextView
+                                    android:id="@+id/tv_boxStarts"
                                     style="@style/fragment_lock_data"
                                     android:text="@string/setting_tv_close" />
 

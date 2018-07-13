@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -67,6 +68,8 @@ import static com.androidex.boxlib.cache.SharedPreTool.IS_BIND_NUM;
 import static com.androidex.boxlib.cache.SharedPreTool.LOWEST_TEMP;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BOX_FIRMWARE_VER;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BOX_HARDWARE_VER;
+import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BOX_POLICE_CHANGE;
+import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BOX_STARTS_CHANGE;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_END_TAST;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_HEART;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_OPEN_SUCCED;
@@ -121,6 +124,8 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     TextView tv_deviceMac;
     @Bind(R.id.tv_status)
     TextView tv_status;
+    @Bind(R.id.tv_boxStarts)
+    TextView tv_boxStarts;
     @Bind(R.id.current_temp)
     TextView current_temp;
     @Bind(R.id.main_tv_maxtemp)
@@ -137,12 +142,14 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     TextView minhum;
     @Bind(R.id.tv_chargingState)
     TextView tv_chargingState;
-
-
     @Bind(R.id.progressBar_dfu)
     ProgressBar mProgressBarOtaUpload;
     @Bind(R.id.swipeRefreshLayout)
     SwipeRefreshLayout swipeRefreshLayout;
+    @Bind(R.id.rl_police)
+    RelativeLayout rl_police;
+    @Bind(R.id.tv_police)
+    TextView tv_police;
 
     private Timer timer_location = new Timer();// 设计定时器
     private TimerTask timer_getlocation;
@@ -193,6 +200,8 @@ public class LockFragment extends BaseFragment implements OnClickListener {
             intentFilter.addAction(BLUTOOTH_ON);//手机蓝牙打开
             intentFilter.addAction(ACTION_BOX_HARDWARE_VER);//获取箱体的硬件版本号
             intentFilter.addAction(ACTION_BOX_FIRMWARE_VER);//获取箱体的固件版本号
+            intentFilter.addAction(ACTION_BOX_STARTS_CHANGE);//箱体状态变更
+            intentFilter.addAction(ACTION_BOX_POLICE_CHANGE);//报警信息变更
             mReceiverTag = true;    //标识值 赋值为 true 表示广播已被注册
             context.registerReceiver(dataUpdateRecevice, intentFilter);
         }
@@ -224,6 +233,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         tv_boxConfig.setOnClickListener(this);
         iv_lock.setOnClickListener(this);
         iv_menu.setOnClickListener(this);
+        rl_police.setOnClickListener(this);
     }
 
     public void initMap() {
@@ -320,7 +330,9 @@ public class LockFragment extends BaseFragment implements OnClickListener {
             case R.id.iv_menu:
                 titlePopup.show(v);
                 break;
-
+            case R.id.rl_police:
+                rl_police.setVisibility(View.GONE);
+                break;
             default:
                 break;
         }
@@ -892,17 +904,19 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     break;
                 case ACTION_LOCK_OPEN_SUCCED:
                     if (b[1] == (byte) 0x01) {
-                            CommonKit.showOkShort(context, "开锁成功");
-                        } else {
-                            CommonKit.showOkShort(context, "开锁失败");
-                        }
+                        CommonKit.showOkShort(context, "开锁成功");
+                    } else {
+                        CommonKit.showOkShort(context, "开锁失败");
+                    }
                     MyBleService.getInstance().getLockStatus(address);
                     break;
                 case ACTION_LOCK_STARTS:
-                    if (b[0] == (byte) 0x01) {
+                    if (b[0] == (byte) 0x01 || b[1] == (byte) 0x01) {
                         tv_status.setText("已打开");
+                        CommonKit.showOkShort(context, "锁已打开");
                     } else {
                         tv_status.setText("已关闭");
+                        CommonKit.showOkShort(context, "锁已关闭l");
                     }
                     break;
 
@@ -937,7 +951,79 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                 case ACTION_BOX_FIRMWARE_VER://获取箱体的固件版本号
                     checkVersion();
                     break;
-                default:
+                case ACTION_BOX_STARTS_CHANGE://箱体状态变更
+                    //开/关箱：0x01/0x02
+                    //开/关锁：0x03/0x04
+                    //APP开锁：0x05
+                    //指纹开锁：0x06
+                    //远程开锁：0x07
+                    //进入静默/退出静默：0x08/0x09
+                    //开始充电/断开充电/充满： 0x0a/0x0b /0x0c
+                    switch (b[1]) {
+                        case (byte) 0x01:
+                            tv_boxStarts.setText("打开");
+                            CommonKit.showMsgShort(context, "箱子已打开");
+                            break;
+                        case (byte) 0x02:
+                            tv_boxStarts.setText("关闭");
+                            CommonKit.showMsgShort(context, "箱子已关闭");
+                            break;
+                        case (byte) 0x03:
+                            tv_status.setText("已打开");
+                            CommonKit.showOkShort(context, "锁已打开");
+                            break;
+                        case (byte) 0x04:
+                            tv_status.setText("关闭");
+                            CommonKit.showOkShort(context, "锁已关闭");
+                            break;
+                        case (byte) 0x05:
+
+                            break;
+                        case (byte) 0x06:
+
+                            break;
+                        case (byte) 0x07:
+
+                            break;
+                        case (byte) 0x08:
+
+                            break;
+                        case (byte) 0x09:
+
+                            break;
+                        case (byte) 0x0a:
+                            tv_chargingState.setText("正在充电");
+                            break;
+                        case (byte) 0x0b:
+                            tv_chargingState.setText("未充电");
+                            break;
+                        case (byte) 0x0c:
+                            tv_chargingState.setText("已充满");
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case ACTION_BOX_POLICE_CHANGE://报警信息变更
+                    //锁异常报警：0x01
+                    //异动报警：0x02
+                    //破拆：0x03
+                    switch (b[1]) {
+                        case (byte) 0x01:
+                            rl_police.setVisibility(View.VISIBLE);
+                            tv_police.setText("锁异常报警");
+                            break;
+                        case (byte) 0x02:
+                            rl_police.setVisibility(View.VISIBLE);
+                            tv_police.setText("异动报警");
+                            break;
+                        case (byte) 0x03:
+                            rl_police.setVisibility(View.VISIBLE);
+                            tv_police.setText("破拆报警");
+                            break;
+                        default:
+                            break;
+                    }
                     break;
             }
         }
