@@ -73,6 +73,7 @@ public class MyApplication extends Application {
 
         /*********GreenDao************/
         DevOpenHelper helper = new DevOpenHelper(this, "notes-db");
+        //Database db = helper.getEncryptedWritableDb("androidex");
         Database db = helper.getWritableDb();
         daoSession = new DaoMaster(db).newSession();
 

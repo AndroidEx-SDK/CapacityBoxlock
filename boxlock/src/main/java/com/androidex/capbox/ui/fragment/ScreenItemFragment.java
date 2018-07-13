@@ -1,21 +1,46 @@
 package com.androidex.capbox.ui.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseFragment;
 import com.androidex.capbox.data.Event;
 import com.androidex.capbox.module.BoxDeviceModel;
 import com.androidex.capbox.service.MyBleService;
+import com.androidex.capbox.utils.CalendarUtil;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.RLog;
 
+import java.util.Calendar;
+
 import butterknife.Bind;
 import de.greenrobot.event.EventBus;
+
+import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_HEART;
+import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_OPEN_SUCCED;
+import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_STARTS;
+import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
+import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
+import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_RSSI_FAIL;
+import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_RSSI_SUCCED;
+import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
+import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCONNECTED;
+import static com.androidex.boxlib.utils.BleConstants.BLE.BLUTOOTH_OFF;
+import static com.androidex.boxlib.utils.BleConstants.BLE.BLUTOOTH_ON;
+import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
+import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
+import static com.androidex.capbox.utils.Constants.BASE.ACTION_RSSI_IN;
+import static com.androidex.capbox.utils.Constants.BASE.ACTION_RSSI_OUT;
+import static com.androidex.capbox.utils.Constants.BASE.ACTION_TEMP_OUT;
 
 public class ScreenItemFragment extends BaseFragment {
     @Bind(R.id.iv_last)
@@ -39,7 +64,80 @@ public class ScreenItemFragment extends BaseFragment {
         item = (BoxDeviceModel.device) bundle.getSerializable("item");
         if (item == null) return;
         initView();
+        initBleBroadCast();
     }
+
+    /**
+     * 初始化蓝牙广播
+     */
+    private void initBleBroadCast() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BLE_CONN_SUCCESS);
+        intentFilter.addAction(BLE_CONN_SUCCESS_ALLCONNECTED);
+        intentFilter.addAction(BLE_CONN_FAIL);
+        intentFilter.addAction(BLE_CONN_DIS);
+        intentFilter.addAction(BLUTOOTH_OFF);//手机蓝牙关闭
+        intentFilter.addAction(BLUTOOTH_ON);//手机蓝牙关闭
+
+        intentFilter.addAction(ACTION_LOCK_STARTS);
+        intentFilter.addAction(ACTION_LOCK_OPEN_SUCCED);
+        intentFilter.addAction(ACTION_TEMP_OUT);//温度超范围
+        intentFilter.addAction(ACTION_RSSI_OUT);//信号值超出范围内
+        intentFilter.addAction(ACTION_RSSI_IN);//信号值回到范围内
+        context.registerReceiver(lockScreenReceiver, intentFilter);
+    }
+
+    BroadcastReceiver lockScreenReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context mContext, Intent intent) {
+            String address = intent.getStringExtra(BLECONSTANTS_ADDRESS);
+            if (!address.equals(item.getMac())) return;
+            switch (intent.getAction()) {
+                case BLE_CONN_SUCCESS://重复连接
+                case BLE_CONN_SUCCESS_ALLCONNECTED://重复连接
+                    RLog.e("lockscreen  连接");
+                    iv_connect.setImageResource(R.mipmap.starts_disconnect);
+                    CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast3));
+                    break;
+                case BLE_CONN_DIS://蓝牙断开
+                    RLog.e("lockscreen  断开");
+                    iv_connect.setImageResource(R.mipmap.starts_connect);
+                    CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast4));
+                    break;
+                case BLE_CONN_FAIL://连接失败
+                    disProgress();
+                    RLog.e("lockscreen  连接失败");
+                    iv_connect.setImageResource(R.mipmap.starts_connect);
+                    CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast8));
+                    break;
+                case ACTION_LOCK_OPEN_SUCCED:
+                    CommonKit.showOkShort(context, "开锁成功");
+                    break;
+                case ACTION_LOCK_STARTS://锁状态FB 32 00 01 00 00 FE
+                    byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
+                    if (b.length == 1) {
+                        if (b[0] == (byte) 0x01) {
+                            iv_lock.setImageResource(R.mipmap.lock_open);
+                        } else {
+                            iv_lock.setImageResource(R.mipmap.lock_close);
+                        }
+                    } else if (b.length > 1) {
+                        if (b[1] == (byte) 0x01) {
+                            iv_lock.setImageResource(R.mipmap.lock_open);
+                        } else {
+                            iv_lock.setImageResource(R.mipmap.lock_close);
+                        }
+                    }
+                    break;
+                case ACTION_TEMP_OUT://温度超范围
+                    break;
+                case ACTION_RSSI_OUT:
+                    break;
+                case ACTION_RSSI_IN:
+                    break;
+            }
+        }
+    };
 
     private void initView() {
         ll_fragmentScreenItem.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
@@ -48,11 +146,7 @@ public class ScreenItemFragment extends BaseFragment {
                 RLog.e("fragementScreenItem onUIChange i = " + i);
             }
         });
-        if (item.boxName.equals("Box")) {
-            item.boxName = item.boxName + item.getMac().substring(item.getMac().length() - 2);
-        } else if (item.boxName.contains("AndroidExBox")) {
-            item.boxName = "Box" + item.getMac().substring(item.getMac().length() - 2);
-        }
+        item.boxName = CalendarUtil.getName(item.boxName, item.getMac());
         tv_name.setText(item.boxName);
         iv_lock.setImageResource(R.mipmap.lock_close);
         if (MyBleService.getInstance().getConnectDevice(item.getMac()) == null) {
@@ -66,10 +160,15 @@ public class ScreenItemFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 if (MyBleService.getInstance().getConnectDevice(item.getMac()) == null) {
-                    CommonKit.showOkShort(context, context.getResources().getString(R.string.bledevice_toast12));
-                    EventBus.getDefault().postSticky(new Event.BleConnected(item.getMac()));
+                    RLog.e("lockscreen  点击连接");
+                    MyBleService.getInstance().connectionDevice(context, item.getMac());
                 } else {
-                    EventBus.getDefault().postSticky(new Event.BleDisConnected(item.getMac()));
+                    RLog.e("lockscreen  点击断开");
+                    ServiceBean device = MyBleService.getInstance().getConnectDevice(item.getMac());
+                    if (device != null) {
+                        device.setActiveDisConnect(true);
+                    }
+                    MyBleService.getInstance().disConnectDevice(item.getMac());
                 }
             }
         });
@@ -100,6 +199,14 @@ public class ScreenItemFragment extends BaseFragment {
     @Override
     public void setListener() {
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (lockScreenReceiver != null) {
+            context.unregisterReceiver(lockScreenReceiver);
+        }
     }
 
     @Override

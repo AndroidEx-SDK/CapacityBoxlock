@@ -79,7 +79,7 @@ public class LockScreenActivity extends BaseActivity {
         RLog.e("lockscreen onCreat");
         isFirstOnEvent = false;
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED   //这个在锁屏状态下
-                //| WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON              //这个是点亮屏幕
+                        | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON              //这个是点亮屏幕
                 //| WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD            //这个是透过锁屏界面，相当与解锁，但实质没有
                 //| WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON              //这个是保持屏幕常亮。
         );
@@ -103,20 +103,8 @@ public class LockScreenActivity extends BaseActivity {
      */
     private void initBleBroadCast() {
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BLE_CONN_SUCCESS);
-        intentFilter.addAction(BLE_CONN_SUCCESS_ALLCONNECTED);
-        intentFilter.addAction(BLE_CONN_FAIL);
-        intentFilter.addAction(BLE_CONN_DIS);
-        intentFilter.addAction(ACTION_LOCK_STARTS);
-        intentFilter.addAction(BLE_CONN_RSSI_SUCCED);
-        intentFilter.addAction(BLE_CONN_RSSI_FAIL);
-        intentFilter.addAction(ACTION_HEART);
         intentFilter.addAction(BLUTOOTH_OFF);//手机蓝牙关闭
         intentFilter.addAction(BLUTOOTH_ON);//手机蓝牙关闭
-        intentFilter.addAction(ACTION_LOCK_OPEN_SUCCED);
-        intentFilter.addAction(ACTION_TEMP_OUT);//温度超范围
-        intentFilter.addAction(ACTION_RSSI_OUT);//信号值超出范围内
-        intentFilter.addAction(ACTION_RSSI_IN);//信号值回到范围内
         registerReceiver(lockScreenReceiver, intentFilter);
     }
 
@@ -161,38 +149,6 @@ public class LockScreenActivity extends BaseActivity {
     }
 
     /**
-     * 蓝牙连接
-     *
-     * @param event
-     */
-    public void onEvent(Event.BleConnected event) {
-        if (!isFirstOnEvent) {
-            RLog.e("onEvent init connect " + !isFirstOnEvent);
-        } else {
-            RLog.e("onEvent connect " + event.getAddress());
-            MyBleService.getInstance().connectionDevice(context, event.getAddress());
-        }
-    }
-
-    /**
-     * 蓝牙断开
-     *
-     * @param event
-     */
-    public void onEvent(Event.BleDisConnected event) {
-        if (!isFirstOnEvent) {//初始化的时候会执行
-            RLog.e("onEvent init disconnect " + !isFirstOnEvent);
-        } else {
-            RLog.e("onEvent disconnect " + event.getAddress());
-            ServiceBean device = MyBleService.getInstance().getConnectDevice(event.getAddress());
-            if (device != null) {
-                device.setActiveDisConnect(true);
-            }
-            MyBleService.getInstance().disConnectDevice(event.getAddress());
-        }
-    }
-
-    /**
      * 切换下一页
      *
      * @param event
@@ -221,7 +177,6 @@ public class LockScreenActivity extends BaseActivity {
             RLog.e("onEvent init lastPage " + !isFirstOnEvent);
         } else {
             int currentItem = viewPager.getCurrentItem();
-            RLog.e("onEvent lastPage " + currentItem);
             if (currentItem > 0) {
                 viewPager.setCurrentItem(currentItem - 1);
             } else {
@@ -249,7 +204,6 @@ public class LockScreenActivity extends BaseActivity {
                             if (model != null) {
                                 list.clear();
                                 if (model.devicelist != null && !model.devicelist.isEmpty()) {
-                                    //list = model.devicelist;
                                     for (int i = 0; i < model.devicelist.size(); i++) {
                                         ScreenItemFragment screenItemFragment = new ScreenItemFragment();
                                         Bundle bundle = new Bundle();
@@ -302,29 +256,8 @@ public class LockScreenActivity extends BaseActivity {
         @Override
         public void onReceive(Context mContext, Intent intent) {
             String address = intent.getStringExtra(BLECONSTANTS_ADDRESS);
-            byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
             if (address == null) return;
             switch (intent.getAction()) {
-                case BLE_CONN_SUCCESS://重复连接
-                case BLE_CONN_SUCCESS_ALLCONNECTED://重复连接
-                    disProgress();
-                    if (list != null) {
-                        RLog.e("蓝牙连接时更新 list size = " + list.size());
-                        pagerAdapter.notifyDataSetChanged();
-                    }
-                    CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast3));
-                    break;
-                case BLE_CONN_DIS://蓝牙断开
-                    CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast4));
-                    if (list != null) {
-                        RLog.e("蓝牙断开时更新 list size = " + list.size());
-                        pagerAdapter.notifyDataSetChanged();
-                    }
-                    break;
-                case BLE_CONN_FAIL://连接失败
-                    disProgress();
-                    CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast8));
-                    break;
                 case BLUTOOTH_OFF:
                     Logd("手机蓝牙断开");
                     CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast9));
@@ -336,26 +269,6 @@ public class LockScreenActivity extends BaseActivity {
                 case BLUTOOTH_ON:
                     Logd("手机蓝牙开启");
                     CommonKit.showOkShort(context, "手机蓝牙开启");
-                    break;
-                case ACTION_LOCK_OPEN_SUCCED:
-                    CommonKit.showOkShort(context, "开锁成功");
-                    MyBleService.getInstance().getLockStatus(address);
-                    break;
-                case ACTION_LOCK_STARTS://锁状态FB 32 00 01 00 00 FE
-                    if (b[2] == (byte) 0x01) {
-                        //tv_status.setText("已打开");
-                    } else {
-                        //tv_status.setText("已关闭");
-                    }
-                    break;
-
-                case ACTION_TEMP_OUT://温度超范围
-                    break;
-
-                case ACTION_RSSI_OUT:
-                    break;
-                case ACTION_RSSI_IN:
-
                     break;
             }
         }
@@ -409,6 +322,13 @@ public class LockScreenActivity extends BaseActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        if (timeThread.isAlive())
+            timeThread.stop();
+    }
+
+    @Override
     protected void onDestroy() {
         unregisterReceiver(lockScreenReceiver);
         unregisterEventBus();
@@ -446,13 +366,11 @@ public class LockScreenActivity extends BaseActivity {
          */
         @Override
         public Fragment getItem(int position) {
-            RLog.e("getItem position =" + position);
             return list_adapter.get(position);
         }
 
         @Override
         public int getItemPosition(Object object) {
-            RLog.e("getItemPosition  执行了");
             return POSITION_NONE;
             //return POSITION_UNCHANGED;
         }
@@ -460,7 +378,6 @@ public class LockScreenActivity extends BaseActivity {
         @Override
         public void notifyDataSetChanged() {
             isFirstOnEvent = true;
-            RLog.e("notify  is start " + getCount());
             super.notifyDataSetChanged();
         }
     }

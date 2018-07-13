@@ -71,6 +71,7 @@ android {
                 outputFileName = "boxlock_" + buildType.name + "_v${defaultConfig.versionCode}.apk"
             }
         }
+        ndk { abiFilters "armeabi", "armeabi-v7a", "x86", "mips" }
     }
 
     buildTypes {
@@ -108,7 +109,7 @@ android {
 }
 
 greendao {
-    schemaVersion 4
+    schemaVersion 5
     daoPackage "com.androidex.capbox.db"
     targetGenDir "src/main/java"
 }
@@ -137,4 +138,5 @@ dependencies {
     implementation 'org.greenrobot:greendao:3.2.2'
     implementation files('libs/BaiduLBS_Android.jar')
     implementation files('libs/BaiduTraceSDK_v3_0_7.jar')
+    //implementation 'net.zetetic:android-database-sqlcipher:3.5.7@aar'//数据库加密
 }
