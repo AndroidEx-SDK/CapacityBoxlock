@@ -69,6 +69,7 @@ import static com.androidex.boxlib.cache.SharedPreTool.LOWEST_TEMP;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BOX_FIRMWARE_VER;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BOX_HARDWARE_VER;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BOX_POLICE_CHANGE;
+import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BOX_STARTS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BOX_STARTS_CHANGE;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_END_TAST;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_HEART;
@@ -908,23 +909,40 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     } else {
                         CommonKit.showOkShort(context, "开锁失败");
                     }
-                    MyBleService.getInstance().getLockStatus(address);
                     break;
                 case ACTION_LOCK_STARTS:
-                    if (b[0] == (byte) 0x01 || b[1] == (byte) 0x01) {
-                        tv_status.setText("已打开");
-                        CommonKit.showOkShort(context, "锁已打开");
-                    } else {
-                        tv_status.setText("已关闭");
-                        CommonKit.showOkShort(context, "锁已关闭l");
+                    if (b.length == 1) {
+                        if (b[0] == (byte) 0x01) {
+                            tv_status.setText("已打开");
+                            //CommonKit.showOkShort(context, "锁已打开");
+                        } else {
+                            tv_status.setText("已关闭");
+                            //CommonKit.showOkShort(context, "锁已关闭l");
+                        }
+                    } else if (b.length > 1) {
+                        if (b[1] == (byte) 0x01) {
+                            tv_status.setText("已打开");
+                            //CommonKit.showOkShort(context, "锁已打开");
+                        } else {
+                            tv_status.setText("已关闭");
+                            //CommonKit.showOkShort(context, "锁已关闭l");
+                        }
                     }
                     break;
-
+                case ACTION_BOX_STARTS:
+                    if (b.length == 1) {
+                        if (b[0] == (byte) 0x01) {
+                            tv_boxStarts.setText("已打开");
+                            //CommonKit.showOkShort(context, "锁已打开");
+                        } else {
+                            tv_boxStarts.setText("已关闭");
+                            //CommonKit.showOkShort(context, "锁已关闭l");
+                        }
+                    }
+                    break;
                 case BLE_CONN_RSSI_SUCCED://获取到信号强度值
-
                     break;
                 case BLE_CONN_RSSI_FAIL://获取信号强度失败
-
                     break;
                 case ACTION_HEART://温度、湿度、电量
                     current_temp.setText(intent.getStringExtra(BLECONSTANTS_TEMP) != null ? intent.getStringExtra(BLECONSTANTS_TEMP) : "");
@@ -962,19 +980,19 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     switch (b[1]) {
                         case (byte) 0x01:
                             tv_boxStarts.setText("打开");
-                            CommonKit.showMsgShort(context, "箱子已打开");
+                            //CommonKit.showMsgShort(context, "箱子已打开");
                             break;
                         case (byte) 0x02:
                             tv_boxStarts.setText("关闭");
-                            CommonKit.showMsgShort(context, "箱子已关闭");
+                            // CommonKit.showMsgShort(context, "箱子已关闭");
                             break;
                         case (byte) 0x03:
                             tv_status.setText("已打开");
-                            CommonKit.showOkShort(context, "锁已打开");
+                            //CommonKit.showOkShort(context, "锁已打开");
                             break;
                         case (byte) 0x04:
                             tv_status.setText("关闭");
-                            CommonKit.showOkShort(context, "锁已关闭");
+                            //CommonKit.showOkShort(context, "锁已关闭");
                             break;
                         case (byte) 0x05:
 
@@ -1067,6 +1085,19 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         } else {
             CommonKit.showMsgShort(context, "设备已连接");
             updateBleView(View.GONE, View.VISIBLE);
+            MyBleService.getInstance().getLockStatus(address);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(300);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } finally {
+                        MyBleService.getInstance().getBoxStatus(address);
+                    }
+                }
+            }).start();
         }
     }
 
