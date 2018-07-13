@@ -668,7 +668,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                         if (model != null) {
                             switch (model.code) {
                                 case Constants.API.API_OK:
-                                    RLog.e("get device location");
                                     LocationModel.Data data = model.data;
                                     latitude = data.getLatitude();//纬度
                                     longitude = data.getLongitude();//经度

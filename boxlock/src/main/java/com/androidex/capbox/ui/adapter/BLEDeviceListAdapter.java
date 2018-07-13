@@ -2,6 +2,7 @@ package com.androidex.capbox.ui.adapter;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.androidex.capbox.R;
 import com.androidex.capbox.ui.fragment.LockFragment;
+import com.androidex.capbox.utils.CalendarUtil;
 
 import java.util.ArrayList;
 
@@ -91,14 +93,12 @@ public class BLEDeviceListAdapter extends BaseAdapter {
         viewHolder.deviceBtn.setTag(position);
         BluetoothDevice device = mLeDevices.get(position);
         String deviceName = device.getName();
-        if (deviceName != null && deviceName.length() > 0) {
-            if (deviceName.contains(LockFragment.boxName)) {
-                deviceName = deviceName.replace(LockFragment.boxName, "");
-                viewHolder.deviceName.setText(deviceName);
-            }
+        if (!TextUtils.isEmpty(deviceName) && deviceName.contains(LockFragment.boxName)) {
+            deviceName = deviceName.replace(LockFragment.boxName, "");
         } else {
-            viewHolder.deviceName.setText(R.string.unknown_device);
+            deviceName = CalendarUtil.getName(deviceName, device.getAddress());
         }
+        viewHolder.deviceName.setText(deviceName);
         viewHolder.deviceAddress.setText(device.getAddress());
         return view;
     }

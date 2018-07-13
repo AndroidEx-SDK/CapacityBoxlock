@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -308,14 +309,22 @@ public class AddDeviceActivity extends BaseActivity {
         public void onLeScan(final BluetoothDevice device, int rssi, final byte[] scanRecord) {
             context.runOnUiThread(new Runnable() {
                 @Override
-                public void run() {
+                public void run() {//getDevice().getName
                     if (device.getName() != null) {
                         //过滤搜索到的设备的名字
                         if (device.getName().contains(LockFragment.boxName)) {
                             mDeviceListAdapter.addDevice(device);
+                        } else {
+                            RLog.e("device Name 11 = " + device.getName());
                         }
-                        mDeviceListAdapter.notifyDataSetChanged();
+                    } else {
+                        String deviceName = Byte2HexUtil.convertHexToString(Byte2HexUtil.byte2Hex(scanRecord));
+                        if (!TextUtils.isEmpty(deviceName) && deviceName.contains(LockFragment.boxName)) {
+                            mDeviceListAdapter.addDevice(device);
+                        }
+                        RLog.e("device Name 22 = " + deviceName);
                     }
+                    mDeviceListAdapter.notifyDataSetChanged();
                 }
             });
         }
