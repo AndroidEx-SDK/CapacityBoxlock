@@ -38,23 +38,9 @@ import butterknife.Bind;
 import okhttp3.Headers;
 import okhttp3.Request;
 
-import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_HEART;
-import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_OPEN_SUCCED;
-import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_STARTS;
-import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
-import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
-import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_RSSI_FAIL;
-import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_RSSI_SUCCED;
-import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
-import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCONNECTED;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLUTOOTH_OFF;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLUTOOTH_ON;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
-import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
-import static com.androidex.capbox.utils.Constants.BASE.ACTION_RSSI_IN;
-import static com.androidex.capbox.utils.Constants.BASE.ACTION_RSSI_OUT;
-import static com.androidex.capbox.utils.Constants.BASE.ACTION_TEMP_OUT;
-
 
 /**
  * 悬浮在锁屏界面之上界面
@@ -159,7 +145,7 @@ public class LockScreenActivity extends BaseActivity {
             int currentItem = viewPager.getCurrentItem();
             RLog.e("onEvent nextpage currentItem = " + currentItem);
             if (currentItem >= list.size() - 1) {
-                CommonKit.showOkShort(context, context.getResources().getString(R.string.bledevice_toast11));
+                CommonKit.showOkToast(context, context.getResources().getString(R.string.bledevice_toast11));
             } else {
                 viewPager.setCurrentItem(currentItem + 1);
             }
@@ -179,7 +165,7 @@ public class LockScreenActivity extends BaseActivity {
             if (currentItem > 0) {
                 viewPager.setCurrentItem(currentItem - 1);
             } else {
-                CommonKit.showOkShort(context, context.getResources().getString(R.string.bledevice_toast10));
+                CommonKit.showOkToast(context, context.getResources().getString(R.string.bledevice_toast10));
             }
         }
     }
@@ -189,7 +175,7 @@ public class LockScreenActivity extends BaseActivity {
      */
     public void boxlist() {
         if (!CommonKit.isNetworkAvailable(context)) {
-            CommonKit.showErrorShort(context, "设备未连接网络");
+            CommonKit.showErrorToast(context, "设备未连接网络");
             return;
         }
         NetApi.boxlist(getToken(), getUserName(), new ResultCallBack<BoxDeviceModel>() {
@@ -215,15 +201,15 @@ public class LockScreenActivity extends BaseActivity {
                             }
                             break;
                         case Constants.API.API_FAIL:
-                            CommonKit.showErrorShort(context, "账号在其他地方登录");
+                            CommonKit.showErrorToast(context, "账号在其他地方登录");
                             LoginActivity.lauch(context);
                             break;
                         case Constants.API.API_NOPERMMISION:
-                            CommonKit.showErrorShort(context, "获取设备列表失败");
+                            CommonKit.showErrorToast(context, "获取设备列表失败");
                             break;
                         default:
                             if (model.info != null) {
-                                CommonKit.showErrorShort(context, model.info);
+                                CommonKit.showErrorToast(context, model.info);
                             }
                             break;
                     }
@@ -234,7 +220,7 @@ public class LockScreenActivity extends BaseActivity {
             @Override
             public void onFailure(int statusCode, Request request, Exception e) {
                 super.onFailure(statusCode, request, e);
-                CommonKit.showErrorShort(context, "网络连接异常");
+                CommonKit.showErrorToast(context, "网络连接异常");
             }
 
             @Override
@@ -252,7 +238,7 @@ public class LockScreenActivity extends BaseActivity {
             switch (intent.getAction()) {
                 case BLUTOOTH_OFF:
                     Logd("手机蓝牙断开");
-                    CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast9));
+                    CommonKit.showErrorToast(context, getResources().getString(R.string.bledevice_toast9));
                     MyBleService.getInstance().disConnectDeviceALL();
                     if (list != null) {
                         pagerAdapter.notifyDataSetChanged();
@@ -260,7 +246,7 @@ public class LockScreenActivity extends BaseActivity {
                     break;
                 case BLUTOOTH_ON:
                     Logd("手机蓝牙开启");
-                    CommonKit.showOkShort(context, "手机蓝牙开启");
+                    CommonKit.showOkToast(context, "手机蓝牙开启");
                     break;
             }
         }

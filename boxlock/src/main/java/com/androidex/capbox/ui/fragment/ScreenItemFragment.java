@@ -20,18 +20,13 @@ import com.androidex.capbox.utils.CalendarUtil;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.RLog;
 
-import java.util.Calendar;
-
 import butterknife.Bind;
 import de.greenrobot.event.EventBus;
 
-import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_HEART;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_OPEN_SUCCED;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_STARTS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
-import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_RSSI_FAIL;
-import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_RSSI_SUCCED;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCONNECTED;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLUTOOTH_OFF;
@@ -97,21 +92,21 @@ public class ScreenItemFragment extends BaseFragment {
                 case BLE_CONN_SUCCESS_ALLCONNECTED://重复连接
                     RLog.e("lockscreen  连接");
                     iv_connect.setImageResource(R.mipmap.starts_disconnect);
-                    CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast3));
+                    CommonKit.showOkToast(context, getResources().getString(R.string.bledevice_toast3));
                     break;
                 case BLE_CONN_DIS://蓝牙断开
                     RLog.e("lockscreen  断开");
                     iv_connect.setImageResource(R.mipmap.starts_connect);
-                    CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast4));
+                    CommonKit.showOkToast(context, getResources().getString(R.string.bledevice_toast4));
                     break;
                 case BLE_CONN_FAIL://连接失败
                     disProgress();
                     RLog.e("lockscreen  连接失败");
                     iv_connect.setImageResource(R.mipmap.starts_connect);
-                    CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast8));
+                    CommonKit.showErrorToast(context, getResources().getString(R.string.bledevice_toast8));
                     break;
                 case ACTION_LOCK_OPEN_SUCCED:
-                    CommonKit.showOkShort(context, "开锁成功");
+                    CommonKit.showOkToast(context, "开锁成功");
                     break;
                 case ACTION_LOCK_STARTS://锁状态FB 32 00 01 00 00 FE
                     byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
@@ -176,7 +171,7 @@ public class ScreenItemFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 if (MyBleService.getInstance().getConnectDevice(item.getMac()) == null) {
-                    CommonKit.showErrorShort(context, context.getResources().getString(R.string.bledevice_toast7));
+                    CommonKit.showErrorToast(context, context.getResources().getString(R.string.bledevice_toast7));
                 } else {
                     MyBleService.getInstance().openLock(item.getMac());
                 }

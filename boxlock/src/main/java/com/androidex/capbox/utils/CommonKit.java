@@ -79,6 +79,14 @@ import java.util.Random;
 public class CommonKit {
     //------------------------Toast---------------------------
 
+    public static void showOkToast(Context context, String msg) {
+        InfoToast.showOkToast(context, msg);
+    }
+
+    public static void showErrorToast(Context context, String msg) {
+        InfoToast.showErrorToast(context, msg);
+    }
+
     /**
      * 短吐司
      *
@@ -98,7 +106,6 @@ public class CommonKit {
     public static void showMsgLong(Context context, String msg) {
         InfoToast.showOkLong(context, msg);
     }
-
 
     public static void showOkShort(Context context, String msg) {
         InfoToast.showOkShort(context, msg);
