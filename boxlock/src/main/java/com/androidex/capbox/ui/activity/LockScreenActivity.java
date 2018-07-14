@@ -76,10 +76,9 @@ public class LockScreenActivity extends BaseActivity {
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        RLog.e("lockscreen onCreat");
         isFirstOnEvent = false;
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED   //这个在锁屏状态下
-                        | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON              //这个是点亮屏幕
+                //| WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON              //这个是点亮屏幕
                 //| WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD            //这个是透过锁屏界面，相当与解锁，但实质没有
                 //| WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON              //这个是保持屏幕常亮。
         );
@@ -218,11 +217,9 @@ public class LockScreenActivity extends BaseActivity {
                         case Constants.API.API_FAIL:
                             CommonKit.showErrorShort(context, "账号在其他地方登录");
                             LoginActivity.lauch(context);
-                            showProgress("刷新失败");
                             break;
                         case Constants.API.API_NOPERMMISION:
                             CommonKit.showErrorShort(context, "获取设备列表失败");
-                            showProgress("刷新失败");
                             break;
                         default:
                             if (model.info != null) {
@@ -237,11 +234,6 @@ public class LockScreenActivity extends BaseActivity {
             @Override
             public void onFailure(int statusCode, Request request, Exception e) {
                 super.onFailure(statusCode, request, e);
-                disProgress();
-                if (context != null) {
-                    showProgress("刷新列表失败");
-                }
-                disProgress();
                 CommonKit.showErrorShort(context, "网络连接异常");
             }
 
