@@ -324,8 +324,6 @@ public class LockScreenActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (timeThread.isAlive())
-            timeThread.stop();
     }
 
     @Override

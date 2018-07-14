@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Vibrator;
 import android.support.v4.view.ViewCompat;
+import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -259,6 +260,31 @@ public class SystemUtil {
             return false;
         }
     }
+
+    /**
+     * 获取手机IMEI
+     *
+     * @param context
+     * @return
+     */
+    public static final String getIMEI(Context context) {
+        try {
+            //实例化TelephonyManager对象
+            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            //获取IMEI号
+            String imei = telephonyManager.getDeviceId();
+            //在次做个验证，也不是什么时候都能获取到的啊
+            if (imei == null) {
+                imei = "";
+            }
+            return imei;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+
+    }
+
 
     public static String getTopActivityName(Context context) {
         String topActivityClassName = null;

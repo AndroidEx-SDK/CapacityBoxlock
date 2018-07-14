@@ -14,16 +14,14 @@ import org.greenrobot.greendao.database.Database;
 import com.androidex.capbox.db.DaoMaster;
 import com.androidex.capbox.db.DaoMaster.DevOpenHelper;
 import com.androidex.capbox.db.DaoSession;
+import com.androidex.capbox.db.MyOpenHelper;
 import com.androidex.capbox.service.MyBleService;
-import com.androidex.capbox.map.CommonUtil;
+import com.androidex.capbox.utils.RLog;
+import com.androidex.capbox.utils.SystemUtil;
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.trace.LBSTraceClient;
-import com.baidu.trace.api.entity.LocRequest;
-import com.baidu.trace.model.BaseRequest;
 import com.e.ble.BLESdk;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class MyApplication extends Application {
     private static MyApplication mInstance;
@@ -72,9 +70,10 @@ public class MyApplication extends Application {
         SDKInitializer.setCoordType(CoordType.BD09LL);
 
         /*********GreenDao************/
-        DevOpenHelper helper = new DevOpenHelper(this, "notes-db");
-        //Database db = helper.getEncryptedWritableDb("androidex");
-        Database db = helper.getWritableDb();
+        MyOpenHelper helper = new MyOpenHelper(this, "notes-db");
+        RLog.d("IMEI = " + SystemUtil.getIMEI(this));
+        Database db = helper.getEncryptedWritableDb(SystemUtil.getIMEI(this));//加密数据库
+        //Database db = helper.getWritableDb();
         daoSession = new DaoMaster(db).newSession();
 
         /**************百度鹰眼轨迹**************/

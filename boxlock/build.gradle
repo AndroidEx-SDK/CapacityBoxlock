@@ -136,7 +136,7 @@ dependencies {
     implementation 'no.nordicsemi.android:dfu:1.0.4'
     implementation project(':boommenu')
     implementation 'org.greenrobot:greendao:3.2.2'
+    implementation 'net.zetetic:android-database-sqlcipher:3.5.7@aar'//数据库加密
     implementation files('libs/BaiduLBS_Android.jar')
     implementation files('libs/BaiduTraceSDK_v3_0_7.jar')
-    //implementation 'net.zetetic:android-database-sqlcipher:3.5.7@aar'//数据库加密
 }
