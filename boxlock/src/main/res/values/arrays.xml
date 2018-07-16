@@ -32,4 +32,16 @@
         <item>从相册选择</item>
         <item>取消</item>
     </string-array>
+
+    <string-array name="fre_normal">
+        <item>30s</item>
+        <item>45s</item>
+        <item>60s</item>
+    </string-array>
+
+    <string-array name="fre_urgency">
+        <item>5s</item>
+        <item>10s</item>
+        <item>20s</item>
+    </string-array>
 </resources>

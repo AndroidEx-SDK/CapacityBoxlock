@@ -18,6 +18,7 @@ import com.androidex.capbox.module.BoxDeviceModel;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.utils.CalendarUtil;
 import com.androidex.capbox.utils.CommonKit;
+import com.androidex.capbox.utils.DialogUtils;
 import com.androidex.capbox.utils.RLog;
 
 import butterknife.Bind;
@@ -92,6 +93,7 @@ public class ScreenItemFragment extends BaseFragment {
                 case BLE_CONN_SUCCESS_ALLCONNECTED://重复连接
                     RLog.e("lockscreen  连接");
                     iv_connect.setImageResource(R.mipmap.starts_disconnect);
+                    //disSystemDialog();
                     CommonKit.showOkToast(context, getResources().getString(R.string.bledevice_toast3));
                     break;
                 case BLE_CONN_DIS://蓝牙断开
@@ -156,6 +158,7 @@ public class ScreenItemFragment extends BaseFragment {
             public void onClick(View view) {
                 if (MyBleService.getInstance().getConnectDevice(item.getMac()) == null) {
                     RLog.e("lockscreen  点击连接");
+                    //showSystemDialog("正在连接");
                     MyBleService.getInstance().connectionDevice(context, item.getMac());
                 } else {
                     RLog.e("lockscreen  点击断开");
@@ -194,6 +197,26 @@ public class ScreenItemFragment extends BaseFragment {
     @Override
     public void setListener() {
 
+    }
+
+    private android.app.Dialog sysdialog;
+
+    public void showSystemDialog(String msg) {
+        if (sysdialog == null) {
+            sysdialog = DialogUtils.showDialog(context, msg);
+        }
+        TextView tv = (TextView) sysdialog.findViewById(R.id.msg);
+        tv.setText(msg);
+        if (!sysdialog.isShowing()) {
+            sysdialog.setCancelable(true);
+            sysdialog.show();
+        }
+    }
+
+    public void disSystemDialog() {
+        if (sysdialog != null && sysdialog.isShowing()) {
+            sysdialog.dismiss();
+        }
     }
 
     @Override

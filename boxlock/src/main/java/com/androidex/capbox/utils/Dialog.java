@@ -15,7 +15,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.androidex.capbox.R;
-
 /**
  * 就是自定义的Dialog,不可back或点击外部销毁
  *

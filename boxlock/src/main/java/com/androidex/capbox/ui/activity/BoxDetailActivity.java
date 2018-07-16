@@ -1,11 +1,16 @@
 package com.androidex.capbox.ui.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +21,7 @@ import android.widget.ToggleButton;
 import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
+import com.androidex.capbox.callback.ItemClickCallBack;
 import com.androidex.capbox.data.Event;
 import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
@@ -25,9 +31,11 @@ import com.androidex.capbox.module.BoxDetailModel;
 import com.androidex.capbox.module.BoxDeviceModel;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.widget.SecondTitleBar;
+import com.androidex.capbox.ui.widget.SingleCheckListDialog;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
 import com.androidex.capbox.utils.Dialog;
+import com.androidex.capbox.utils.PhotoUtils;
 import com.androidex.capbox.utils.RLog;
 
 import java.util.ArrayList;
@@ -53,8 +61,10 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCO
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
 import static com.androidex.capbox.provider.WidgetProvider.EXTRA_ITEM_POSITION;
+import static com.androidex.capbox.utils.Constants.CODE.CAMERA_PERMISSIONS_REQUEST_CODE;
 import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_FINGER_SETTING;
 import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_OPEN_MONITOR;
+import static com.androidex.capbox.utils.Constants.CODE.STORAGE_PERMISSIONS_REQUEST_CODE;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
 import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
@@ -427,44 +437,12 @@ public class BoxDetailActivity extends BaseActivity {
             case R.id.ll_heartbeatRate://心跳更新频率
                 if (isCarry()) return;//判断是否处于不可配置状态
                 if (isConnectBle()) return;//判断是否连接蓝牙
-                Dialog.showAlertDialog(context, "请设置心跳更新频率", new Dialog.DialogDataListener() {
-                    @Override
-                    public void confirm(String data) {
-                        if (data != null) {
-                            heartbeatRate = Integer.parseInt(data);
-                        } else {
-                            heartbeatRate = 60;
-                        }
-                        tv_heartbeatRate.setText(String.format("%ds/次", heartbeatRate));
-                        RLog.e("设置的定位更新频率为：" + heartbeatRate);
-                    }
-
-                    @Override
-                    public void cancel() {
-
-                    }
-                });
+                showFreNormalDlg();
                 break;
             case R.id.setting_Location://定位更新频率
                 if (isCarry()) return;//判断是否处于不可配置状态
                 if (isConnectBle()) return;//判断是否连接蓝牙
-                Dialog.showAlertDialog(context, "请设置定位更新频率", new Dialog.DialogDataListener() {
-                    @Override
-                    public void confirm(String data) {
-                        if (data != null) {
-                            locationRate = Integer.parseInt(data);
-                        } else {
-                            locationRate = 60;
-                        }
-                        tv_locationRate.setText(String.format("%ds/次", locationRate));
-                        RLog.e("设置的定位更新频率为：" + locationRate);
-                    }
-
-                    @Override
-                    public void cancel() {
-
-                    }
-                });
+                showFreUrgencyDlg();
                 break;
             case R.id.ll_settingFinger://设置指纹
                 if (isCarry()) return;//判断是否处于不可配置状态
@@ -495,14 +473,54 @@ public class BoxDetailActivity extends BaseActivity {
                     return;
                 }
                 if (status == 2) {//携行状态，结束携行
-                    MyBleService.getInstance().endTask(mac);
+                    //MyBleService.getInstance().endTask(mac);
+                    endTask();
                 } else {
-                    MyBleService.getInstance().startEscort(mac);
+                    //MyBleService.getInstance().startEscort(mac);
+                    startEscort();
                 }
                 break;
             default:
                 break;
         }
+    }
+
+    /**
+     * 设置心跳频率
+     */
+    private void showFreNormalDlg() {
+        final SingleCheckListDialog editHeadDlg = new SingleCheckListDialog(context);
+        final String[] freNormalArray = getResources().getStringArray(R.array.fre_normal);
+        editHeadDlg.title(getString(R.string.label_fre_heart))
+                .data(freNormalArray)
+                .setItemClickCallBack(new ItemClickCallBack<String>() {
+                    @Override
+                    public void onItemClick(int position, String model, int tag) {
+                        super.onItemClick(position, model, tag);
+                        tv_locationRate.setText(String.format("%s/次", freNormalArray[position]));
+                        locationRate = Integer.parseInt(freNormalArray[position].replace("s", ""));
+                        editHeadDlg.dismiss();
+                    }
+                }).show();
+    }
+
+    /**
+     * 设置紧急情况心跳频率
+     */
+    private void showFreUrgencyDlg() {
+        final SingleCheckListDialog editHeadDlg = new SingleCheckListDialog(context);
+        final String[] freUrgencyArray = getResources().getStringArray(R.array.fre_urgency);
+        editHeadDlg.title(getString(R.string.label_fre_urgency_heart))
+                .data(freUrgencyArray)
+                .setItemClickCallBack(new ItemClickCallBack<String>() {
+                    @Override
+                    public void onItemClick(int position, String model, int tag) {
+                        super.onItemClick(position, model, tag);
+                        tv_heartbeatRate.setText(String.format("%s/次", freUrgencyArray[position]));
+                        heartbeatRate = Integer.parseInt(freUrgencyArray[position].replace("s", ""));
+                        editHeadDlg.dismiss();
+                    }
+                }).show();
     }
 
     /**
@@ -520,13 +538,6 @@ public class BoxDetailActivity extends BaseActivity {
                 if (model != null) {
                     switch (model.code) {
                         case Constants.API.API_OK:
-                            int carryNum = 0;
-                            for (BoxDeviceModel.device device : model.devicelist) {
-                                if (device.deviceStatus == 2) {
-                                    carryNum++;
-                                }
-                            }
-                            //SharedPreTool.getInstance(context).setIntData(IS_BIND_NUM, carryNum++);
                             SharedPreTool.getInstance(context).setIntData(IS_BIND_NUM, model.devicelist.size());
                             break;
                         default:
@@ -854,6 +865,7 @@ public class BoxDetailActivity extends BaseActivity {
                         case Constants.API.API_OK:
                             Log.e(TAG, "启动携行押运成功");
                             tv_startCarryScort.setText("结束携行押运");
+                            tv_boxConfig.setEnabled(false);
                             getBoxDetail();
                             break;
                         default:

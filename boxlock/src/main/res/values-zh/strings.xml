@@ -313,6 +313,8 @@
     <string name="label_device_list">设备列表</string>
     <string name="label_user_login_account">手机号码</string>
     <string name="label_edit_head">修改头像</string>
+    <string name="label_fre_heart">设置心跳频率</string>
+    <string name="label_fre_urgency_heart">设置紧急情况心跳频率</string>
     <string name="label_img_clip">图片裁剪</string>
     <string name="label_img_select">图片选择</string>
     <string name="hint_phone_input">请输入11位手机号</string>
