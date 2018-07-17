@@ -56,8 +56,6 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
     private String uuid;
     private String police = "A";            //报警开启A和关闭B
     private String dismountPolice = "A";    //防拆报警开启A和关闭B
-    private float highestTemp = 80;         //最高温度
-    private float lowestTemp = 0;           //最低温度
     private String tempPolice = "A";        //温度报警开启A 关闭B
     private String humidityPolice = "A";    //湿度开启A 关闭B
     private String distancePolice = "A";    //距离报警开启A 关闭B
@@ -229,16 +227,13 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
                         case Constants.API.API_OK:
                             police = model.data.police;//报警开启A和关闭B
                             dismountPolice = model.data.dismountPolice;//破拆报警的开启A和关闭B
-
-                            highestTemp = model.data.highestTemp;//最高温
-                            lowestTemp = model.data.lowestTemp;//最低温
                             Log.d(TAG, model.toString());
-
                             tb_police.setChecked(false ? police.equals("B") : !police.equals("B"));
                             tb_tamperAlarm.setChecked(false ? dismountPolice.equals("B") : !dismountPolice.equals("B"));
-                            tb_distanceAlarm.setChecked(false ? police.equals("B") : !police.equals("B"));
-                            tb_tempAlarm.setChecked(false ? police.equals("B") : !police.equals("B"));
-                            tb_humAlarm.setChecked(false ? police.equals("B") : !police.equals("B"));
+                            tb_distanceAlarm.setChecked(false ? distancePolice.equals("B") : !distancePolice.equals("B"));
+                            tb_tempAlarm.setChecked(false ? tempPolice.equals("B") : !tempPolice.equals("B"));
+                            tb_humAlarm.setChecked(false ? humidityPolice.equals("B") : !humidityPolice.equals("B"));
+
 
                             break;
 

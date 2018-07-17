@@ -143,7 +143,7 @@ public class SettingLockActivity extends BaseActivity {
         builder.setPositiveButton("确定", btnListener);
         AlertDialog dialog = builder.create();
         dialog.show();
-        dialog.setCanceledOnTouchOutside(false);// dialog弹出后，点击界面其他部分dialog消失
+        dialog.setCanceledOnTouchOutside(false);// d
     }
 
     public static void lauch(Activity activity, int requestCode) {

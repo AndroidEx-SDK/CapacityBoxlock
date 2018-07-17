@@ -51,10 +51,10 @@ public class BoxDetailModel extends BaseModel{
         public int policeDiatance;
         public int heartbeatRate;
         public int locationRate;
-        public float highestTemp;
-        public float lowestTemp;
-        public float highestHum;
-        public float lowestHum;
+        public int highestTemp;
+        public int lowestTemp;
+        public int highestHum;
+        public int lowestHum;
         public String dismountPolice;
         public String become;
 

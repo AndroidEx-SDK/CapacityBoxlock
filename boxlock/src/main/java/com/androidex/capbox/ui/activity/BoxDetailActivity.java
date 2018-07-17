@@ -1,16 +1,11 @@
 package com.androidex.capbox.ui.activity;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -19,13 +14,13 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.androidex.boxlib.modules.ServiceBean;
+import com.androidex.boxlib.utils.Byte2HexUtil;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.callback.ItemClickCallBack;
 import com.androidex.capbox.data.Event;
 import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
-import com.androidex.capbox.data.net.base.L;
 import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.module.BaseModel;
 import com.androidex.capbox.module.BoxDetailModel;
@@ -35,9 +30,6 @@ import com.androidex.capbox.ui.widget.SecondTitleBar;
 import com.androidex.capbox.ui.widget.SingleCheckListDialog;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
-import com.androidex.capbox.utils.Dialog;
-import com.androidex.capbox.utils.PhotoUtils;
-import com.androidex.capbox.utils.RLog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -111,10 +103,10 @@ public class BoxDetailActivity extends BaseActivity {
     private String unlocking = "A";//开锁次数，多次有效A，一次有效B
     private String unlockingMode = "C";//开锁方式设定: 指纹开锁A，腕表开锁B 同时开锁 C
     private String dismountPolice = "A";  //破拆报警的开启A和关闭B
-    private float highestTemp = 80;  //最高温度
-    private float lowestTemp = 0;  //最低温度
-    private float highestHum = 100;  //最高湿度
-    private float lowestHum = 0;  //最低湿度
+    private int highestTemp = 80;  //最高温度
+    private int lowestTemp = 0;  //最低温度
+    private int highestHum = 100;  //最高湿度
+    private int lowestHum = 0;  //最低湿度
     private int carryPersonNum = 1;  //携行人员人数跟腕表数量对应
     private int policeDiatance = 0;  //报警距离：0脱距、1较近、2近、3较远、4远
     private int heartbeatRate = 60;  //心跳更新频率60秒
@@ -131,6 +123,8 @@ public class BoxDetailActivity extends BaseActivity {
     private int pager_sign;//跳转页标识，0代表从列表页跳转到此类，1代表从监控页跳转到此类
     private int position;//用户选中的第几个设备
     private static ChatActivity chatActivity;
+    private int policeValue;//报警开关的参数值
+    private int lockmode;
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -410,11 +404,18 @@ public class BoxDetailActivity extends BaseActivity {
             case R.id.oneKeyConfig://配置箱体
                 if (isCarry()) return;//判断是否处于不可配置状态
                 if (isConnectBle()) return;//判断是否连接蓝牙
-
                 String heartRate = String.format("%2X", heartbeatRate);//心跳频率
-                String locRate = String.format("%2X", locationRate);//紧急心跳频率
-
-                MyBleService.getInstance().setBoxConfig(mac, "0101");
+                String locRate = String.format("%2X", locationRate);
+                String lowHum = String.format("%2X", lowestHum);
+                String highHum = String.format("%2X", highestHum);
+                String lowTemp = String.format("%2X", lowestTemp);
+                String highTemp = String.format("%2X", highestTemp);
+                String thresholdRssi = String.format("%2X", MyBleService.getInstance().getRssiMaxValue());
+                String poliValue = String.format("%2X", policeValue);
+                String lockMode = String.format("%2X", lockmode);
+                String hexData = heartRate + locRate + lowHum + highHum + lowTemp + highTemp + thresholdRssi + poliValue + lockMode;
+                Log.e(TAG, "hexData = " + hexData);
+                MyBleService.getInstance().setBoxConfig(mac, hexData);
                 break;
             case R.id.setting_carryPersonNum://携行设备
                 if (isCarry()) return;//判断是否处于不可配置状态
@@ -695,11 +696,20 @@ public class BoxDetailActivity extends BaseActivity {
             switch (resultCode) {
                 case Activity.RESULT_OK:
                     police = data.getStringExtra("police");//报警开关
-                    dismountPolice = data.getStringExtra("dismountPolice");//防拆报警开关
+                    distancePolice = data.getStringExtra("distancePolice");//脱距报警开关
                     tempPolice = data.getStringExtra("tempPolice");     //温度报警开关
                     humidityPolice = data.getStringExtra("humidityPolice");//湿度报警开关
+                    dismountPolice = data.getStringExtra("dismountPolice");//防拆报警开关
                     Log.d(TAG, "police=" + police + " policeDiatance=" + policeDiatance +
                             " dismountPolice" + dismountPolice + "tempPolice=" + tempPolice + " humidityPolice=" + humidityPolice + "distancePolice=" + distancePolice);
+
+                    policeValue = Byte2HexUtil.byte2Int(police.equals("A") ? (byte) 0x01 : (byte) 0x00);
+                    if (policeValue != 0) {
+                        policeValue = Byte2HexUtil.byte2Int(distancePolice.equals("A") ? (byte) 0x01 : (byte) 0x00) +
+                                Byte2HexUtil.byte2Int(tempPolice.equals("A") ? (byte) 0x02 : (byte) 0x00) +
+                                Byte2HexUtil.byte2Int(humidityPolice.equals("A") ? (byte) 0x04 : (byte) 0x00) +
+                                Byte2HexUtil.byte2Int(dismountPolice.equals("A") ? (byte) 0x08 : (byte) 0x00);
+                    }
                     break;
                 default:
                     CommonKit.showErrorShort(context, "取消配置");
@@ -708,10 +718,10 @@ public class BoxDetailActivity extends BaseActivity {
         } else if (requestCode == Constants.CODE.REQUESTCODE_TEMP_SETTING) {
             switch (resultCode) {
                 case Activity.RESULT_OK:
-                    highestTemp = data.getFloatExtra("highestTemp", 80);   //最高温
-                    lowestTemp = data.getFloatExtra("lowestTemp", 0);     //最低温
-                    highestHum = data.getFloatExtra("highestHum", 100);   //最高湿度
-                    lowestHum = data.getFloatExtra("lowestHum", 0);     //最低湿度
+                    highestTemp = data.getIntExtra("highestTemp", 80);   //最高温
+                    lowestTemp = data.getIntExtra("lowestTemp", 0);     //最低温
+                    highestHum = data.getIntExtra("highestHum", 100);   //最高湿度
+                    lowestHum = data.getIntExtra("lowestHum", 0);     //最低湿度
                     Log.d(TAG, " highestTemp=" + highestTemp + "lowestTemp=" + lowestTemp + " highestHum=" + highestHum + "lowestHum=" + lowestHum);
                     break;
                 default:
@@ -724,6 +734,11 @@ public class BoxDetailActivity extends BaseActivity {
                     unlockingMode = data.getStringExtra("unlockingMode");//报警开关
                     unlocking = data.getStringExtra("unlocking");//报警距离
                     Log.d(TAG, " unlockingMode=" + unlockingMode + " unlocking=" + unlocking);
+
+                    lockmode = Byte2HexUtil.byte2Int(unlockingMode.contains("A") ? (byte) 0x01 : (byte) 0x00) +
+                            Byte2HexUtil.byte2Int(unlockingMode.contains("B") ? (byte) 0x02 : (byte) 0x00) +
+                            Byte2HexUtil.byte2Int(unlockingMode.contains("C") ? (byte) 0x04 : (byte) 0x00);
+
                     break;
                 default:
                     CommonKit.showErrorShort(context, "取消配置");

@@ -11,9 +11,9 @@
         <item>一次有效</item>
     </string-array>
     <string-array name="mode">
+        <item>蓝牙开锁</item>
         <item>指纹开锁</item>
-        <item>手环开锁</item>
-        <item>指定位置开锁</item>
+        <item>远程开锁</item>
     </string-array>
     <string-array name="configure">
         <item>任务发布人配置</item>
