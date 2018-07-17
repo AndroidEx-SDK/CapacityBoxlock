@@ -43,6 +43,7 @@ import okhttp3.Request;
 
 import static com.androidex.boxlib.cache.SharedPreTool.IS_BIND_NUM;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BOX_MAC;
+import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_CONFIG_PARAM;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_END_TAST;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_ONEKEYCONFIG;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_START_BECOME;
@@ -93,7 +94,6 @@ public class BoxDetailActivity extends BaseActivity {
     private String name;//箱体的名字
     private String mac;//箱体的mac
     private String uuid;//箱体的UUID
-    private String police = "A";//报警开启A和关闭B
     private String possessorFinger1 = "";//所有人指纹信息或ID
     private String possessorFinger2 = "";//所有人指纹信息或ID
     private String possessorFinger3 = "";//所有人指纹信息或ID
@@ -101,8 +101,12 @@ public class BoxDetailActivity extends BaseActivity {
     private String becomeFinger2 = "";////静默模式功能的指纹
     private String becomeFinger3 = "";////静默模式功能的指纹
     private String unlocking = "A";//开锁次数，多次有效A，一次有效B
-    private String unlockingMode = "C";//开锁方式设定: 指纹开锁A，腕表开锁B 同时开锁 C
+    private String police = "A";//报警开启A和关闭B
+    private String unlockingMode = "ABC";//开锁方式设定: 指纹开锁A，腕表开锁B 同时开锁 C
     private String dismountPolice = "A";  //破拆报警的开启A和关闭B
+    private String tempPolice = "A";    //温度报警开关
+    private String humidityPolice = "A";    //湿度报警开关
+    private String distancePolice = "A";    //脱距报警开关
     private int highestTemp = 80;  //最高温度
     private int lowestTemp = 0;  //最低温度
     private int highestHum = 100;  //最高湿度
@@ -112,9 +116,6 @@ public class BoxDetailActivity extends BaseActivity {
     private int heartbeatRate = 60;  //心跳更新频率60秒
     private int locationRate = 120;   //定位更新频率为60秒
     private String become = "A";    //静默开启A 关闭B
-    private String tempPolice = "A";    //温度报警开关
-    private String humidityPolice = "A";    //湿度报警开关
-    private String distancePolice = "A";    //脱距报警开关
     private ArrayList<Map<String, String>> mapArrayList = new ArrayList<>();//添加的设备集合
     private ArrayList<String> list_devicemac = new ArrayList<>();//添加的设备集合的MAC
     private DataBroadcast dataBroadcast;
@@ -123,8 +124,8 @@ public class BoxDetailActivity extends BaseActivity {
     private int pager_sign;//跳转页标识，0代表从列表页跳转到此类，1代表从监控页跳转到此类
     private int position;//用户选中的第几个设备
     private static ChatActivity chatActivity;
-    private int policeValue;//报警开关的参数值
-    private int lockmode;
+    private int policeValue = 0;//报警开关的参数值
+    private int lockmode = 0;
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -176,6 +177,7 @@ public class BoxDetailActivity extends BaseActivity {
         intentFilter.addAction(ACTION_START_CARRYESCORT);//启动携行押运
         intentFilter.addAction(ACTION_END_TAST);//结束携行押运
         intentFilter.addAction(ACTION_START_BECOME);//开启静默
+        intentFilter.addAction(ACTION_CONFIG_PARAM);//配置箱体
         dataBroadcast = new DataBroadcast();
         context.registerReceiver(dataBroadcast, intentFilter);
     }
@@ -259,8 +261,8 @@ public class BoxDetailActivity extends BaseActivity {
                             if (heartbeatRate <= 20) {
                                 heartbeatRate = 60;
                             }
-                            if (locationRate <= 30) {
-                                locationRate = 60;
+                            if (locationRate <= 0 || locationRate >= 40) {
+                                locationRate = 20;
                             }
                             if (status == 2) {
                                 setDeviceCaryyStarts(true);//保存携行状态
@@ -273,13 +275,10 @@ public class BoxDetailActivity extends BaseActivity {
                             }
                             highestTemp = model.data.highestTemp;//最高温
                             lowestTemp = model.data.lowestTemp;//最低温
-                            dismountPolice = model.data.dismountPolice;//破拆报警的开启A和关闭B
+                            highestTemp = model.data.highestTemp > 0 ? model.data.highestTemp : 80;
+                            lowestTemp = model.data.lowestTemp > 0 ? model.data.lowestTemp : 0;
                             become = model.data.become;//静默开启A 关闭B
-                            if (become.equals("A")) {
-                                tb_becomeAlarm.setChecked(true);
-                            } else {
-                                tb_becomeAlarm.setChecked(false);
-                            }
+                            tb_becomeAlarm.setChecked(become.equals("A") ? true : false);
                             tv_carryNum.setText(String.format("%d人", carryPersonNum));
                             tv_heartbeatRate.setText(String.format("%ds/次", heartbeatRate));
                             tv_locationRate.setText(String.format("%ds/次", locationRate));
@@ -289,6 +288,12 @@ public class BoxDetailActivity extends BaseActivity {
                             possessorFinger1 = model.data.possessorFinger1;//possessorFinger1
                             possessorFinger2 = model.data.possessorFinger2;
                             possessorFinger3 = model.data.possessorFinger3;
+                            becomeFinger1 = TextUtils.isEmpty(becomeFinger1) ? "1" : becomeFinger1;
+                            becomeFinger2 = TextUtils.isEmpty(becomeFinger2) ? "2" : becomeFinger2;
+                            becomeFinger3 = TextUtils.isEmpty(becomeFinger3) ? "3" : becomeFinger3;
+                            possessorFinger1 = TextUtils.isEmpty(possessorFinger1) ? "1" : possessorFinger1;
+                            possessorFinger2 = TextUtils.isEmpty(possessorFinger2) ? "2" : possessorFinger2;
+                            possessorFinger3 = TextUtils.isEmpty(possessorFinger3) ? "3" : possessorFinger3;
                             Log.d(TAG, model.toString());
                             break;
 
@@ -362,7 +367,6 @@ public class BoxDetailActivity extends BaseActivity {
     @OnClick({
             R.id.tv_boxConfig,
             R.id.rl_boxset,
-            R.id.oneKeyConfig,
             R.id.setting_carryPersonNum,
             R.id.setting_Location,
             R.id.ll_heartbeatRate,
@@ -385,37 +389,34 @@ public class BoxDetailActivity extends BaseActivity {
                 } else if (carryPersonNum == 0) {
                     CommonKit.showErrorShort(context, getString(R.string.hint_carryPersonNum_commit));
                     return;
-                } else if (heartbeatRate <= 30 || heartbeatRate > 120) {
+                } else if (heartbeatRate < 30 || heartbeatRate > 120) {
                     CommonKit.showErrorShort(context, getString(R.string.hint_heartbeatRate_commit));
                     return;
-                } else if (locationRate < 60 || locationRate > 300) {
+                } else if (locationRate <= 0 || locationRate > 60) {
                     CommonKit.showErrorShort(context, getString(R.string.hint_locationRate_commit));
                     return;
                 } else {
+                    if (isCarry()) return;//判断是否处于不可配置状态
+                    if (isConnectBle()) return;//判断是否连接蓝牙
                     initDefaultData();//过滤某些参数，如果值为空的时候，配置默认值
-                    boxConfig();//配置箱体
+                    String heartRate = Byte2HexUtil.int2HexStr(heartbeatRate);//心跳频率
+                    String locRate = Byte2HexUtil.int2HexStr(locationRate);
+                    String highTemp = Byte2HexUtil.int2HexStr(highestTemp);
+                    String lowTemp = Byte2HexUtil.int2HexStr(lowestTemp);
+                    String highHum = Byte2HexUtil.int2HexStr(highestHum);
+                    String lowHum = Byte2HexUtil.int2HexStr(lowestHum);
+                    String thresholdRssi = Byte2HexUtil.int2HexStr(MyBleService.getInstance().getRssiMaxValue());
+                    String poliValue = Byte2HexUtil.int2HexStr(policeValue);
+                    String lockMode = Byte2HexUtil.int2HexStr(lockmode);//3c1450006400000000
+                    String hexData = heartRate + locRate + highTemp + lowTemp + highHum + lowHum + thresholdRssi + poliValue + lockMode;
+                    Log.e(TAG, "hexData = " + hexData);
+                    MyBleService.getInstance().setBoxConfig(mac, hexData);
                 }
                 break;
             case R.id.rl_boxset:
                 if (isCarry()) return;//判断是否处于不可配置状态
                 if (isConnectBle()) return;//判断是否连接蓝牙
                 BoxSettingActivity.lauch(context);
-                break;
-            case R.id.oneKeyConfig://配置箱体
-                if (isCarry()) return;//判断是否处于不可配置状态
-                if (isConnectBle()) return;//判断是否连接蓝牙
-                String heartRate = String.format("%2X", heartbeatRate);//心跳频率
-                String locRate = String.format("%2X", locationRate);
-                String lowHum = String.format("%2X", lowestHum);
-                String highHum = String.format("%2X", highestHum);
-                String lowTemp = String.format("%2X", lowestTemp);
-                String highTemp = String.format("%2X", highestTemp);
-                String thresholdRssi = String.format("%2X", MyBleService.getInstance().getRssiMaxValue());
-                String poliValue = String.format("%2X", policeValue);
-                String lockMode = String.format("%2X", lockmode);
-                String hexData = heartRate + locRate + lowHum + highHum + lowTemp + highTemp + thresholdRssi + poliValue + lockMode;
-                Log.e(TAG, "hexData = " + hexData);
-                MyBleService.getInstance().setBoxConfig(mac, hexData);
                 break;
             case R.id.setting_carryPersonNum://携行设备
                 if (isCarry()) return;//判断是否处于不可配置状态
@@ -561,21 +562,10 @@ public class BoxDetailActivity extends BaseActivity {
      * 过滤某些参数，如果值为空的时候，配置默认值
      */
     private void initDefaultData() {
-        if (unlocking == null || unlocking.equals("")) {//开锁次数
-            unlocking = "A";
-        }
-        if (unlockingMode == null || unlockingMode.equals("")) {//开锁方式
-            unlockingMode = "C";
-        }
-        if (police == null || police.equals("")) {//报警方式
-            police = "A";
-        }
-        if (dismountPolice == null || dismountPolice.equals("")) {
-            dismountPolice = "A";
-        }
-        if (become == null || become.equals("")) {
-            become = "A";
-        }
+        unlocking = TextUtils.isEmpty(unlocking) ? "A" : unlocking;//开锁次数
+        initLockMode();//初始化报警参数配置
+        initPoliceValue();//初始化报警参数配置
+
     }
 
     /**
@@ -702,14 +692,7 @@ public class BoxDetailActivity extends BaseActivity {
                     dismountPolice = data.getStringExtra("dismountPolice");//防拆报警开关
                     Log.d(TAG, "police=" + police + " policeDiatance=" + policeDiatance +
                             " dismountPolice" + dismountPolice + "tempPolice=" + tempPolice + " humidityPolice=" + humidityPolice + "distancePolice=" + distancePolice);
-
-                    policeValue = Byte2HexUtil.byte2Int(police.equals("A") ? (byte) 0x01 : (byte) 0x00);
-                    if (policeValue != 0) {
-                        policeValue = Byte2HexUtil.byte2Int(distancePolice.equals("A") ? (byte) 0x01 : (byte) 0x00) +
-                                Byte2HexUtil.byte2Int(tempPolice.equals("A") ? (byte) 0x02 : (byte) 0x00) +
-                                Byte2HexUtil.byte2Int(humidityPolice.equals("A") ? (byte) 0x04 : (byte) 0x00) +
-                                Byte2HexUtil.byte2Int(dismountPolice.equals("A") ? (byte) 0x08 : (byte) 0x00);
-                    }
+                    initPoliceValue();
                     break;
                 default:
                     CommonKit.showErrorShort(context, "取消配置");
@@ -734,11 +717,7 @@ public class BoxDetailActivity extends BaseActivity {
                     unlockingMode = data.getStringExtra("unlockingMode");//报警开关
                     unlocking = data.getStringExtra("unlocking");//报警距离
                     Log.d(TAG, " unlockingMode=" + unlockingMode + " unlocking=" + unlocking);
-
-                    lockmode = Byte2HexUtil.byte2Int(unlockingMode.contains("A") ? (byte) 0x01 : (byte) 0x00) +
-                            Byte2HexUtil.byte2Int(unlockingMode.contains("B") ? (byte) 0x02 : (byte) 0x00) +
-                            Byte2HexUtil.byte2Int(unlockingMode.contains("C") ? (byte) 0x04 : (byte) 0x00);
-
+                    initLockMode();
                     break;
                 default:
                     CommonKit.showErrorShort(context, "取消配置");
@@ -785,6 +764,34 @@ public class BoxDetailActivity extends BaseActivity {
                     break;
             }
         }
+    }
+
+    /**
+     * 初始化报警参数配置
+     */
+    private void initPoliceValue() {
+        police = TextUtils.isEmpty(police) ? "A" : police;
+        dismountPolice = TextUtils.isEmpty(dismountPolice) ? "A" : dismountPolice;
+        become = TextUtils.isEmpty(become) ? "A" : become;
+
+        policeValue = Byte2HexUtil.byte2Int(police.equals("A") ? (byte) 0x01 : (byte) 0x00);
+        if (policeValue != 0) {
+            policeValue = Byte2HexUtil.byte2Int(distancePolice.equals("A") ? (byte) 0x01 : (byte) 0x00) +
+                    Byte2HexUtil.byte2Int(tempPolice.equals("A") ? (byte) 0x02 : (byte) 0x00) +
+                    Byte2HexUtil.byte2Int(humidityPolice.equals("A") ? (byte) 0x04 : (byte) 0x00) +
+                    Byte2HexUtil.byte2Int(dismountPolice.equals("A") ? (byte) 0x08 : (byte) 0x00);
+        }
+    }
+
+    /**
+     * 初始化开锁模式
+     */
+    private void initLockMode() {
+        unlockingMode = TextUtils.isEmpty(unlockingMode) ? "ABC" : unlockingMode;
+        lockmode = Byte2HexUtil.byte2Int(unlockingMode.contains("A") ? (byte) 0x01 : (byte) 0x00) +
+                Byte2HexUtil.byte2Int(unlockingMode.contains("B") ? (byte) 0x02 : (byte) 0x00) +
+                Byte2HexUtil.byte2Int(unlockingMode.contains("C") ? (byte) 0x04 : (byte) 0x00);
+        lockmode = lockmode == 0 ? 1 : lockmode;
     }
 
     public class DataBroadcast extends BroadcastReceiver {
@@ -861,6 +868,17 @@ public class BoxDetailActivity extends BaseActivity {
                         case (byte) 0x01://失败
                             tb_becomeAlarm.setEnabled(false);
                             CommonKit.showErrorShort(context, "启动静默失败");
+                            break;
+                    }
+                    break;
+                case ACTION_CONFIG_PARAM:
+                    switch (b[2]) {
+                        case (byte) 0x00://成功
+                            boxConfig();
+                            break;
+                        case (byte) 0x01://失败
+                            tb_becomeAlarm.setEnabled(false);
+                            CommonKit.showErrorShort(context, "配置失败");
                             break;
                     }
                     break;

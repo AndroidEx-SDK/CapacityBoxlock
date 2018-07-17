@@ -152,7 +152,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
             lockFragment = new LockFragment();
             lockFragment.setArguments(bundle);
             transaction.replace(R.id.content, lockFragment);
-            transaction.commit();
+            transaction.commitAllowingStateLoss();
         }
     }
 
