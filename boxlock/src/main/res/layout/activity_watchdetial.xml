@@ -91,43 +91,6 @@
 
         </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/tv_line_height"
-            android:background="@color/line_color" />
-
-        <!--添加携行人指纹信息-->
-        <LinearLayout
-            android:id="@+id/ll_possessorFinger"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/adduser_ll_height"
-            android:gravity="center_vertical"
-            android:paddingLeft="@dimen/marginPadding16">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingLeft="@dimen/setting_tv_padding_left"
-                android:text="@string/setting_tv_carryFinger"
-                android:textColor="@color/white"
-                android:textSize="@dimen/setting_tv" />
-
-            <TextView
-                android:id="@+id/tv_possessorFinger"
-                android:layout_width="@dimen/setting_btn_right_height"
-                android:layout_height="@dimen/setting_btn_right_height"
-                android:gravity="center"
-                android:text="0"
-                android:textColor="@color/white" />
-
-            <ImageView
-                android:layout_width="@dimen/marginPadding20"
-                android:layout_height="@dimen/marginPadding20"
-                android:layout_marginRight="@dimen/marginPadding30"
-                android:src="@mipmap/white_right" />
-        </LinearLayout>
-
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/tv_line_height"

@@ -72,12 +72,10 @@
     <!-- fragment_setting -->
     <string name="setting_tv_rule">开锁规则</string>
     <string name="setting_tv_modes">开锁方式</string>
-    <string name="setting_tv_clearFinger">清除所有人指纹</string>
-    <string name="setting_tv_clearCarryFinger">清除携行人指纹</string>
-    <string name="setting_tv_possessorFinger">所有人指纹</string>
+    <string name="setting_tv_clearFinger">清除指纹</string>
+    <string name="setting_tv_possessorFinger">添加指纹</string>
     <string name="setting_tv_settingFinger">指纹设置</string>
-    <string name="setting_tv_carryFinger">携行人员指纹</string>
-    <string name="setting_tv_becomeFinger">无线静默功能指纹</string>
+    <string name="setting_tv_becomeFinger">静默指纹</string>
     <string name="setting_tv_personnel">携行设备</string>
     <string name="setting_tv_distance">报警距离</string>
     <string name="setting_tv_photograph">携行人员信息</string>
@@ -85,9 +83,11 @@
     <string name="setting_tv_distance_settings">距离设定</string>
     <string name="setting_tv_configure">一键配置</string>
     <string name="setting_tv_heartbeatRate">心跳更新频率</string>
-    <string name="setting_tv_Location">定位更新频率</string>
+    <string name="setting_tv_UrgencyHeartRate">紧急心跳频率</string>
     <string name="setting_tv_temperature">最低温度</string>
     <string name="setting_tv_temperature2">最高温度</string>
+    <string name="setting_tv_lowhum">最低湿度</string>
+    <string name="setting_tv_highhum">最高湿度</string>
     <string name="setting_tv_alarm">报警设置</string>
     <string name="setting_tv_openalarm">报警开关</string>
     <string name="setting_tv_lockscreen">锁屏开关</string>
@@ -111,7 +111,9 @@
     <string name="setting_tv_close">关闭</string>
     <string name="setting_tv_temp">温度报警标准</string>
     <string name="setting_tv_alowesttemp">0℃</string>
+    <string name="setting_tv_alowesthum">0℃</string>
     <string name="setting_tv_highesttemp">80℃</string>
+    <string name="setting_tv_highesthum">80℃</string>
     <string name="setting_tv_cry">踢被子报警</string>
     <string name="setting_tv_Nolocation">箱体位置未知</string>
     <string name="setting_tv_real">体温计模式</string>
@@ -305,6 +307,7 @@
     <string name="label_configBox">配置箱体</string>
     <string name="label_configbracelet">配置腕表</string>
     <string name="label_settingLock">开锁设置</string>
+    <string name="label_settingTemp">温湿度设置</string>
     <string name="label_startCarryScort">启动携行押运</string>
     <string name="label_finish">提交</string>
     <string name="label_register">提交审核</string>

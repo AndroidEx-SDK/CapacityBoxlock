@@ -112,6 +112,9 @@
             android:name="com.androidex.capbox.ui.activity.SettingAlarmActivity"
             android:screenOrientation="portrait"></activity>
         <activity
+            android:name="com.androidex.capbox.ui.activity.SettingTempActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
             android:name="com.androidex.capbox.ui.activity.SettingLockActivity"
             android:screenOrientation="portrait" />
         <activity

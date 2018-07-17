@@ -25,6 +25,7 @@ import com.androidex.capbox.callback.ItemClickCallBack;
 import com.androidex.capbox.data.Event;
 import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
+import com.androidex.capbox.data.net.base.L;
 import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.module.BaseModel;
 import com.androidex.capbox.module.BoxDetailModel;
@@ -112,6 +113,8 @@ public class BoxDetailActivity extends BaseActivity {
     private String dismountPolice = "A";  //破拆报警的开启A和关闭B
     private float highestTemp = 80;  //最高温度
     private float lowestTemp = 0;  //最低温度
+    private float highestHum = 100;  //最高湿度
+    private float lowestHum = 0;  //最低湿度
     private int carryPersonNum = 1;  //携行人员人数跟腕表数量对应
     private int policeDiatance = 0;  //报警距离：0脱距、1较近、2近、3较远、4远
     private int heartbeatRate = 60;  //心跳更新频率60秒
@@ -369,6 +372,7 @@ public class BoxDetailActivity extends BaseActivity {
             R.id.setting_carryPersonNum,
             R.id.setting_Location,
             R.id.ll_heartbeatRate,
+            R.id.ll_settingTemp,
             R.id.ll_settingFinger,
             R.id.tv_startCarryScort,
             R.id.ll_settingAlarm,
@@ -383,24 +387,6 @@ public class BoxDetailActivity extends BaseActivity {
                     return;
                 } else if (name == null || name.equals("")) {
                     CommonKit.showErrorShort(context, getString(R.string.hint_boxname_commit));
-                    return;
-                } else if (possessorFinger1 == null) {
-                    CommonKit.showErrorShort(context, getString(R.string.hint_possessorFinger_commit));
-                    return;
-                } else if (possessorFinger2 == null) {
-                    CommonKit.showErrorShort(context, getString(R.string.hint_possessorFinger_commit));
-                    return;
-                } else if (possessorFinger3 == null) {
-                    CommonKit.showErrorShort(context, getString(R.string.hint_possessorFinger_commit));
-                    return;
-                } else if (becomeFinger1 == null) {
-                    CommonKit.showErrorShort(context, getString(R.string.hint_becomeFinger_commit));
-                    return;
-                } else if (becomeFinger2 == null) {
-                    CommonKit.showErrorShort(context, getString(R.string.hint_becomeFinger_commit));
-                    return;
-                } else if (becomeFinger3 == null) {
-                    CommonKit.showErrorShort(context, getString(R.string.hint_becomeFinger_commit));
                     return;
                 } else if (carryPersonNum == 0) {
                     CommonKit.showErrorShort(context, getString(R.string.hint_carryPersonNum_commit));
@@ -421,9 +407,13 @@ public class BoxDetailActivity extends BaseActivity {
                 if (isConnectBle()) return;//判断是否连接蓝牙
                 BoxSettingActivity.lauch(context);
                 break;
-            case R.id.oneKeyConfig://一键配置
+            case R.id.oneKeyConfig://配置箱体
                 if (isCarry()) return;//判断是否处于不可配置状态
                 if (isConnectBle()) return;//判断是否连接蓝牙
+
+                String heartRate = String.format("%2X", heartbeatRate);//心跳频率
+                String locRate = String.format("%2X", locationRate);//紧急心跳频率
+
                 MyBleService.getInstance().setBoxConfig(mac, "0101");
                 break;
             case R.id.setting_carryPersonNum://携行设备
@@ -439,14 +429,22 @@ public class BoxDetailActivity extends BaseActivity {
                 if (isConnectBle()) return;//判断是否连接蓝牙
                 showFreNormalDlg();
                 break;
-            case R.id.setting_Location://定位更新频率
+            case R.id.setting_Location://紧急心跳频率
                 if (isCarry()) return;//判断是否处于不可配置状态
                 if (isConnectBle()) return;//判断是否连接蓝牙
                 showFreUrgencyDlg();
                 break;
+            case R.id.ll_settingTemp://设置最高最低温湿度
+                if (isCarry()) return;
+                if (isConnectBle()) return;
+                Bundle bundleTemp = new Bundle();
+                bundleTemp.putString(EXTRA_ITEM_ADDRESS, mac);
+                bundleTemp.putString(EXTRA_BOX_UUID, uuid);
+                SettingTempActivity.lauch(context, bundleTemp, Constants.CODE.REQUESTCODE_TEMP_SETTING);
+                break;
             case R.id.ll_settingFinger://设置指纹
-                if (isCarry()) return;//判断是否处于不可配置状态
-                if (isConnectBle()) return;//判断是否连接蓝牙
+                if (isCarry()) return;
+                if (isConnectBle()) return;
                 Bundle bundle1 = new Bundle();
                 bundle1.putString(EXTRA_ITEM_ADDRESS, mac);
                 SettingFingerActivity.lauch(context, bundle1);
@@ -497,7 +495,7 @@ public class BoxDetailActivity extends BaseActivity {
                     @Override
                     public void onItemClick(int position, String model, int tag) {
                         super.onItemClick(position, model, tag);
-                        tv_locationRate.setText(String.format("%s/次", freNormalArray[position]));
+                        tv_heartbeatRate.setText(String.format("%s/次", freNormalArray[position]));
                         locationRate = Integer.parseInt(freNormalArray[position].replace("s", ""));
                         editHeadDlg.dismiss();
                     }
@@ -516,7 +514,7 @@ public class BoxDetailActivity extends BaseActivity {
                     @Override
                     public void onItemClick(int position, String model, int tag) {
                         super.onItemClick(position, model, tag);
-                        tv_heartbeatRate.setText(String.format("%s/次", freUrgencyArray[position]));
+                        tv_locationRate.setText(String.format("%s/次", freUrgencyArray[position]));
                         heartbeatRate = Integer.parseInt(freUrgencyArray[position].replace("s", ""));
                         editHeadDlg.dismiss();
                     }
@@ -698,14 +696,23 @@ public class BoxDetailActivity extends BaseActivity {
                 case Activity.RESULT_OK:
                     police = data.getStringExtra("police");//报警开关
                     dismountPolice = data.getStringExtra("dismountPolice");//防拆报警开关
-                    highestTemp = data.getFloatExtra("highestTemp", 80);   //最高温
-                    lowestTemp = data.getFloatExtra("lowestTemp", 0);     //最低温
                     tempPolice = data.getStringExtra("tempPolice");     //温度报警开关
                     humidityPolice = data.getStringExtra("humidityPolice");//湿度报警开关
                     Log.d(TAG, "police=" + police + " policeDiatance=" + policeDiatance +
-                            " dismountPolice" + dismountPolice + " highestTemp=" +
-                            highestTemp + "lowestTemp=" + lowestTemp +
-                            "tempPolice=" + tempPolice + " humidityPolice=" + humidityPolice + "distancePolice=" + distancePolice);
+                            " dismountPolice" + dismountPolice + "tempPolice=" + tempPolice + " humidityPolice=" + humidityPolice + "distancePolice=" + distancePolice);
+                    break;
+                default:
+                    CommonKit.showErrorShort(context, "取消配置");
+                    break;
+            }
+        } else if (requestCode == Constants.CODE.REQUESTCODE_TEMP_SETTING) {
+            switch (resultCode) {
+                case Activity.RESULT_OK:
+                    highestTemp = data.getFloatExtra("highestTemp", 80);   //最高温
+                    lowestTemp = data.getFloatExtra("lowestTemp", 0);     //最低温
+                    highestHum = data.getFloatExtra("highestHum", 100);   //最高湿度
+                    lowestHum = data.getFloatExtra("lowestHum", 0);     //最低湿度
+                    Log.d(TAG, " highestTemp=" + highestTemp + "lowestTemp=" + lowestTemp + " highestHum=" + highestHum + "lowestHum=" + lowestHum);
                     break;
                 default:
                     CommonKit.showErrorShort(context, "取消配置");

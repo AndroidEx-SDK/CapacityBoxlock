@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/tv_line_height"
                 android:background="@color/line_color" />
-            <!--添加所有人指纹信息-->
+            <!--添加指纹信息-->
             <LinearLayout
                 android:id="@+id/ll_clearFinger"
                 android:layout_width="match_parent"

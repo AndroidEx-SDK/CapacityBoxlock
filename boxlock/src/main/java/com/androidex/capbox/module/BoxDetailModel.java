@@ -53,6 +53,8 @@ public class BoxDetailModel extends BaseModel{
         public int locationRate;
         public float highestTemp;
         public float lowestTemp;
+        public float highestHum;
+        public float lowestHum;
         public String dismountPolice;
         public String become;
 

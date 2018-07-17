@@ -40,10 +40,6 @@ import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
  */
 
 public class SettingAlarmActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
-    @Bind(R.id.tv_lowestTemp)
-    TextView tv_lowestTemp;
-    @Bind(R.id.tv_highestTemp)
-    TextView tv_highestTemp;
     @Bind(R.id.tb_police)
     ToggleButton tb_police;
     @Bind(R.id.tb_distanceAlarm)
@@ -69,8 +65,6 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        tv_lowestTemp.setText(String.format("%s℃", SharedPreTool.getInstance(context).getStringData(LOWEST_TEMP, "0")));
-        tv_highestTemp.setText(String.format("%s℃", SharedPreTool.getInstance(context).getStringData(HIGHEST_TEMP, "80")));
         mac = getIntent().getStringExtra(EXTRA_ITEM_ADDRESS);
         uuid = getIntent().getStringExtra(EXTRA_BOX_UUID);
         if (mac != null) {
@@ -106,66 +100,14 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
     }
 
     @OnClick({
-            R.id.ll_lowestTemp,
-            R.id.ll_highestTemp,
             R.id.tv_finish,
     })
     public void clickEvent(View view) {
         switch (view.getId()) {
-            case R.id.ll_highestTemp://最高温
-                Dialog.showAlertDialog(context, "请设置最高温度", new Dialog.DialogDataListener() {
-                    @Override
-                    public void confirm(String data) {
-                        if (data != null && data != "") {
-                            highestTemp = Float.parseFloat(data);
-                            if (highestTemp <= lowestTemp) {
-                                CommonKit.showErrorShort(context, "最高温度不得低于最低温度");
-                                highestTemp = 80;
-                            }
-                        } else {
-                            highestTemp = 80;
-                        }
-                        SharedPreTool.getInstance(context).setStringData(HIGHEST_TEMP, highestTemp + "");
-                        tv_highestTemp.setText(String.format("%s℃", highestTemp));
-                        Log.e(TAG, "设置最高温度为：" + highestTemp);
-                    }
-
-                    @Override
-                    public void cancel() {
-
-                    }
-                });
-                break;
-            case R.id.ll_lowestTemp://最低温
-                Dialog.showAlertDialog(context, getResources().getString(R.string.setting_tv_lowtemp), new Dialog.DialogDataListener() {
-                    @Override
-                    public void confirm(String data) {
-                        if (data != null && data != "") {
-                            lowestTemp = Float.parseFloat(data);
-                            if (lowestTemp >= highestTemp) {
-                                CommonKit.showErrorShort(context, "最低温度不得高于最高温度");
-                                lowestTemp = 0;
-                            }
-                        } else {
-                            lowestTemp = 0;
-                        }
-                        SharedPreTool.getInstance(context).setStringData(LOWEST_TEMP, lowestTemp + "");
-                        tv_lowestTemp.setText(String.format("%s℃", lowestTemp));
-                        Log.e(TAG, "设置最低温度为：" + lowestTemp);
-                    }
-
-                    @Override
-                    public void cancel() {
-
-                    }
-                });
-                break;
             case R.id.tv_finish:
                 Intent intent = new Intent();
                 intent.putExtra("police", police);
                 intent.putExtra("dismountPolice", dismountPolice);
-                intent.putExtra("highestTemp", highestTemp);
-                intent.putExtra("lowestTemp", lowestTemp);
                 intent.putExtra("tempPolice", tempPolice);
                 intent.putExtra("humidityPolice", humidityPolice);
                 intent.putExtra("distancePolice", distancePolice);
@@ -176,8 +118,6 @@ public class SettingAlarmActivity extends BaseActivity implements CompoundButton
                 break;
         }
     }
-
-    private boolean isCloseAll = true;
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {

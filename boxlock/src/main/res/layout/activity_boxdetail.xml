@@ -93,12 +93,13 @@
                 </RelativeLayout>
 
             </RelativeLayout>
-            <!-- 防丢报警 -->
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/tv_line_height"
                 android:background="@color/line_color" />
 
+            <!-- 报警设置 -->
             <LinearLayout
                 android:id="@+id/ll_settingAlarm"
                 android:layout_width="match_parent"
@@ -129,7 +130,7 @@
                 android:layout_height="@dimen/tv_line_height"
                 android:background="@color/line_color" />
 
-            <!--规则-->
+            <!--开锁设置-->
             <LinearLayout
                 android:id="@+id/ll_settinglock"
                 android:layout_width="match_parent"
@@ -143,6 +144,35 @@
                     android:layout_weight="1"
                     android:paddingLeft="@dimen/setting_tv_padding_left"
                     android:text="@string/label_settingLock"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/size16" />
+
+                <ImageView
+                    android:layout_width="@dimen/marginPadding20"
+                    android:layout_height="@dimen/marginPadding20"
+                    android:layout_marginRight="@dimen/marginPadding16"
+                    android:src="@mipmap/white_right" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tv_line_height"
+                android:background="@color/line_color" />
+
+
+            <!--开锁设置-->
+            <LinearLayout
+                android:id="@+id/ll_settingTemp"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/adduser_ll_height"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/setting_tv_padding_left"
+                    android:text="@string/label_settingTemp"
                     android:textColor="@color/white"
                     android:textSize="@dimen/size16" />
 
@@ -188,6 +218,7 @@
 
             <!--携行设备-->
             <LinearLayout
+                android:visibility="gone"
                 android:id="@+id/setting_carryPersonNum"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/adduser_ll_height"
@@ -260,7 +291,7 @@
                 android:layout_height="@dimen/tv_line_height"
                 android:background="@color/line_color" />
 
-            <!--定位-->
+            <!--紧急心跳-->
             <LinearLayout
                 android:id="@+id/setting_Location"
                 android:layout_width="match_parent"
@@ -272,7 +303,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingLeft="@dimen/setting_tv_padding_left"
-                    android:text="@string/setting_tv_Location"
+                    android:text="@string/setting_tv_UrgencyHeartRate"
                     android:textColor="@color/white"
                     android:textSize="@dimen/size16" />
 

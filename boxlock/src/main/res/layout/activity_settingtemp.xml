@@ -21,38 +21,47 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- 防丢报警 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tv_line_height"
+                android:background="@color/line_color" />
+
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/tv_line_height"
                 android:background="@color/line_color" />
 
             <LinearLayout
-                android:id="@+id/setting_alarm_function"
+                android:id="@+id/ll_lowestTemp"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/adduser_ll_height"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/marginPadding16">
 
                 <TextView
-                    android:id="@+id/TextView08_function"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingLeft="@dimen/setting_tv_padding_left"
-                    android:text="@string/setting_tv_openalarm"
+                    android:text="@string/setting_tv_temperature"
                     android:textColor="@color/white"
                     android:textSize="@dimen/size16" />
 
-                <ToggleButton
-                    android:id="@+id/tb_police"
-                    android:layout_width="@dimen/marginPadding120"
-                    android:layout_height="@dimen/marginPadding35"
-                    android:layout_marginRight="@dimen/marginPadding16"
-                    android:background="@drawable/thumbs"
-                    android:checked="true"
-                    android:textOff="  "
-                    android:textOn="  " />
+                <TextView
+                    android:id="@+id/tv_lowestTemp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/setting_btn_right_height"
+                    android:gravity="center"
+                    android:text="@string/setting_tv_alowesttemp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/setting_tv_call_temp" />
+
+                <ImageView
+                    android:layout_width="@dimen/marginPadding20"
+                    android:layout_height="@dimen/marginPadding20"
+                    android:layout_marginRight="@dimen/marginPadding30"
+                    android:src="@mipmap/white_right" />
 
             </LinearLayout>
 
@@ -60,8 +69,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/tv_line_height"
                 android:background="@color/line_color" />
-            <!-- 破拆报警 -->
+
+
             <LinearLayout
+                android:id="@+id/ll_highestTemp"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/adduser_ll_height"
                 android:gravity="center_vertical"
@@ -72,20 +83,24 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingLeft="@dimen/setting_tv_padding_left"
-                    android:text="@string/setting_tv_distancePolice"
+                    android:text="@string/setting_tv_temperature2"
                     android:textColor="@color/white"
                     android:textSize="@dimen/size16" />
 
-                <ToggleButton
-                    android:id="@+id/tb_distanceAlarm"
-                    android:layout_width="@dimen/marginPadding120"
-                    android:layout_height="@dimen/marginPadding35"
-                    android:layout_marginRight="@dimen/marginPadding16"
-                    android:background="@drawable/thumbs"
-                    android:checked="true"
-                    android:textOff="  "
-                    android:textOn="  " />
+                <TextView
+                    android:id="@+id/tv_highestTemp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/setting_btn_right_height"
+                    android:gravity="center"
+                    android:text="@string/setting_tv_highesttemp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/setting_tv_call_temp" />
 
+                <ImageView
+                    android:layout_width="@dimen/marginPadding20"
+                    android:layout_height="@dimen/marginPadding20"
+                    android:layout_marginRight="@dimen/marginPadding30"
+                    android:src="@mipmap/white_right" />
 
             </LinearLayout>
 
@@ -93,9 +108,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/tv_line_height"
                 android:background="@color/line_color" />
-            <!-- 破拆报警 -->
+
             <LinearLayout
-                android:id="@+id/setting_alarm_demolition"
+                android:id="@+id/ll_lowestHum"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/adduser_ll_height"
                 android:gravity="center_vertical"
@@ -106,20 +121,24 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingLeft="@dimen/setting_tv_padding_left"
-                    android:text="@string/setting_tv_alarm_demolition"
+                    android:text="@string/setting_tv_lowhum"
                     android:textColor="@color/white"
                     android:textSize="@dimen/size16" />
 
-                <ToggleButton
-                    android:id="@+id/tb_tamperAlarm"
-                    android:layout_width="@dimen/marginPadding120"
-                    android:layout_height="@dimen/marginPadding35"
-                    android:layout_marginRight="@dimen/marginPadding16"
-                    android:background="@drawable/thumbs"
-                    android:checked="true"
-                    android:textOff="  "
-                    android:textOn="  " />
+                <TextView
+                    android:id="@+id/tv_lowestHum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/setting_btn_right_height"
+                    android:gravity="center"
+                    android:text="@string/setting_tv_alowesttemp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/setting_tv_call_temp" />
 
+                <ImageView
+                    android:layout_width="@dimen/marginPadding20"
+                    android:layout_height="@dimen/marginPadding20"
+                    android:layout_marginRight="@dimen/marginPadding30"
+                    android:src="@mipmap/white_right" />
 
             </LinearLayout>
 
@@ -127,9 +146,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/tv_line_height"
                 android:background="@color/line_color" />
-            <!-- 静默开关 -->
+
+
             <LinearLayout
-                android:id="@+id/ll_tempPolice"
+                android:id="@+id/ll_highestHum"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/adduser_ll_height"
                 android:gravity="center_vertical"
@@ -140,52 +160,24 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingLeft="@dimen/setting_tv_padding_left"
-                    android:text="@string/setting_tv_tempPolice"
+                    android:text="@string/setting_tv_highhum"
                     android:textColor="@color/white"
                     android:textSize="@dimen/size16" />
-
-                <ToggleButton
-                    android:id="@+id/tb_tempAlarm"
-                    android:layout_width="@dimen/marginPadding120"
-                    android:layout_height="@dimen/marginPadding35"
-                    android:layout_marginRight="@dimen/marginPadding16"
-                    android:background="@drawable/thumbs"
-                    android:checked="true"
-                    android:textOff="  "
-                    android:textOn="  " />
-
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/tv_line_height"
-                android:background="@color/line_color" />
-            <!-- 静默开关 -->
-            <LinearLayout
-                android:id="@+id/ll_humidityPolice"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/adduser_ll_height"
-                android:gravity="center_vertical"
-                android:paddingLeft="@dimen/marginPadding16">
 
                 <TextView
+                    android:id="@+id/tv_highestHum"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingLeft="@dimen/setting_tv_padding_left"
-                    android:text="@string/setting_tv_humidityPolice"
+                    android:layout_height="@dimen/setting_btn_right_height"
+                    android:gravity="center"
+                    android:text="@string/setting_tv_highesthum"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/size16" />
+                    android:textSize="@dimen/setting_tv_call_temp" />
 
-                <ToggleButton
-                    android:id="@+id/tb_humAlarm"
-                    android:layout_width="@dimen/marginPadding120"
-                    android:layout_height="@dimen/marginPadding35"
-                    android:layout_marginRight="@dimen/marginPadding16"
-                    android:background="@drawable/thumbs"
-                    android:checked="true"
-                    android:textOff="  "
-                    android:textOn="  " />
+                <ImageView
+                    android:layout_width="@dimen/marginPadding20"
+                    android:layout_height="@dimen/marginPadding20"
+                    android:layout_marginRight="@dimen/marginPadding30"
+                    android:src="@mipmap/white_right" />
 
             </LinearLayout>
 
