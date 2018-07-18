@@ -49,12 +49,8 @@ public class FingerEnterActivity extends BaseActivity {
     private FingerEnterActivity.DataBroadcast dataBroadcast;
     private Context mContext;
     private String mac;
-    private String possessorFinger1 = null;//所有人指纹信息或ID
-    private String possessorFinger2 = null;//所有人指纹信息或ID
-    private String possessorFinger3 = null;//所有人指纹信息或ID
-    private String becomeFinger1 = null;////静默模式功能的指纹
-    private String becomeFinger2 = null;////静默模式功能的指纹
-    private String becomeFinger3 = null;////静默模式功能的指纹
+    private String possessorFinger = null;//所有人指纹信息或ID
+    private String becomeFinger = null;////静默模式功能的指纹
     private static int code;
 
     Handler handler = new Handler() {
@@ -64,17 +60,13 @@ public class FingerEnterActivity extends BaseActivity {
             switch (msg.what) {
                 case 0:
                     Intent intent = new Intent();
-                    intent.putExtra("possessorFinger1", possessorFinger1);
-                    intent.putExtra("possessorFinger2", possessorFinger2);
-                    intent.putExtra("possessorFinger3", possessorFinger3);
+                    intent.putExtra("possessorFinger", possessorFinger);
                     setResult(Activity.RESULT_OK, intent);
                     CommonKit.finishActivity(context);
                     break;
                 case 1:
                     Intent intent1 = new Intent();
-                    intent1.putExtra("becomeFinger1", becomeFinger1);
-                    intent1.putExtra("becomeFinger2", becomeFinger2);
-                    intent1.putExtra("becomeFinger3", becomeFinger3);
+                    intent1.putExtra("becomeFinger", becomeFinger);
                     setResult(Activity.RESULT_OK, intent1);
                     CommonKit.finishActivity(context);
                     break;
@@ -149,17 +141,15 @@ public class FingerEnterActivity extends BaseActivity {
                     RLog.d("获取到所有人的指纹信息 b=" + Byte2HexUtil.byte2Hex(b));
                     switch (b[1]) {
                         case (byte) 0x01:
-                            possessorFinger1 = "1";
                             RLog.d("指纹录入，第一次录入成功");
                             tv_hint_printFinger.setText("第一次录入成功");
                             break;
                         case (byte) 0x02:
-                            possessorFinger2 = "2";
                             RLog.d("指纹录入，第二次录入成功");
                             tv_hint_printFinger.setText("第二次录入成功");
                             break;
                         case (byte) 0x03:
-                            possessorFinger3 = "3";
+                            possessorFinger = "3";
                             RLog.d("指纹录入，第三次录入成功");
                             tv_hint_printFinger.setText("第三次录入成功");
                             handler.sendEmptyMessage(0);
@@ -177,17 +167,15 @@ public class FingerEnterActivity extends BaseActivity {
                     RLog.d("静默功能的指纹信息 b=" + Byte2HexUtil.byte2Hex(b));
                     switch (b[1]) {
                         case (byte) 0x01:
-                            becomeFinger1 = "1";
                             RLog.d("指纹录入，第一次录入成功");
                             tv_hint_printFinger.setText("第一次录入成功");
                             break;
                         case (byte) 0x02:
-                            becomeFinger2 = "2";
                             RLog.d("指纹录入，第二次录入成功");
                             tv_hint_printFinger.setText("第二次录入成功");
                             break;
                         case (byte) 0x03:
-                            becomeFinger3 = "3";
+                            becomeFinger = "3";
                             RLog.d("指纹录入，第三次录入成功");
                             tv_hint_printFinger.setText("第三次录入成功");
                             handler.sendEmptyMessage(1);

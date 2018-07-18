@@ -72,7 +72,8 @@
     <!-- fragment_setting -->
     <string name="setting_tv_rule">开锁规则</string>
     <string name="setting_tv_modes">开锁方式</string>
-    <string name="setting_tv_clearFinger">清除指纹</string>
+    <string name="setting_tv_clearFinger">清除开锁指纹</string>
+    <string name="setting_tv_clearBecomeFinger">清除静默指纹</string>
     <string name="setting_tv_possessorFinger">添加指纹</string>
     <string name="setting_tv_settingFinger">指纹设置</string>
     <string name="setting_tv_becomeFinger">静默指纹</string>

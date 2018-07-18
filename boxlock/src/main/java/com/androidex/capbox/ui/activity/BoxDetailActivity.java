@@ -54,10 +54,8 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCO
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
 import static com.androidex.capbox.provider.WidgetProvider.EXTRA_ITEM_POSITION;
-import static com.androidex.capbox.utils.Constants.CODE.CAMERA_PERMISSIONS_REQUEST_CODE;
 import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_FINGER_SETTING;
 import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_OPEN_MONITOR;
-import static com.androidex.capbox.utils.Constants.CODE.STORAGE_PERMISSIONS_REQUEST_CODE;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
 import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
@@ -93,12 +91,8 @@ public class BoxDetailActivity extends BaseActivity {
     private String name;//箱体的名字
     private String mac;//箱体的mac
     private String uuid;//箱体的UUID
-    private String possessorFinger1 = "";//所有人指纹信息或ID
-    private String possessorFinger2 = "";//所有人指纹信息或ID
-    private String possessorFinger3 = "";//所有人指纹信息或ID
-    private String becomeFinger1 = "";////静默模式功能的指纹
-    private String becomeFinger2 = "";////静默模式功能的指纹
-    private String becomeFinger3 = "";////静默模式功能的指纹
+    private String possessorFinger = "";//所有人指纹信息或ID
+    private String becomeFinger = "";////静默模式功能的指纹
     private String unlocking = "A";//开锁次数，多次有效A，一次有效B
     private String police = "A";//报警开启A和关闭B
     private String unlockingMode = "ABC";//开锁方式设定: 指纹开锁A，腕表开锁B 同时开锁 C
@@ -276,18 +270,10 @@ public class BoxDetailActivity extends BaseActivity {
                             tv_carryNum.setText(String.format("%d人", carryPersonNum));
                             tv_heartbeatRate.setText(String.format("%ds/次", heartbeatRate));
                             tv_locationRate.setText(String.format("%ds/次", locationRate));
-                            becomeFinger1 = model.data.becomeFinger1;
-                            becomeFinger2 = model.data.becomeFinger2;
-                            becomeFinger3 = model.data.becomeFinger3;
-                            possessorFinger1 = model.data.possessorFinger1;//possessorFinger1
-                            possessorFinger2 = model.data.possessorFinger2;
-                            possessorFinger3 = model.data.possessorFinger3;
-                            becomeFinger1 = TextUtils.isEmpty(becomeFinger1) ? "1" : becomeFinger1;
-                            becomeFinger2 = TextUtils.isEmpty(becomeFinger2) ? "2" : becomeFinger2;
-                            becomeFinger3 = TextUtils.isEmpty(becomeFinger3) ? "3" : becomeFinger3;
-                            possessorFinger1 = TextUtils.isEmpty(possessorFinger1) ? "1" : possessorFinger1;
-                            possessorFinger2 = TextUtils.isEmpty(possessorFinger2) ? "2" : possessorFinger2;
-                            possessorFinger3 = TextUtils.isEmpty(possessorFinger3) ? "3" : possessorFinger3;
+                            becomeFinger = model.data.becomeFinger1;
+                            possessorFinger = model.data.possessorFinger1;//possessorFinger1
+                            becomeFinger = TextUtils.isEmpty(becomeFinger) ? "3" : becomeFinger;
+                            possessorFinger = TextUtils.isEmpty(possessorFinger) ? "3" : possessorFinger;
                             Log.d(TAG, model.toString());
                             break;
 
@@ -464,7 +450,7 @@ public class BoxDetailActivity extends BaseActivity {
                 MyBleService.getInstance().connectionDevice(context, mac);
                 break;
             case R.id.tv_startCarryScort://启动/结束携行押运
-                if (TextUtils.isEmpty(becomeFinger1)  || TextUtils.isEmpty(possessorFinger1)) {
+                if (TextUtils.isEmpty(becomeFinger)  || TextUtils.isEmpty(possessorFinger)) {
                     CommonKit.showErrorShort(context, "请先配置箱体");
                     return;
                 }
@@ -597,8 +583,8 @@ public class BoxDetailActivity extends BaseActivity {
     private void boxConfig() {
         Log.e(TAG, "开始配置");
         NetApi.boxConfig(getToken(), username, uuid, name,
-                possessorFinger1, possessorFinger2, possessorFinger3,
-                becomeFinger1, becomeFinger2, becomeFinger3,
+                possessorFinger, possessorFinger, possessorFinger,
+                becomeFinger, becomeFinger, becomeFinger,
                 unlocking, unlockingMode, carryPersonNum, police,
                 policeDiatance, heartbeatRate, locationRate, highestTemp, lowestTemp,
                 dismountPolice, become, tempPolice, humidityPolice, distancePolice,
@@ -743,14 +729,10 @@ public class BoxDetailActivity extends BaseActivity {
         } else if (requestCode == REQUESTCODE_FINGER_SETTING) {
             switch (resultCode) {
                 case Activity.RESULT_OK:
-                    possessorFinger1 = data.getStringExtra("possessorFinger1");
-                    possessorFinger2 = data.getStringExtra("possessorFinger2");
-                    possessorFinger3 = data.getStringExtra("possessorFinger3");
-                    becomeFinger1 = data.getStringExtra("becomeFinger1");
-                    becomeFinger2 = data.getStringExtra("becomeFinger2");
-                    becomeFinger3 = data.getStringExtra("becomeFinger3");
-                    setFinger(possessorFinger3 != null ? true : false, becomeFinger3 != null ? true : false);
-                    if (possessorFinger3 != null) {
+                    possessorFinger = data.getStringExtra("possessorFinger");
+                    becomeFinger = data.getStringExtra("becomeFinger");
+                    setFinger(possessorFinger != null ? true : false, becomeFinger != null ? true : false);
+                    if (possessorFinger != null) {
                         CommonKit.showOkShort(context, "指纹录入完成");
                     } else {
                         CommonKit.showOkShort(context, "指纹录入取消");
