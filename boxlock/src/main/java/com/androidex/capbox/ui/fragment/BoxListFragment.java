@@ -55,6 +55,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.Bind;
 import de.greenrobot.event.EventBus;
@@ -65,6 +67,7 @@ import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static com.androidex.boxlib.cache.SharedPreTool.IS_BIND_NUM;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_UNBIND;
+import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCONNECTED;
@@ -107,6 +110,7 @@ public class BoxListFragment extends BaseFragment {
     private int unBindPosition;
     private BleBroadCast bleBroadCast;
     private boolean isShow = true;
+    private boolean inUnbind;//是否解绑
 
     @Override
     public void initData() {
@@ -180,6 +184,7 @@ public class BoxListFragment extends BaseFragment {
                         }
                         break;
                     case R.id.tv_unbind:
+                        inUnbind = false;
                         String address = mylist.get(position).get(EXTRA_ITEM_ADDRESS);
                         uuid = mylist.get(position).get(EXTRA_BOX_UUID);
                         unBindPosition = position;
@@ -189,7 +194,6 @@ public class BoxListFragment extends BaseFragment {
                         } else {
                             showProgress("正在解绑...");
                             String hexStr = Long.toHexString(Long.parseLong(getUserName().trim()));
-                            RLog.d("解绑手机 = " + hexStr);
                             MyBleService.getInstance().unBind(address, hexStr);
                         }
                         break;
@@ -330,18 +334,50 @@ public class BoxListFragment extends BaseFragment {
                     showProgress("连接成功...");
                     String hexStr = Long.toHexString(Long.parseLong(getUserName().trim()));
                     MyBleService.getInstance().unBind(address, hexStr);
+                    inUnbind = false;
+                    Timer timer = new Timer();
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            if (!inUnbind) {
+                                context.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        MyBleService.getInstance().disConnectDevice(address);
+                                        disProgress();
+                                        CommonKit.showErrorShort(context, "解绑超时");
+                                    }
+                                });
+                            }
+                        }
+                    }, 5000);
+                    break;
+                case BLE_CONN_DIS:
+                    disProgress();
+                    CommonKit.showErrorShort(context, "蓝牙断开");
+                    MyBleService.getInstance().disConnectDevice(address);
+                    break;
+                case BLE_CONN_FAIL:
+                    disProgress();
+                    CommonKit.showErrorShort(context, "连接失败");
+                    MyBleService.getInstance().disConnectDevice(address);
                     break;
                 case ACTION_UNBIND:
                     disProgress();
+                    inUnbind = true;
                     byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
                     switch (b[1]) {
                         case (byte) 0x01:
                             if (uuid.length() >= 32) {
                                 unBind(unBindPosition, address, uuid);
+                            } else {
+                                CommonKit.showErrorShort(context, "uuid错误");
+                                MyBleService.getInstance().disConnectDevice(address);
                             }
                             break;
                         case (byte) 0x00:
                             CommonKit.showErrorShort(context, "解绑失败");
+                            MyBleService.getInstance().disConnectDevice(address);
                             break;
                         default:
                             break;
@@ -351,7 +387,6 @@ public class BoxListFragment extends BaseFragment {
                     break;
             }
         }
-
     }
 
     @Override
@@ -458,6 +493,7 @@ public class BoxListFragment extends BaseFragment {
                 if (model != null) {
                     switch (model.code) {
                         case Constants.API.API_OK:
+                            RLog.d(getString(R.string.hint_unbind_ok));
                             CommonKit.showOkShort(context, getString(R.string.hint_unbind_ok));
                             if (position >= 0 && position < mylist.size()) {
                                 mylist.remove(position);
@@ -474,7 +510,7 @@ public class BoxListFragment extends BaseFragment {
                             context.sendBroadcast(new Intent(ACTION_UPDATE_ALL));//发送广播给桌面插件，更新列表
                             break;
                         case Constants.API.API_FAIL:
-                            CommonKit.showErrorShort(context, "解绑失败");
+                            CommonKit.showErrorShort(context, getString(R.string.hint_unbind_fail));
                             break;
                         case Constants.API.API_NOPERMMISION:
                             if (model.info != null) {
@@ -515,7 +551,6 @@ public class BoxListFragment extends BaseFragment {
                     switch (model.code) {
                         case Constants.API.API_OK:
                             mylist.clear();
-                            int carryNum = 0;
                             for (BoxDeviceModel.device device : model.devicelist) {
                                 Map<String, String> map = new HashMap<>();
                                 map.put(EXTRA_BOX_NAME, device.boxName);
@@ -524,9 +559,6 @@ public class BoxListFragment extends BaseFragment {
                                 map.put("deviceStatus", "" + device.deviceStatus);
                                 map.put("isdefault", "" + device.isDefault);
                                 map.put("isOnLine", "" + device.isOnLine);
-                                if (device.deviceStatus == 2) {
-                                    carryNum++;
-                                }
                                 mylist.add(map);
                                 if (deviceInfoDao.queryBuilder().where(DeviceInfoDao.Properties.Address.eq(device.mac)).list().size() <= 0) {
                                     DeviceInfo deviceInfo = new DeviceInfo();

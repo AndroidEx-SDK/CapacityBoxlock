@@ -32,7 +32,6 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BECOMEFINGER;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BOX_MAC;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_CARRYFINGER;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_STARTS;
-import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_ONEKEYCONFIG;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_POSSESSORFINGER;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
@@ -86,7 +85,6 @@ public class WatchDetialActivity extends BaseActivity {
         intentFilter.addAction(ACTION_POSSESSORFINGER);//获取到所有人的指纹信息
         intentFilter.addAction(ACTION_BECOMEFINGER);//获取开启静默功能的指纹信息
         intentFilter.addAction(ACTION_CARRYFINGER);//获取到携行人的指纹信息
-        intentFilter.addAction(ACTION_ONEKEYCONFIG);//一键配置
         intentFilter.addAction(ACTION_BOX_MAC);//发送mac给腕表
         dataBroadcast = new DataBroadcast();
         context.registerReceiver(dataBroadcast, intentFilter);

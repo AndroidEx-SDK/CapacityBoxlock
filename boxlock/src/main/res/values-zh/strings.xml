@@ -349,6 +349,7 @@
     <string name="hint_login_ok">登录成功</string>
     <string name="hint_bind_ok">绑定成功</string>
     <string name="hint_unbind_ok">解绑成功</string>
+    <string name="hint_unbind_fail">解绑失败</string>
     <string name="hint_login_fail">登录失败</string>
     <string name="label_login_ing">正在登录</string>
     <string name="label_config_ing">正在配置</string>

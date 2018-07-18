@@ -146,7 +146,7 @@ public class FingerEnterActivity extends BaseActivity {
                     break;
                 case ACTION_POSSESSORFINGER://获取到所有人的指纹信息
                     RLog.d("获取到所有人的指纹信息 b=" + Byte2HexUtil.byte2Hex(b));
-                    switch (b[4]) {
+                    switch (b[1]) {
                         case (byte) 0x01:
                             possessorFinger1 = "1";
                             RLog.d("指纹录入，第一次录入成功");
@@ -172,7 +172,7 @@ public class FingerEnterActivity extends BaseActivity {
                     break;
                 case ACTION_BECOMEFINGER://静默功能的指纹信息
                     RLog.d("静默功能的指纹信息 b=" + Byte2HexUtil.byte2Hex(b));
-                    switch (b[4]) {
+                    switch (b[1]) {
                         case (byte) 0x01:
                             becomeFinger1 = "1";
                             RLog.d("指纹录入，第一次录入成功");

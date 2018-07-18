@@ -390,7 +390,7 @@ public class AddDeviceActivity extends BaseActivity {
                                             public void run() {
                                                 MyBleService.getInstance().disConnectDevice(mac);
                                                 disProgress();
-                                                CommonKit.showErrorShort(context, "绑定失败");
+                                                CommonKit.showErrorShort(context, "绑定超时");
                                             }
                                         });
                                     }

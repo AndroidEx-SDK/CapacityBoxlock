@@ -95,7 +95,7 @@ public class SettingFingerActivity extends BaseActivity {
             return;
         }
         switch (view.getId()) {
-            case R.id.ll_possessorFinger://所有人的指纹信息
+            case R.id.ll_possessorFinger://录入指纹信息
                 if (!TextUtils.isEmpty(possessorFinger3)) {
                     CommonKit.showErrorShort(context, "指纹已经录入");
                     return;
@@ -261,7 +261,7 @@ public class SettingFingerActivity extends BaseActivity {
                     CommonKit.showOkShort(mContext, "连接成功");
                     break;
                 case BLE_CONN_FAIL:
-                    RLog.d("连接失败=");
+                    RLog.d("连接失败");
                     showProgress("连接失败，正在重连...");
                     if (MyBleService.getInstance().getConnectDevice(address) == null) {
                         MyBleService.getInstance().connectionDevice(context, address);

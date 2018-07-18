@@ -45,7 +45,6 @@ import static com.androidex.boxlib.cache.SharedPreTool.IS_BIND_NUM;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BOX_MAC;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_CONFIG_PARAM;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_END_TAST;
-import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_ONEKEYCONFIG;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_START_BECOME;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_START_CARRYESCORT;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
@@ -172,7 +171,6 @@ public class BoxDetailActivity extends BaseActivity {
         intentFilter.addAction(BLE_CONN_SUCCESS_ALLCONNECTED);
         intentFilter.addAction(BLE_CONN_FAIL);
         intentFilter.addAction(BLE_CONN_DIS);
-        intentFilter.addAction(ACTION_ONEKEYCONFIG);//一键配置
         intentFilter.addAction(ACTION_BOX_MAC);//发送mac给腕表
         intentFilter.addAction(ACTION_START_CARRYESCORT);//启动携行押运
         intentFilter.addAction(ACTION_END_TAST);//结束携行押运
@@ -395,17 +393,19 @@ public class BoxDetailActivity extends BaseActivity {
                     if (isCarry()) return;//判断是否处于不可配置状态
                     if (isConnectBle()) return;//判断是否连接蓝牙
                     initDefaultData();//过滤某些参数，如果值为空的时候，配置默认值
+                    //3C 14 50 00 64 00 FF FF FF BA0F07
                     String heartRate = Byte2HexUtil.int2HexStr(heartbeatRate);//心跳频率
                     String locRate = Byte2HexUtil.int2HexStr(locationRate);
                     String highTemp = Byte2HexUtil.int2HexStr(highestTemp);
                     String lowTemp = Byte2HexUtil.int2HexStr(lowestTemp);
                     String highHum = Byte2HexUtil.int2HexStr(highestHum);
                     String lowHum = Byte2HexUtil.int2HexStr(lowestHum);
-                    String thresholdRssi = Byte2HexUtil.int2HexStr(MyBleService.getInstance().getRssiMaxValue());
+                    String thresholdRssi = Byte2HexUtil.int2HexStr(Math.abs(MyBleService.getInstance().getRssiMaxValue()));//
                     String poliValue = Byte2HexUtil.int2HexStr(policeValue);
                     String lockMode = Byte2HexUtil.int2HexStr(lockmode);//3c1450006400000000
                     String hexData = heartRate + locRate + highTemp + lowTemp + highHum + lowHum + thresholdRssi + poliValue + lockMode;
                     Log.e(TAG, "hexData = " + hexData);
+                    Log.e(TAG, "thresholdRssi = " + thresholdRssi);
                     MyBleService.getInstance().setBoxConfig(mac, hexData);
                 }
                 break;
@@ -808,17 +808,6 @@ public class BoxDetailActivity extends BaseActivity {
                 case BLE_CONN_DIS:
                     tv_connect_starts.setText("点击连接");
                     Log.d(TAG, "断开连接=");
-                    break;
-                case ACTION_ONEKEYCONFIG://一键配置
-                    Log.e(TAG, "一键配置");
-                    switch (b[2]) {
-                        case (byte) 0x00://成功
-                            CommonKit.showMsgShort(mContext, "配置成功");
-                            break;
-                        case (byte) 0x01://失败
-                            CommonKit.showErrorShort(mContext, "配置失败");
-                            break;
-                    }
                     break;
                 case ACTION_BOX_MAC://发送mac
                     Log.e(TAG, "发送Mac给腕表");
