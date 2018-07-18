@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.boxlib.utils.Byte2HexUtil;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
@@ -92,10 +93,10 @@ public class FingerEnterActivity extends BaseActivity {
             tv_hint_printFinger.setText("请将手指放到箱体的指纹处");
             if (code == REQUESTCODE_FINGER_POSSESSOR) {
                 MyBleService.getInstance().setFinger(mac, 11);
-            } else if (code == REQUESTCODE_FINGER_BECOME) {
-                MyBleService.getInstance().setFinger(mac, 13);
             } else if (code == REQUESTCODE_FINGER_CARRY) {
                 MyBleService.getInstance().setFinger(mac, 12);
+            } else if (code == REQUESTCODE_FINGER_BECOME) {
+                MyBleService.getInstance().setFinger(mac, 13);
             }
         } else {
             CommonKit.showErrorShort(context, "正在连接蓝牙，稍后再试");
@@ -162,6 +163,8 @@ public class FingerEnterActivity extends BaseActivity {
                             RLog.d("指纹录入，第三次录入成功");
                             tv_hint_printFinger.setText("第三次录入成功");
                             handler.sendEmptyMessage(0);
+                            ServiceBean connectDevice = MyBleService.getInstance().getConnectDevice(mac);
+                            connectDevice.setStopGetLoc();
                             break;
                         case (byte) 0x00:
                             tv_hint_printFinger.setText("录入失败请重新录入");

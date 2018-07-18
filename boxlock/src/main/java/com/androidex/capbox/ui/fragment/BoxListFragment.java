@@ -49,8 +49,6 @@ import com.e.ble.scan.BLEScanCfg;
 import com.e.ble.scan.BLEScanListener;
 import com.e.ble.util.BLEError;
 
-import org.greenrobot.greendao.query.QueryBuilder;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

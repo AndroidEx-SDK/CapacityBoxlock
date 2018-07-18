@@ -128,15 +128,7 @@ public class SettingFingerActivity extends BaseActivity {
                                 @Override
                                 public void run() {
                                     disProgress();
-                                    CommonKit.showMsgShort(mContext, "清除成功");
-                                    tv_possessorFinger.setText("0");
-                                    tv_becomeFinger.setText("0");
-                                    possessorFinger1 = null;//所有人指纹信息或ID
-                                    possessorFinger2 = null;//所有人指纹信息或ID
-                                    possessorFinger3 = null;//所有人指纹信息或ID
-                                    becomeFinger1 = null;//静默模式功能的指纹
-                                    becomeFinger2 = null;//静默模式功能的指纹
-                                    becomeFinger3 = null;//静默模式功能的指纹
+                                    CommonKit.showMsgShort(mContext, "清除超时");
                                 }
                             });
                         }
