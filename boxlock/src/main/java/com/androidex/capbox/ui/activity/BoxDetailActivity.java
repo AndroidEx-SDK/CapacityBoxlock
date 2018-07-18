@@ -114,7 +114,7 @@ public class BoxDetailActivity extends BaseActivity {
     private int carryPersonNum = 1;  //携行人员人数跟腕表数量对应
     private int policeDiatance = 0;  //报警距离：0脱距、1较近、2近、3较远、4远
     private int heartbeatRate = 60;  //心跳更新频率60秒
-    private int locationRate = 120;   //定位更新频率为60秒
+    private int locationRate = 20;   //定位更新频率为60秒
     private String become = "A";    //静默开启A 关闭B
     private ArrayList<Map<String, String>> mapArrayList = new ArrayList<>();//添加的设备集合
     private ArrayList<String> list_devicemac = new ArrayList<>();//添加的设备集合的MAC
@@ -257,13 +257,9 @@ public class BoxDetailActivity extends BaseActivity {
                             police = model.data.police;//报警开启A和关闭B
                             policeDiatance = model.data.policeDiatance;////报警距离：0脱距、1较近、2近、3较远、4远
                             heartbeatRate = model.data.heartbeatRate;//心跳更新频率60秒
-                            locationRate = model.data.locationRate;//定位更新频率60秒
-                            if (heartbeatRate <= 20) {
-                                heartbeatRate = 60;
-                            }
-                            if (locationRate <= 0 || locationRate >= 40) {
-                                locationRate = 20;
-                            }
+                            locationRate = model.data.locationRate;//紧急心跳更新频率20秒
+                            heartbeatRate = heartbeatRate < 30 ? 60 : heartbeatRate;
+                            locationRate = locationRate <= 0 || locationRate >= 30 ? 20 : locationRate;
                             if (status == 2) {
                                 setDeviceCaryyStarts(true);//保存携行状态
                                 tv_boxConfig.setEnabled(false);
@@ -392,7 +388,7 @@ public class BoxDetailActivity extends BaseActivity {
                 } else if (heartbeatRate < 30 || heartbeatRate > 120) {
                     CommonKit.showErrorShort(context, getString(R.string.hint_heartbeatRate_commit));
                     return;
-                } else if (locationRate <= 0 || locationRate > 60) {
+                } else if (locationRate <= 0 || locationRate > 30) {
                     CommonKit.showErrorShort(context, getString(R.string.hint_locationRate_commit));
                     return;
                 } else {
@@ -498,7 +494,7 @@ public class BoxDetailActivity extends BaseActivity {
                     public void onItemClick(int position, String model, int tag) {
                         super.onItemClick(position, model, tag);
                         tv_heartbeatRate.setText(String.format("%s/次", freNormalArray[position]));
-                        locationRate = Integer.parseInt(freNormalArray[position].replace("s", ""));
+                        heartbeatRate = Integer.parseInt(freNormalArray[position].replace("s", ""));
                         editHeadDlg.dismiss();
                     }
                 }).show();
@@ -517,7 +513,7 @@ public class BoxDetailActivity extends BaseActivity {
                     public void onItemClick(int position, String model, int tag) {
                         super.onItemClick(position, model, tag);
                         tv_locationRate.setText(String.format("%s/次", freUrgencyArray[position]));
-                        heartbeatRate = Integer.parseInt(freUrgencyArray[position].replace("s", ""));
+                        locationRate = Integer.parseInt(freUrgencyArray[position].replace("s", ""));
                         editHeadDlg.dismiss();
                     }
                 }).show();

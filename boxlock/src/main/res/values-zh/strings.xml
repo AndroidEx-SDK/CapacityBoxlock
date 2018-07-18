@@ -330,7 +330,7 @@
     <string name="hint_carryPersonNum_commit">请添加携行人员</string>
     <string name="hint_police_commit">警告，报警开关没开</string>
     <string name="hint_heartbeatRate_commit">请设置正确的心跳频率(30s-120s)</string>
-    <string name="hint_locationRate_commit">请设置正确的定位频率(60s-300s)</string>
+    <string name="hint_locationRate_commit">请设置正确的定位频率(0s-30s)</string>
     <string name="hint_highestTemp_commit">请设置最高温度(60°-100°)</string>
     <string name="hint_lowestTemp_commit">请设置最低温度(0°-60°)</string>
     <string name="hint_dismountPolice_commit">请开启破拆报警</string>
