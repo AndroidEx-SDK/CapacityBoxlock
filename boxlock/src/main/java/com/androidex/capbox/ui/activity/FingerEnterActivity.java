@@ -16,8 +16,10 @@ import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.boxlib.utils.Byte2HexUtil;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
+import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.utils.CommonKit;
+import com.androidex.capbox.utils.FingerCacheUtil;
 import com.androidex.capbox.utils.RLog;
 
 import butterknife.Bind;
@@ -48,9 +50,7 @@ public class FingerEnterActivity extends BaseActivity {
 
     private FingerEnterActivity.DataBroadcast dataBroadcast;
     private Context mContext;
-    private String mac;
-    private String possessorFinger = null;//所有人指纹信息或ID
-    private String becomeFinger = null;////静默模式功能的指纹
+    private String address;
     private static int code;
 
     Handler handler = new Handler() {
@@ -60,13 +60,11 @@ public class FingerEnterActivity extends BaseActivity {
             switch (msg.what) {
                 case 0:
                     Intent intent = new Intent();
-                    intent.putExtra("possessorFinger", possessorFinger);
                     setResult(Activity.RESULT_OK, intent);
                     CommonKit.finishActivity(context);
                     break;
                 case 1:
                     Intent intent1 = new Intent();
-                    intent1.putExtra("becomeFinger", becomeFinger);
                     setResult(Activity.RESULT_OK, intent1);
                     CommonKit.finishActivity(context);
                     break;
@@ -79,20 +77,20 @@ public class FingerEnterActivity extends BaseActivity {
     @Override
     public void initData(Bundle savedInstanceState) {
         mContext = context;
-        mac = getIntent().getStringExtra(EXTRA_ITEM_ADDRESS);
+        address = getIntent().getStringExtra(EXTRA_ITEM_ADDRESS);
         initBroadCast();
-        if (MyBleService.getInstance().getConnectDevice(mac) != null) {
+        if (MyBleService.getInstance().getConnectDevice(address) != null) {
             tv_hint_printFinger.setText("请将手指放到箱体的指纹处");
             if (code == REQUESTCODE_FINGER_POSSESSOR) {
-                MyBleService.getInstance().setFinger(mac, 11);
+                MyBleService.getInstance().setFinger(address, 11);
             } else if (code == REQUESTCODE_FINGER_CARRY) {
-                MyBleService.getInstance().setFinger(mac, 12);
+                MyBleService.getInstance().setFinger(address, 12);
             } else if (code == REQUESTCODE_FINGER_BECOME) {
-                MyBleService.getInstance().setFinger(mac, 13);
+                MyBleService.getInstance().setFinger(address, 13);
             }
         } else {
             CommonKit.showErrorShort(context, "正在连接蓝牙，稍后再试");
-            MyBleService.getInstance().connectionDevice(context, mac);
+            MyBleService.getInstance().connectionDevice(context, address);
         }
     }
 
@@ -124,7 +122,7 @@ public class FingerEnterActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String deviceMac = intent.getStringExtra(BLECONSTANTS_ADDRESS);
-            if (!mac.equals(deviceMac)) return;
+            if (!address.equals(deviceMac)) return;
             byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
             switch (intent.getAction()) {
                 case BLE_CONN_SUCCESS:
@@ -134,7 +132,7 @@ public class FingerEnterActivity extends BaseActivity {
                     break;
                 case BLE_CONN_DIS:
                     Log.d(TAG, "断开连接=");
-                    MyBleService.getInstance().connectionDevice(context, mac);
+                    MyBleService.getInstance().connectionDevice(context, address);
                     CommonKit.showErrorShort(mContext, "蓝牙断开，已开始重连");
                     break;
                 case ACTION_POSSESSORFINGER://获取到所有人的指纹信息
@@ -149,12 +147,10 @@ public class FingerEnterActivity extends BaseActivity {
                             tv_hint_printFinger.setText("第二次录入成功");
                             break;
                         case (byte) 0x03:
-                            possessorFinger = "3";
                             RLog.d("指纹录入，第三次录入成功");
                             tv_hint_printFinger.setText("第三次录入成功");
                             handler.sendEmptyMessage(0);
-                            ServiceBean connectDevice = MyBleService.getInstance().getConnectDevice(mac);
-                            connectDevice.setStopGetLoc();
+                            FingerCacheUtil.addOpenFinger(context, address);//添加开锁指纹缓存
                             break;
                         case (byte) 0x00:
                             tv_hint_printFinger.setText("录入失败请重新录入");
@@ -175,10 +171,10 @@ public class FingerEnterActivity extends BaseActivity {
                             tv_hint_printFinger.setText("第二次录入成功");
                             break;
                         case (byte) 0x03:
-                            becomeFinger = "3";
                             RLog.d("指纹录入，第三次录入成功");
                             tv_hint_printFinger.setText("第三次录入成功");
                             handler.sendEmptyMessage(1);
+                            FingerCacheUtil.addBecomeFinger(context, address);//添加静默指纹缓存
                             break;
                         default:
                             break;

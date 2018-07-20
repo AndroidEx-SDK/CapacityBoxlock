@@ -30,6 +30,7 @@ import com.androidex.capbox.ui.widget.SecondTitleBar;
 import com.androidex.capbox.ui.widget.SingleCheckListDialog;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
+import com.androidex.capbox.utils.FingerCacheUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,7 +90,7 @@ public class BoxDetailActivity extends BaseActivity {
 
     private String username;//所有人的电话
     private String name;//箱体的名字
-    private String mac;//箱体的mac
+    private String address;//箱体的mac
     private String uuid;//箱体的UUID
     private String possessorFinger = "";//所有人指纹信息或ID
     private String becomeFinger = "";////静默模式功能的指纹
@@ -126,7 +127,7 @@ public class BoxDetailActivity extends BaseActivity {
         username = SharedPreTool.getInstance(context).getStringData(SharedPreTool.PHONE, null);
         name = getIntent().getStringExtra(EXTRA_BOX_NAME);
         uuid = getIntent().getStringExtra(EXTRA_BOX_UUID);
-        mac = getIntent().getStringExtra(EXTRA_ITEM_ADDRESS);
+        address = getIntent().getStringExtra(EXTRA_ITEM_ADDRESS);
         pager_sign = getIntent().getIntExtra(EXTRA_PAGER_SIGN, -1);
         if (pager_sign == 0) {
             position = getIntent().getIntExtra(EXTRA_ITEM_POSITION, -1);
@@ -134,23 +135,23 @@ public class BoxDetailActivity extends BaseActivity {
         initBroadCast();
         initTitleBar();
         initCheckedButton();//初始化静默开关的View;
-        if (mac != null) {
-            if (MyBleService.getInstance().getConnectDevice(mac) == null) {
-                if (mac != null) {
-                    MyBleService.getInstance().connectionDevice(context, mac);
+        if (address != null) {
+            if (MyBleService.getInstance().getConnectDevice(address) == null) {
+                if (address != null) {
+                    MyBleService.getInstance().connectionDevice(context, address);
                 } else {
-                    Log.d(TAG, "mac is null");
+                    Log.d(TAG, "address is null");
                 }
             } else {
                 Log.d(TAG, "已经连接");
                 tv_connect_starts.setText("已连接");
                 CommonKit.showOkShort(mContext, "设备已连接");
             }
-            tv_mac.setText(mac);
+            tv_mac.setText(address);
         }
         if (name != null) {
             if (name.equals("Box")) {
-                name = name + mac.substring(mac.length() - 2);
+                name = name + address.substring(address.length() - 2);
             }
             tv_name.setText(name);
         }
@@ -200,7 +201,7 @@ public class BoxDetailActivity extends BaseActivity {
      */
     private void intentMonitorPager() {
         Event.UpdateMonitorDevice monitorDevice = new Event.UpdateMonitorDevice();
-        monitorDevice.setAddress(mac);
+        monitorDevice.setAddress(address);
         monitorDevice.setPosition(position);
         monitorDevice.setName(name);
         monitorDevice.setUuid(uuid);
@@ -211,13 +212,13 @@ public class BoxDetailActivity extends BaseActivity {
         tb_becomeAlarm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (MyBleService.getInstance().getConnectDevice(mac) == null) {
+                if (MyBleService.getInstance().getConnectDevice(address) == null) {
                     CommonKit.showErrorShort(context, "蓝牙未连接");
                     return;
                 }
                 if (isChecked) {
                     become = "A";
-                    MyBleService.getInstance().startBecome(mac);
+                    MyBleService.getInstance().startBecome(address);
                     Log.e(TAG, "静默开关A");
                 } else {
                     become = "B";
@@ -270,10 +271,6 @@ public class BoxDetailActivity extends BaseActivity {
                             tv_carryNum.setText(String.format("%d人", carryPersonNum));
                             tv_heartbeatRate.setText(String.format("%ds/次", heartbeatRate));
                             tv_locationRate.setText(String.format("%ds/次", locationRate));
-                            becomeFinger = model.data.becomeFinger1;
-                            possessorFinger = model.data.possessorFinger1;//possessorFinger1
-                            becomeFinger = TextUtils.isEmpty(becomeFinger) ? "3" : becomeFinger;
-                            possessorFinger = TextUtils.isEmpty(possessorFinger) ? "3" : possessorFinger;
                             Log.d(TAG, model.toString());
                             break;
 
@@ -309,37 +306,15 @@ public class BoxDetailActivity extends BaseActivity {
      */
     private void setDeviceCaryyStarts(boolean isflag) {
         boxlist();
-        ServiceBean obj = SharedPreTool.getInstance(context).getObj(ServiceBean.class, mac);
+        ServiceBean obj = SharedPreTool.getInstance(context).getObj(ServiceBean.class, address);
         if (obj != null) {
             obj.setStartCarry(isflag);
-            SharedPreTool.getInstance(context).saveObj(obj, mac);
+            SharedPreTool.getInstance(context).saveObj(obj, address);
         } else {
-            ServiceBean device = MyBleService.getInstance().getConnectDevice(mac);
+            ServiceBean device = MyBleService.getInstance().getConnectDevice(address);
             if (device != null) {
                 device.setStartCarry(isflag);
-                SharedPreTool.getInstance(context).saveObj(device, mac);
-            }
-        }
-    }
-
-    /**
-     * 保存指纹是否录入
-     *
-     * @param flag0
-     * @param flag1
-     */
-    private void setFinger(boolean flag0, boolean flag1) {
-        ServiceBean device = SharedPreTool.getInstance(context).getObj(ServiceBean.class, mac);
-        if (device != null) {
-            device.setCarryFinger(flag0);
-            device.setBecomeFinger(flag1);
-            SharedPreTool.getInstance(context).saveObj(device, mac);
-        } else {
-            device = MyBleService.getInstance().getConnectDevice(mac);
-            if (device != null) {
-                device.setCarryFinger(flag0);
-                device.setBecomeFinger(flag1);
-                SharedPreTool.getInstance(context).saveObj(device, mac);
+                SharedPreTool.getInstance(context).saveObj(device, address);
             }
         }
     }
@@ -379,7 +354,7 @@ public class BoxDetailActivity extends BaseActivity {
                     if (isCarry()) return;//判断是否处于不可配置状态
                     if (isConnectBle()) return;//判断是否连接蓝牙
                     initDefaultData();//过滤某些参数，如果值为空的时候，配置默认值
-                    //3C 14 50 00 64 00 FF FF FF BA0F07
+                    //3C 14 50 00 64 00 BA0F07
                     String heartRate = Byte2HexUtil.int2HexStr(heartbeatRate);//心跳频率
                     String locRate = Byte2HexUtil.int2HexStr(locationRate);
                     String highTemp = Byte2HexUtil.int2HexStr(highestTemp);
@@ -390,9 +365,7 @@ public class BoxDetailActivity extends BaseActivity {
                     String poliValue = Byte2HexUtil.int2HexStr(policeValue);
                     String lockMode = Byte2HexUtil.int2HexStr(lockmode);//3c1450006400000000
                     String hexData = heartRate + locRate + highTemp + lowTemp + highHum + lowHum + thresholdRssi + poliValue + lockMode;
-                    Log.e(TAG, "hexData = " + hexData);
-                    Log.e(TAG, "thresholdRssi = " + thresholdRssi);
-                    MyBleService.getInstance().setBoxConfig(mac, hexData);
+                    MyBleService.getInstance().setBoxConfig(address, hexData);
                 }
                 break;
             case R.id.rl_boxset:
@@ -405,7 +378,7 @@ public class BoxDetailActivity extends BaseActivity {
                 if (isConnectBle()) return;//判断是否连接蓝牙
                 Bundle bundle = new Bundle();
                 bundle.putString(EXTRA_BOX_UUID, uuid);
-                bundle.putString(EXTRA_ITEM_ADDRESS, mac);
+                bundle.putString(EXTRA_ITEM_ADDRESS, address);
                 WatchListActivity.lauch(context, bundle);
                 break;
             case R.id.ll_heartbeatRate://心跳更新频率
@@ -422,7 +395,7 @@ public class BoxDetailActivity extends BaseActivity {
                 if (isCarry()) return;
                 if (isConnectBle()) return;
                 Bundle bundleTemp = new Bundle();
-                bundleTemp.putString(EXTRA_ITEM_ADDRESS, mac);
+                bundleTemp.putString(EXTRA_ITEM_ADDRESS, address);
                 bundleTemp.putString(EXTRA_BOX_UUID, uuid);
                 SettingTempActivity.lauch(context, bundleTemp, Constants.CODE.REQUESTCODE_TEMP_SETTING);
                 break;
@@ -430,14 +403,14 @@ public class BoxDetailActivity extends BaseActivity {
                 if (isCarry()) return;
                 if (isConnectBle()) return;
                 Bundle bundle1 = new Bundle();
-                bundle1.putString(EXTRA_ITEM_ADDRESS, mac);
+                bundle1.putString(EXTRA_ITEM_ADDRESS, address);
                 SettingFingerActivity.lauch(context, bundle1);
                 break;
             case R.id.ll_settingAlarm://报警设置
                 if (isCarry()) return;//判断是否处于不可配置状态
                 if (isConnectBle()) return;//判断是否连接蓝牙
                 Bundle bundle3 = new Bundle();
-                bundle3.putString(EXTRA_ITEM_ADDRESS, mac);
+                bundle3.putString(EXTRA_ITEM_ADDRESS, address);
                 bundle3.putString(EXTRA_BOX_UUID, uuid);
                 SettingAlarmActivity.lauch(context, bundle3, Constants.CODE.REQUESTCODE_SET_ALARM);
                 break;
@@ -447,18 +420,14 @@ public class BoxDetailActivity extends BaseActivity {
                 SettingLockActivity.lauch(context, Constants.CODE.REQUESTCODE_SET_LOCK);
                 break;
             case R.id.tv_connect_starts:
-                MyBleService.getInstance().connectionDevice(context, mac);
+                MyBleService.getInstance().connectionDevice(context, address);
                 break;
             case R.id.tv_startCarryScort://启动/结束携行押运
-                if (TextUtils.isEmpty(becomeFinger)  || TextUtils.isEmpty(possessorFinger)) {
-                    CommonKit.showErrorShort(context, "请先配置箱体");
-                    return;
-                }
                 if (status == 2) {//携行状态，结束携行
-                    //MyBleService.getInstance().endTask(mac);
+                    //MyBleService.getInstance().endTask(address);
                     endTask();
                 } else {
-                    //MyBleService.getInstance().startEscort(mac);
+                    //MyBleService.getInstance().startEscort(address);
                     startEscort();
                 }
                 break;
@@ -547,7 +516,6 @@ public class BoxDetailActivity extends BaseActivity {
         unlocking = TextUtils.isEmpty(unlocking) ? "A" : unlocking;//开锁次数
         initLockMode();//初始化报警参数配置
         initPoliceValue();//初始化报警参数配置
-
     }
 
     /**
@@ -556,9 +524,9 @@ public class BoxDetailActivity extends BaseActivity {
      * @return
      */
     private boolean isConnectBle() {
-        if (MyBleService.getInstance().getConnectDevice(mac) == null) {
+        if (MyBleService.getInstance().getConnectDevice(address) == null) {
             CommonKit.showErrorShort(context, getResources().getString(R.string.setting_tv_ble_disconnect));
-            MyBleService.getInstance().connectionDevice(context, mac);
+            MyBleService.getInstance().connectionDevice(context, address);
             return true;
         }
         return false;
@@ -582,6 +550,7 @@ public class BoxDetailActivity extends BaseActivity {
      */
     private void boxConfig() {
         Log.e(TAG, "开始配置");
+        initFinger();//初始化指纹参数
         NetApi.boxConfig(getToken(), username, uuid, name,
                 possessorFinger, possessorFinger, possessorFinger,
                 becomeFinger, becomeFinger, becomeFinger,
@@ -606,28 +575,18 @@ public class BoxDetailActivity extends BaseActivity {
                                 case Constants.API.API_OK:
                                     CommonKit.showOkShort(context, "配置成功");
                                     break;
-                                case Constants.API.API_FAIL:
-                                    if (model.info != null) {
-                                        CommonKit.showErrorShort(context, model.info);
-                                    } else {
-                                        CommonKit.showOkShort(context, "配置失败");
-                                    }
-                                    break;
-                                case Constants.API.API_NOPERMMISION:
-                                    if (model.info != null) {
-                                        CommonKit.showErrorShort(context, model.info);
-                                    } else {
-                                        CommonKit.showOkShort(context, "配置失败");
-                                    }
-                                    break;
                                 default:
-                                    if (model.info != null) {
-                                        CommonKit.showErrorShort(context, model.info);
-                                    } else {
-                                        CommonKit.showOkShort(context, "配置失败");
-                                    }
+                                    sendFailMessage(model);
                                     break;
                             }
+                        }
+                    }
+
+                    private void sendFailMessage(BaseModel model) {
+                        if (model.info != null) {
+                            CommonKit.showErrorShort(context, model.info);
+                        } else {
+                            CommonKit.showOkShort(context, "配置失败");
                         }
                     }
 
@@ -638,6 +597,19 @@ public class BoxDetailActivity extends BaseActivity {
                         CommonKit.showErrorShort(context, "网络连接失败");
                     }
                 });
+    }
+
+    private void initFinger() {
+        if (FingerCacheUtil.isHasOpenFinger(context, address)) {
+            possessorFinger = "3";
+        } else {
+            possessorFinger = "0";
+        }
+        if (FingerCacheUtil.isHasOpenFinger(context, address)) {
+            becomeFinger = "3";
+        } else {
+            becomeFinger = "0";
+        }
     }
 
     @Override
@@ -719,27 +691,18 @@ public class BoxDetailActivity extends BaseActivity {
         } else if (requestCode == REQUESTCODE_OPEN_MONITOR) {
             switch (resultCode) {
                 case Activity.RESULT_OK:
-                    if (mac != null) {
-                        MyBleService.getInstance().connectionDevice(context, mac);
+                    if (address != null) {
+                        MyBleService.getInstance().connectionDevice(context, address);
                     }
                     break;
                 default:
                     break;
             }
         } else if (requestCode == REQUESTCODE_FINGER_SETTING) {
-            switch (resultCode) {
-                case Activity.RESULT_OK:
-                    possessorFinger = data.getStringExtra("possessorFinger");
-                    becomeFinger = data.getStringExtra("becomeFinger");
-                    setFinger(possessorFinger != null ? true : false, becomeFinger != null ? true : false);
-                    if (possessorFinger != null) {
-                        CommonKit.showOkShort(context, "指纹录入完成");
-                    } else {
-                        CommonKit.showOkShort(context, "指纹录入取消");
-                    }
-                    break;
-                default:
-                    break;
+            if (FingerCacheUtil.isHasOpenFinger(context, address) || FingerCacheUtil.isHasBecomeFinger(context, address)) {
+                CommonKit.showOkShort(context, "指纹录入完成");
+            } else {
+                CommonKit.showOkShort(context, "指纹录入取消");
             }
         }
     }
@@ -751,7 +714,6 @@ public class BoxDetailActivity extends BaseActivity {
         police = TextUtils.isEmpty(police) ? "A" : police;
         dismountPolice = TextUtils.isEmpty(dismountPolice) ? "A" : dismountPolice;
         become = TextUtils.isEmpty(become) ? "A" : become;
-
         policeValue = Byte2HexUtil.byte2Int(police.equals("A") ? (byte) 0x01 : (byte) 0x00);
         if (policeValue != 0) {
             policeValue = Byte2HexUtil.byte2Int(distancePolice.equals("A") ? (byte) 0x01 : (byte) 0x00) +
@@ -777,7 +739,7 @@ public class BoxDetailActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String deviceMac = intent.getStringExtra(BLECONSTANTS_ADDRESS);
-            if (!mac.equals(deviceMac)) return;
+            if (!address.equals(deviceMac)) return;
             byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
             switch (intent.getAction()) {
                 case BLE_CONN_SUCCESS:

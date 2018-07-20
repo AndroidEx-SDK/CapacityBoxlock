@@ -19,6 +19,7 @@ import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.widget.SecondTitleBar;
 import com.androidex.capbox.utils.CommonKit;
+import com.androidex.capbox.utils.FingerCacheUtil;
 import com.androidex.capbox.utils.RLog;
 
 import java.util.Timer;
@@ -51,8 +52,6 @@ public class SettingFingerActivity extends BaseActivity {
     TextView tv_becomeFinger;
 
     private String address;//箱体的mac
-    private String possessorFinger = null;//所有人指纹信息或ID
-    private String becomeFinger = null;//静默模式功能的指纹
     private DataBroadcast dataBroadcast;
     private Context mContext;
     private boolean isClear = false;
@@ -63,17 +62,8 @@ public class SettingFingerActivity extends BaseActivity {
         address = getIntent().getStringExtra(EXTRA_ITEM_ADDRESS);
         initBroadCast();
         initTitleBar();
-        ServiceBean device = SharedPreTool.getInstance(context).getObj(ServiceBean.class, address);
-        if (device != null) {
-            if (device.isCarryFinger()) {
-                possessorFinger = "3";
-                tv_possessorFinger.setText("3");
-            }
-            if (device.isBecomeFinger()) {
-                becomeFinger = "3";
-                tv_becomeFinger.setText("3");
-            }
-        }
+        tv_possessorFinger.setText(FingerCacheUtil.isHasOpenFinger(context, address) ? "3" : "0");
+        tv_becomeFinger.setText(FingerCacheUtil.isHasBecomeFinger(context, address) ? "3" : "0");
     }
 
     @OnClick({
@@ -89,30 +79,27 @@ public class SettingFingerActivity extends BaseActivity {
         }
         switch (view.getId()) {
             case R.id.ll_possessorFinger://录入指纹信息
-                if (!TextUtils.isEmpty(possessorFinger)) {
+                if (FingerCacheUtil.isHasOpenFinger(context, address)) {
                     CommonKit.showErrorShort(context, "指纹已经录入");
-                    return;
+                } else {
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putString(EXTRA_ITEM_ADDRESS, address);
+                    FingerEnterActivity.lauch(context, bundle1, REQUESTCODE_FINGER_POSSESSOR);
                 }
-                Bundle bundle1 = new Bundle();
-                bundle1.putString(EXTRA_ITEM_ADDRESS, address);
-                FingerEnterActivity.lauch(context, bundle1, REQUESTCODE_FINGER_POSSESSOR);
                 break;
             case R.id.ll_becomeFinger://无线静默功能指纹信息
-                if (TextUtils.isEmpty(possessorFinger)) {
-                    CommonKit.showErrorShort(context, "请先录入所有人指纹");
-                    return;
-                } else if (!TextUtils.isEmpty(becomeFinger)) {
+                if (FingerCacheUtil.isHasBecomeFinger(context, address)) {
                     CommonKit.showErrorShort(context, "指纹已经录入");
-                    return;
+                } else {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(EXTRA_ITEM_ADDRESS, address);
+                    FingerEnterActivity.lauch(context, bundle, REQUESTCODE_FINGER_BECOME);
                 }
-                Bundle bundle = new Bundle();
-                bundle.putString(EXTRA_ITEM_ADDRESS, address);
-                FingerEnterActivity.lauch(context, bundle, REQUESTCODE_FINGER_BECOME);
                 break;
             case R.id.ll_clearFinger: {
                 isClear = true;
                 showProgress("正在清除...");
-                MyBleService.getInstance().clearFinger(address, 15, "01");
+                MyBleService.getInstance().clearFinger(address, 35, "01");
                 TimerTask task = new TimerTask() {
                     @Override
                     public void run() {
@@ -171,12 +158,6 @@ public class SettingFingerActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent();
-                if (possessorFinger != null) {
-                    intent.putExtra("possessorFinger", possessorFinger);
-                }
-                if (becomeFinger != null) {
-                    intent.putExtra("becomeFinger", becomeFinger);
-                }
                 setResult(Activity.RESULT_OK, intent);
                 CommonKit.finishActivity(context);
             }
@@ -204,8 +185,8 @@ public class SettingFingerActivity extends BaseActivity {
         if (requestCode == REQUESTCODE_FINGER_POSSESSOR) {//所有人指纹录取
             switch (resultCode) {
                 case Activity.RESULT_OK:
-                    possessorFinger = data.getStringExtra("possessorFinger");
-                    tv_possessorFinger.setText("3");
+                    tv_possessorFinger.setText(FingerCacheUtil.isHasOpenFinger(context, address) ? "3" : "0");
+                    CommonKit.showErrorShort(context, "录入成功");
                     break;
                 default:
                     CommonKit.showErrorShort(context, "取消所有人指纹录入");
@@ -214,9 +195,8 @@ public class SettingFingerActivity extends BaseActivity {
         } else if (requestCode == REQUESTCODE_FINGER_BECOME) {//静默指纹录入
             switch (resultCode) {
                 case Activity.RESULT_OK:
-                    becomeFinger = data.getStringExtra("becomeFinger");
-                    RLog.e("becomeFinger = " + becomeFinger);
-                    tv_becomeFinger.setText("3");
+                    tv_becomeFinger.setText(FingerCacheUtil.isHasBecomeFinger(context, address) ? "3" : "0");
+                    CommonKit.showOkShort(context, "录入成功");
                     break;
                 default:
                     CommonKit.showErrorShort(context, "取消静默指纹录入");
@@ -227,15 +207,6 @@ public class SettingFingerActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent();
-        if (possessorFinger != null) {
-            intent.putExtra("possessorFinger", possessorFinger);
-        }
-        if (becomeFinger != null) {
-            intent.putExtra("becomeFinger", becomeFinger);
-        }
-        setResult(Activity.RESULT_OK, intent);
-        CommonKit.finishActivity(context);
         super.onBackPressed();
     }
 
@@ -270,9 +241,10 @@ public class SettingFingerActivity extends BaseActivity {
                     RLog.d("收到清除指纹 b=" + Byte2HexUtil.byte2Hex(b));
                     isClear = false;
                     disProgress();
-                    switch (b[2]) {
+                    switch (b[1]) {
                         case (byte) 0x01://成功
                             CommonKit.showMsgShort(mContext, "清除成功");
+                            FingerCacheUtil.clearFingerCache(context, address);
                             break;
                         case (byte) 0x00://失败
                             CommonKit.showErrorShort(mContext, "清除失败");
@@ -281,10 +253,8 @@ public class SettingFingerActivity extends BaseActivity {
                             CommonKit.showErrorShort(mContext, "清除失败");
                             break;
                     }
-                    tv_possessorFinger.setText("0");
-                    tv_becomeFinger.setText("0");
-                    possessorFinger = null;//所有人指纹信息或ID
-                    becomeFinger = null;//静默模式功能的指纹
+                    tv_possessorFinger.setText(FingerCacheUtil.isHasOpenFinger(context, address) ? "3" : "0");
+                    tv_becomeFinger.setText(FingerCacheUtil.isHasBecomeFinger(context, address) ? "3" : "0");
                     break;
             }
         }
