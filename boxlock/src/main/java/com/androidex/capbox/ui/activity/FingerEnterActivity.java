@@ -176,6 +176,9 @@ public class FingerEnterActivity extends BaseActivity {
                             handler.sendEmptyMessage(1);
                             FingerCacheUtil.addBecomeFinger(context, address);//添加静默指纹缓存
                             break;
+                        case (byte) 0x00:
+                            tv_hint_printFinger.setText("录入失败请重新录入");
+                            break;
                         default:
                             break;
                     }

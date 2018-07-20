@@ -271,7 +271,6 @@ public class SettingFingerActivity extends BaseActivity {
 
     }
 
-
     @Override
     public void onClick(View view) {
 

@@ -129,18 +129,20 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
         if (username != null) {
             tv_username.setText(username);
         }
-        int rssiMaxValue = MyBleService.getInstance().getRssiMaxValue();
-        settingDistance();//报警距离
-        if (rssiMaxValue >= 0) {
-            setting_distance.setSelection(0);
-        } else if (rssiMaxValue == -70) {//较近
-            setting_distance.setSelection(1);
-        } else if (rssiMaxValue == -80) {//近
-            setting_distance.setSelection(2);
-        } else if (rssiMaxValue == -90) {//较远
-            setting_distance.setSelection(3);
-        } else if (rssiMaxValue == -98) {//远
-            setting_distance.setSelection(4);
+        if (MyBleService.getInstance()!=null){
+            int rssiMaxValue = MyBleService.getInstance().getRssiMaxValue();
+            settingDistance();//报警距离
+            if (rssiMaxValue >= 0) {
+                setting_distance.setSelection(0);
+            } else if (rssiMaxValue == -70) {//较近
+                setting_distance.setSelection(1);
+            } else if (rssiMaxValue == -80) {//近
+                setting_distance.setSelection(2);
+            } else if (rssiMaxValue == -90) {//较远
+                setting_distance.setSelection(3);
+            } else if (rssiMaxValue == -98) {//远
+                setting_distance.setSelection(4);
+            }
         }
     }
 
@@ -181,13 +183,13 @@ public class MeMainFragment extends BaseFragment implements CompoundButton.OnChe
                         MyBleService.getInstance().setRssiMaxValue(-70);
                         break;
                     case 2:
-                        MyBleService.getInstance().setRssiMaxValue(-80);
+                        MyBleService.getInstance().setRssiMaxValue(-77);
                         break;
                     case 3:
-                        MyBleService.getInstance().setRssiMaxValue(-90);
+                        MyBleService.getInstance().setRssiMaxValue(-84);
                         break;
                     case 4:
-                        MyBleService.getInstance().setRssiMaxValue(-98);
+                        MyBleService.getInstance().setRssiMaxValue(-91);
                         break;
                     default:
                         MyBleService.getInstance().setRssiMaxValue(0);

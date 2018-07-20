@@ -96,7 +96,7 @@ public class DebugBLEActivity extends BaseActivity {
     private List<BluetoothDevice> allConnectDevice;
     boolean isCirculation = false;//是否自动发送
     boolean isTCP = false;//TCP协议发送
-    boolean isAll = false;//全部协议发送
+    boolean isAll = true;//全部协议发送
     private int tag = 0;
     UUID UUID_BIND = UUID.fromString("0000ff25-0000-1000-8000-00805f9b34fb");//3.4.1	绑定箱体
 
@@ -111,6 +111,28 @@ public class DebugBLEActivity extends BaseActivity {
         }
         initTitleBar();
         initBleBroadCast();
+        initLog();
+    }
+
+    private void initLog() {
+        List<String> logList = MyBleService.getInstance().getLogList();
+        if (logList != null) {
+            Loge("log size = " + logList.size());
+            for (String str : MyBleService.getInstance().getLogList()) {
+                updateText(str);
+            }
+        } else {
+            Loge("log size = log is null");
+        }
+    }
+
+    private void addText(EditText textView, String content) {
+        textView.append(content);
+        textView.append("\n");
+        int offset = textView.getLineCount() * textView.getLineHeight();
+        if (offset > textView.getHeight()) {
+            textView.scrollTo(0, offset - textView.getHeight());
+        }
     }
 
     private void initTitleBar() {
@@ -303,6 +325,7 @@ public class DebugBLEActivity extends BaseActivity {
                 editTextRecDisp.setText("");
                 iRecLines = 0;
                 editTextLines.setText(String.valueOf(iRecLines));
+                MyBleService.getInstance().clearLog();
             } else if (v == ButtonSendCOMA) {
                 if (isTCP) {
                     if (getSendData() == null) return;
@@ -362,6 +385,7 @@ public class DebugBLEActivity extends BaseActivity {
 
     private void updateText(String str) {
         editTextRecDisp.append(str);
+        editTextRecDisp.append("\n");
         iRecLines++;
         editTextLines.setText(String.valueOf(iRecLines));
         if ((iRecLines > 200) && (checkBoxAutoClear.isChecked())) {//达到200项自动清除
@@ -439,13 +463,13 @@ public class DebugBLEActivity extends BaseActivity {
                 case ACTION_NET_TCP_RECEIVE:
                     byte[] tcpData = intent.getByteArrayExtra("tcpClientReceiver");
                     if (tcpData.length > 0) {
-                        updateText(String.format("服务器返回：%s\r\n", Byte2HexUtil.byte2Hex(tcpData)));
+                        //updateText(String.format("服务器返回：%s\r\n", Byte2HexUtil.byte2Hex(tcpData)));
                     }
                     break;
 
                 case ACTION_LOG_TEST:
                     String data = intent.getStringExtra(BLECONSTANTS_DATA);
-                    updateText(String.format("发送给服务器：%s\r\n", data));
+                    //updateText(String.format("发送给服务器：%s\r\n", data));
                     break;
             }
         }

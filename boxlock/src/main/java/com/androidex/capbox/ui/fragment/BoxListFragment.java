@@ -474,12 +474,7 @@ public class BoxListFragment extends BaseFragment {
             CommonKit.showErrorShort(context, "设备未连接网络");
             return;
         }
-        String token = SharedPreTool.getInstance(context).getStringData(SharedPreTool.TOKEN, null);
-        if (token == null) {
-            CommonKit.showErrorShort(context, "账号异常");
-            token = "";
-        }
-        NetApi.relieveBoxBind(token, ((BaseActivity) context).getUserName(), uuid, address, new ResultCallBack<BaseModel>() {
+        NetApi.relieveBoxBind(getToken(), ((BaseActivity) context).getUserName(), uuid, address, new ResultCallBack<BaseModel>() {
             @Override
             public void onStart() {
                 super.onStart();
@@ -491,7 +486,6 @@ public class BoxListFragment extends BaseFragment {
                 if (model != null) {
                     switch (model.code) {
                         case Constants.API.API_OK:
-                            RLog.d(getString(R.string.hint_unbind_ok));
                             CommonKit.showOkShort(context, getString(R.string.hint_unbind_ok));
                             if (position >= 0 && position < mylist.size()) {
                                 mylist.remove(position);
