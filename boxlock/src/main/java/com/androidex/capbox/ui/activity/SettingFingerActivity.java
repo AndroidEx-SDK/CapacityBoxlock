@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.UiThread;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.androidex.boxlib.modules.ServiceBean;
@@ -50,11 +51,16 @@ public class SettingFingerActivity extends BaseActivity {
     TextView tv_possessorFinger;
     @Bind(R.id.tv_becomeFinger)
     TextView tv_becomeFinger;
+    @Bind(R.id.ll_clearFinger)
+    LinearLayout ll_clearFinger;
+    @Bind(R.id.ll_clearBecomeFinger)
+    LinearLayout ll_clearBecomeFinger;
 
     private String address;//箱体的mac
     private DataBroadcast dataBroadcast;
     private Context mContext;
     private boolean isClear = false;
+    private int fingerTag;
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -98,6 +104,8 @@ public class SettingFingerActivity extends BaseActivity {
                 break;
             case R.id.ll_clearFinger: {
                 isClear = true;
+                fingerTag = 0;
+                ll_clearBecomeFinger.setClickable(false);
                 showProgress("正在清除...");
                 MyBleService.getInstance().clearFinger(address, 35, "01");
                 TimerTask task = new TimerTask() {
@@ -116,8 +124,10 @@ public class SettingFingerActivity extends BaseActivity {
                 };
                 new Timer().schedule(task, 5000);
             }
-                break;
+            break;
             case R.id.ll_clearBecomeFinger: {
+                fingerTag = 1;
+                ll_clearFinger.setClickable(false);
                 showProgress("正在清除...");
                 MyBleService.getInstance().clearFinger(address, 35, "02");
                 TimerTask task = new TimerTask() {
@@ -240,11 +250,17 @@ public class SettingFingerActivity extends BaseActivity {
                 case ACTION_CLEARFINGER://清除指纹
                     RLog.d("收到清除指纹 b=" + Byte2HexUtil.byte2Hex(b));
                     isClear = false;
+                    ll_clearFinger.setClickable(true);
+                    ll_clearBecomeFinger.setClickable(true);
                     disProgress();
                     switch (b[1]) {
                         case (byte) 0x01://成功
                             CommonKit.showMsgShort(mContext, "清除成功");
-                            FingerCacheUtil.clearFingerCache(context, address);
+                            if (fingerTag == 0) {
+                                FingerCacheUtil.clearOpenFingerCache(context, address);
+                            } else {
+                                FingerCacheUtil.clearBecomeFingerCache(context, address);
+                            }
                             break;
                         case (byte) 0x00://失败
                             CommonKit.showErrorShort(mContext, "清除失败");

@@ -60,22 +60,42 @@ public class FingerCacheUtil {
     }
 
     /**
-     * 清除指纹缓存
+     * 清除开锁指纹缓存
      *
      * @param context
      * @param address
      */
-    public static void clearFingerCache(Context context, String address) {
+    public static void clearOpenFingerCache(Context context, String address) {
         ServiceBean device = SharedPreTool.getInstance(context).getObj(ServiceBean.class, address);
         if (device != null) {
-            device.setBecomeFinger(false);
             device.setCarryFinger(false);
             SharedPreTool.getInstance(context).saveObj(device, address);
         } else {
             device = MyBleService.getInstance().getConnectDevice(address);
             if (device != null) {
-                device.setBecomeFinger(false);
                 device.setCarryFinger(false);
+                SharedPreTool.getInstance(context).saveObj(device, address);
+            }
+        }
+        device = SharedPreTool.getInstance(context).getObj(ServiceBean.class, address);
+        RLog.e("转换后设备参数 录入静默指纹" + device.toString());
+    }
+
+    /**
+     * 清除静默指纹缓存
+     *
+     * @param context
+     * @param address
+     */
+    public static void clearBecomeFingerCache(Context context, String address) {
+        ServiceBean device = SharedPreTool.getInstance(context).getObj(ServiceBean.class, address);
+        if (device != null) {
+            device.setBecomeFinger(false);
+            SharedPreTool.getInstance(context).saveObj(device, address);
+        } else {
+            device = MyBleService.getInstance().getConnectDevice(address);
+            if (device != null) {
+                device.setBecomeFinger(false);
                 SharedPreTool.getInstance(context).saveObj(device, address);
             }
         }
