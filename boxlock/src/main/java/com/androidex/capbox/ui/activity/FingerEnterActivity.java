@@ -81,13 +81,7 @@ public class FingerEnterActivity extends BaseActivity {
         initBroadCast();
         if (MyBleService.getInstance().getConnectDevice(address) != null) {
             tv_hint_printFinger.setText("请将手指放到箱体的指纹处");
-            if (code == REQUESTCODE_FINGER_POSSESSOR) {
-                MyBleService.getInstance().setFinger(address, 11);
-            } else if (code == REQUESTCODE_FINGER_CARRY) {
-                MyBleService.getInstance().setFinger(address, 12);
-            } else if (code == REQUESTCODE_FINGER_BECOME) {
-                MyBleService.getInstance().setFinger(address, 13);
-            }
+            setFinger();
         } else {
             CommonKit.showErrorShort(context, "正在连接蓝牙，稍后再试");
             MyBleService.getInstance().connectionDevice(context, address);
@@ -152,10 +146,9 @@ public class FingerEnterActivity extends BaseActivity {
                             handler.sendEmptyMessage(0);
                             FingerCacheUtil.addOpenFinger(context, address);//添加开锁指纹缓存
                             break;
-                        case (byte) 0x00:
-                            tv_hint_printFinger.setText("录入失败请重新录入");
-                            break;
                         default:
+                            tv_hint_printFinger.setText("录入失败请重新录入");
+                            setFinger();
                             break;
                     }
                     break;
@@ -176,10 +169,9 @@ public class FingerEnterActivity extends BaseActivity {
                             handler.sendEmptyMessage(1);
                             FingerCacheUtil.addBecomeFinger(context, address);//添加静默指纹缓存
                             break;
-                        case (byte) 0x00:
-                            tv_hint_printFinger.setText("录入失败请重新录入");
-                            break;
                         default:
+                            tv_hint_printFinger.setText("录入失败请重新录入");
+                            setFinger();
                             break;
                     }
                     break;
@@ -189,6 +181,42 @@ public class FingerEnterActivity extends BaseActivity {
                 default:
                     break;
             }
+        }
+    }
+
+    /**
+     * 指纹回复信息处理函数
+     * 0x0000			成功
+     * 0x8F01			XOR 校验错误
+     * 0x8F02			SUM 校验错误
+     * 0x8F03			指令错误
+     * 0x8F04			参数错误
+     * 0x8F05			通信超时
+     * 0x8F06			无系统文件
+     * 0x8F07			系统错误
+     * 0x8F08			扩展域-参数错误
+     * 0x8101			传感器初始化失败
+     * 0x8102			传感器校正失败
+     * 0x8201			手指检测超时
+     * 0x8202			图像采集失败
+     * 0x8203			图像质量差
+     * 0x8301			指纹已注册
+     * 0x8302			与临时模板1 匹配失败
+     * 0x8303			与临时模板 2 匹配失败
+     * 0x8304			指纹注册满
+     * 0x8401			无注册指纹
+     * 0x8402			匹配失败
+     * 0x8403			更新模板失败
+     * 0x8501			删除指定的指纹模板失败
+     * 0x8601			指定模板无效
+     */
+    private void setFinger() {
+        if (code == REQUESTCODE_FINGER_POSSESSOR) {
+            MyBleService.getInstance().setFinger(address, 11);
+        } else if (code == REQUESTCODE_FINGER_CARRY) {
+            MyBleService.getInstance().setFinger(address, 12);
+        } else if (code == REQUESTCODE_FINGER_BECOME) {
+            MyBleService.getInstance().setFinger(address, 13);
         }
     }
 
