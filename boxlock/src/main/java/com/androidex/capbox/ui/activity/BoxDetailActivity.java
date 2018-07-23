@@ -801,11 +801,11 @@ public class BoxDetailActivity extends BaseActivity {
                     }
                     break;
                 case ACTION_CONFIG_PARAM:
-                    switch (b[2]) {
-                        case (byte) 0x00://成功
+                    switch (b[1]) {
+                        case (byte) 0x01://成功
                             boxConfig();
                             break;
-                        case (byte) 0x01://失败
+                        case (byte) 0x00://失败
                             tb_becomeAlarm.setEnabled(false);
                             CommonKit.showErrorShort(context, "配置失败");
                             break;
