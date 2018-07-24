@@ -108,48 +108,44 @@ public class SettingFingerActivity extends BaseActivity {
                 ll_clearBecomeFinger.setClickable(false);
                 showProgress("正在清除...");
                 MyBleService.getInstance().clearFinger(address, 35, "01");
-                TimerTask task = new TimerTask() {
-                    @Override
-                    public void run() {
-                        if (isClear) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    disProgress();
-                                    CommonKit.showMsgShort(mContext, "清除超时");
-                                }
-                            });
-                        }
-                    }
-                };
-                new Timer().schedule(task, 5000);
+                startTimer();
             }
             break;
             case R.id.ll_clearBecomeFinger: {
+                isClear = true;
                 fingerTag = 1;
                 ll_clearFinger.setClickable(false);
                 showProgress("正在清除...");
                 MyBleService.getInstance().clearFinger(address, 35, "02");
-                TimerTask task = new TimerTask() {
-                    @Override
-                    public void run() {
-                        if (isClear) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    disProgress();
-                                    CommonKit.showMsgShort(mContext, "清除超时");
-                                }
-                            });
-                        }
-                    }
-                };
-                new Timer().schedule(task, 5000);
+                startTimer();
             }
             break;
             default:
                 break;
         }
+    }
+
+    /**
+     * 启动超时检测
+     */
+    private void startTimer() {
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if (isClear) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            disProgress();
+                            CommonKit.showMsgShort(mContext, "清除超时");
+                            ll_clearFinger.setClickable(true);
+                            ll_clearBecomeFinger.setClickable(true);
+                        }
+                    });
+                }
+            }
+        };
+        new Timer().schedule(task, 5000);
     }
 
     private void initBroadCast() {
