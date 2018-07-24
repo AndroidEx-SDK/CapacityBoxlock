@@ -225,7 +225,6 @@ public class MyBleService extends BleService {
     public void disConnect(String address) {
         ServiceBean device = getConnectDevice(address);
         if (device != null) {
-            device.setStopGetRssi();
             if (device.isActiveDisConnect()) {//判断是否是主动断开，true就不报警,在主动断开的时候就要设置该值为true
                 sendDisconnectMessage(address, true);
             } else {

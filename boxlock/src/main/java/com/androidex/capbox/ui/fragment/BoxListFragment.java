@@ -363,6 +363,7 @@ public class BoxListFragment extends BaseFragment {
                 case ACTION_UNBIND:
                     disProgress();
                     inUnbind = true;
+                    MyBleService.getInstance().disConnectDevice(address);
                     byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
                     switch (b[1]) {
                         case (byte) 0x01:
@@ -370,12 +371,10 @@ public class BoxListFragment extends BaseFragment {
                                 unBind(unBindPosition, address, uuid);
                             } else {
                                 CommonKit.showErrorShort(context, "uuid错误");
-                                MyBleService.getInstance().disConnectDevice(address);
                             }
                             break;
                         case (byte) 0x00:
                             CommonKit.showErrorShort(context, "解绑失败");
-                            MyBleService.getInstance().disConnectDevice(address);
                             break;
                         default:
                             break;
@@ -491,12 +490,7 @@ public class BoxListFragment extends BaseFragment {
                                 mylist.remove(position);
                                 boxListAdapter.notifyDataSetChanged();
                             }
-                            ServiceBean device = MyBleService.getInstance().getConnectDevice(address);
-                            if (device != null) {
-                                device.setActiveDisConnect(true);
-                                MyBleService.getInstance().disConnectDevice(address);
-                            }
-                            SharedPreTool.getInstance(context).remove(address);
+                            SharedPreTool.getInstance(context).clearObj(ServiceBean.class, address);
                             MyBleService.deleateData(address);//删除轨迹
                             EventBus.getDefault().postSticky(new Event.BoxRelieveBind());
                             context.sendBroadcast(new Intent(ACTION_UPDATE_ALL));//发送广播给桌面插件，更新列表
