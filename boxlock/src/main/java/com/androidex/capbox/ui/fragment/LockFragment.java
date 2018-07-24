@@ -179,6 +179,32 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         iniRefreshView();
         initMap();
         initBleBroadCast();
+
+    }
+
+    /**
+     * 获取温湿度和定位信息
+     */
+    private void initTemp() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(300);
+                    MyBleService.getInstance().getTempEnergy(address);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } finally {
+                        MyBleService.getInstance().getLocation(address);
+                    }
+                }
+            }
+        }).start();
     }
 
     /**
@@ -877,6 +903,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     disProgress();
                     updateBleView(View.GONE, View.VISIBLE);
                     CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast3));
+                    initTemp();//获取温湿度信息
                     break;
 
                 case BLE_CONN_DIS://断开连接
