@@ -179,7 +179,9 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         iniRefreshView();
         initMap();
         initBleBroadCast();
-
+        if (MyBleService.getInstance().getConnectDevice(address) != null) {
+            initTemp();
+        }
     }
 
     /**
