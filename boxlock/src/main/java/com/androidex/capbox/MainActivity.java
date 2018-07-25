@@ -54,6 +54,7 @@ import static com.androidex.boxlib.cache.SharedPreTool.IS_BIND_NUM;
 import static com.androidex.capbox.provider.WidgetProvider.EXTRA_ITEM_POSITION;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
+import static com.androidex.capbox.utils.Constants.EXTRA_DEVICE;
 import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
 import static com.androidex.capbox.utils.Constants.boxName;
 
@@ -99,7 +100,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     public void initData(Bundle savedInstanceState) {
         registerEventBusSticky();
         initDB();
-        boxlist(0);
+        boxlist(null);
     }
 
     @Override
@@ -110,7 +111,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     /**
      * 初始化fragment
      */
-    private void initPager(int tag) {
+    private void initPager(DeviceModel deviceModel) {
         homepage_tab1.setOnClickListener(this);
         homepage_tab2.setOnClickListener(this);
         homepage_tab3.setOnClickListener(this);
@@ -127,23 +128,16 @@ public class MainActivity extends BaseActivity implements OnClickListener {
             Bundle bundle = new Bundle();
             currIndex = 2;
             initImage();
-            if (getIntent().getStringExtra(EXTRA_ITEM_ADDRESS) != null) {//从桌面插件跳转过来
-                bundle.putString(EXTRA_ITEM_ADDRESS, getIntent().getStringExtra(EXTRA_ITEM_ADDRESS));
-                bundle.putString(EXTRA_BOX_NAME, getIntent().getStringExtra(EXTRA_BOX_NAME));
-                bundle.putString(EXTRA_BOX_UUID, getIntent().getStringExtra(EXTRA_BOX_UUID));
-                main_index = getIntent().getIntExtra(EXTRA_ITEM_POSITION, -1);
+            if (deviceModel == null) {
+                bundle.putParcelable(EXTRA_DEVICE,
+                        new DeviceModel(mylist.get(0).get(EXTRA_ITEM_ADDRESS),
+                                mylist.get(0).get(EXTRA_BOX_UUID),
+                                mylist.get(0).get(EXTRA_BOX_NAME)));
             } else {
-                if (tag == 1) {
-                    RLog.e("最后一个绑定设备");
-                    bundle.putString(EXTRA_ITEM_ADDRESS, mylist.get(mylist.size() - 1).get(EXTRA_ITEM_ADDRESS));
-                    bundle.putString(EXTRA_BOX_NAME, mylist.get(mylist.size() - 1).get(EXTRA_BOX_NAME));
-                    bundle.putString(EXTRA_BOX_UUID, mylist.get(mylist.size() - 1).get(EXTRA_BOX_UUID));
-                } else {
-                    RLog.e("第一个绑定设备");
-                    bundle.putString(EXTRA_ITEM_ADDRESS, mylist.get(0).get(EXTRA_ITEM_ADDRESS));
-                    bundle.putString(EXTRA_BOX_NAME, mylist.get(0).get(EXTRA_BOX_NAME));
-                    bundle.putString(EXTRA_BOX_UUID, mylist.get(0).get(EXTRA_BOX_UUID));
-                }
+                bundle.putParcelable(EXTRA_DEVICE, deviceModel);
+            }
+            if (getIntent().getStringExtra(EXTRA_ITEM_ADDRESS) != null) {//从桌面插件跳转过来
+                main_index = getIntent().getIntExtra(EXTRA_ITEM_POSITION, -1);
             }
             lockFragment = new LockFragment();
             lockFragment.setArguments(bundle);
@@ -328,9 +322,10 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                                     main_index = index;
                                     initImage();
                                     Bundle bundle = new Bundle();
-                                    bundle.putString(EXTRA_ITEM_ADDRESS, mylist.get(index).get(EXTRA_ITEM_ADDRESS));//这里的values就是我们要传的值
-                                    bundle.putString(EXTRA_BOX_NAME, mylist.get(index).get(EXTRA_BOX_NAME));//这里的values就是我们要传的值
-                                    bundle.putString(EXTRA_BOX_UUID, mylist.get(index).get(EXTRA_BOX_UUID));//这里的values就是我们要传的值
+                                    bundle.putParcelable(EXTRA_DEVICE,
+                                            new DeviceModel(mylist.get(index).get(EXTRA_ITEM_ADDRESS),
+                                                    mylist.get(index).get(EXTRA_BOX_UUID),
+                                                    mylist.get(index).get(EXTRA_BOX_NAME)));
                                     lockFragment = new LockFragment();
                                     lockFragment.setArguments(bundle);
                                     transaction = fragmentManager.beginTransaction();
@@ -376,7 +371,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     /**
      * 获取设备列表
      */
-    public void boxlist(final int tag) {
+    public void boxlist(final DeviceModel deviceModel) {
         if (!CommonKit.isNetworkAvailable(context)) {
             CommonKit.showErrorShort(context, "设备未连接网络");
             return;
@@ -392,11 +387,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                             mylist.clear();
                             for (BoxDeviceModel.device device : model.devicelist) {
                                 Map<String, String> map = new HashMap<>();
-                                if (device.boxName.equals("Box")) {
-                                    map.put(EXTRA_BOX_NAME, "Box" + device.mac.substring(device.mac.length() - 2));
-                                } else {
-                                    map.put(EXTRA_BOX_NAME, device.boxName);
-                                }
+                                map.put(EXTRA_BOX_NAME, CalendarUtil.getName(device.mac));
                                 map.put(EXTRA_BOX_UUID, device.uuid);
                                 map.put(EXTRA_ITEM_ADDRESS, device.mac);
                                 map.put("deviceStatus", "" + device.deviceStatus);
@@ -415,16 +406,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                             break;
                     }
                 }
-                switch (tag) {
-                    case 0://程序启动时执行
-                        initPager(tag);
-                        break;
-                    case 1://绑定设备数量变化触发
-                        initPager(tag);
-                        break;
-                    default:
-                        break;
-                }
+                initPager(deviceModel);
                 initBmb();
             }
 
@@ -433,7 +415,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                 super.onFailure(statusCode, request, e);
                 dismissSpinnerDlg(true);
                 CommonKit.showErrorShort(context, getString(R.string.label_intnet_fail));
-                initPager(-1);
+                initPager(null);
                 initBmb();
             }
 
@@ -450,11 +432,11 @@ public class MainActivity extends BaseActivity implements OnClickListener {
      *
      * @param event
      */
-    public void onEvent(Event.BoxBindChange event) {
+    public void onEvent(final Event.BoxBindChange event) {
         doAfterLogin(new UserBaseActivity.CallBackAction() {
             @Override
             public void action() {
-                boxlist(1);
+                boxlist(event.getDeviceModel());
             }
         });
     }
@@ -479,15 +461,15 @@ public class MainActivity extends BaseActivity implements OnClickListener {
      * @param event
      */
     public void onEvent(final Event.UpdateMonitorDevice event) {
-        event.getPosition();
-        if (currIndex == 2 && main_index == event.getPosition()) {
+        int position = event.getPosition();
+        if (currIndex == 2 && main_index == position) {
             return;
         } else {
             currIndex = 2;
             main_index = event.getPosition();
             initImage();
             Bundle bundle = new Bundle();
-            bundle.putParcelable("DeviceModel",  new DeviceModel(event.getAddress(),event.getUuid(),event.getName()));
+            bundle.putParcelable(EXTRA_DEVICE, new DeviceModel(event.getAddress(), event.getUuid(), event.getName()));
             lockFragment = new LockFragment();
             lockFragment.setArguments(bundle);
             if (fragmentManager == null) fragmentManager = getSupportFragmentManager();

@@ -94,6 +94,7 @@ import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_
 import static com.androidex.capbox.utils.Constants.CONFIG.OPEN_DFU_UPDATE;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
+import static com.androidex.capbox.utils.Constants.EXTRA_DEVICE;
 import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
 import static com.androidex.capbox.utils.Constants.EXTRA_PAGER_SIGN;
 
@@ -172,7 +173,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     public void initData() {
         isConnect = false;
         Bundle bundle = getArguments();
-        DeviceModel deviceModel = bundle.getParcelable("DeviceModel");
+        DeviceModel deviceModel = bundle.getParcelable(EXTRA_DEVICE);
         if (deviceModel != null) {
             address = deviceModel.getAddress();
             uuid = deviceModel.getUuid();

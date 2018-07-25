@@ -1,5 +1,6 @@
 package com.androidex.capbox.data;
 
+import com.androidex.capbox.module.DeviceModel;
 import com.androidex.capbox.utils.Constants;
 
 /**
@@ -27,10 +28,21 @@ public class Event {
      * 绑定箱体数量改变
      */
     public static class BoxBindChange extends BaseEvent {
-
+        DeviceModel deviceModel;
         @Override
         int getCode() {
             return Constants.EVENT.TAG_EVENT_BOX_BIND_CHANGE;
+        }
+
+        public BoxBindChange() {
+        }
+
+        public DeviceModel getDeviceModel() {
+            return deviceModel;
+        }
+
+        public void setDeviceModel(DeviceModel deviceModel) {
+            this.deviceModel = deviceModel;
         }
     }
 

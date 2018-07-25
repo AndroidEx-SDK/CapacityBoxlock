@@ -12,6 +12,7 @@ import com.androidex.boxlib.utils.BleConstants;
  */
 public class Constants extends BleConstants {
     public static final String EXTRA_PACKAGE_NAME = "com.androidex.capbox";
+    public static final String EXTRA_DEVICE = "devicemodel";
     public static final String EXTRA_ITEM_ADDRESS = "address";
     public static final String EXTRA_BOX_UUID = "uuid";
     public static final String EXTRA_BOX_NAME = "name";

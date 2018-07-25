@@ -27,6 +27,7 @@ import com.androidex.capbox.data.Event;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.module.BaseModel;
+import com.androidex.capbox.module.DeviceModel;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.adapter.BLEDeviceListAdapter;
 import com.androidex.capbox.ui.fragment.LockFragment;
@@ -225,7 +226,7 @@ public class AddDeviceActivity extends BaseActivity {
      *
      * @param uuid
      */
-    public void bindBox(String uuid) {
+    public void bindBox(final String address, final String uuid) {
         NetApi.boxBind(getToken(), getUserName(), uuid, new ResultCallBack<BaseModel>() {
             @Override
             public void onSuccess(int statusCode, Headers headers, BaseModel model) {
@@ -235,7 +236,9 @@ public class AddDeviceActivity extends BaseActivity {
                         case Constants.API.API_OK:
                             mDeviceListAdapter.setTextHint(-1, "");
                             CommonKit.showOkShort(context, getString(R.string.hint_bind_ok));
-                            postSticky(new Event.BoxBindChange());
+                            Event.BoxBindChange boxBindChange = new Event.BoxBindChange();
+                            boxBindChange.setDeviceModel(new DeviceModel(address, uuid, "Box"));
+                            postSticky(boxBindChange);
                             CommonKit.finishActivity(context);
                             break;
                         case Constants.API.API_NOPERMMISION:
@@ -335,7 +338,7 @@ public class AddDeviceActivity extends BaseActivity {
 
         @Override
         public void onReceive(Context mContext, Intent intent) {
-            final String mac = intent.getStringExtra(BLECONSTANTS_ADDRESS);
+            final String address = intent.getStringExtra(BLECONSTANTS_ADDRESS);
             switch (intent.getAction()) {
                 case BLE_CONN_SUCCESS://连接成功
                 case BLE_CONN_SUCCESS_ALLCONNECTED://重复连接
@@ -344,13 +347,13 @@ public class AddDeviceActivity extends BaseActivity {
                         Intent intent1 = context.getIntent();
                         showProgress("连接成功");
                         Bundle bundle = new Bundle();
-                        bundle.putString("address", mac);
+                        bundle.putString("address", address);
                         bundle.putInt("tag", 1);
                         intent1.putExtras(bundle);
                         context.setResult(RESULT_OK, intent1);
                         CommonKit.finishActivity(context);
                     } else {
-                        MyBleService.getInstance().enableNotifyService(mac);
+                        MyBleService.getInstance().enableNotifyService(address);
                         showProgress("开始获取UUID...");
                         RLog.d("开始获取UUID");
                         new Thread(new Runnable() {
@@ -361,7 +364,7 @@ public class AddDeviceActivity extends BaseActivity {
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
-                                MyBleService.get().getBleUUID(mac);
+                                MyBleService.get().getBleUUID(address);
                             }
                         }).start();
                     }
@@ -375,7 +378,7 @@ public class AddDeviceActivity extends BaseActivity {
                             System.arraycopy(b, 0, epcBytes, 0, 16);
                             uuid = Byte2HexUtil.byte2Hex(epcBytes);
                             RLog.d("uuid = " + uuid);
-                            MyBleService.get().bind(mac, hexStr);
+                            MyBleService.get().bind(address, hexStr);
                             showProgress("开始绑定");
                             isBind = false;
                             Timer timer = new Timer();
@@ -386,7 +389,7 @@ public class AddDeviceActivity extends BaseActivity {
                                         runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                MyBleService.getInstance().disConnectDevice(mac);
+                                                MyBleService.getInstance().disConnectDevice(address);
                                                 disProgress();
                                                 CommonKit.showErrorShort(context, "绑定超时");
                                             }
@@ -412,17 +415,17 @@ public class AddDeviceActivity extends BaseActivity {
                             case (byte) 0x01:
                                 showProgress("正在绑定");
                                 //CommonKit.showErrorShort(context, "绑定成功");
-                                bindBox(uuid);
+                                bindBox(address, uuid);
                                 break;
                             case (byte) 0x02://已被绑定
                                 disProgress();
-                                MyBleService.getInstance().disConnectDevice(mac);
+                                MyBleService.getInstance().disConnectDevice(address);
                                 byte[] epcBytes = new byte[5];
                                 System.arraycopy(b, 2, epcBytes, 0, 5);
                                 String mobile = Byte2HexUtil.byte2Hex(epcBytes);
                                 Long phone = Long.valueOf(mobile, 16);
                                 if (Long.parseLong(getUserName().trim())==phone) {
-                                    bindBox(uuid);
+                                    bindBox(address, uuid);
                                 } else {
                                     CommonKit.showErrorShort(context, "已被" + phone + "绑定");
                                 }
@@ -432,18 +435,18 @@ public class AddDeviceActivity extends BaseActivity {
                                 break;
                             case (byte) 0x04:
                                 disProgress();
-                                MyBleService.getInstance().disConnectDevice(mac);
+                                MyBleService.getInstance().disConnectDevice(address);
                                 CommonKit.showErrorShort(context, "连接超时");
                                 break;
                             default:
                                 disProgress();
-                                MyBleService.getInstance().disConnectDevice(mac);
+                                MyBleService.getInstance().disConnectDevice(address);
                                 CommonKit.showErrorShort(context, "出现未知错误");
                                 break;
                         }
                     } else {
                         disProgress();
-                        MyBleService.getInstance().disConnectDevice(mac);
+                        MyBleService.getInstance().disConnectDevice(address);
                         CommonKit.showErrorShort(context, "出现未知错误");
                     }
                     break;

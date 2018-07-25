@@ -32,6 +32,7 @@ import com.androidex.capbox.db.DeviceInfoDao;
 import com.androidex.capbox.module.ActionItem;
 import com.androidex.capbox.module.BaseModel;
 import com.androidex.capbox.module.BoxDeviceModel;
+import com.androidex.capbox.module.DeviceModel;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.activity.AddDeviceActivity;
 import com.androidex.capbox.ui.activity.ChatActivity;
@@ -399,7 +400,7 @@ public class BoxListFragment extends BaseFragment {
                         uuid = uuid.replace("", "-");
                         RLog.d("扫描结果：" + data.getStringExtra(CaptureActivity.EXTRA_SCAN_RESULT));  //or do sth
                         if (uuid.length() > 32) {
-                            bindBox(uuid.trim());//扫描到UUID
+                            bindBox("FF:FF:FF:FF:FF:FF", uuid.trim());//扫描到UUID
                         } else {
                             CommonKit.showMsgShort(context, "扫描失败");
                         }
@@ -421,7 +422,7 @@ public class BoxListFragment extends BaseFragment {
      *
      * @param uuid
      */
-    public void bindBox(String uuid) {
+    public void bindBox(final String address, final String uuid) {
         if (!CommonKit.isNetworkAvailable(context)) {
             CommonKit.showErrorShort(context, "设备未连接网络");
             return;
@@ -435,7 +436,9 @@ public class BoxListFragment extends BaseFragment {
                         case Constants.API.API_OK:
                             CommonKit.showOkShort(context, getString(R.string.hint_bind_ok));
                             boxlist();//返回成功后刷新列表
-                            postSticky(new Event.BoxBindChange());
+                            Event.BoxBindChange boxBindChange = new Event.BoxBindChange();
+                            boxBindChange.setDeviceModel(new DeviceModel(address, uuid, ""));
+                            postSticky(boxBindChange);
                             context.sendBroadcast(new Intent(ACTION_UPDATE_ALL));
                             break;
                         case Constants.API.API_NOPERMMISION:
@@ -469,7 +472,7 @@ public class BoxListFragment extends BaseFragment {
         });
     }
 
-    private void unBind(final int position, final String address, String uuid) {
+    private void unBind(final int position, final String address, final String uuid) {
         if (!CommonKit.isNetworkAvailable(context)) {
             CommonKit.showErrorShort(context, "设备未连接网络");
             return;
@@ -494,7 +497,9 @@ public class BoxListFragment extends BaseFragment {
                             SharedPreTool.getInstance(context).clearObj(ServiceBean.class, address);
                             MyBleService.deleateData(address);//删除轨迹
                             boxlist();
-                            postSticky(new Event.BoxBindChange());
+                            Event.BoxBindChange boxBindChange = new Event.BoxBindChange();
+                            boxBindChange.setDeviceModel(new DeviceModel(address, uuid, ""));
+                            postSticky(boxBindChange);
                             context.sendBroadcast(new Intent(ACTION_UPDATE_ALL));//发送广播给桌面插件，更新列表
                             break;
                         case Constants.API.API_FAIL:
@@ -615,7 +620,6 @@ public class BoxListFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        RLog.e("Boxlistfragment onResume");
         boxlist();
         isShow = true;
     }
@@ -623,7 +627,6 @@ public class BoxListFragment extends BaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-        RLog.e("Boxlistfragment onPause");
         stopScanLe();
         isShow = false;
     }
