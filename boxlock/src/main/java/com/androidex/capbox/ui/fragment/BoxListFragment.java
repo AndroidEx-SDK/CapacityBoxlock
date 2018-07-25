@@ -108,7 +108,7 @@ public class BoxListFragment extends BaseFragment {
     private String uuid;
     private int unBindPosition;
     private BleBroadCast bleBroadCast;
-    private boolean isShow = true;
+    private boolean isShow = true;//解决与监控页面的广播冲突
     private boolean inUnbind;//是否解绑
 
     @Override
@@ -118,7 +118,6 @@ public class BoxListFragment extends BaseFragment {
         iniRefreshView();
         initListView();
         initBle();//蓝牙连接
-        initBleReceiver();
     }
 
     public void initDB() {
@@ -497,7 +496,6 @@ public class BoxListFragment extends BaseFragment {
                             SharedPreTool.getInstance(context).clearObj(ServiceBean.class, address);
                             MyBleService.deleateData(address);//删除轨迹
                             postSticky(new Event.BoxRelieveBind());
-                            boxlist();
                             context.sendBroadcast(new Intent(ACTION_UPDATE_ALL));//发送广播给桌面插件，更新列表
                             break;
                         case Constants.API.API_FAIL:
@@ -618,8 +616,8 @@ public class BoxListFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        boxlist();
         isShow = true;
+        boxlist();
     }
 
     @Override

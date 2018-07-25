@@ -11,6 +11,7 @@ import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.module.BoxDeviceModel;
+import com.androidex.capbox.utils.CalendarUtil;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
 import com.androidex.capbox.utils.RLog;
@@ -122,19 +123,17 @@ public class WidgetService extends RemoteViewsService {
             RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.list_item_provider_widget);
             RLog.e("getViewAt mainPage refresh");
             BoxDeviceModel.device device = mWidgetItems.get(position);
-            if (device.getDeviceName().equals("Box")) {
-                device.setDeviceName(device.getDeviceName() + device.getMac().substring(device.getMac().length() - 2));
-            }else if (device.getDeviceName().contains("AndroidExBox")){
-                device.setDeviceName("Box"+device.getMac().substring(device.getMac().length() - 2));
-            }
-            rv.setTextViewText(R.id.tv_name, device.getDeviceName());
-            rv.setTextViewText(R.id.tv_address, device.getMac());
+            String address = device.getMac();
+            String name = CalendarUtil.getName(address);
 
-            rv.setOnClickFillInIntent(R.id.rl_device, getPendingIntentStartActivity(device.getDeviceName(), device.getMac(), device.getUuid(), position));
-            rv.setOnClickFillInIntent(R.id.iv_connect, getIntent(CLICK_BLE_CONNECTED, position, device.getMac()));
-            rv.setOnClickFillInIntent(R.id.iv_lock, getIntent(CLICK_LOCK_OPEN, position, device.getMac()));
+            rv.setTextViewText(R.id.tv_name, name);
+            rv.setTextViewText(R.id.tv_address, address);
 
-            if (MyBleService.getInstance().getConnectDevice(device.getMac()) == null) {
+            rv.setOnClickFillInIntent(R.id.rl_device, getPendingIntentStartActivity(name, address, device.getUuid(), position));
+            rv.setOnClickFillInIntent(R.id.iv_connect, getIntent(CLICK_BLE_CONNECTED, position, address));
+            rv.setOnClickFillInIntent(R.id.iv_lock, getIntent(CLICK_LOCK_OPEN, position, address));
+
+            if (MyBleService.getInstance().getConnectDevice(address) == null) {
                 rv.setImageViewResource(R.id.iv_connect, R.mipmap.starts_connect2);
             } else {
                 rv.setImageViewResource(R.id.iv_connect, R.mipmap.starts_disconnect2);
@@ -214,14 +213,12 @@ public class WidgetService extends RemoteViewsService {
         String token = SharedPreTool.getInstance(context).getStringData(SharedPreTool.TOKEN, null);
         if (token == null) {
             CommonKit.showErrorShort(context, "账号未登录");
-            RLog.e("token is null");
             return;
         }
 
         String username = SharedPreTool.getInstance(context).getStringData(SharedPreTool.PHONE, null);
         if (username == null) {
             CommonKit.showErrorShort(context, "账号未登录");
-            RLog.e("username is null");
             return;
         }
 
@@ -241,12 +238,6 @@ public class WidgetService extends RemoteViewsService {
                             }
                             AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(mAppWidgetId, R.id.myListView);
                             RLog.d("刷新列表");
-                            break;
-                        case Constants.API.API_FAIL:
-                            CommonKit.showErrorShort(context, "账号在其他地方登录");
-                            break;
-                        case Constants.API.API_NOPERMMISION:
-                            CommonKit.showErrorShort(context, "获取设备列表失败");
                             break;
                         default:
                             if (model.info != null) {
