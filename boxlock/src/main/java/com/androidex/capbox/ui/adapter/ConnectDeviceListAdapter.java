@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.androidex.capbox.R;
 import com.androidex.capbox.ui.fragment.LockFragment;
+import com.androidex.capbox.utils.CalendarUtil;
 
 import java.util.List;
 
@@ -78,24 +79,10 @@ public class ConnectDeviceListAdapter extends BaseAdapter {
         }
         holder.normalItemContentLayout.setOnClickListener(mListener);
         holder.normalItemContentLayout.setTag(position);
-        final String mac = mContentList.get(position).getAddress();
-        String name = mContentList.get(position).getName();
-        if (name == null || name.equals("")) {
-            holder.deviceName.setText("Box" + mac.substring(mac.length() - 2));
-        } else {
-            if (name.contains(LockFragment.boxName)) {
-                if (name.trim().equals("AndroidExBox")) {
-                    name = "Box" + mac.substring(mac.length() - 2);
-                } else {
-                    name = name.replace(LockFragment.boxName, "");
-                }
-            } else if (name.trim().equals("Box")) {
-                name = name + mac.substring(mac.length() - 2);
-            }
-            holder.deviceName.setText(name);
-        }
-        if (mac != null) {
-            holder.device_address.setText(mac);
+        String address = mContentList.get(position).getAddress();
+        holder.deviceName.setText(CalendarUtil.getName(address));
+        if (address != null) {
+            holder.device_address.setText(address);
         }
         return convertView;
     }

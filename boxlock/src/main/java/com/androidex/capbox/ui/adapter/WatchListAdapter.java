@@ -3,6 +3,7 @@ package com.androidex.capbox.ui.adapter;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -10,9 +11,12 @@ import android.widget.TextView;
 
 import com.androidex.capbox.R;
 import com.androidex.capbox.ui.fragment.LockFragment;
+import com.androidex.capbox.utils.CalendarUtil;
 
 import java.util.List;
 import java.util.Map;
+
+import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
 
 /**
  * @author liyp
@@ -20,8 +24,6 @@ import java.util.Map;
  */
 
 public class WatchListAdapter extends BaseAdapter {
-
-    private static final String TAG = "WatchListAdapter";
     private List<Map<String,String>> mContentList;
     private LayoutInflater mInflater;
 
@@ -47,7 +49,6 @@ public class WatchListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Log.i(TAG, "getView");
         ViewHolder holder = null;
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.list_item_watch, null);
@@ -61,12 +62,11 @@ public class WatchListAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        String name = mContentList.get(position).get("name");
-        if (name.contains(LockFragment.boxName)){
-            name=name.replace(LockFragment.boxName,"");
-            holder.deviceName.setText(name);
+        String address = mContentList.get(position).get(EXTRA_ITEM_ADDRESS);
+        holder.deviceName.setText(CalendarUtil.getName(address));
+        if (address != null) {
+            holder.device_address.setText(address);
         }
-        holder.device_address.setText(mContentList.get(position).get("mac"));
         holder.tv_connect.setTag(position);
         return convertView;
     }

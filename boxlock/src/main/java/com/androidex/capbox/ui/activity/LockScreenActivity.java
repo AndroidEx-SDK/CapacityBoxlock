@@ -115,25 +115,6 @@ public class LockScreenActivity extends BaseActivity {
     }
 
     /**
-     * 更新状态
-     *
-     * @param event
-     */
-    public void onEvent(Event.BoxBindChange event) {
-        //刷新数据
-        boxlist();
-    }
-
-    /**
-     * 解除绑定时触发
-     *
-     * @param event
-     */
-    public void onEvent(Event.BoxRelieveBind event) {
-        boxlist();
-    }
-
-    /**
      * 切换下一页
      *
      * @param event

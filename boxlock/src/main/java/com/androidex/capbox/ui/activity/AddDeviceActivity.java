@@ -52,6 +52,7 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.SCAN_PERIOD;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
 import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_ADD_DEBUG_DEVICE;
+import static com.androidex.capbox.utils.Constants.boxName;
 
 public class AddDeviceActivity extends BaseActivity {
     @Bind(R.id.deviceListView)
@@ -312,17 +313,14 @@ public class AddDeviceActivity extends BaseActivity {
                 public void run() {//getDevice().getName
                     if (device.getName() != null) {
                         //过滤搜索到的设备的名字
-                        if (device.getName().contains(LockFragment.boxName)) {
+                        if (device.getName().contains(boxName)) {
                             mDeviceListAdapter.addDevice(device);
-                        } else {
-                            RLog.e("device Name 11 = " + device.getName());
                         }
                     } else {
                         String deviceName = Byte2HexUtil.convertHexToString(Byte2HexUtil.byte2Hex(scanRecord));
-                        if (!TextUtils.isEmpty(deviceName) && deviceName.contains(LockFragment.boxName)) {
+                        if (!TextUtils.isEmpty(deviceName) && deviceName.contains(boxName)) {
                             mDeviceListAdapter.addDevice(device);
                         }
-                        RLog.e("device Name 22 = " + deviceName);
                     }
                     mDeviceListAdapter.notifyDataSetChanged();
                 }

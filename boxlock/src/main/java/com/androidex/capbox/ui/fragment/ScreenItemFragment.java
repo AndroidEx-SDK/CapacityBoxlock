@@ -143,7 +143,7 @@ public class ScreenItemFragment extends BaseFragment {
                 RLog.e("fragementScreenItem onUIChange i = " + i);
             }
         });
-        item.boxName = CalendarUtil.getName(item.boxName, item.getMac());
+        item.boxName = CalendarUtil.getName(item.getMac());
         tv_name.setText(item.boxName);
         iv_lock.setImageResource(R.mipmap.lock_close);
         if (MyBleService.getInstance().getConnectDevice(item.getMac()) == null) {

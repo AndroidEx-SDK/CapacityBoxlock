@@ -17,6 +17,7 @@ public class Constants extends BleConstants {
     public static final String EXTRA_BOX_NAME = "name";
     public static final String EXTRA_USER_HEAD = "head";//存储用户头像路径
     public static final String EXTRA_PAGER_SIGN = "pager_sign";//启动页面标志，区别是哪个页面跳转到该页面的
+    public static final String boxName = "AndroidEx";
 
     /*Send Command Type*/
     public static final byte VISE_COMMAND_TYPE_NONE = (byte) 0x00;

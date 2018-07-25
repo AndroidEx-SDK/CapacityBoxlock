@@ -3,11 +3,7 @@ package com.androidex.capbox;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.PowerManager;
-import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -29,9 +25,9 @@ import com.androidex.capbox.db.DaoSession;
 import com.androidex.capbox.db.DeviceInfo;
 import com.androidex.capbox.db.DeviceInfoDao;
 import com.androidex.capbox.module.BoxDeviceModel;
+import com.androidex.capbox.module.DeviceModel;
 import com.androidex.capbox.ui.fragment.BoxListFragment;
 import com.androidex.capbox.ui.fragment.LockFragment;
-import com.androidex.capbox.ui.fragment.MapFragment;
 import com.androidex.capbox.ui.fragment.MapFragment2;
 import com.androidex.capbox.ui.fragment.MeMainFragment;
 import com.androidex.capbox.ui.fragment.WatchListFragment;
@@ -56,10 +52,10 @@ import okhttp3.Request;
 
 import static com.androidex.boxlib.cache.SharedPreTool.IS_BIND_NUM;
 import static com.androidex.capbox.provider.WidgetProvider.EXTRA_ITEM_POSITION;
-import static com.androidex.capbox.ui.fragment.LockFragment.boxName;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
 import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
+import static com.androidex.capbox.utils.Constants.boxName;
 
 public class MainActivity extends BaseActivity implements OnClickListener {
     public static String TAG = "MainActivity";
@@ -411,31 +407,11 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                                     DeviceInfo deviceInfo = new DeviceInfo();
                                     deviceInfo.setAddress(device.mac);
                                     deviceInfo.setUuid(device.uuid);
-                                    deviceInfo.setName(CalendarUtil.getName(device.boxName, device.mac));
+                                    deviceInfo.setName(CalendarUtil.getName(device.mac));
                                     deviceInfoDao.insert(deviceInfo);
-                                    RLog.d("DeviceInfo  设备不存在");
-                                }else {
-                                    RLog.d("DeviceInfo  设备已存在");
                                 }
                             }
                             SharedPreTool.getInstance(context).setIntData(IS_BIND_NUM, model.devicelist.size());
-                            if (model.devicelist.size() == 0) {
-                                CommonKit.showErrorShort(context, "未绑定任何设备");
-                                RLog.e(TAG + "刷新列表无数据");
-                            } else {
-                                RLog.e(TAG + "绑定的设备数量为：" + mylist.size());
-                            }
-                            break;
-                        case Constants.API.API_FAIL:
-                            CommonKit.showErrorShort(context, "未绑定任何设备");
-                            break;
-                        case Constants.API.API_NOPERMMISION:
-                            CommonKit.showErrorShort(context, "获取设备列表失败");
-                            break;
-                        default:
-                            if (model.info != null) {
-                                CommonKit.showErrorShort(context, model.info);
-                            }
                             break;
                     }
                 }
@@ -443,11 +419,8 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                     case 0://程序启动时执行
                         initPager(tag);
                         break;
-                    case 1://绑定成功
+                    case 1://绑定设备数量变化触发
                         initPager(tag);
-                        break;
-                    case 2://解绑成功
-
                         break;
                     default:
                         break;
@@ -487,20 +460,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     }
 
     /**
-     * 解除绑定时触发
-     *
-     * @param event
-     */
-    public void onEvent(Event.BoxRelieveBind event) {
-        doAfterLogin(new UserBaseActivity.CallBackAction() {
-            @Override
-            public void action() {
-                boxlist(2);
-            }
-        });
-    }
-
-    /**
      * 退出主界面
      *
      * @param event
@@ -528,10 +487,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
             main_index = event.getPosition();
             initImage();
             Bundle bundle = new Bundle();
-            bundle.putString(EXTRA_ITEM_ADDRESS, event.getAddress());
-            bundle.putString(EXTRA_BOX_NAME, event.getName());
-            bundle.putString(EXTRA_BOX_UUID, event.getUuid());
-
+            bundle.putParcelable("DeviceModel",  new DeviceModel(event.getAddress(),event.getUuid(),event.getName()));
             lockFragment = new LockFragment();
             lockFragment.setArguments(bundle);
             if (fragmentManager == null) fragmentManager = getSupportFragmentManager();

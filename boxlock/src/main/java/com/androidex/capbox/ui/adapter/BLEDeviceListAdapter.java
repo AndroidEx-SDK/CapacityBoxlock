@@ -15,6 +15,8 @@ import com.androidex.capbox.utils.CalendarUtil;
 
 import java.util.ArrayList;
 
+import static com.androidex.capbox.utils.Constants.boxName;
+
 public class BLEDeviceListAdapter extends BaseAdapter {
     private ArrayList<BluetoothDevice> mLeDevices;
     private LayoutInflater mInflator;
@@ -92,12 +94,7 @@ public class BLEDeviceListAdapter extends BaseAdapter {
         viewHolder.deviceBtn.setOnClickListener(mListener);
         viewHolder.deviceBtn.setTag(position);
         BluetoothDevice device = mLeDevices.get(position);
-        String deviceName = device.getName();
-        if (!TextUtils.isEmpty(deviceName) && deviceName.contains(LockFragment.boxName)) {
-            deviceName = deviceName.replace(LockFragment.boxName, "");
-        } else {
-            deviceName = CalendarUtil.getName(deviceName, device.getAddress());
-        }
+        String deviceName = CalendarUtil.getName(device.getAddress());
         viewHolder.deviceName.setText(deviceName);
         viewHolder.deviceAddress.setText(device.getAddress());
         return view;

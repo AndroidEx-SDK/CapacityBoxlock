@@ -43,11 +43,10 @@ public class CalendarUtil {
     /**
      * 组合名字Box+address后两位
      */
-    public static String getName(String name, String address) {
+    public static String getName(String address) {
+        String name = null;
         if (TextUtils.isEmpty(address)) {
-            if (TextUtils.isEmpty(name)){
-                name="Box";
-            }
+            name = "Box";
         }else {
             name="Box" + address.substring(address.length() - 2);
         }

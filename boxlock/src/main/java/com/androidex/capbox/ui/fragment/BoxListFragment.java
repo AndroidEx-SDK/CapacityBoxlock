@@ -368,6 +368,7 @@ public class BoxListFragment extends BaseFragment {
                     switch (b[1]) {
                         case (byte) 0x01:
                             if (uuid.length() >= 32) {
+                                RLog.d("收到解除绑定成功指令");
                                 unBind(unBindPosition, address, uuid);
                             } else {
                                 CommonKit.showErrorShort(context, "uuid错误");
@@ -492,7 +493,8 @@ public class BoxListFragment extends BaseFragment {
                             }
                             SharedPreTool.getInstance(context).clearObj(ServiceBean.class, address);
                             MyBleService.deleateData(address);//删除轨迹
-                            EventBus.getDefault().postSticky(new Event.BoxRelieveBind());
+                            boxlist();
+                            postSticky(new Event.BoxBindChange());
                             context.sendBroadcast(new Intent(ACTION_UPDATE_ALL));//发送广播给桌面插件，更新列表
                             break;
                         case Constants.API.API_FAIL:
@@ -550,7 +552,7 @@ public class BoxListFragment extends BaseFragment {
                                     DeviceInfo deviceInfo = new DeviceInfo();
                                     deviceInfo.setAddress(device.mac);
                                     deviceInfo.setUuid(device.uuid);
-                                    deviceInfo.setName(CalendarUtil.getName(device.boxName, device.mac));
+                                    deviceInfo.setName(CalendarUtil.getName(device.mac));
                                     deviceInfoDao.insert(deviceInfo);
                                     RLog.d("DeviceInfo  设备不存在");
                                 } else {

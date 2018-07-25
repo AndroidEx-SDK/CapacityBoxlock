@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Base64;
 import android.util.Log;
@@ -30,6 +31,7 @@ import com.androidex.capbox.module.BaiduModel;
 import com.androidex.capbox.module.BaseModel;
 import com.androidex.capbox.module.BoxDeviceModel;
 import com.androidex.capbox.module.CheckVersionModel;
+import com.androidex.capbox.module.DeviceModel;
 import com.androidex.capbox.module.LocationModel;
 import com.androidex.capbox.service.DfuService;
 import com.androidex.capbox.service.MyBleService;
@@ -157,7 +159,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     private String address = null;
     private String uuid = null;
     private String deviceName = "Box";
-    public static String boxName = "AndroidEx";
     private String latitude;
     private String longitude;
     private String elevation;
@@ -171,9 +172,16 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     public void initData() {
         isConnect = false;
         Bundle bundle = getArguments();
-        address = bundle.getString(EXTRA_ITEM_ADDRESS);
-        uuid = bundle.getString(EXTRA_BOX_UUID);
-        deviceName = bundle.getString(EXTRA_BOX_NAME);
+        DeviceModel deviceModel = bundle.getParcelable("DeviceModel");
+        if (deviceModel != null) {
+            address = deviceModel.getAddress();
+            uuid = deviceModel.getUuid();
+            deviceName = deviceModel.getName();
+        } else {
+            address = bundle.getString(EXTRA_ITEM_ADDRESS);
+            uuid = bundle.getString(EXTRA_BOX_UUID);
+            deviceName = bundle.getString(EXTRA_BOX_NAME);
+        }
         if (uuid != null) getLocation(true);
         initView();
         iniRefreshView();
@@ -277,7 +285,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
 
     private void initView() {
         tv_deviceMac.setText(address);
-        deviceName=CalendarUtil.getName(deviceName, address);
+        deviceName=CalendarUtil.getName(address);
         name.setText(deviceName);
         if (address == null || address.equals("")) {
             tv_deviceMac.setText("FF:FF:FF:FF:FF:FF");

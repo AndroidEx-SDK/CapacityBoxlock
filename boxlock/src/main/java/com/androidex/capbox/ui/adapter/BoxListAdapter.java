@@ -110,7 +110,7 @@ public class BoxListAdapter extends BaseAdapter {
         String name = mContentList.get(position).get(EXTRA_BOX_NAME);
         String isOnLine = mContentList.get(position).get("isOnLine");
         String deviceStatus = mContentList.get(position).get("deviceStatus");
-        holder.deviceName.setText(CalendarUtil.getName(name, mac));
+        holder.deviceName.setText(CalendarUtil.getName(mac));
         if (mac != null) {
             holder.device_address.setText(mac);
         }

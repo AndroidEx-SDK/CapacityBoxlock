@@ -157,9 +157,9 @@ public class ChatActivity extends BaseActivity {
      */
     private void initTitle() {
         if (MyBleService.getInstance().getConnectDevice(address) != null) {
-            titlebar.setTitle(CalendarUtil.getName(name, address) + "(已连接)");
+            titlebar.setTitle(CalendarUtil.getName(address) + "(已连接)");
         } else {
-            titlebar.setTitle(CalendarUtil.getName(name, address) + "(断开)");
+            titlebar.setTitle(CalendarUtil.getName(address) + "(断开)");
         }
     }
 
