@@ -74,6 +74,8 @@ public class AddDeviceActivity extends BaseActivity {
     private static int code;
     private String uuid = null;
     private boolean isBind = false;
+    private TimerTask timerTask;//定时发送获取UUID
+    private Timer timer;
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -353,20 +355,26 @@ public class AddDeviceActivity extends BaseActivity {
                         context.setResult(RESULT_OK, intent1);
                         CommonKit.finishActivity(context);
                     } else {
-                        MyBleService.getInstance().enableNotifyService(address);
                         showProgress("开始获取UUID...");
                         RLog.d("开始获取UUID");
-                        new Thread(new Runnable() {
+                        isBind = false;
+                        startGetUUID(address);
+                        new Timer().schedule(new TimerTask() {
                             @Override
                             public void run() {
-                                try {
-                                    Thread.sleep(200);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
+                                if (!isBind) {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            MyBleService.getInstance().disConnectDevice(address);
+                                            disProgress();
+                                            CommonKit.showErrorShort(context, "绑定超时");
+                                            stopGetUUID();
+                                        }
+                                    });
                                 }
-                                MyBleService.get().getBleUUID(address);
                             }
-                        }).start();
+                        }, 4000);
                     }
                     break;
                 case ACTION_UUID: {
@@ -380,23 +388,6 @@ public class AddDeviceActivity extends BaseActivity {
                             RLog.d("uuid = " + uuid);
                             MyBleService.get().bind(address, hexStr);
                             showProgress("开始绑定");
-                            isBind = false;
-                            Timer timer = new Timer();
-                            timer.schedule(new TimerTask() {
-                                @Override
-                                public void run() {
-                                    if (!isBind) {
-                                        runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                MyBleService.getInstance().disConnectDevice(address);
-                                                disProgress();
-                                                CommonKit.showErrorShort(context, "绑定超时");
-                                            }
-                                        });
-                                    }
-                                }
-                            }, 3000);
                         } else {
                             RLog.d("uuid不正确");
                             showProgress("uuid不正确");
@@ -408,6 +399,7 @@ public class AddDeviceActivity extends BaseActivity {
                 }
                 break;
                 case ACTION_BIND:
+                    stopGetUUID();
                     if (uuid != null && uuid.length() >= 32) {
                         byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
                         isBind = true;
@@ -457,6 +449,39 @@ public class AddDeviceActivity extends BaseActivity {
                 default:
                     break;
             }
+        }
+    }
+
+    /**
+     * 开始读取信号值
+     */
+    private void startGetUUID(final String address) {
+        stopGetUUID();
+        if (timerTask == null) {
+            // 通过消息更新
+            timerTask = new TimerTask() {
+
+                @Override
+                public void run() {// 通过消息更新
+                    MyBleService.get().getBleUUID(address);
+                }
+            };
+            if (timer == null) {
+                timer = new Timer();
+            }
+            timer.schedule(timerTask, 300, 1000);// 执行心跳包任务
+        }
+    }
+
+    /**
+     * 停止读取信号值
+     */
+    private void stopGetUUID() {
+        if (timerTask != null) {
+            timerTask.cancel();
+            timer.cancel();
+            timerTask = null;
+            timer = null;
         }
     }
 
