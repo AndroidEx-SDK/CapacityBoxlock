@@ -100,7 +100,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     public void initData(Bundle savedInstanceState) {
         registerEventBusSticky();
         initDB();
-        boxlist(null);
+        boxlist(null, 0);
     }
 
     @Override
@@ -370,8 +370,10 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
     /**
      * 获取设备列表
+     * @param deviceModel
+     * @param tag 标识是否显示监控页，在解绑时无需显示监控页
      */
-    public void boxlist(final DeviceModel deviceModel) {
+    public void boxlist(final DeviceModel deviceModel, final int tag) {
         if (!CommonKit.isNetworkAvailable(context)) {
             CommonKit.showErrorShort(context, "设备未连接网络");
             return;
@@ -406,7 +408,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                             break;
                     }
                 }
-                initPager(deviceModel);
+                if (tag != -1) {
+                    initPager(deviceModel);
+                }
                 initBmb();
             }
 
@@ -436,10 +440,11 @@ public class MainActivity extends BaseActivity implements OnClickListener {
         doAfterLogin(new UserBaseActivity.CallBackAction() {
             @Override
             public void action() {
-                boxlist(event.getDeviceModel());
+                boxlist(event.getDeviceModel(), 0);
             }
         });
     }
+
 
     /**
      * 退出主界面
@@ -454,6 +459,21 @@ public class MainActivity extends BaseActivity implements OnClickListener {
             }
         });
     }
+
+    /**
+     * 解除绑定时触发
+     *
+     * @param event
+     */
+    public void onEvent(Event.BoxRelieveBind event) {
+        doAfterLogin(new UserBaseActivity.CallBackAction() {
+            @Override
+            public void action() {
+                boxlist(null, -1);
+            }
+        });
+    }
+
 
     /**
      * 监控设备变更

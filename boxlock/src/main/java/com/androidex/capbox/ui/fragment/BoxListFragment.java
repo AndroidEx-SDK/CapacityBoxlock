@@ -496,10 +496,8 @@ public class BoxListFragment extends BaseFragment {
                             }
                             SharedPreTool.getInstance(context).clearObj(ServiceBean.class, address);
                             MyBleService.deleateData(address);//删除轨迹
+                            postSticky(new Event.BoxRelieveBind());
                             boxlist();
-                            Event.BoxBindChange boxBindChange = new Event.BoxBindChange();
-                            boxBindChange.setDeviceModel(new DeviceModel(address, uuid, ""));
-                            postSticky(boxBindChange);
                             context.sendBroadcast(new Intent(ACTION_UPDATE_ALL));//发送广播给桌面插件，更新列表
                             break;
                         case Constants.API.API_FAIL:
