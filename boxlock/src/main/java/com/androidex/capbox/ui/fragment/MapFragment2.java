@@ -99,52 +99,59 @@ public class MapFragment2 extends BaseFragment implements MapUtils.MapUtilsEvent
     int position;//标记动画跳转到哪个地理节点
     private Marker marker;//动画绘制
     private BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.mipmap.icon_map);
-    private BaiduMap.OnMarkerClickListener onMarkerClickListener = new BaiduMap.OnMarkerClickListener() {
-        @Override
-        public boolean onMarkerClick(final Marker marker) {
-            showLocation(marker.getPosition());
-            if (markerDialog == null) {
-                markerDialog = LayoutInflater.from(context).inflate(R.layout.marker_dialog, null);
+
+
+    public BaiduMap.OnMarkerClickListener OnMarkerClickListener() {
+
+        BaiduMap.OnMarkerClickListener onMarkerClickListener = new BaiduMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(final Marker marker) {
+                showLocation(marker.getPosition());
+                if (markerDialog == null) {
+                    markerDialog = LayoutInflater.from(context).inflate(R.layout.marker_dialog, null);
+                }
+                markerDialog.findViewById(R.id.marker_dialog_navigation).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (location != null) {
+                            LatLng start = new LatLng(location.getLatitude(), location.getLongitude());
+                            LatLng end = marker.getPosition();
+                            isOverTime = false;
+                            wrl = null;
+                            drl = null;
+                            mMapUtils.RoutePlan(start, end);
+                            progressDialog = ProgressDialog.show(context, null, "正在规划路线...");
+                            progressDialog.setCanceledOnTouchOutside(false);
+                            mHandler.sendEmptyMessageDelayed(END_OVERTIME_WHAT, DELAY_TIME); //10s超时
+                        } else {
+                            CommonKit.showErrorShort(context, "未获取定位信息，请到开阔地带");
+                        }
+                        mBaiduMap.hideInfoWindow();
+                    }
+                });
+                markerDialog.findViewById(R.id.marker_dialog_trajectory).setOnClickListener(new View.OnClickListener() {//轨迹
+                    @Override
+                    public void onClick(View view) {
+                        String uuid = mBoxDevices.get(marker.getExtraInfo().getInt("id")).get("uuid");
+                        String address = mBoxDevices.get(marker.getExtraInfo().getInt("id")).get("mac");
+                        if (uuid != null && uuid.length() > 0) {
+                            Bundle bundle = new Bundle();
+                            // uuid=CommonUtil.getImei(context);//entityName = 861464030375634
+                            bundle.putString("uuid", uuid);
+                            //跳转到查看轨迹页面
+                            CommonKit.startActivity(context, TrackQueryActivity.class, bundle, false);
+                            //getDeviceMovePath(uuid, address);
+                        }
+                        mBaiduMap.hideInfoWindow();
+                    }
+                });
+                mBaiduMap.showInfoWindow(new InfoWindow(markerDialog, marker.getPosition(), -47));
+                return false;
             }
-            markerDialog.findViewById(R.id.marker_dialog_navigation).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (location != null) {
-                        LatLng start = new LatLng(location.getLatitude(), location.getLongitude());
-                        LatLng end = marker.getPosition();
-                        isOverTime = false;
-                        wrl = null;
-                        drl = null;
-                        mMapUtils.RoutePlan(start, end);
-                        progressDialog = ProgressDialog.show(context, null, "正在规划路线...");
-                        progressDialog.setCanceledOnTouchOutside(false);
-                        mHandler.sendEmptyMessageDelayed(END_OVERTIME_WHAT, DELAY_TIME); //10s超时
-                    } else {
-                        CommonKit.showErrorShort(context, "未获取定位信息，请到开阔地带");
-                    }
-                    mBaiduMap.hideInfoWindow();
-                }
-            });
-            markerDialog.findViewById(R.id.marker_dialog_trajectory).setOnClickListener(new View.OnClickListener() {//轨迹
-                @Override
-                public void onClick(View view) {
-                    String uuid = mBoxDevices.get(marker.getExtraInfo().getInt("id")).get("uuid");
-                    String address = mBoxDevices.get(marker.getExtraInfo().getInt("id")).get("mac");
-                    if (uuid != null && uuid.length() > 0) {
-                        Bundle bundle = new Bundle();
-                       // uuid=CommonUtil.getImei(context);//entityName = 861464030375634
-                        bundle.putString("uuid", uuid);
-                        //跳转到查看轨迹页面
-                        CommonKit.startActivity(context, TrackQueryActivity.class, bundle, false);
-                        //getDeviceMovePath(uuid, address);
-                    }
-                    mBaiduMap.hideInfoWindow();
-                }
-            });
-            mBaiduMap.showInfoWindow(new InfoWindow(markerDialog, marker.getPosition(), -47));
-            return false;
-        }
-    };
+        };
+        return onMarkerClickListener;
+    }
+
     private Timer timer;
 
     //Handler
@@ -262,11 +269,9 @@ public class MapFragment2 extends BaseFragment implements MapUtils.MapUtilsEvent
                 if (model != null) {
                     switch (model.code) {
                         case Constants.API.API_OK:
-                            LatLng ll = null;
-                            RLog.i("============箱子坐标=====================");
                             for (BoxDeviceModel.device device : model.devicelist) {
                                 RLog.i("lat = " + device.lat + "  lon =  " + device.lon);
-                                ll = new LatLng(Double.valueOf(device.lat), Double.valueOf(device.lon));
+                                LatLng ll = new LatLng(Double.valueOf(device.lat), Double.valueOf(device.lon));
                                 ll = mMapUtils.GpsToBD(ll);
                                 Map<String, String> map = new HashMap<>();
                                 map.put("name", device.boxName);
@@ -276,10 +281,7 @@ public class MapFragment2 extends BaseFragment implements MapUtils.MapUtilsEvent
                                 map.put("lon", ll.longitude + "");
                                 mBoxDevices.add(map);
                             }
-                            RLog.i("============end=====================");
-                            ll = null;
                             mHandler.sendEmptyMessage(END_DEVICES_WHAT);
-
                             break;
                         case Constants.API.API_FAIL:
                             CommonKit.showErrorShort(context, "账号在其他地方登录");
@@ -392,7 +394,7 @@ public class MapFragment2 extends BaseFragment implements MapUtils.MapUtilsEvent
                 }
             }
             ll = null;
-            mBaiduMap.setOnMarkerClickListener(onMarkerClickListener);
+            mBaiduMap.setOnMarkerClickListener(OnMarkerClickListener());
         }
     }
 
@@ -433,7 +435,7 @@ public class MapFragment2 extends BaseFragment implements MapUtils.MapUtilsEvent
     private void cleanMap() {
         if (mBaiduMap != null) {
             mBaiduMap.clear();
-            mBaiduMap.removeMarkerClickListener(onMarkerClickListener);
+            mBaiduMap.removeMarkerClickListener(OnMarkerClickListener());
         }
     }
 

@@ -3,6 +3,8 @@ package com.androidex.capbox.ui.activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -12,7 +14,10 @@ import com.androidex.capbox.MyApplication;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
 import com.androidex.capbox.data.cache.SharedPreTool;
+import com.androidex.capbox.data.net.NetApi;
+import com.androidex.capbox.data.net.base.ResultCallBack;
 import com.androidex.capbox.map.MapManager;
+import com.androidex.capbox.module.BoxMovePathModel;
 import com.androidex.capbox.ui.widget.SecondTitleBar;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
@@ -59,6 +64,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import okhttp3.Headers;
+import okhttp3.Request;
 
 import static com.androidex.capbox.utils.Constants.CACHE.CACHE_TRACK_QUERY_END_TIME;
 import static com.androidex.capbox.utils.Constants.CACHE.CACHE_TRACK_QUERY_START_TIME;
@@ -226,8 +233,22 @@ public class TrackQueryActivity extends BaseActivity
      * 轨迹分析上一次请求时间
      */
     private long lastQueryTime = 0;
-
     private BDLocation location;
+    private List<LatLng> mBoxMovePath = new ArrayList<LatLng>();
+
+    private final int END_MOVEPATH_WHAT = 0x01;//获取到服务器返回的轨迹列表
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case END_MOVEPATH_WHAT:
+
+
+                    break;
+            }
+        }
+    };
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -258,6 +279,57 @@ public class TrackQueryActivity extends BaseActivity
             @Override
             public void onClick(View v) {
                 CommonKit.startActivityForResult(context, TrackQueryOptionsActivity.class, null, Constants.baiduMap.REQUEST_CODE);
+            }
+        });
+
+
+
+    }
+
+    /**
+     * 根据账户&uuid获取设备移动轨迹
+     */
+    private void getDeviceMovePath(final String uuid) {
+        mBoxMovePath.clear();
+        NetApi.movepath(getToken(), getUserName(), uuid, new ResultCallBack<BoxMovePathModel>() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, BoxMovePathModel model) {
+                super.onSuccess(statusCode, headers, model);
+                if (model != null) {
+                    switch (model.code) {
+                        case Constants.API.API_OK:
+                            for (BoxMovePathModel.LatLng latLng : model.datalist) {
+                                LatLng ll = new LatLng(Double.valueOf(latLng.getLatitude()), Double.valueOf(latLng.getLongitude()));
+                                mBoxMovePath.add(ll);
+                            }
+                            break;
+                        case Constants.API.API_FAIL:
+                            CommonKit.showErrorShort(context, "账号在其他地方登录");
+                            LoginActivity.lauch(context);
+                            break;
+                        case Constants.API.API_NOPERMMISION:
+                            CommonKit.showErrorShort(context, "获取设备轨迹失败");
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                Message msg = Message.obtain();
+                msg.obj = uuid;
+                msg.what = END_MOVEPATH_WHAT;
+                mHandler.sendMessage(msg);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Request request, Exception e) {
+                super.onFailure(statusCode, request, e);
+                if (context != null && !CommonKit.isNetworkAvailable(context)) {
+                    CommonKit.showErrorShort(context, "网络出现异常");
+                }
+                Message msg = Message.obtain();
+                msg.obj = uuid;
+                msg.what = END_MOVEPATH_WHAT;
+                mHandler.sendMessage(msg);
             }
         });
     }
@@ -308,6 +380,9 @@ public class TrackQueryActivity extends BaseActivity
         historyTrackRequest.setSortType(SortType.asc);//升序/降序
         historyTrackRequest.setCoordTypeOutput(CoordType.bd09ll);//百度经纬度坐标/国测局加密坐标
         historyTrackRequest.setProcessed(true);//纠偏
+
+        getDeviceMovePath(entityName);
+
         queryHistoryTrack();
     }
 
