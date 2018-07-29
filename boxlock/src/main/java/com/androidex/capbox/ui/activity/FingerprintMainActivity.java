@@ -79,20 +79,16 @@ public class FingerprintMainActivity extends UserBaseActivity {
      */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void startFingerprintRecognitionUnlockScreen() {
-        if (mKeyguardLockScreenManager == null) {
-            return;
+        if (mKeyguardLockScreenManager != null) {
+            //判断是否设置锁屏密码，没有设置直接进入登陆界面
+            if (!mKeyguardLockScreenManager.isOpenLockScreenPwd()) {
+                CommonKit.showMsgShort(context, getString(R.string.fingerprint_not_set_unlock_screen_pws));
+                Loge("无锁屏密码");
+                LoginActivity.lauch(context);
+            } else {
+                mKeyguardLockScreenManager.showAuthenticationScreen(this);
+            }
         }
-        //判断是否设置锁屏密码，没有设置直接进入欢迎界面
-        if (!mKeyguardLockScreenManager.isOpenLockScreenPwd()) {
-            CommonKit.showMsgShort(context, getString(R.string.fingerprint_not_set_unlock_screen_pws));
-            Loge("无锁屏密码");
-            LoginActivity.lauch(context);
-            return;
-        } else {
-
-            //Loge("有锁屏密码");
-        }
-        mKeyguardLockScreenManager.showAuthenticationScreen(this);
     }
 
     /**
@@ -103,20 +99,18 @@ public class FingerprintMainActivity extends UserBaseActivity {
         if (mFingerprintCore.isSupport()) {
             if (!mFingerprintCore.isHasEnrolledFingerprints()) {//未录入
                 CommonKit.showMsgShort(context, getString(R.string.fingerprint_recognition_not_enrolled));
-                FingerprintUtil.openFingerPrintSettingPage(this);
-                return;
-            }
-            CommonKit.showMsgShort(context, getString(R.string.fingerprint_recognition_start));
-            mFingerGuideTxt.setText(R.string.fingerprint_recognition_start);
-            if (mFingerprintCore.isAuthenticating()) {
-                CommonKit.showMsgShort(context, getString(R.string.fingerprint_recognition_authenticating));
+                //FingerprintUtil.openFingerPrintSettingPage(this);//自动跳转到指纹录入界面，在MI部分老款手机不支持指纹的也会跳转，故屏蔽。
             } else {
-                mFingerprintCore.startAuthenticate();
+                mFingerGuideTxt.setText(R.string.fingerprint_recognition_start);
+                if (!mFingerprintCore.isAuthenticating()) {
+                    mFingerprintCore.startAuthenticate();
+                } else {
+                    CommonKit.showMsgShort(context, getString(R.string.fingerprint_recognition_authenticating));
+                }
             }
-        } else {
-            CommonKit.showMsgShort(context, getString(R.string.fingerprint_recognition_not_support));
-            mFingerGuideTxt.setText(R.string.fingerprint_recognition_start);
-            startFingerprintRecognitionUnlockScreen();
+        } else {//不支持指纹
+            mFingerGuideTxt.setText(R.string.fingerprint_recognition_not_support);
+            //startFingerprintRecognitionUnlockScreen();//使用锁屏密码
         }
     }
 
@@ -132,7 +126,6 @@ public class FingerprintMainActivity extends UserBaseActivity {
             CommonKit.showMsgShort(context, getString(R.string.fingerprint_recognition_success));
             autoLogin();
         }
-
 
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         @Override

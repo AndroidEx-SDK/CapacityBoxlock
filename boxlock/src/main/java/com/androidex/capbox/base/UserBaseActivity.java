@@ -66,7 +66,6 @@ public abstract class UserBaseActivity extends BaseActivity {
                     switch (model.code) {
                         case Constants.API.API_OK:
                             cache2Sp(userName, md5Pwd);
-                            CommonKit.showOkShort(context, getString(R.string.hint_login_ok));
                             if (model.token != null) {
                                 setToken(model.token);
                             }
