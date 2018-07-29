@@ -104,12 +104,13 @@ public class DebugBLEActivity extends BaseActivity {
     public void initData(Bundle savedInstanceState) {
         allConnectDevice = MyBleService.getInstance().getAllConnectDevice();
         Loge("connected device size=" + allConnectDevice.size());
+        initTitleBar();
         if (allConnectDevice.size() > 0) {
             address = allConnectDevice.get(0).getAddress();
+            titlebar.getRightTv().setText("已连接");
         } else {
             CommonKit.showErrorShort(context, "请连接蓝牙");
         }
-        initTitleBar();
         initBleBroadCast();
         initLog();
     }
