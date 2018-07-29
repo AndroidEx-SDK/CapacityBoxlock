@@ -27,9 +27,9 @@
                 android:layout_height="@dimen/tv_line_height"
                 android:background="@color/line_color" />
 
-
             <!--规则-->
             <LinearLayout
+                android:visibility="gone"
                 android:id="@+id/setting_alarm"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/adduser_ll_height"

@@ -194,6 +194,7 @@ public class BoxDetailActivity extends BaseActivity {
                 CommonKit.finishActivity(context);
             }
         });
+        titlebar.getRightTv().setVisibility(View.GONE);
     }
 
     /**
