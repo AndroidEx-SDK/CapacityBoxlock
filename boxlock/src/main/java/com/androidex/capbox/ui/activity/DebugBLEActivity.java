@@ -432,6 +432,18 @@ public class DebugBLEActivity extends BaseActivity {
                         byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
                         if (isHex) {
                             updateText(String.format("%s\r\n", Byte2HexUtil.byte2Hex(b)));
+                            if (b.length > 3 && b[0] == (byte) 0x00) {
+                                int len = Byte2HexUtil.byte2Int(b[2]) + 3;
+                                if (len <= b.length) {
+                                    byte[] new_byte = new byte[len - 3];
+                                    System.arraycopy(b, 3, new_byte, 0, len - 3);
+                                    updateText(String.format("%s\r\n", "len = " + (len - 3) + ": " + Byte2HexUtil.convertHexToString(Byte2HexUtil.byte2Hex(new_byte))));
+                                }else if (b.length >= 20) {
+                                    byte[] new_byte = new byte[17];
+                                    System.arraycopy(b, 3, new_byte, 0, 17);
+                                    updateText(String.format("%s\r\n", "len = " + 17 + ": " + Byte2HexUtil.convertHexToString(Byte2HexUtil.byte2Hex(b))));
+                                }
+                            }
                         } else {
                             updateText(String.format("%s\r\n", Byte2HexUtil.convertHexToString(Byte2HexUtil.byte2Hex(b))));
                         }

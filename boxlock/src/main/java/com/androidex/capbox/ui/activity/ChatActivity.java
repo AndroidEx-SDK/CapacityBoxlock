@@ -126,6 +126,8 @@ public class ChatActivity extends BaseActivity {
     private void initView() {
         hideVoiceInputToggle();
         showInputKeyBoard();
+
+        // SystemUtil.controlKeyboardLayout(,lv_msgList);
     }
 
     /**
@@ -136,9 +138,9 @@ public class ChatActivity extends BaseActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    //隐藏系统软键盘
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(et_msg.getWindowToken(), 0);
+                    hideInputKeyBoard();
+                } else {
+                    showInputKeyBoard();
                 }
             }
         });
@@ -262,18 +264,18 @@ public class ChatActivity extends BaseActivity {
 
     private void hideInputKeyBoard() {
         @SuppressLint("WrongConstant")
-        InputMethodManager imm = (InputMethodManager) getSystemService("input_method");
-        imm.hideSoftInputFromWindow(this.et_msg.getWindowToken(), 0);
-        this.et_msg.clearFocus();
-        this.isKeyBoardActive = true;
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(lv_msgList.getWindowToken(), 0);
+        et_msg.clearFocus();
+        isKeyBoardActive = true;
     }
 
     private void showInputKeyBoard() {
         this.et_msg.requestFocus();
         @SuppressLint("WrongConstant")
-        InputMethodManager imm = (InputMethodManager) getSystemService("input_method");
-        imm.showSoftInput(this.et_msg, 0);
-        this.isKeyBoardActive = false;
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(lv_msgList, 0);
+        isKeyBoardActive = false;
     }
 
     /**
