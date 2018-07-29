@@ -260,7 +260,9 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent 
             @Override
             public void onSuccess(int statusCode, Headers headers, BoxMovePathModel model) {
                 super.onSuccess(statusCode, headers, model);
+                RLog.d("移动轨迹 statusCode 111= " + statusCode + " headers : " + headers.toString());
                 if (model != null) {
+                    RLog.d("移动轨迹 model 111= " + model.toString());
                     switch (model.code) {
                         case Constants.API.API_OK:
                             for (BoxMovePathModel.LatLng latLng : model.datalist) {
@@ -279,7 +281,6 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent 
                             break;
                     }
                 }
-                RLog.d("读取设备的数据库数据 收到的address = " + address);
                 Message msg = Message.obtain();
                 msg.obj = address;
                 msg.what = END_MOVEPATH_WHAT;
@@ -292,6 +293,7 @@ public class MapFragment extends BaseFragment implements MapUtils.MapUtilsEvent 
                 if (context != null && !CommonKit.isNetworkAvailable(context)) {
                     CommonKit.showErrorShort(context, "网络出现异常");
                 }
+                RLog.d("移动轨迹 statusCode 222= " + statusCode + " \r\n request : " + request.toString() + "\r\n e:" + e.toString());
                 Message msg = Message.obtain();
                 msg.obj = address;
                 msg.what = END_MOVEPATH_WHAT;
