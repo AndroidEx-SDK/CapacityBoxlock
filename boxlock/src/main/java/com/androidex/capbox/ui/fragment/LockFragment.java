@@ -304,9 +304,11 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         // 给标题栏弹窗添加子类
         titlePopup.addAction(new ActionItem(context, "结束携行", R.mipmap.finish_carry));
         titlePopup.addAction(new ActionItem(context, "连接列表", R.mipmap.connectlist));
+        titlePopup.addAction(new ActionItem(context, "箱体升级", R.mipmap.setting));
         if (SystemUtil.isApkInDebug(context)) {
             titlePopup.addAction(new ActionItem(context, "箱体调试", R.mipmap.setting));
         }
+
         titlePopup.setItemOnClickListener(new TitlePopup.OnItemOnClickListener() {
             @Override
             public void onItemClick(ActionItem item, int position) {
@@ -318,17 +320,20 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                         ConnectDeviceListActivity.lauch(context);
                         break;
                     case 2:
-//                        if (!OPEN_DFU_UPDATE) {
-//                            CommonKit.showOkShort(context, "该功能尚未开启");
-//                        } else {
-//                            if (MyBleService.getInstance().getConnectDevice(address) == null) {
-//                                CommonKit.showErrorShort(context, "请先连接设备");
-//                                return;
-//                            }
-//                            MyBleService.getInstance().getFirmWareVer(address);
-//                        }
+                        if (!OPEN_DFU_UPDATE) {
+                            CommonKit.showOkShort(context, "该功能尚未开启");
+                        } else {
+                            if (MyBleService.getInstance().getConnectDevice(address) == null) {
+                                CommonKit.showErrorShort(context, "请先连接设备");
+                                return;
+                            }
+                            MyBleService.getInstance().getFirmWareVer(address);
+                        }
+                        break;
+                    case 3:
                         DebugBLEActivity.lauch(context);
                         break;
+
                     default:
                         break;
                 }
