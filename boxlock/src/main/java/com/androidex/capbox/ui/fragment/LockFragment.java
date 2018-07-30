@@ -110,6 +110,8 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     ImageView close;
     @Bind(R.id.iv_lock)
     ImageView iv_lock;
+    @Bind(R.id.main_tv_title)
+    TextView main_tv_title;
     @Bind(R.id.tv_boxConfig)
     TextView tv_boxConfig;
     @Bind(R.id.tv_latitude)
@@ -186,6 +188,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
             deviceName = bundle.getString(EXTRA_BOX_NAME);
         }
         if (uuid != null) getLocation(true);
+        main_tv_title.setText(CalendarUtil.getName(address));
         initView();
         iniRefreshView();
         initMap();

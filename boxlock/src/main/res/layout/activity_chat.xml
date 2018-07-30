@@ -32,6 +32,7 @@
 
     <LinearLayout
         android:id="@+id/rl_bottom"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="@dimen/marginPadding48"
         android:background="@color/white"
