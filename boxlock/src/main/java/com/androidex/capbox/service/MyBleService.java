@@ -11,7 +11,10 @@ import com.androidex.capbox.MyApplication;
 import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
+import com.androidex.capbox.db.ChatRecord;
+import com.androidex.capbox.db.ChatRecordDao;
 import com.androidex.capbox.db.DaoSession;
+import com.androidex.capbox.db.DbUtil;
 import com.androidex.capbox.db.DeviceInfo;
 import com.androidex.capbox.db.DeviceInfoDao;
 import com.androidex.capbox.db.Note;
@@ -22,6 +25,7 @@ import com.androidex.capbox.utils.RLog;
 import com.androidex.capbox.utils.SystemUtil;
 import com.androidex.boxlib.modules.LocationModules;
 
+import org.greenrobot.greendao.DbUtils;
 import org.greenrobot.greendao.query.DeleteQuery;
 import org.greenrobot.greendao.query.Query;
 
@@ -39,6 +43,7 @@ import static com.androidex.capbox.utils.Constants.BASE.ACTION_TEMP_OUT;
 import static com.androidex.capbox.utils.Constants.SP.SP_DISTANCE_TYPE;
 import static com.androidex.capbox.utils.Constants.SP.SP_LOST_TYPE;
 import static com.androidex.capbox.utils.Constants.SP.SP_TEMP_TYPE;
+import static com.androidex.capbox.utils.Constants.VISE_COMMAND_TYPE_TEXT;
 import static com.baidu.mapapi.BMapManager.getContext;
 
 /**
@@ -51,6 +56,8 @@ public class MyBleService extends BleService {
     public static final String TAG = "MyBleService";
     private static MyBleService service;
     private DeviceInfoDao deviceInfoDao;
+    private static NoteDao noteDao;
+    private ChatRecordDao chatRecordDao;
 
     @Override
     public void onCreate() {
@@ -70,13 +77,11 @@ public class MyBleService extends BleService {
         return service;
     }
 
-    private static NoteDao noteDao;
-
     public void initDB() {
         DaoSession daoSession = ((MyApplication) getApplication()).getDaoSession();
         noteDao = daoSession.getNoteDao();
         deviceInfoDao = daoSession.getDeviceInfoDao();
-
+        chatRecordDao = daoSession.getChatRecordDao();
     }
 
     /**
@@ -122,14 +127,45 @@ public class MyBleService extends BleService {
         RLog.d("插入数据到数据库" + note.toString());
     }
 
+    /**
+     * 插入发送的数据
+     *
+     * @param address
+     * @param name
+     * @param uuid
+     * @param content
+     * @param time
+     */
+    @Override
+    protected void insertSendDB(String address, String name, String uuid, String content, Long time) {
+        DbUtil.insertSendDB(chatRecordDao, address, name, uuid, content, time);
+    }
+
+    /**
+     * 插入接收到的数据
+     *
+     * @param address
+     * @param name
+     * @param uuid
+     * @param content
+     * @param time
+     */
+    @Override
+    protected void insertReceiveData(String address, String name, String uuid, String content, Long time) {
+        DbUtil.insertReceiveData(chatRecordDao, address, name, uuid, content, time);
+    }
+
     @Override
     protected String getUUID(String address) {
         String uuid = null;
-        List<DeviceInfo> list = deviceInfoDao.queryBuilder().where(DeviceInfoDao.Properties.Address.eq(address)).list();
-        if (list.size() > 0) {
-            uuid = list.get(0).getUuid();
+        if (deviceInfoDao != null) {
+            List<DeviceInfo> list = deviceInfoDao.queryBuilder().where(DeviceInfoDao.Properties.Address.eq(address)).list();
+            if (list.size() > 0) {
+                uuid = list.get(0).getUuid();
+            }
+            return uuid;
         }
-        return uuid;
+        return null;
     }
 
     /**
@@ -137,7 +173,7 @@ public class MyBleService extends BleService {
      * 上传轨迹到百度鹰眼
      */
     private void addpoint(String uuid, LocationModules modules, long longTime) {
-        String  lat= modules.getLat().replace("N","" );
+        String lat = modules.getLat().replace("N", "");
         String lon = modules.getLon().replace("E", "");
         NetApi.addpoint(uuid,LocationUtil.degreeToDB(lat),LocationUtil.degreeToDB(lon) , longTime, new ResultCallBack<BaiduModel>() {
             @Override
@@ -150,7 +186,6 @@ public class MyBleService extends BleService {
                 super.onFailure(statusCode, request, e);
             }
         });
-
     }
 
     /**
@@ -160,7 +195,6 @@ public class MyBleService extends BleService {
      */
     public static List<Note> getLocListData(String address) {
         RLog.d("开始读取数据库数据");
-        //notesQuery = noteDao.queryBuilder().orderAsc(NoteDao.Properties.Address).build();
         List<Note> list = noteDao.queryBuilder().where(NoteDao.Properties.Address.eq(address)).orderAsc(NoteDao.Properties.Time).list();
         for (Note note : list) {
             RLog.d(note.toString());
