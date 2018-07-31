@@ -47,6 +47,7 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCONNECTED;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLUTOOTH_OFF;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLUTOOTH_ON;
+import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_IS_NOTIGY;
 import static com.androidex.boxlib.utils.BleConstants.LOG.ACTION_LOG_TEST;
 import static com.androidex.boxlib.utils.BleConstants.NET.ACTION_NET_TCP_RECEIVE;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
@@ -431,18 +432,21 @@ public class DebugBLEActivity extends BaseActivity {
                 case ACTION_ALL_DATA:
                     if (isAll) {
                         byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
+                        boolean isNotify = intent.getBooleanExtra(BLECONSTANTS_IS_NOTIGY, false);
                         if (isHex) {
                             updateText(String.format("%s\r\n", Byte2HexUtil.byte2Hex(b)));
-                            if (b.length > 3 && b[0] == (byte) 0x00) {
-                                int len = Byte2HexUtil.byte2Int(b[2]) + 3;
-                                if (len <= b.length) {
-                                    byte[] new_byte = new byte[len - 3];
-                                    System.arraycopy(b, 3, new_byte, 0, len - 3);
-                                    updateText(String.format("%s\r\n", "len = " + (len - 3) + ": " + Byte2HexUtil.convertHexToString(Byte2HexUtil.byte2Hex(new_byte))));
-                                }else if (b.length >= 20) {
-                                    byte[] new_byte = new byte[17];
-                                    System.arraycopy(b, 3, new_byte, 0, 17);
-                                    updateText(String.format("%s\r\n", "len = " + 17 + ": " + Byte2HexUtil.convertHexToString(Byte2HexUtil.byte2Hex(b))));
+                            if (isNotify) {
+                                if (b.length > 3 && b[0] == (byte) 0x00) {
+                                    int len = Byte2HexUtil.byte2Int(b[2]) + 3;
+                                    if (len <= b.length) {
+                                        byte[] new_byte = new byte[len - 3];
+                                        System.arraycopy(b, 3, new_byte, 0, len - 3);
+                                        updateText(String.format("%s\r\n", "len = " + (len - 3) + ": " + Byte2HexUtil.convertHexToString(Byte2HexUtil.byte2Hex(new_byte))));
+                                    } else if (b.length >= 20) {
+                                        byte[] new_byte = new byte[17];
+                                        System.arraycopy(b, 3, new_byte, 0, 17);
+                                        updateText(String.format("%s\r\n", "len = " + 17 + ": " + Byte2HexUtil.convertHexToString(Byte2HexUtil.byte2Hex(b))));
+                                    }
                                 }
                             }
                         } else {
