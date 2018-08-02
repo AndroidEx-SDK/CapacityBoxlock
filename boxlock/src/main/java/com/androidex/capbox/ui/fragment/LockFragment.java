@@ -39,6 +39,7 @@ import com.androidex.capbox.ui.activity.BoxDetailActivity;
 import com.androidex.capbox.ui.activity.ConnectDeviceListActivity;
 import com.androidex.capbox.ui.activity.DebugBLEActivity;
 import com.androidex.capbox.ui.view.TitlePopup;
+import com.androidex.capbox.utils.BleUpdateUtil;
 import com.androidex.capbox.utils.CalendarUtil;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.Constants;
@@ -330,7 +331,8 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                                 CommonKit.showErrorShort(context, "请先连接设备");
                                 return;
                             }
-                            MyBleService.getInstance().getFirmWareVer(address);
+                            //MyBleService.getInstance().getFirmWareVer(address);//获取箱体的软件版本号
+                            startDFU();
                         }
                         break;
                     case 3:
@@ -388,30 +390,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                 break;
         }
     }
-
-    /**
-     * 启动DFU升级服务
-     *
-     * @param bluetoothDevice 蓝牙设备
-     * @param keepBond        升级后是否保持连接
-     * @param force           将DFU设置为true将防止跳转到DFU Bootloader引导加载程序模式
-     * @param PacketsReceipt  启用或禁用数据包接收通知（PRN）过程。
-     *                        默认情况下，在使用Android Marshmallow或更高版本的设备上禁用PEN，并在旧设备上启用。
-     * @param numberOfPackets 如果启用分组接收通知过程，则此方法设置在接收PEN之前要发送的分组数。 PEN用于同步发射器和接收器。
-     * @param filePath        约定匹配的ZIP文件的路径。
-     */
-    private void startDFU(BluetoothDevice bluetoothDevice, boolean keepBond, boolean force,
-                          boolean PacketsReceipt, int numberOfPackets, String filePath) {
-        final DfuServiceInitiator stater = new DfuServiceInitiator(bluetoothDevice.getAddress())
-                .setDeviceName(bluetoothDevice.getName())
-                .setKeepBond(keepBond)
-                .setForceDfu(force)
-                .setPacketsReceiptNotificationsEnabled(PacketsReceipt)
-                .setPacketsReceiptNotificationsValue(numberOfPackets);
-        stater.setZip(R.raw.update);//这个方法可以传入raw文件夹中的文件、也可以是文件的string或者url路径。
-        stater.start(context, DfuService.class);
-    }
-
 
     /**
      * 显示确认结束弹窗
@@ -674,13 +652,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                 if (model != null) {
                     switch (model.code) {
                         case Constants.API.API_OK:
-                            DfuServiceListenerHelper.registerProgressListener(context, mDfuProgressListener);
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                    //大于等于6.0的时候，禁用PEN
-                                    startDFU(bluetoothDevice, true, false, false, 0, "");
-                                } else {
-                                    startDFU(bluetoothDevice, true, false, true, 0, "");
-                                }
+                            //startDFU();
                             break;
                         case Constants.API.API_FAIL:
                             RLog.d("网络连接失败");
@@ -709,18 +681,27 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     }
 
     /**
+     * 启动蓝牙升级服务
+     */
+    private void startDFU() {
+        DfuServiceListenerHelper.registerProgressListener(context, mDfuProgressListener);
+        bluetoothDevice = MyBleService.getInstance().getBluetoothDevice(address);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //大于等于6.0的时候，禁用PEN
+            BleUpdateUtil.startDFU(context, bluetoothDevice, true, false, false, 0, "");
+        } else {
+            BleUpdateUtil.startDFU(context, bluetoothDevice, true, false, true, 0, "");
+        }
+    }
+
+    /**
      * 获取设备信息
      *
      * @param uuid
      */
     private void boxlocation(String uuid) {
         if (!CommonKit.isNetworkAvailable(context)) {
-            context.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    CommonKit.showErrorShort(context, "设备未连接网络");
-                }
-            });
+            CommonKit.showErrorShort(context, "设备未连接网络");
             return;
         }
         NetApi.getboxLocation(getToken(), getUserName(), uuid,
@@ -867,32 +848,32 @@ public class LockFragment extends BaseFragment implements OnClickListener {
             //在上传固件期间调用的方法。 它不会使用相同的百分比值调用两次，但是在小型固件文件的情况下，可能会省略一些值。\
             mProgressBarOtaUpload.setVisibility(View.VISIBLE);
             mProgressBarOtaUpload.setProgress(percent);//状态：升级中...
-            Log.d("debug", "percent:" + percent + " partsTotal:" + partsTotal + " speed=" + speed);
+            RLog.d("dfu  percent:" + percent + " partsTotal:" + partsTotal + " speed=" + speed);
         }
 
         @Override
         public void onFirmwareValidating(String deviceAddress) {
             //在目标设备上验证新固件时调用的方法。
-            Log.d("debug", "目标设备上验证新固件时调用的方法");
+            RLog.d("dfu  目标设备上验证新固件时调用的方法");
         }
 
         @Override
         public void onDeviceDisconnecting(String deviceAddress) {
             //服务开始断开与目标设备的连接时调用的方法。
-            Log.d("debug", "服务开始断开与目标设备的连接时调用的方法");
+            RLog.d("dfu  服务开始断开与目标设备的连接时调用的方法");
         }
 
         @Override
         public void onDeviceDisconnected(String deviceAddress) {
             //当服务从设备断开连接时调用的方法。 设备已重置。
-            Log.d("debug", "当服务从设备断开连接时调用的方法。 设备已重置。");
+            RLog.d("dfu  当服务从设备断开连接时调用的方法。 设备已重置。");
             DfuServiceListenerHelper.unregisterProgressListener(context, mDfuProgressListener);
         }
 
         @Override
         public void onDfuCompleted(String deviceAddress) {
             //Method called when the DFU process succeeded.
-            Log.d("debug", "DFU已完成");//升级成功！
+            RLog.d("dfu  DFU已完成");//升级成功！
             mProgressBarOtaUpload.setVisibility(View.GONE);
             DfuServiceListenerHelper.unregisterProgressListener(context, mDfuProgressListener);
         }
@@ -900,14 +881,14 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         @Override
         public void onDfuAborted(String deviceAddress) {
             //当DFU进程已中止时调用的方法。
-            Log.d("debug", "当DFU进程已中止时调用的方法。");//升级进程已中止.
+            RLog.d("dfu  当DFU进程已中止时调用的方法。");//升级进程已中止.
             DfuServiceListenerHelper.unregisterProgressListener(context, mDfuProgressListener);
         }
 
         @Override
         public void onError(String deviceAddress, int error, int errorType, String message) {
             //发生错误时调用的方法。
-            Log.d("debug", "发生错误时调用的方法onError");//升级发生错误.
+            RLog.d("dfu  发生错误时调用的方法onError");//升级发生错误.
             DfuServiceListenerHelper.unregisterProgressListener(context, mDfuProgressListener);
         }
     };
