@@ -49,7 +49,7 @@ public class ChatRecordDao extends AbstractDao<ChatRecord, Long> {
         db.execSQL("CREATE TABLE " + constraint + "\"CHAT_RECORD\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"NICK_NAME\" TEXT NOT NULL ," + // 1: nickName
-                "\"UUID\" TEXT NOT NULL ," + // 2: uuid
+                "\"UUID\" TEXT," + // 2: uuid
                 "\"ADDRESS\" TEXT NOT NULL ," + // 3: address
                 "\"TIME\" INTEGER NOT NULL ," + // 4: time
                 "\"MSG_TYPE\" INTEGER NOT NULL ," + // 5: msgType
@@ -77,7 +77,11 @@ public class ChatRecordDao extends AbstractDao<ChatRecord, Long> {
             stmt.bindLong(1, id);
         }
         stmt.bindString(2, entity.getNickName());
-        stmt.bindString(3, entity.getUuid());
+ 
+        String uuid = entity.getUuid();
+        if (uuid != null) {
+            stmt.bindString(3, uuid);
+        }
         stmt.bindString(4, entity.getAddress());
         stmt.bindLong(5, entity.getTime());
         stmt.bindLong(6, entity.getMsgType());
@@ -96,7 +100,11 @@ public class ChatRecordDao extends AbstractDao<ChatRecord, Long> {
             stmt.bindLong(1, id);
         }
         stmt.bindString(2, entity.getNickName());
-        stmt.bindString(3, entity.getUuid());
+ 
+        String uuid = entity.getUuid();
+        if (uuid != null) {
+            stmt.bindString(3, uuid);
+        }
         stmt.bindString(4, entity.getAddress());
         stmt.bindLong(5, entity.getTime());
         stmt.bindLong(6, entity.getMsgType());
@@ -116,7 +124,7 @@ public class ChatRecordDao extends AbstractDao<ChatRecord, Long> {
         ChatRecord entity = new ChatRecord( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.getString(offset + 1), // nickName
-            cursor.getString(offset + 2), // uuid
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // uuid
             cursor.getString(offset + 3), // address
             cursor.getLong(offset + 4), // time
             (byte) cursor.getShort(offset + 5), // msgType
@@ -132,7 +140,7 @@ public class ChatRecordDao extends AbstractDao<ChatRecord, Long> {
     public void readEntity(Cursor cursor, ChatRecord entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setNickName(cursor.getString(offset + 1));
-        entity.setUuid(cursor.getString(offset + 2));
+        entity.setUuid(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setAddress(cursor.getString(offset + 3));
         entity.setTime(cursor.getLong(offset + 4));
         entity.setMsgType((byte) cursor.getShort(offset + 5));

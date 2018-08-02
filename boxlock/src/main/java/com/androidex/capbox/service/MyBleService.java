@@ -2,6 +2,7 @@ package com.androidex.capbox.service;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.androidex.boxlib.modules.ServiceBean;
@@ -77,6 +78,9 @@ public class MyBleService extends BleService {
         return service;
     }
 
+    /**
+     * 初始化数据库
+     */
     public void initDB() {
         DaoSession daoSession = ((MyApplication) getApplication()).getDaoSession();
         noteDao = daoSession.getNoteDao();
@@ -131,28 +135,32 @@ public class MyBleService extends BleService {
      * 插入发送的数据
      *
      * @param address
-     * @param name
-     * @param uuid
      * @param content
      * @param time
      */
     @Override
-    protected void insertSendDB(String address, String name, String uuid, String content, Long time) {
-        DbUtil.insertSendDB(chatRecordDao, address, name, uuid, content, time);
+    protected void insertSendDB(String address, String content, long time) {
+        String uuid = getUUID(address);
+        RLog.d("chat 111: " + uuid);
+        if (chatRecordDao != null) {
+            DbUtil.insertSendDB(chatRecordDao, address, uuid, content, time);
+        }
     }
 
     /**
      * 插入接收到的数据
      *
      * @param address
-     * @param name
-     * @param uuid
      * @param content
      * @param time
      */
     @Override
-    protected void insertReceiveData(String address, String name, String uuid, String content, Long time) {
-        DbUtil.insertReceiveData(chatRecordDao, address, name, uuid, content, time);
+    protected void insertReceiveData(String address, String content, long time) {
+        String uuid = getUUID(address);
+        RLog.d("chat 222 : " + uuid);
+        if (chatRecordDao != null) {
+            DbUtil.insertReceiveData(chatRecordDao, address, uuid, content, time);
+        }
     }
 
     @Override
@@ -163,9 +171,8 @@ public class MyBleService extends BleService {
             if (list.size() > 0) {
                 uuid = list.get(0).getUuid();
             }
-            return uuid;
         }
-        return null;
+        return uuid;
     }
 
     /**

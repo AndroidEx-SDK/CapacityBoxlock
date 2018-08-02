@@ -21,7 +21,7 @@ public class ChatRecord {
     private Long id;//数据库表条数ID。
     @NotNull
     private String nickName;//设备的ni'cheng
-    @NotNull
+
     private String uuid;//设备的UUID
     @NotNull
     private String address;//设备的mac地址

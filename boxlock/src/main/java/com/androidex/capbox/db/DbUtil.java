@@ -1,5 +1,6 @@
 package com.androidex.capbox.db;
 
+import com.androidex.capbox.utils.CalendarUtil;
 import com.androidex.capbox.utils.RLog;
 
 import static com.androidex.capbox.utils.Constants.VISE_COMMAND_TYPE_TEXT;
@@ -15,19 +16,18 @@ public class DbUtil {
      *
      * @param chatRecordDao
      * @param address
-     * @param name
      * @param uuid
      * @param content
      * @param time
      */
-    public static void insertSendDB(ChatRecordDao chatRecordDao, String address, String name, String uuid, String content, Long time) {
+    public static void insertSendDB(ChatRecordDao chatRecordDao, String address, String uuid, String content, long time) {
         ChatRecord chatRecord = new ChatRecord();
         chatRecord.setAddress(address)
                 .setIsRead("1")
                 .setIsSend("0")
                 .setDeleteChat("0")
                 .setMsgContent(content)
-                .setNickName(name)
+                .setNickName(CalendarUtil.getName(address))
                 .setMsgType(VISE_COMMAND_TYPE_TEXT)
                 .setTime(time)
                 .setUuid(uuid);
@@ -41,19 +41,18 @@ public class DbUtil {
      *
      * @param chatRecordDao
      * @param address
-     * @param name
      * @param uuid
      * @param content
      * @param time
      */
-    public static void insertReceiveData(ChatRecordDao chatRecordDao, String address, String name, String uuid, String content, Long time) {
+    public static void insertReceiveData(ChatRecordDao chatRecordDao, String address, String uuid, String content, long time) {
         ChatRecord chatRecord = new ChatRecord();
         chatRecord.setAddress(address)
                 .setIsRead("1")
                 .setIsSend("1")
                 .setDeleteChat("0")
                 .setMsgContent(content)
-                .setNickName(name)
+                .setNickName(CalendarUtil.getName(address))
                 .setMsgType(VISE_COMMAND_TYPE_TEXT)
                 .setTime(time)
                 .setUuid(uuid);
