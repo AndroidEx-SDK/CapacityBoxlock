@@ -26,6 +26,7 @@ import com.androidex.capbox.base.BaseFragment;
 import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
+import com.androidex.capbox.db.DbUtil;
 import com.androidex.capbox.module.ActionItem;
 import com.androidex.capbox.module.BaiduModel;
 import com.androidex.capbox.module.BaseModel;
@@ -907,22 +908,18 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     isConnect = true;
                     disProgress();
                     updateBleView(View.GONE, View.VISIBLE);
-                    CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast3));
                     initTemp();//获取温湿度信息
                     break;
 
                 case BLE_CONN_DIS://断开连接
                     Loge(TAG, "断开连接");
-                    CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast4));
                     updateBleView(View.VISIBLE, View.GONE);
                     break;
                 case BLE_CONN_FAIL://连接失败
                     disProgress();
                     CommonKit.showOkShort(context, getResources().getString(R.string.bledevice_toast8));
                     break;
-                case BLUTOOTH_OFF:
-                    Logd(TAG, "手机蓝牙断开");
-                    CommonKit.showErrorShort(context, "手机蓝牙断开");
+                case BLUTOOTH_OFF://手机蓝牙断开
                     ServiceBean device = MyBleService.getInstance().getConnectDevice(address);
                     if (device != null) {
                         device.setActiveDisConnect(true);
@@ -930,34 +927,26 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     MyBleService.getInstance().disConnectDevice(address);
                     updateBleView(View.VISIBLE, View.GONE);
                     break;
-                case BLUTOOTH_ON:
-                    Logd(TAG, "手机蓝牙开启");
-                    CommonKit.showOkShort(context, "手机蓝牙开启");
+                case BLUTOOTH_ON://手机蓝牙开启
                     scanLeDevice();
                     break;
                 case ACTION_LOCK_OPEN_SUCCED:
                     if (b[1] == (byte) 0x01) {
                         CommonKit.showOkShort(context, "开锁成功");
+                        MyBleService.getInstance().insertReceiveData(address, "开锁成功");
                     } else {
                         CommonKit.showOkShort(context, "开锁失败");
+                        MyBleService.getInstance().insertReceiveData(address, "开锁失败");
                     }
                     break;
                 case ACTION_LOCK_STARTS:
                     if (b.length == 1) {
                         if (b[0] == (byte) 0x01) {
                             tv_status.setText("已打开");
-                            //CommonKit.showOkShort(context, "锁已打开");
+                            MyBleService.getInstance().insertReceiveData(address, "锁已打开");
                         } else {
                             tv_status.setText("已关闭");
-                            //CommonKit.showOkShort(context, "锁已关闭l");
-                        }
-                    } else if (b.length > 1) {
-                        if (b[1] == (byte) 0x01) {
-                            tv_status.setText("已打开");
-                            //CommonKit.showOkShort(context, "锁已打开");
-                        } else {
-                            tv_status.setText("已关闭");
-                            //CommonKit.showOkShort(context, "锁已关闭l");
+                            MyBleService.getInstance().insertReceiveData(address, "锁已关闭");
                         }
                     }
                     break;
@@ -965,10 +954,10 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     if (b.length == 1) {
                         if (b[0] == (byte) 0x01) {
                             tv_boxStarts.setText("已打开");
-                            //CommonKit.showOkShort(context, "锁已打开");
+                            MyBleService.getInstance().insertReceiveData(address, "箱子打开");
                         } else {
                             tv_boxStarts.setText("已关闭");
-                            //CommonKit.showOkShort(context, "锁已关闭l");
+                            MyBleService.getInstance().insertReceiveData(address, "箱子关闭");
                         }
                     }
                     break;

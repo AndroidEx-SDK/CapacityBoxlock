@@ -109,7 +109,7 @@ public class MyBleService extends BleService {
      * @param longTime
      */
     @Override
-    protected void insertLocData(String address, LocationModules modules, long longTime) {
+    public void insertLocData(String address, LocationModules modules, long longTime) {
         Note note = new Note();
         note.setAddress(address);
         note.setLat(modules.getLat());
@@ -136,14 +136,13 @@ public class MyBleService extends BleService {
      *
      * @param address
      * @param content
-     * @param time
      */
     @Override
-    protected void insertSendDB(String address, String content, long time) {
+    public void insertSendDB(String address, String content) {
         String uuid = getUUID(address);
         RLog.d("chat 111: " + uuid);
         if (chatRecordDao != null) {
-            DbUtil.insertSendDB(chatRecordDao, address, uuid, content, time);
+            DbUtil.insertSendDB(chatRecordDao, address, uuid, content);
         }
     }
 
@@ -152,14 +151,13 @@ public class MyBleService extends BleService {
      *
      * @param address
      * @param content
-     * @param time
      */
     @Override
-    protected void insertReceiveData(String address, String content, long time) {
+    public void insertReceiveData(String address, String content) {
         String uuid = getUUID(address);
         RLog.d("chat 222 : " + uuid);
         if (chatRecordDao != null) {
-            DbUtil.insertReceiveData(chatRecordDao, address, uuid, content, time);
+            DbUtil.insertReceiveData(chatRecordDao, address, uuid, content);
         }
     }
 

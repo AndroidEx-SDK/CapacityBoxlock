@@ -3,6 +3,8 @@ package com.androidex.capbox.db;
 import com.androidex.capbox.utils.CalendarUtil;
 import com.androidex.capbox.utils.RLog;
 
+import java.util.Date;
+
 import static com.androidex.capbox.utils.Constants.VISE_COMMAND_TYPE_TEXT;
 
 /**
@@ -18,9 +20,9 @@ public class DbUtil {
      * @param address
      * @param uuid
      * @param content
-     * @param time
      */
-    public static void insertSendDB(ChatRecordDao chatRecordDao, String address, String uuid, String content, long time) {
+    public static void insertSendDB(ChatRecordDao chatRecordDao, String address, String uuid, String content) {
+
         ChatRecord chatRecord = new ChatRecord();
         chatRecord.setAddress(address)
                 .setIsRead("1")
@@ -29,7 +31,7 @@ public class DbUtil {
                 .setMsgContent(content)
                 .setNickName(CalendarUtil.getName(address))
                 .setMsgType(VISE_COMMAND_TYPE_TEXT)
-                .setTime(time)
+                .setTime(new Date().getTime())
                 .setUuid(uuid);
         RLog.d("msg 发送的数据 = " + chatRecord.toString());
         chatRecordDao.insert(chatRecord);
@@ -42,9 +44,8 @@ public class DbUtil {
      * @param address
      * @param uuid
      * @param content
-     * @param time
      */
-    public static void insertReceiveData(ChatRecordDao chatRecordDao, String address, String uuid, String content, long time) {
+    public static void insertReceiveData(ChatRecordDao chatRecordDao, String address, String uuid, String content) {
         ChatRecord chatRecord = new ChatRecord();
         chatRecord.setAddress(address)
                 .setIsRead("1")
@@ -53,7 +54,7 @@ public class DbUtil {
                 .setMsgContent(content)
                 .setNickName(CalendarUtil.getName(address))
                 .setMsgType(VISE_COMMAND_TYPE_TEXT)
-                .setTime(time)
+                .setTime(new Date().getTime())
                 .setUuid(uuid);
         RLog.d("msg 接收到的数据 = " + chatRecord.toString());
         chatRecordDao.insert(chatRecord);
