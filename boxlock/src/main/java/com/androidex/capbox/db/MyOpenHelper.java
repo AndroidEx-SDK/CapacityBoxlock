@@ -30,5 +30,12 @@ public class MyOpenHelper extends DaoMaster.DevOpenHelper {
     @Override
     public void onUpgrade(Database db, int oldVersion, int newVersion) {
         super.onUpgrade(db, oldVersion, newVersion);
+        switch (oldVersion) {
+            case 5:
+                //db.execSQL("alter table CHAT_RECORD drop column category_id ");   // 判断版本号.如果是老版本, 走upgrade逻辑,创建新的表
+            default:
+
+                break;
+        }
     }
 }
