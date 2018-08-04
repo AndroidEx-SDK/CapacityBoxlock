@@ -192,12 +192,12 @@ public class AddDeviceActivity extends BaseActivity {
                             RLog.d("断开连接");
                             mDeviceListAdapter.setTextHint(-1, "");//刷新列表的提醒显示
                             device.setActiveDisConnect(true);
-                            MyBleService.get().disConnectDevice(mDeviceListAdapter.getDevice(position).getAddress());
+                            MyBleService.get().disConnectionDeviceShort(mDeviceListAdapter.getDevice(position).getAddress());
                         } else {
                             RLog.d("开始连接");
                             stopScanLe();
                             showProgress(getResources().getString(R.string.device_connect));
-                            MyBleService.get().connectionDevice(context, mDeviceListAdapter.getDevice(position).getAddress());
+                            MyBleService.get().connectionDeviceShort(context, mDeviceListAdapter.getDevice(position).getAddress());
                         }
                         break;
                     default:
@@ -366,7 +366,7 @@ public class AddDeviceActivity extends BaseActivity {
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            MyBleService.getInstance().disConnectDevice(address);
+                                            MyBleService.getInstance().disConnectionDeviceShort(address);
                                             disProgress();
                                             CommonKit.showErrorShort(context, "绑定超时");
                                             stopGetUUID();
@@ -411,7 +411,7 @@ public class AddDeviceActivity extends BaseActivity {
                                 break;
                             case (byte) 0x02://已被绑定
                                 disProgress();
-                                MyBleService.getInstance().disConnectDevice(address);
+                                MyBleService.getInstance().disConnectionDeviceShort(address);
                                 byte[] epcBytes = new byte[5];
                                 System.arraycopy(b, 2, epcBytes, 0, 5);
                                 String mobile = Byte2HexUtil.byte2Hex(epcBytes);
@@ -427,7 +427,7 @@ public class AddDeviceActivity extends BaseActivity {
                                 break;
                             case (byte) 0x04:
                                 disProgress();
-                                MyBleService.getInstance().disConnectDevice(address);
+                                MyBleService.getInstance().disConnectionDeviceShort(address);
                                 CommonKit.showErrorShort(context, "连接超时");
                                 break;
                             default:
@@ -438,7 +438,7 @@ public class AddDeviceActivity extends BaseActivity {
                         }
                     } else {
                         disProgress();
-                        MyBleService.getInstance().disConnectDevice(address);
+                        MyBleService.getInstance().disConnectionDeviceShort(address);
                         CommonKit.showErrorShort(context, "出现未知错误");
                     }
                     break;

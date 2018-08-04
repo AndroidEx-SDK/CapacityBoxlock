@@ -33,7 +33,6 @@ public class DbUtil {
                 .setUuid(uuid);
         RLog.d("msg 发送的数据 = " + chatRecord.toString());
         chatRecordDao.insert(chatRecord);
-
     }
 
     /**
