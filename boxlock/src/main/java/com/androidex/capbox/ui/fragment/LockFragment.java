@@ -940,21 +940,19 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     }
                     break;
                 case ACTION_LOCK_STARTS:
-                    if (b[1] == (byte) 0x00) {
-                        tv_status.setText("已打开");
-                        MyBleService.getInstance().insertReceiveData(address, "锁已打开");
+                    if (b.length >= 2) {
+                        tv_status.setText(b[1] == (byte) 0x00 ? "已打开" : "已关闭");
+                        MyBleService.getInstance().insertReceiveData(address, b[1] == (byte) 0x00 ? "锁已打开" : "锁已关闭");
                     } else {
-                        tv_status.setText("已关闭");
-                        MyBleService.getInstance().insertReceiveData(address, "锁已关闭");
+                        tv_status.setText("未知");
                     }
                     break;
                 case ACTION_BOX_STARTS:
-                    if (b[1] == (byte) 0x00) {
-                        tv_boxStarts.setText("已打开");
-                        MyBleService.getInstance().insertReceiveData(address, "箱子打开");
+                    if (b.length >= 2) {
+                        tv_boxStarts.setText(b[1] == (byte) 0x00 ? "已打开" : "已关闭");
+                        MyBleService.getInstance().insertReceiveData(address, b[1] == (byte) 0x00 ? "箱子打开" : "箱子关闭");
                     } else {
-                        tv_boxStarts.setText("已关闭");
-                        MyBleService.getInstance().insertReceiveData(address, "箱子关闭");
+                        tv_boxStarts.setText("未知");
                     }
                     break;
                 case BLE_CONN_RSSI_SUCCED://获取到信号强度值
@@ -966,9 +964,9 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     current_hum.setText(intent.getStringExtra(BLECONSTANTS_HUM) != null ? intent.getStringExtra(BLECONSTANTS_HUM) : "");
                     tv_electric_quantity.setText(intent.getStringExtra(BLECONSTANTS_ELECTRIC_QUANTITY) != null ? intent.getStringExtra(BLECONSTANTS_ELECTRIC_QUANTITY) : "");
                     break;
-
                 case ACTION_END_TAST://结束携行押运
                     Log.e(TAG, "结束携行押运");
+                    if (b.length < 2) return;
                     switch (b[2]) {
                         case (byte) 0x00://成功
                             endTask();

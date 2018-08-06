@@ -12,11 +12,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.boxlib.utils.Byte2HexUtil;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
-import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.utils.CommonKit;
 import com.androidex.capbox.utils.FingerCacheUtil;
@@ -33,9 +31,12 @@ import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_SUCCESS_ALLCONNECTED;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_ADDRESS;
 import static com.androidex.boxlib.utils.BleConstants.BLECONSTANTS.BLECONSTANTS_DATA;
-import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_FINGER_BECOME;
-import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_FINGER_CARRY;
-import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_FINGER_POSSESSOR;
+import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_FINGER_CARRY1_BECOME;
+import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_FINGER_CARRY1_OPEN;
+import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_FINGER_CARRY2_BECOME;
+import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_FINGER_CARRY2_OPEN;
+import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_FINGER_OWNER_BECOME;
+import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_FINGER_OWNER_OPEN;
 import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
 
 /**
@@ -211,12 +212,18 @@ public class FingerEnterActivity extends BaseActivity {
      * 0x8601			指定模板无效
      */
     private void setFinger() {
-        if (code == REQUESTCODE_FINGER_POSSESSOR) {
-            MyBleService.getInstance().setFinger(address, 11);
-        } else if (code == REQUESTCODE_FINGER_CARRY) {
-            MyBleService.getInstance().setFinger(address, 12);
-        } else if (code == REQUESTCODE_FINGER_BECOME) {
-            MyBleService.getInstance().setFinger(address, 13);
+        if (code == REQUESTCODE_FINGER_OWNER_OPEN) {
+            MyBleService.getInstance().setFinger(address, 01);
+        } else if (code == REQUESTCODE_FINGER_OWNER_BECOME) {
+            MyBleService.getInstance().setFinger(address, 02);
+        } else if (code == REQUESTCODE_FINGER_CARRY1_OPEN) {
+            MyBleService.getInstance().setFinger(address, 03);
+        } else if (code == REQUESTCODE_FINGER_CARRY1_BECOME) {
+            MyBleService.getInstance().setFinger(address, 04);
+        } else if (code == REQUESTCODE_FINGER_CARRY2_OPEN) {
+            MyBleService.getInstance().setFinger(address, 05);
+        } else if (code == REQUESTCODE_FINGER_CARRY2_BECOME) {
+            MyBleService.getInstance().setFinger(address, 06);
         }
     }
 

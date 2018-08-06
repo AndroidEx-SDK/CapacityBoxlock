@@ -134,15 +134,18 @@ public class Constants extends BleConstants {
         public static final int REQUESTCODE_SET_LOCK = 0x0003;//开锁设置，
         public static final int REQUESTCODE_SET_BOX = 0x0004;//箱子设置，昵称设置
         public static final int REQUESTCODE_OPEN_MONITOR = 0x0005;//从配置页跳转到监控页
-        public static final int REQUESTCODE_FINGER_POSSESSOR = 0x0006;//录入所有人指纹
-        public static final int REQUESTCODE_FINGER_BECOME = 0x0007;//录入无线静默指纹
-        public static final int REQUESTCODE_FINGER_CARRY = 0x0008;//录入携行人指纹
-        public static final int REQUESTCODE_FINGER_SETTING = 0x0009;//指纹设置
-        public static final int REQUESTCODE_TEMP_SETTING = 0x000A;//最高最低温湿度设置
-        public static final int CAMERA_PERMISSIONS_REQUEST_CODE = 0x03;//请求相机权限
-        public static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0x04;//请求SD卡权限
+        public static final int REQUESTCODE_FINGER_OWNER_OPEN = 0x0006;//录入所有人开锁指纹
+        public static final int REQUESTCODE_FINGER_OWNER_BECOME = 0x0007;//录入所有人静默指纹
+        public static final int REQUESTCODE_FINGER_CARRY1_OPEN = 0x0008;//录入携行人1开锁指纹
+        public static final int REQUESTCODE_FINGER_CARRY1_BECOME = 0x0009;//录入携行人1静默指纹
+        public static final int REQUESTCODE_FINGER_CARRY2_OPEN = 0x000A;//录入携行人2开锁指纹
+        public static final int REQUESTCODE_FINGER_CARRY2_BECOME = 0x000B;//录入携行人2静默指纹
+        public static final int REQUESTCODE_FINGER_SETTING = 0x000C;//指纹设置
+        public static final int REQUESTCODE_TEMP_SETTING = 0x000D;//最高最低温湿度设置
+        public static final int REQUESTCODE_ADD_DEBUG_DEVICE = 0x000E;//添加调试设备
 
-        public static final int REQUESTCODE_ADD_DEBUG_DEVICE = 0x000A;//添加调试设备
+        public static final int CAMERA_PERMISSIONS_REQUEST_CODE = 0x0010;//请求相机权限
+        public static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0x0011;//请求SD卡权限
     }
 
     public static class baiduMap{
