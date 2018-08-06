@@ -940,25 +940,21 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     }
                     break;
                 case ACTION_LOCK_STARTS:
-                    if (b.length == 1) {
-                        if (b[0] == (byte) 0x01) {
-                            tv_status.setText("已打开");
-                            MyBleService.getInstance().insertReceiveData(address, "锁已打开");
-                        } else {
-                            tv_status.setText("已关闭");
-                            MyBleService.getInstance().insertReceiveData(address, "锁已关闭");
-                        }
+                    if (b[1] == (byte) 0x00) {
+                        tv_status.setText("已打开");
+                        MyBleService.getInstance().insertReceiveData(address, "锁已打开");
+                    } else {
+                        tv_status.setText("已关闭");
+                        MyBleService.getInstance().insertReceiveData(address, "锁已关闭");
                     }
                     break;
                 case ACTION_BOX_STARTS:
-                    if (b.length == 1) {
-                        if (b[0] == (byte) 0x01) {
-                            tv_boxStarts.setText("已打开");
-                            MyBleService.getInstance().insertReceiveData(address, "箱子打开");
-                        } else {
-                            tv_boxStarts.setText("已关闭");
-                            MyBleService.getInstance().insertReceiveData(address, "箱子关闭");
-                        }
+                    if (b[1] == (byte) 0x00) {
+                        tv_boxStarts.setText("已打开");
+                        MyBleService.getInstance().insertReceiveData(address, "箱子打开");
+                    } else {
+                        tv_boxStarts.setText("已关闭");
+                        MyBleService.getInstance().insertReceiveData(address, "箱子关闭");
                     }
                     break;
                 case BLE_CONN_RSSI_SUCCED://获取到信号强度值
