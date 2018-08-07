@@ -21,6 +21,7 @@ import com.androidex.capbox.utils.Dialog;
 import com.androidex.capbox.utils.DialogUtils;
 import com.androidex.capbox.utils.RLog;
 import com.androidex.capbox.utils.SystemUtil;
+import com.androidex.capbox.utils.UserUtil;
 
 import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
@@ -209,14 +210,7 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
     }
 
     public String getUserName() {
-        String username = SharedPreTool.getInstance(context).getStringData(SharedPreTool.PHONE, null);
-        if (username == null) {
-            CommonKit.showErrorShort(context, "账号未登录");
-            SharedPreTool.getInstance(context).setBoolData(LOGIN_STATUS, false);
-            LoginActivity.lauch(context);
-            return "";
-        }
-        return username;
+        return UserUtil.getUserName(context);
     }
 
     public void setUsername(String username) {

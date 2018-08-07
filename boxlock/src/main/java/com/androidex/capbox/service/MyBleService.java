@@ -25,6 +25,7 @@ import com.androidex.capbox.ui.activity.LockScreenActivity;
 import com.androidex.capbox.utils.RLog;
 import com.androidex.capbox.utils.SystemUtil;
 import com.androidex.boxlib.modules.LocationModules;
+import com.androidex.capbox.utils.UserUtil;
 
 import org.greenrobot.greendao.DbUtils;
 import org.greenrobot.greendao.query.DeleteQuery;
@@ -159,6 +160,11 @@ public class MyBleService extends BleService {
         if (chatRecordDao != null) {
             DbUtil.insertReceiveData(chatRecordDao, address, uuid, content);
         }
+    }
+
+    @Override
+    protected String getUser() {
+        return Long.toHexString(Long.parseLong(UserUtil.getUserName(getContext()).trim()));
     }
 
     @Override
@@ -423,7 +429,6 @@ public class MyBleService extends BleService {
             default:
                 break;
         }
-
     }
 
     /**
