@@ -931,7 +931,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     scanLeDevice();
                     break;
                 case ACTION_LOCK_OPEN_SUCCED:
-                    if (b[1] == (byte) 0x01) {
+                    if (b.length >= 2 && b[1] == (byte) 0x01) {
                         CommonKit.showOkShort(context, "开锁成功");
                         MyBleService.getInstance().insertReceiveData(address, "开锁成功");
                     } else {
