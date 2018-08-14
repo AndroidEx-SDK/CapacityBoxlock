@@ -378,6 +378,7 @@ public class AddDeviceActivity extends BaseActivity {
                     }
                     break;
                 case ACTION_UUID: {
+                    stopGetUUID();
                     String hexStr = Long.toHexString(Long.parseLong(getUserName().trim()));
                     if (hexStr.length() >= 9) {
                         byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);

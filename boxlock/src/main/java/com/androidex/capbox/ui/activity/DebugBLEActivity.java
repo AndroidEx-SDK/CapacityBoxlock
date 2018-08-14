@@ -356,7 +356,7 @@ public class DebugBLEActivity extends BaseActivity {
             return;
         }
         if (getSendData() == null) return;
-        MyBleService.get().sendData(address, Byte2HexUtil.hex2Bytes(getSendData()), UUID_BIND);
+       // MyBleService.get().sendData(address, Byte2HexUtil.hex2Bytes(getSendData()), UUID_BIND);
     }
 
     @NonNull
