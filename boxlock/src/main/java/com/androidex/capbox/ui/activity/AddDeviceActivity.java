@@ -404,7 +404,12 @@ public class AddDeviceActivity extends BaseActivity {
                     if (uuid != null && uuid.length() >= 32) {
                         byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
                         isBind = true;
-                        switch (b[1]) {
+                        switch (b[2]) {
+                            case (byte) 0x00:
+                                disProgress();
+                                MyBleService.getInstance().disConnectDevice(address);
+                                CommonKit.showErrorShort(context, "绑定失败");
+                                break;
                             case (byte) 0x01:
                                 showProgress("正在绑定");
                                 //CommonKit.showErrorShort(context, "绑定成功");
@@ -434,7 +439,7 @@ public class AddDeviceActivity extends BaseActivity {
                             default:
                                 disProgress();
                                 MyBleService.getInstance().disConnectDevice(address);
-                                CommonKit.showErrorShort(context, "出现未知错误");
+                                CommonKit.showErrorShort(context, "绑定失败");
                                 break;
                         }
                     } else {

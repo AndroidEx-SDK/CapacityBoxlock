@@ -365,7 +365,7 @@ public class BoxListFragment extends BaseFragment {
                     inUnbind = true;
                     MyBleService.getInstance().disConnectDevice(address);
                     byte[] b = intent.getByteArrayExtra(BLECONSTANTS_DATA);
-                    switch (b[1]) {
+                    switch (b[2]) {
                         case (byte) 0x01:
                             if (uuid.length() >= 32) {
                                 RLog.d("收到解除绑定成功指令");
