@@ -208,18 +208,27 @@ public class LockFragment extends BaseFragment implements OnClickListener {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(300);
-                    MyBleService.getInstance().getTempEnergy(address);
+                    for (int i = 0; i < 4; i++) {
+                        Thread.sleep(300);
+                        switch (i) {
+                            case 0:
+                                MyBleService.getInstance().getTempEnergy(address);//获取温度信息
+                                break;
+                            case 1:
+                                MyBleService.getInstance().getLocation(address);//获取定位信息
+                                break;
+                            case 2:
+                                MyBleService.getInstance().getLockStatus(address);//获取锁状态
+                                break;
+                            case 3:
+                                MyBleService.getInstance().getBoxStatus(address);//获取箱状态
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                } finally {
-                    try {
-                        Thread.sleep(200);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } finally {
-                        MyBleService.getInstance().getLocation(address);
-                    }
                 }
             }
         }).start();
@@ -910,7 +919,6 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     updateBleView(View.GONE, View.VISIBLE);
                     initTemp();//获取温湿度信息
                     break;
-
                 case BLE_CONN_DIS://断开连接
                     Loge(TAG, "断开连接");
                     updateBleView(View.VISIBLE, View.GONE);
@@ -932,17 +940,20 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     break;
                 case ACTION_LOCK_OPEN_SUCCED:
                     if (b.length >= 2 && b[1] == (byte) 0x01) {
-                        CommonKit.showOkShort(context, "开锁成功");
-                        MyBleService.getInstance().insertReceiveData(address, "开锁成功");
-                    } else {
                         CommonKit.showOkShort(context, "开锁失败");
                         MyBleService.getInstance().insertReceiveData(address, "开锁失败");
+                    } else {
+                        CommonKit.showOkShort(context, "开锁成功");
+                        MyBleService.getInstance().insertReceiveData(address, "开锁成功");
                     }
                     break;
                 case ACTION_LOCK_STARTS:
                     if (b.length >= 2) {
                         tv_status.setText(b[1] == (byte) 0x00 ? "已打开" : "已关闭");
                         MyBleService.getInstance().insertReceiveData(address, b[1] == (byte) 0x00 ? "锁已打开" : "锁已关闭");
+                    } else if (b.length > 0) {
+                        tv_status.setText(b[0] == (byte) 0x00 ? "已关闭" : "已打开");
+                        MyBleService.getInstance().insertReceiveData(address, b[0] == (byte) 0x00 ? "锁是关着的" : "锁是开着的");
                     } else {
                         tv_status.setText("未知");
                     }
@@ -1100,19 +1111,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         } else {
             CommonKit.showMsgShort(context, "设备已连接");
             updateBleView(View.GONE, View.VISIBLE);
-            MyBleService.getInstance().getLockStatus(address);
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(300);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } finally {
-                        MyBleService.getInstance().getBoxStatus(address);
-                    }
-                }
-            }).start();
+            initTemp();
         }
     }
 
