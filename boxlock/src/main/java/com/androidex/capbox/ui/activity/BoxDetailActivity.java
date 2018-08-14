@@ -837,6 +837,10 @@ public class BoxDetailActivity extends BaseActivity {
                             tv_startCarryScort.setText("结束携行押运");
                             tv_boxConfig.setEnabled(false);
                             getBoxDetail();
+                            ServiceBean connectDevice = MyBleService.getInstance().getConnectDevice(address);
+                            if (connectDevice != null) {
+                                connectDevice.setStartGetRssi(address);
+                            }
                             break;
                         default:
                             if (model.info != null) {
@@ -874,6 +878,10 @@ public class BoxDetailActivity extends BaseActivity {
                             CommonKit.showOkShort(context, "结束成功");
                             tv_startCarryScort.setText("启动携行押运");
                             tv_boxConfig.setEnabled(true);
+                            ServiceBean connectDevice = MyBleService.getInstance().getConnectDevice(address);
+                            if (connectDevice != null) {
+                                connectDevice.setStopGetRssi();
+                            }
                             break;
                         default:
                             if (model.info != null) {
