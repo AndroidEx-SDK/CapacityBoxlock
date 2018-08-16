@@ -8,14 +8,12 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -26,7 +24,6 @@ import com.androidex.capbox.base.BaseFragment;
 import com.androidex.capbox.data.cache.SharedPreTool;
 import com.androidex.capbox.data.net.NetApi;
 import com.androidex.capbox.data.net.base.ResultCallBack;
-import com.androidex.capbox.db.DbUtil;
 import com.androidex.capbox.module.ActionItem;
 import com.androidex.capbox.module.BaiduModel;
 import com.androidex.capbox.module.BaseModel;
@@ -34,7 +31,6 @@ import com.androidex.capbox.module.BoxDeviceModel;
 import com.androidex.capbox.module.CheckVersionModel;
 import com.androidex.capbox.module.DeviceModel;
 import com.androidex.capbox.module.LocationModel;
-import com.androidex.capbox.service.DfuService;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.activity.BoxDetailActivity;
 import com.androidex.capbox.ui.activity.ConnectDeviceListActivity;
@@ -64,7 +60,6 @@ import java.util.TimerTask;
 
 import butterknife.Bind;
 import no.nordicsemi.android.dfu.DfuProgressListener;
-import no.nordicsemi.android.dfu.DfuServiceInitiator;
 import no.nordicsemi.android.dfu.DfuServiceListenerHelper;
 import okhttp3.Headers;
 import okhttp3.Request;
@@ -72,15 +67,17 @@ import okhttp3.Request;
 import static com.androidex.boxlib.cache.SharedPreTool.HIGHEST_TEMP;
 import static com.androidex.boxlib.cache.SharedPreTool.IS_BIND_NUM;
 import static com.androidex.boxlib.cache.SharedPreTool.LOWEST_TEMP;
+import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BATTERY;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BOX_FIRMWARE_VER;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BOX_HARDWARE_VER;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BOX_POLICE_CHANGE;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BOX_STARTS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_BOX_STARTS_CHANGE;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_END_TAST;
-import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_HEART;
+import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_HUMIDITY;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_OPEN_SUCCED;
 import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_LOCK_STARTS;
+import static com.androidex.boxlib.utils.BleConstants.BLE.ACTION_TEMPERATURE;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_DIS;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_FAIL;
 import static com.androidex.boxlib.utils.BleConstants.BLE.BLE_CONN_RSSI_FAIL;
@@ -195,43 +192,13 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         iniRefreshView();
         initMap();
         initBleBroadCast();
-        if (MyBleService.getInstance().getConnectDevice(address) != null) {
-            initTemp();
-        }
     }
 
     /**
      * 获取温湿度和定位信息
      */
-    private void initTemp() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    for (int i = 0; i < 4; i++) {
-                        Thread.sleep(300);
-                        switch (i) {
-                            case 0:
-                                MyBleService.getInstance().getTempEnergy(address);//获取温度信息
-                                break;
-                            case 1:
-                                MyBleService.getInstance().getLocation(address);//获取定位信息
-                                break;
-                            case 2:
-                                MyBleService.getInstance().getLockStatus(address);//获取锁状态
-                                break;
-                            case 3:
-                                MyBleService.getInstance().getBoxStatus(address);//获取箱状态
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+    private void initBoxInfo() {
+        MyBleService.getInstance().startGetBoxInfo(address);// 循环读取箱体的温度湿度电量
     }
 
     /**
@@ -247,7 +214,9 @@ public class LockFragment extends BaseFragment implements OnClickListener {
             intentFilter.addAction(ACTION_LOCK_STARTS);//锁状态
             intentFilter.addAction(BLE_CONN_RSSI_SUCCED);
             intentFilter.addAction(BLE_CONN_RSSI_FAIL);
-            intentFilter.addAction(ACTION_HEART);//收到心跳返回
+            intentFilter.addAction(ACTION_TEMPERATURE);//温度
+            intentFilter.addAction(ACTION_HUMIDITY);//湿度
+            intentFilter.addAction(ACTION_BATTERY);//电量
             intentFilter.addAction(ACTION_END_TAST);//结束携行押运
             intentFilter.addAction(ACTION_LOCK_OPEN_SUCCED);//开锁成功
             intentFilter.addAction(BLUTOOTH_OFF);//手机蓝牙关闭
@@ -917,7 +886,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     isConnect = true;
                     disProgress();
                     updateBleView(View.GONE, View.VISIBLE);
-                    initTemp();//获取温湿度信息
+                    initBoxInfo();//获取温湿度信息
                     break;
                 case BLE_CONN_DIS://断开连接
                     Loge(TAG, "断开连接");
@@ -948,7 +917,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     }
                     break;
                 case ACTION_LOCK_STARTS:
-                    if (b.length >= 2) {
+                    if (b!=null&&b.length >= 2) {
                         tv_status.setText(b[1] == (byte) 0x00 ? "已打开" : "已关闭");
                         MyBleService.getInstance().insertReceiveData(address, b[1] == (byte) 0x00 ? "锁已打开" : "锁已关闭");
                     } else if (b.length > 0) {
@@ -959,7 +928,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     }
                     break;
                 case ACTION_BOX_STARTS:
-                    if (b.length >= 2) {
+                    if (b!=null&&b.length >= 2) {
                         tv_boxStarts.setText(b[1] == (byte) 0x00 ? "已打开" : "已关闭");
                         MyBleService.getInstance().insertReceiveData(address, b[1] == (byte) 0x00 ? "箱子打开" : "箱子关闭");
                     } else {
@@ -970,9 +939,17 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     break;
                 case BLE_CONN_RSSI_FAIL://获取信号强度失败
                     break;
-                case ACTION_HEART://温度、湿度、电量
-                    current_temp.setText(intent.getStringExtra(BLECONSTANTS_TEMP) != null ? intent.getStringExtra(BLECONSTANTS_TEMP) : "");
+                case ACTION_TEMPERATURE://温度
+                    if (b!=null&&b.length>=2){
+                        current_temp.setText(intent.getStringExtra(BLECONSTANTS_TEMP) != null ? intent.getStringExtra(BLECONSTANTS_TEMP) : "");
+                    }else {
+
+                    }
+                    break;
+                case ACTION_HUMIDITY://湿度
                     current_hum.setText(intent.getStringExtra(BLECONSTANTS_HUM) != null ? intent.getStringExtra(BLECONSTANTS_HUM) : "");
+                    break;
+                case ACTION_BATTERY://电量
                     tv_electric_quantity.setText(intent.getStringExtra(BLECONSTANTS_ELECTRIC_QUANTITY) != null ? intent.getStringExtra(BLECONSTANTS_ELECTRIC_QUANTITY) : "");
                     break;
                 case ACTION_END_TAST://结束携行押运
@@ -1111,7 +1088,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         } else {
             CommonKit.showMsgShort(context, "设备已连接");
             updateBleView(View.GONE, View.VISIBLE);
-            initTemp();
+            initBoxInfo();
         }
     }
 
