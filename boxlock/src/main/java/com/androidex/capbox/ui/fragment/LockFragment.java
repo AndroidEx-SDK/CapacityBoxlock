@@ -55,6 +55,7 @@ import com.e.ble.scan.BLEScanCfg;
 import com.e.ble.scan.BLEScanListener;
 import com.e.ble.util.BLEError;
 
+import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -171,6 +172,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     private boolean isConnect = false;
     private boolean mReceiverTag = false;   //广播接受者标识
     BluetoothDevice bluetoothDevice;
+    DecimalFormat df = new DecimalFormat("#.00");
 
     @Override
     public void initData() {
@@ -212,8 +214,8 @@ public class LockFragment extends BaseFragment implements OnClickListener {
             intentFilter.addAction(BLE_CONN_FAIL);
             intentFilter.addAction(BLE_CONN_DIS);
             intentFilter.addAction(ACTION_LOCK_STARTS);//锁状态
-            intentFilter.addAction(BLE_CONN_RSSI_SUCCED);
-            intentFilter.addAction(BLE_CONN_RSSI_FAIL);
+            intentFilter.addAction(BLE_CONN_RSSI_SUCCED);//获取信号强度成功
+            intentFilter.addAction(BLE_CONN_RSSI_FAIL);//获取信号强度失败
             intentFilter.addAction(ACTION_TEMPERATURE);//温度
             intentFilter.addAction(ACTION_HUMIDITY);//湿度
             intentFilter.addAction(ACTION_BATTERY);//电量
@@ -941,16 +943,40 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     break;
                 case ACTION_TEMPERATURE://温度
                     if (b!=null&&b.length>=2){
-                        current_temp.setText(intent.getStringExtra(BLECONSTANTS_TEMP) != null ? intent.getStringExtra(BLECONSTANTS_TEMP) : "");
+                        String s = new StringBuilder(1).append(String.format("%02X", b[0])).toString();
+                        String s1 = new StringBuilder(1).append(String.format("%02X", b[1])).toString();
+                        Double temp = Double.valueOf(Integer.parseInt(s + s1, 16)) / 100 - 100;//温度
+                        current_temp.setText(df.format(temp) != null ? df.format(temp) : "");
                     }else {
-
+                        current_temp.setText("");
                     }
                     break;
                 case ACTION_HUMIDITY://湿度
-                    current_hum.setText(intent.getStringExtra(BLECONSTANTS_HUM) != null ? intent.getStringExtra(BLECONSTANTS_HUM) : "");
+                    if (b != null && b.length >= 1) {
+                        String s2 = new StringBuilder(1).append(String.format("%02X", b[0])).toString();
+                        int hum = 0;
+                        if (s2 != null) {
+                            hum = Integer.parseInt(s2, 16);
+                        }
+                        current_hum.setText(String.format("%d", hum) != null ? String.format("%d", hum) : "");
+                    } else {
+                        current_hum.setText("");
+                    }
                     break;
                 case ACTION_BATTERY://电量
-                    tv_electric_quantity.setText(intent.getStringExtra(BLECONSTANTS_ELECTRIC_QUANTITY) != null ? intent.getStringExtra(BLECONSTANTS_ELECTRIC_QUANTITY) : "");
+                    if (b != null && b.length >= 1) {
+                        String s3 = new StringBuilder(1).append(String.format("%02X", b[0])).toString();//电量
+                        if (s3 != null) {
+                            Double y = Integer.parseInt(s3, 16) * 1.0 / 2;
+                            if (y > 99.6) {
+                                y = 100.0;
+                            }
+                            String electric_quantity = String.valueOf(y);
+                            tv_electric_quantity.setText(electric_quantity != null ? electric_quantity : "");
+                        }
+                    } else {
+                        tv_electric_quantity.setText("");
+                    }
                     break;
                 case ACTION_END_TAST://结束携行押运
                     Log.e(TAG, "结束携行押运");
