@@ -139,4 +139,5 @@ dependencies {
     implementation 'net.zetetic:android-database-sqlcipher:3.5.7@aar'//数据库加密
     implementation files('libs/BaiduLBS_Android.jar')
     implementation files('libs/BaiduTraceSDK_v3_0_7.jar')
+    implementation 'com.squareup.picasso:picasso:2.5.2'
 }
