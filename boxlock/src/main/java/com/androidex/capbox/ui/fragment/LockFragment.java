@@ -200,7 +200,18 @@ public class LockFragment extends BaseFragment implements OnClickListener {
      * 获取温湿度和定位信息
      */
     private void initBoxInfo() {
-        MyBleService.getInstance().getTemperature(address);// 读取箱体的温度,读取到温度后会自动继续读取湿度、电量、锁状态、箱状态、定位
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(300);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally {
+                    MyBleService.getInstance().getTemperature(address);// 读取箱体的温度,读取到温度后会自动继续读取湿度、电量、锁状态、箱状态、定位
+                }
+            }
+        }).start();
     }
 
     /**
@@ -214,6 +225,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
             intentFilter.addAction(BLE_CONN_FAIL);
             intentFilter.addAction(BLE_CONN_DIS);
             intentFilter.addAction(ACTION_LOCK_STARTS);//锁状态
+            intentFilter.addAction(ACTION_BOX_STARTS);//箱状态
             intentFilter.addAction(BLE_CONN_RSSI_SUCCED);//获取信号强度成功
             intentFilter.addAction(BLE_CONN_RSSI_FAIL);//获取信号强度失败
             intentFilter.addAction(ACTION_TEMPERATURE);//温度
@@ -922,7 +934,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     if (b!=null&&b.length >= 2) {
                         tv_status.setText(b[1] == (byte) 0x00 ? "已打开" : "已关闭");
                         MyBleService.getInstance().insertReceiveData(address, b[1] == (byte) 0x00 ? "锁已打开" : "锁已关闭");
-                    } else if (b.length > 0) {
+                    } else if (b != null && b.length > 0) {
                         tv_status.setText(b[0] == (byte) 0x00 ? "已打开" : "已关闭");
                         MyBleService.getInstance().insertReceiveData(address, b[0] == (byte) 0x00 ? "锁是开着的" : "锁是关着的");
                     } else {
@@ -933,7 +945,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     if (b!=null&&b.length >= 2) {
                         tv_boxStarts.setText(b[1] == (byte) 0x00 ? "已打开" : "已关闭");
                         MyBleService.getInstance().insertReceiveData(address, b[1] == (byte) 0x00 ? "箱子打开" : "箱子关闭");
-                    } else if (b.length > 0) {
+                    } else if (b != null && b.length > 0) {
                         tv_boxStarts.setText(b[0] == (byte) 0x00 ? "已打开" : "已关闭");
                         MyBleService.getInstance().insertReceiveData(address, b[0] == (byte) 0x00 ? "箱子是开着的" : "箱子是关着的");
                     } else {
