@@ -35,7 +35,6 @@ import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.activity.BoxDetailActivity;
 import com.androidex.capbox.ui.activity.ConnectDeviceListActivity;
 import com.androidex.capbox.ui.activity.DebugBLEActivity;
-import com.androidex.capbox.ui.view.GrayScaleImageView;
 import com.androidex.capbox.ui.view.TitlePopup;
 import com.androidex.capbox.utils.BleUpdateUtil;
 import com.androidex.capbox.utils.CalendarUtil;
