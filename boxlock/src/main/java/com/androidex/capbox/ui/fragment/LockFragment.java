@@ -923,8 +923,8 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                         tv_status.setText(b[1] == (byte) 0x00 ? "已打开" : "已关闭");
                         MyBleService.getInstance().insertReceiveData(address, b[1] == (byte) 0x00 ? "锁已打开" : "锁已关闭");
                     } else if (b.length > 0) {
-                        tv_status.setText(b[0] == (byte) 0x00 ? "已关闭" : "已打开");
-                        MyBleService.getInstance().insertReceiveData(address, b[0] == (byte) 0x00 ? "锁是关着的" : "锁是开着的");
+                        tv_status.setText(b[0] == (byte) 0x00 ? "已打开" : "已关闭");
+                        MyBleService.getInstance().insertReceiveData(address, b[0] == (byte) 0x00 ? "锁是开着的" : "锁是关着的");
                     } else {
                         tv_status.setText("未知");
                     }
@@ -933,6 +933,9 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     if (b!=null&&b.length >= 2) {
                         tv_boxStarts.setText(b[1] == (byte) 0x00 ? "已打开" : "已关闭");
                         MyBleService.getInstance().insertReceiveData(address, b[1] == (byte) 0x00 ? "箱子打开" : "箱子关闭");
+                    } else if (b.length > 0) {
+                        tv_boxStarts.setText(b[0] == (byte) 0x00 ? "已打开" : "已关闭");
+                        MyBleService.getInstance().insertReceiveData(address, b[0] == (byte) 0x00 ? "箱子是开着的" : "箱子是关着的");
                     } else {
                         tv_boxStarts.setText("未知");
                     }
