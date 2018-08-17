@@ -200,7 +200,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
      * 获取温湿度和定位信息
      */
     private void initBoxInfo() {
-        MyBleService.getInstance().startGetBoxInfo(address);// 循环读取箱体的温度湿度电量
+        MyBleService.getInstance().getTemperature(address);// 读取箱体的温度,读取到温度后会自动继续读取湿度、电量、锁状态、箱状态、定位
     }
 
     /**
