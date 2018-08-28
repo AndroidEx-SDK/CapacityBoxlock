@@ -387,21 +387,21 @@
 
                             </LinearLayout>
 
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/marginPadding6">
+                            <!--<LinearLayout-->
+                                <!--android:layout_width="wrap_content"-->
+                                <!--android:layout_height="wrap_content"-->
+                                <!--android:layout_marginTop="@dimen/marginPadding6">-->
 
-                                <TextView
-                                    style="@style/fragment_lock_name"
-                                    android:text="充电状态：" />
+                                <!--<TextView-->
+                                    <!--style="@style/fragment_lock_name"-->
+                                    <!--android:text="充电状态：" />-->
 
-                                <TextView
-                                    android:id="@+id/tv_chargingState"
-                                    style="@style/fragment_lock_data"
-                                    android:text="@string/main_max_temp" />
+                                <!--<TextView-->
+                                    <!--android:id="@+id/tv_chargingState"-->
+                                    <!--style="@style/fragment_lock_data"-->
+                                    <!--android:text="@string/main_max_temp" />-->
 
-                            </LinearLayout>
+                            <!--</LinearLayout>-->
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
@@ -484,13 +484,21 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <com.androidex.capbox.ui.view.GrayScaleImageView
+                <!--<com.androidex.capbox.ui.view.GrayScaleImageView-->
+                    <!--android:id="@+id/iv_lock"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="center_horizontal"-->
+                    <!--android:layout_marginTop="@dimen/marginPadding20"-->
+                    <!--android:src="@mipmap/open_lock" />-->
+                <ImageView
                     android:id="@+id/iv_lock"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/marginPadding20"
-                    android:src="@mipmap/open_lock" />
+                    android:src="@mipmap/open_lock"
+                    android:background="@drawable/open_close_selector"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"

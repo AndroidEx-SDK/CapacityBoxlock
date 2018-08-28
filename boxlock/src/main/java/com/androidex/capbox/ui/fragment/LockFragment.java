@@ -1,22 +1,31 @@
 package com.androidex.capbox.ui.fragment;
 
+import android.Manifest;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.androidex.boxlib.modules.ServiceBean;
 import com.androidex.capbox.R;
@@ -35,6 +44,7 @@ import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.activity.BoxDetailActivity;
 import com.androidex.capbox.ui.activity.ConnectDeviceListActivity;
 import com.androidex.capbox.ui.activity.DebugBLEActivity;
+import com.androidex.capbox.ui.view.GrayScaleImageView;
 import com.androidex.capbox.ui.view.TitlePopup;
 import com.androidex.capbox.utils.BleUpdateUtil;
 import com.androidex.capbox.utils.CalendarUtil;
@@ -65,6 +75,7 @@ import no.nordicsemi.android.dfu.DfuServiceListenerHelper;
 import okhttp3.Headers;
 import okhttp3.Request;
 
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static com.androidex.boxlib.cache.SharedPreTool.HIGHEST_TEMP;
 import static com.androidex.boxlib.cache.SharedPreTool.IS_BIND_NUM;
 import static com.androidex.boxlib.cache.SharedPreTool.LOWEST_TEMP;
@@ -148,8 +159,8 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     TextView maxhum;
     @Bind(R.id.main_tv_minhum)
     TextView minhum;
-    @Bind(R.id.tv_chargingState)
-    TextView tv_chargingState;
+    //    @Bind(R.id.tv_chargingState)
+//    TextView tv_chargingState;
     @Bind(R.id.progressBar_dfu)
     ProgressBar mProgressBarOtaUpload;
     @Bind(R.id.swipeRefreshLayout)
@@ -173,6 +184,11 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     private boolean mReceiverTag = false;   //广播接受者标识
     BluetoothDevice bluetoothDevice;
     DecimalFormat df = new DecimalFormat("#.00");
+    private static final int BAIDU_READ_PHONE_STATE = 100;//定位权限请求
+    private static final int PRIVATE_CODE = 1315;//开启GPS权限
+    static final String[] LOCATIONGPS = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.READ_PHONE_STATE};
 
     @Override
     public void initData() {
@@ -285,7 +301,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
 
     private void initView() {
         tv_deviceMac.setText(address);
-        deviceName=CalendarUtil.getName(address);
+        deviceName = CalendarUtil.getName(address);
         name.setText(deviceName);
         if (address == null || address.equals("")) {
             tv_deviceMac.setText("FF:FF:FF:FF:FF:FF");
@@ -362,6 +378,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
 
             case R.id.iv_lock:
                 openLock();
+                Toast.makeText(getActivity(), "开锁", Toast.LENGTH_LONG).show();
                 break;
 
             case R.id.tv_boxConfig:
@@ -540,6 +557,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
     private void openLock() {
         if (MyBleService.getInstance().getConnectDevice(address) != null) {
             MyBleService.getInstance().openLock(address);
+            Log.e("open", "开锁msg：" + address);
         } else {
             CommonKit.showErrorShort(context, getResources().getString(R.string.setting_tv_ble_disconnect));
         }
@@ -713,7 +731,8 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                                     tv_longitude.setText(longitude);
                                     tv_elevation.setText(elevation);
                                     if (latitude.equals("0") && longitude.equals("0")) {
-                                        tv_address.setText("携行箱位置未知");
+//                                        tv_address.setText("携行箱位置未知");
+                                        showGPSContacts();
                                     } else {
                                         getBaiduLocation(latitude, longitude);
                                     }
@@ -931,7 +950,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     }
                     break;
                 case ACTION_LOCK_STARTS:
-                    if (b!=null&&b.length >= 2) {
+                    if (b != null && b.length >= 2) {
                         tv_status.setText(b[1] == (byte) 0x00 ? "已打开" : "已关闭");
                         MyBleService.getInstance().insertReceiveData(address, b[1] == (byte) 0x00 ? "锁已打开" : "锁已关闭");
                     } else if (b != null && b.length > 0) {
@@ -942,7 +961,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                     }
                     break;
                 case ACTION_BOX_STARTS:
-                    if (b!=null&&b.length >= 2) {
+                    if (b != null && b.length >= 2) {
                         tv_boxStarts.setText(b[1] == (byte) 0x00 ? "已打开" : "已关闭");
                         MyBleService.getInstance().insertReceiveData(address, b[1] == (byte) 0x00 ? "箱子打开" : "箱子关闭");
                     } else if (b != null && b.length > 0) {
@@ -957,12 +976,12 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                 case BLE_CONN_RSSI_FAIL://获取信号强度失败
                     break;
                 case ACTION_TEMPERATURE://温度
-                    if (b!=null&&b.length>=2){
+                    if (b != null && b.length >= 2) {
                         String s = new StringBuilder(1).append(String.format("%02X", b[0])).toString();
                         String s1 = new StringBuilder(1).append(String.format("%02X", b[1])).toString();
                         Double temp = Double.valueOf(Integer.parseInt(s + s1, 16)) / 100 - 100;//温度
                         current_temp.setText(df.format(temp) != null ? df.format(temp) : "");
-                    }else {
+                    } else {
                         current_temp.setText("");
                     }
                     break;
@@ -1053,15 +1072,15 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                         case (byte) 0x09:
 
                             break;
-                        case (byte) 0x0a:
-                            tv_chargingState.setText("正在充电");
-                            break;
-                        case (byte) 0x0b:
-                            tv_chargingState.setText("未充电");
-                            break;
-                        case (byte) 0x0c:
-                            tv_chargingState.setText("已充满");
-                            break;
+//                        case (byte) 0x0a:
+//                            tv_chargingState.setText("正在充电");
+//                            break;
+//                        case (byte) 0x0b:
+//                            tv_chargingState.setText("未充电");
+//                            break;
+//                        case (byte) 0x0c:
+//                            tv_chargingState.setText("已充满");
+//                            break;
                         default:
                             break;
                     }
@@ -1118,6 +1137,111 @@ public class LockFragment extends BaseFragment implements OnClickListener {
             //获取反向地理编码结果
         }
     };
+
+    /**
+     * 检测GPS、位置权限是否开启
+     */
+    public void showGPSContacts() {
+        LocationManager lm = (LocationManager) getActivity().getSystemService(getActivity().LOCATION_SERVICE);
+        boolean ok = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if (ok) {//开了定位服务
+            if (Build.VERSION.SDK_INT >= 23) { //判断是否为android6.0系统版本，如果是，需要动态添加权限
+                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PERMISSION_GRANTED) {// 没有权限，申请权限。
+                    ActivityCompat.requestPermissions(getActivity(), LOCATIONGPS,
+                            BAIDU_READ_PHONE_STATE);
+                } else {
+                    getLocation();//getLocation为定位方法
+                }
+            } else {
+                getLocation();//getLocation为定位方法
+            }
+        } else {
+            Toast.makeText(getActivity(), "系统检测到未开启GPS定位服务,请开启", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivityForResult(intent, PRIVATE_CODE);
+        }
+    }
+
+    /**
+     * 获取具体位置的经纬度
+     */
+    private void getLocation() {
+        // 获取位置管理服务
+        LocationManager locationManager;
+        String serviceName = Context.LOCATION_SERVICE;
+        locationManager = (LocationManager) getActivity().getSystemService(serviceName);
+        // 查找到服务信息
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE); // 高精度
+        criteria.setAltitudeRequired(false);
+        criteria.setBearingRequired(false);
+        criteria.setCostAllowed(true);
+        criteria.setPowerRequirement(Criteria.POWER_LOW); // 低功耗
+        String provider = locationManager.getBestProvider(criteria, true); // 获取GPS信息
+        /**这段代码不需要深究，是locationManager.getLastKnownLocation(provider)自动生成的，不加会出错**/
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location location = locationManager.getLastKnownLocation(provider); // 通过GPS获取位置
+        updateLocation(location);
+    }
+
+    /**
+     * 获取到当前位置的经纬度
+     *
+     * @param location
+     */
+    private void updateLocation(Location location) {
+        if (location != null) {
+            double latitude = location.getLatitude();
+            double longitude = location.getLongitude();
+            tv_address.setText("纬度：" + latitude + "\n经度：" + longitude);
+        } else {
+            tv_address.setText("无法获取到位置信息");
+        }
+    }
+
+    /**
+     * Android6.0申请权限的回调方法
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            // requestCode即所声明的权限获取码，在checkSelfPermission时传入
+            case BAIDU_READ_PHONE_STATE:
+                //如果用户取消，permissions可能为null.
+                if (grantResults[0] == PERMISSION_GRANTED && grantResults.length > 0) {  //有权限
+                    // 获取到权限，作相应处理
+                    getLocation();
+                } else {
+                    showGPSContacts();
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case PRIVATE_CODE:
+                showGPSContacts();
+                break;
+
+        }
+    }
 
     @Override
     public void onResume() {
