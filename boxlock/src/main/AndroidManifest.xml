@@ -52,7 +52,8 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="fc51UqGugQUOwzhBuan3UHSZ1MUERHXz" />    <!--liyp-->
+            android:value="aPF5MCWupjkePjVQZZN8mFTPLZTFb3cV" />
+        <!--android:value="fc51UqGugQUOwzhBuan3UHSZ1MUERHXz" />    &lt;!&ndash;liyp&ndash;&gt;-->
         <!--android:value="GIDYV7mTuroWsLyMApmqSDVaBaCLdTb9" />-->  <!--xiaozd-->
 
         <activity

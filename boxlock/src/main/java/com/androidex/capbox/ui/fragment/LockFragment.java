@@ -378,7 +378,7 @@ public class LockFragment extends BaseFragment implements OnClickListener {
 
             case R.id.iv_lock:
                 openLock();
-                Toast.makeText(getActivity(), "开锁", Toast.LENGTH_LONG).show();
+//                Toast.makeText(getActivity(), "开锁", Toast.LENGTH_LONG).show();
                 break;
 
             case R.id.tv_boxConfig:
@@ -1204,7 +1204,8 @@ public class LockFragment extends BaseFragment implements OnClickListener {
         if (location != null) {
             double latitude = location.getLatitude();
             double longitude = location.getLongitude();
-            tv_address.setText("纬度：" + latitude + "\n经度：" + longitude);
+//            tv_address.setText("纬度：" + latitude + "\n经度：" + longitude);
+            getBaiduLocation(String.valueOf(latitude), String.valueOf(longitude));
         } else {
             tv_address.setText("无法获取到位置信息");
         }
