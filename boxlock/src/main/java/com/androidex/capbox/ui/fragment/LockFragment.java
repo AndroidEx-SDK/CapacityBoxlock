@@ -337,8 +337,8 @@ public class LockFragment extends BaseFragment implements OnClickListener {
                             CommonKit.showOkShort(context, "该功能尚未开启");
                         } else {
                             if (MyBleService.getInstance().getConnectDevice(address) == null) {
-                                CommonKit.showErrorShort(context, "请先连接设备");
-                                return;
+                                //CommonKit.showErrorShort(context, "请先连接设备");
+                                //return;
                             }
                             //MyBleService.getInstance().getFirmWareVer(address);//获取箱体的软件版本号
                             startDFU();

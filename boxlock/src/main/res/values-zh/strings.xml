@@ -5,8 +5,8 @@
     <string name="action_settings">设置</string>
     <string name="action_config">配置</string>
     <string name="action_connectlist">连接列表</string>
-    <string name="copy_right">西安中仪动控信息科技版权所有</string>
-    <string name="corporate_name">西安中仪动控信息科技有限公司</string>
+    <string name="copy_right">安卓(西安)工控设备有限公司 版权所有</string>
+    <string name="corporate_name">安卓(西安)工控设备有限公司</string>
     <!-- fragment_lock -->
     <string name="main_title_tv">智能监控</string>
     <string name="user_name0">名称：</string>
