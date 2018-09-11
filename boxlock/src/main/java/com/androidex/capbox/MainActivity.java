@@ -137,7 +137,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
             } else {
                 bundle.putParcelable(EXTRA_DEVICE, deviceModel);
             }
-            if (getIntent().getStringExtra(EXTRA_ITEM_ADDRESS) != null) {//从桌面插件跳转过来
+            if (getIntent().getStringExtra(EXTRA_ITEM_ADDRESS) !=  null) {//从桌面插件跳转过来
                 main_index = getIntent().getIntExtra(EXTRA_ITEM_POSITION, -1);
             }
             lockFragment = new LockFragment();
