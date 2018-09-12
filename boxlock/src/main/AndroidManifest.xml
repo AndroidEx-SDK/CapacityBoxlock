@@ -87,6 +87,9 @@
             android:name="com.androidex.capbox.ui.activity.BoxDetailActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.androidex.capbox.ui.activity.BoxStatusActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.androidex.capbox.ui.activity.WatchDetialActivity"
             android:screenOrientation="portrait" />
         <activity

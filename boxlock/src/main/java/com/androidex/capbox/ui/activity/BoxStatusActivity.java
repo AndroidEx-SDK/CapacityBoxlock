@@ -1,6 +1,7 @@
 package com.androidex.capbox.ui.activity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -173,6 +174,7 @@ public class BoxStatusActivity extends BaseActivity {
     private TitlePopup titlePopup;
     private boolean isConnect = false;
     private boolean mReceiverTag = false;   //广播接受者标识
+    private static ChatActivity chatActivity;
     BluetoothDevice bluetoothDevice;
     DecimalFormat df = new DecimalFormat("#.00");
     private static final int BAIDU_READ_PHONE_STATE = 100;//定位权限请求
@@ -183,7 +185,24 @@ public class BoxStatusActivity extends BaseActivity {
 
     @Override
     public void initData(Bundle savedInstanceState) {
-
+        isConnect = false;
+//        Bundle bundle = getArguments();
+        DeviceModel deviceModel = savedInstanceState.getParcelable(EXTRA_DEVICE);
+        if (deviceModel != null) {
+            address = deviceModel.getAddress();
+            uuid = deviceModel.getUuid();
+            deviceName = deviceModel.getName();
+        } else {
+            address = savedInstanceState.getString(EXTRA_ITEM_ADDRESS);
+            uuid = savedInstanceState.getString(EXTRA_BOX_UUID);
+            deviceName = savedInstanceState.getString(EXTRA_BOX_NAME);
+        }
+        if (uuid != null) getLocation(true);
+        main_tv_title.setText(CalendarUtil.getName(address));
+        initView();
+        iniRefreshView();
+        initMap();
+        initBleBroadCast();
     }
 
 //    @Override
@@ -1277,7 +1296,12 @@ public class BoxStatusActivity extends BaseActivity {
         unregisterReceiver();
     }
 
-
+    public static void lauch(Activity activity, Bundle bundle) {
+        if (bundle.getInt(EXTRA_PAGER_SIGN) == 0) {
+            chatActivity = (ChatActivity) activity;
+        }
+        CommonKit.startActivity(activity, BoxStatusActivity.class, bundle, false);
+    }
     @Override
     public int getLayoutId() {
         return R.layout.fragment_lock;
