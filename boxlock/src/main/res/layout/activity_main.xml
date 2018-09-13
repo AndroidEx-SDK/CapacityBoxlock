@@ -74,6 +74,7 @@
 
         <com.nightonke.boommenu.BoomMenuButton
             android:id="@+id/bmb2"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:bmb_buttonEnum="textInsideCircle"

@@ -35,6 +35,8 @@ import com.androidex.capbox.module.BoxDeviceModel;
 import com.androidex.capbox.module.DeviceModel;
 import com.androidex.capbox.service.MyBleService;
 import com.androidex.capbox.ui.activity.AddDeviceActivity;
+import com.androidex.capbox.ui.activity.BoxDetailActivity;
+import com.androidex.capbox.ui.activity.BoxStatusActivity;
 import com.androidex.capbox.ui.activity.ChatActivity;
 import com.androidex.capbox.ui.activity.LoginActivity;
 import com.androidex.capbox.ui.adapter.BoxListAdapter;
@@ -167,19 +169,19 @@ public class BoxListFragment extends BaseFragment {
             public void listViewItemClick(int position, View v) {
                 switch (v.getId()) {
                     case R.id.rl_normal:
-                        if (MyBleService.getInstance().getConnectDevice(mylist.get(position).get(EXTRA_ITEM_ADDRESS)) != null) {
+//                        if (MyBleService.getInstance().getConnectDevice(mylist.get(position).get(EXTRA_ITEM_ADDRESS)) != null) {
                             Bundle bundle = new Bundle();
                             bundle.putString(EXTRA_BOX_NAME, mylist.get(position).get(EXTRA_BOX_NAME));
                             bundle.putString(EXTRA_BOX_UUID, mylist.get(position).get(EXTRA_BOX_UUID));
                             bundle.putString(EXTRA_ITEM_ADDRESS, mylist.get(position).get(EXTRA_ITEM_ADDRESS));
                             bundle.putInt(EXTRA_PAGER_SIGN, 0);//0表示从设备列表跳转过去的1表示从监控页跳转
                             bundle.putInt(EXTRA_ITEM_POSITION, position);//position选择的是第几个设备
-                            // BoxDetailActivity.lauch(getActivity(), bundle);
-                            ChatActivity.lauch(context, bundle);
-                        } else {
-                            CommonKit.showOkShort(context, "开始扫描...");
-                            scanLeDevice(position, 0);//开始扫描
-                        }
+                             BoxStatusActivity.lauch(getActivity(), bundle);
+//                            ChatActivity.lauch(context, bundle);
+//                        } else {
+//                            CommonKit.showOkShort(context, "开始扫描...");
+//                            scanLeDevice(position, 0);//开始扫描
+//                        }
                         break;
                     case R.id.tv_unbind:
                         inUnbind = false;

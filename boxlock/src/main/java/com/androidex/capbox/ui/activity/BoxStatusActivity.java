@@ -175,6 +175,7 @@ public class BoxStatusActivity extends BaseActivity {
     private boolean isConnect = false;
     private boolean mReceiverTag = false;   //广播接受者标识
     private static ChatActivity chatActivity;
+    private Context mContext;
     BluetoothDevice bluetoothDevice;
     DecimalFormat df = new DecimalFormat("#.00");
     private static final int BAIDU_READ_PHONE_STATE = 100;//定位权限请求
@@ -186,17 +187,17 @@ public class BoxStatusActivity extends BaseActivity {
     @Override
     public void initData(Bundle savedInstanceState) {
         isConnect = false;
-//        Bundle bundle = getArguments();
-        DeviceModel deviceModel = savedInstanceState.getParcelable(EXTRA_DEVICE);
-        if (deviceModel != null) {
-            address = deviceModel.getAddress();
-            uuid = deviceModel.getUuid();
-            deviceName = deviceModel.getName();
-        } else {
-            address = savedInstanceState.getString(EXTRA_ITEM_ADDRESS);
-            uuid = savedInstanceState.getString(EXTRA_BOX_UUID);
-            deviceName = savedInstanceState.getString(EXTRA_BOX_NAME);
-        }
+//        mContext = context;
+//        DeviceModel deviceModel = savedInstanceState.getParcelable(EXTRA_DEVICE);
+//        if (deviceModel != null) {
+            address = getIntent().getStringExtra(EXTRA_ITEM_ADDRESS);
+            uuid = getIntent().getStringExtra(EXTRA_BOX_UUID);
+            deviceName = getIntent().getStringExtra(EXTRA_BOX_NAME);
+//        } else {
+//            address = savedInstanceState.getString(EXTRA_ITEM_ADDRESS);
+//            uuid = savedInstanceState.getString(EXTRA_BOX_UUID);
+//            deviceName = savedInstanceState.getString(EXTRA_BOX_NAME);
+//        }
         if (uuid != null) getLocation(true);
         main_tv_title.setText(CalendarUtil.getName(address));
         initView();
@@ -352,10 +353,10 @@ public class BoxStatusActivity extends BaseActivity {
                             CommonKit.showOkShort(context, "该功能尚未开启");
                         } else {
                             if (MyBleService.getInstance().getConnectDevice(address) == null) {
-                                //CommonKit.showErrorShort(context, "请先连接设备");
-                                //return;
+                                CommonKit.showErrorShort(context, "请先连接设备");
+                                return;
                             }
-                            //MyBleService.getInstance().getFirmWareVer(address);//获取箱体的软件版本号
+                            MyBleService.getInstance().getFirmWareVer(address);//获取箱体的软件版本号
                             startDFU();
                         }
                         break;
@@ -1297,9 +1298,9 @@ public class BoxStatusActivity extends BaseActivity {
     }
 
     public static void lauch(Activity activity, Bundle bundle) {
-        if (bundle.getInt(EXTRA_PAGER_SIGN) == 0) {
-            chatActivity = (ChatActivity) activity;
-        }
+//        if (bundle.getInt(EXTRA_PAGER_SIGN) == 0) {
+//            chatActivity = (ChatActivity) activity;
+//        }
         CommonKit.startActivity(activity, BoxStatusActivity.class, bundle, false);
     }
     @Override

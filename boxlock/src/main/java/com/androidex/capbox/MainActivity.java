@@ -26,6 +26,7 @@ import com.androidex.capbox.db.DeviceInfo;
 import com.androidex.capbox.db.DeviceInfoDao;
 import com.androidex.capbox.module.BoxDeviceModel;
 import com.androidex.capbox.module.DeviceModel;
+import com.androidex.capbox.ui.activity.BoxStatusActivity;
 import com.androidex.capbox.ui.fragment.BoxListFragment;
 import com.androidex.capbox.ui.fragment.LockFragment;
 import com.androidex.capbox.ui.fragment.MapFragment;
