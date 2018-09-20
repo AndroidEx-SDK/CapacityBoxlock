@@ -6,6 +6,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +20,7 @@ import android.widget.RelativeLayout;
 
 import com.acker.simplezxing.activity.CaptureActivity;
 import com.androidex.boxlib.modules.ServiceBean;
+import com.androidex.capbox.MainActivity;
 import com.androidex.capbox.MyApplication;
 import com.androidex.capbox.R;
 import com.androidex.capbox.base.BaseActivity;
@@ -79,6 +82,7 @@ import static com.androidex.capbox.provider.WidgetProvider.EXTRA_ITEM_POSITION;
 import static com.androidex.capbox.utils.Constants.CODE.REQUESTCODE_ADD_DEVICE;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
+import static com.androidex.capbox.utils.Constants.EXTRA_DEVICE;
 import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
 import static com.androidex.capbox.utils.Constants.EXTRA_PAGER_SIGN;
 
@@ -139,7 +143,7 @@ public class BoxListFragment extends BaseFragment {
             public void onItemClick(ActionItem item, int position) {
                 switch (position) {
                     case 0:
-                        AddDeviceActivity.lauch(context, null,REQUESTCODE_ADD_DEVICE);
+                        AddDeviceActivity.lauch(context, null, REQUESTCODE_ADD_DEVICE);
                         break;
                     case 1:
                         Intent intent = new Intent(context, CaptureActivity.class);
@@ -169,25 +173,33 @@ public class BoxListFragment extends BaseFragment {
             public void listViewItemClick(int position, View v) {
                 switch (v.getId()) {
                     case R.id.rl_normal:
-//                        if (MyBleService.getInstance().getConnectDevice(mylist.get(position).get(EXTRA_ITEM_ADDRESS)) != null) {
-                            Bundle bundle = new Bundle();
-                            bundle.putString(EXTRA_BOX_NAME, mylist.get(position).get(EXTRA_BOX_NAME));
-                            bundle.putString(EXTRA_BOX_UUID, mylist.get(position).get(EXTRA_BOX_UUID));
-                            bundle.putString(EXTRA_ITEM_ADDRESS, mylist.get(position).get(EXTRA_ITEM_ADDRESS));
-                            bundle.putInt(EXTRA_PAGER_SIGN, 0);//0表示从设备列表跳转过去的1表示从监控页跳转
-                            bundle.putInt(EXTRA_ITEM_POSITION, position);//position选择的是第几个设备
-                             BoxStatusActivity.lauch(getActivity(), bundle);
-//                            ChatActivity.lauch(context, bundle);
-//                        } else {
-//                            CommonKit.showOkShort(context, "开始扫描...");
-//                            scanLeDevice(position, 0);//开始扫描
-//                        }
+                        Bundle bundle = new Bundle();
+                        bundle.putString(EXTRA_BOX_NAME, mylist.get(position).get(EXTRA_BOX_NAME));
+                        bundle.putString(EXTRA_BOX_UUID, mylist.get(position).get(EXTRA_BOX_UUID));
+                        bundle.putString(EXTRA_ITEM_ADDRESS, mylist.get(position).get(EXTRA_ITEM_ADDRESS));
+                        bundle.putInt(EXTRA_PAGER_SIGN, 0);//0表示从设备列表跳转过去的1表示从监控页跳转
+                        bundle.putInt(EXTRA_ITEM_POSITION, position);//position选择的是第几个设备
+                        BoxStatusActivity.lauch(getActivity(), bundle);
+//进入设备详情的fragment
+//                        Bundle bundle = new Bundle();
+//                        MainActivity activity = (MainActivity) getActivity();
+//                        FragmentManager fragmentManager = activity.getSupportFragmentManager();
+//                        bundle.putParcelable(EXTRA_DEVICE,
+//                                new DeviceModel(mylist.get(position).get(EXTRA_ITEM_ADDRESS),
+//                                        mylist.get(position).get(EXTRA_BOX_UUID),
+//                                        mylist.get(position).get(EXTRA_BOX_NAME)));
+//                        activity.lockFragment = new LockFragment();
+//                        activity.lockFragment.setArguments(bundle);
+//                        FragmentTransaction transaction = fragmentManager.beginTransaction();
+//                        transaction.replace(R.id.content,activity.lockFragment);
+//                        transaction.commit();
                         break;
                     case R.id.tv_unbind:
                         inUnbind = false;
                         String address = mylist.get(position).get(EXTRA_ITEM_ADDRESS);
                         uuid = mylist.get(position).get(EXTRA_BOX_UUID);
                         unBindPosition = position;
+                        unBind(unBindPosition, address, uuid);
                         if (MyBleService.getInstance().getConnectDevice(address) == null) {
                             scanLeDevice(position, 1);
                             showProgress("正在连接...");
@@ -238,6 +250,7 @@ public class BoxListFragment extends BaseFragment {
 
     /**
      * 开始扫描
+     *
      * @param index 0 代表是点击连接后进入聊天  1代表是解除绑定
      */
     private void scanLeDevice(final int position, final int index) {

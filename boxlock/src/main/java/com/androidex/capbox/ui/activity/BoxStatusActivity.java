@@ -1305,6 +1305,6 @@ public class BoxStatusActivity extends BaseActivity {
     }
     @Override
     public int getLayoutId() {
-        return R.layout.fragment_lock;
+        return R.layout.activity_boxstatus;
     }
 }

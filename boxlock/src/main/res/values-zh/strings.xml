@@ -31,7 +31,7 @@
     <string name="main_tv_boxlist">携行箱</string>
     <string name="main_tv_connectlist">已连接设备</string>
     <string name="main_tv_find">查找设备</string>
-    <string name="main_tv_setting">我</string>
+    <string name="main_tv_setting">个人中心</string>
 
     <!-- userlist -->
     <string name="userlist_title_tv">用户</string>

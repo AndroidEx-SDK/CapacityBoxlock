@@ -93,7 +93,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     private FragmentTransaction transaction;
     private int currIndex = 0;
     private Fragment mainFragment;
-    private Fragment lockFragment;
+    public Fragment lockFragment;
     private static List<Map<String, String>> mylist = new ArrayList<>();
     private int main_index = -1;
     private DeviceInfoDao deviceInfoDao;
@@ -120,32 +120,32 @@ public class MainActivity extends BaseActivity implements OnClickListener {
         homepage_tab4.setOnClickListener(this);
         fragmentManager = getSupportFragmentManager();
         transaction = fragmentManager.beginTransaction();
-        if (mylist.size() == 0) {
+//        if (mylist.size() == 0) {
             currIndex = 0;
             initImage();
             mainFragment = new BoxListFragment();
             transaction.replace(R.id.content, mainFragment);
             transaction.commit();
-        } else {
-            Bundle bundle = new Bundle();
-            currIndex = 2;
-            initImage();
-            if (deviceModel == null) {
-                bundle.putParcelable(EXTRA_DEVICE,
-                        new DeviceModel(mylist.get(0).get(EXTRA_ITEM_ADDRESS),
-                                mylist.get(0).get(EXTRA_BOX_UUID),
-                                mylist.get(0).get(EXTRA_BOX_NAME)));
-            } else {
-                bundle.putParcelable(EXTRA_DEVICE, deviceModel);
-            }
-            if (getIntent().getStringExtra(EXTRA_ITEM_ADDRESS) !=  null) {//从桌面插件跳转过来
-                main_index = getIntent().getIntExtra(EXTRA_ITEM_POSITION, -1);
-            }
-            lockFragment = new LockFragment();
-            lockFragment.setArguments(bundle);
-            transaction.replace(R.id.content, lockFragment);
-            transaction.commitAllowingStateLoss();
-        }
+//        } else {
+//            Bundle bundle = new Bundle();
+//            currIndex = 2;
+//            initImage();
+//            if (deviceModel == null) {
+//                bundle.putParcelable(EXTRA_DEVICE,
+//                        new DeviceModel(mylist.get(0).get(EXTRA_ITEM_ADDRESS),
+//                                mylist.get(0).get(EXTRA_BOX_UUID),
+//                                mylist.get(0).get(EXTRA_BOX_NAME)));
+//            } else {
+//                bundle.putParcelable(EXTRA_DEVICE, deviceModel);
+//            }
+//            if (getIntent().getStringExtra(EXTRA_ITEM_ADDRESS) !=  null) {//从桌面插件跳转过来
+//                main_index = getIntent().getIntExtra(EXTRA_ITEM_POSITION, -1);
+//            }
+//            lockFragment = new LockFragment();
+//            lockFragment.setArguments(bundle);
+//            transaction.replace(R.id.content, lockFragment);
+//            transaction.commitAllowingStateLoss();
+//        }
     }
 
     public void initDB() {
