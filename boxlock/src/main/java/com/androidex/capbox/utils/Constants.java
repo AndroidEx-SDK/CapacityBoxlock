@@ -16,6 +16,10 @@ public class Constants extends BleConstants {
     public static final String EXTRA_ITEM_ADDRESS = "address";
     public static final String EXTRA_BOX_UUID = "uuid";
     public static final String EXTRA_BOX_NAME = "name";
+    public static final String EXTRA_BOX_LA= "latitude";
+    public static final String EXTRA_BOX_LONG = "longitude";
+    public static final String EXTRA_BOX_TEMP = "temperature";
+    public static final String EXTRA_BOX_HUM = "humidity";
     public static final String EXTRA_USER_HEAD = "head";//存储用户头像路径
     public static final String EXTRA_PAGER_SIGN = "pager_sign";//启动页面标志，区别是哪个页面跳转到该页面的
     public static final String boxName = "AEX";

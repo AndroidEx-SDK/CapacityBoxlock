@@ -34,7 +34,11 @@ import okhttp3.Headers;
 import okhttp3.Request;
 
 import static com.androidex.capbox.provider.WidgetProvider.ACTION_UPDATE_ALL;
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_HUM;
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_LA;
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_LONG;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_NAME;
+import static com.androidex.capbox.utils.Constants.EXTRA_BOX_TEMP;
 import static com.androidex.capbox.utils.Constants.EXTRA_BOX_UUID;
 import static com.androidex.capbox.utils.Constants.EXTRA_ITEM_ADDRESS;
 
@@ -78,7 +82,7 @@ public class BoxListAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.listitem_device, null);
+            convertView = mInflater.inflate(R.layout.listitem_device_test, null);
             if (holder == null) {
                 holder = new ViewHolder();
             }
@@ -90,6 +94,9 @@ public class BoxListAdapter extends BaseAdapter {
             holder.normalItemContentLayout = convertView.findViewById(R.id.rl_normal);
             holder.deviceName = convertView.findViewById(R.id.device_name);
             holder.device_address = convertView.findViewById(R.id.device_address);
+            holder.device_location = convertView.findViewById(R.id.device_location);
+            holder.device_temp = convertView.findViewById(R.id.device_temp);
+            holder.device_hum = convertView.findViewById(R.id.device_hum);
             holder.iv_online = convertView.findViewById(R.id.iv_online);
             holder.tv_status = convertView.findViewById(R.id.tv_status);
             holder.unbind = convertView.findViewById(R.id.tv_unbind);
@@ -108,12 +115,20 @@ public class BoxListAdapter extends BaseAdapter {
         final String uuid = mContentList.get(position).get(EXTRA_BOX_UUID);
         final String mac = mContentList.get(position).get(EXTRA_ITEM_ADDRESS);
         String name = mContentList.get(position).get(EXTRA_BOX_NAME);
+        String latitude = mContentList.get(position).get(EXTRA_BOX_LA);
+        String longitude = mContentList.get(position).get(EXTRA_BOX_LONG);
+        String temperature = mContentList.get(position).get(EXTRA_BOX_TEMP);
+        String humidity = mContentList.get(position).get(EXTRA_BOX_HUM);
         String isOnLine = mContentList.get(position).get("isOnLine");
         String deviceStatus = mContentList.get(position).get("deviceStatus");
-        holder.deviceName.setText(CalendarUtil.getName(mac));
+//        holder.deviceName.setText(CalendarUtil.getName(mac));
+        holder.deviceName.setText(name);
         if (mac != null) {
-            holder.device_address.setText(mac);
+            holder.device_address.setText("设备地址："+mac);
         }
+        holder.device_location.setText("："+latitude+"0°,"+longitude+"0°");
+        holder.device_temp.setText("："+temperature+"℃");
+        holder.device_hum.setText("："+humidity+"%RH");
         holder.iv_online.setOnClickListener(mListener);
         holder.iv_online.setTag(position);
         holder.normalItemContentLayout.setOnClickListener(mListener);
@@ -191,6 +206,9 @@ public class BoxListAdapter extends BaseAdapter {
         private View normalItemContentLayout;
         public TextView deviceName;
         public TextView device_address;
+        public TextView device_location;
+        public TextView device_temp;
+        public TextView device_hum;
         public ImageView iv_online;
         public TextView tv_status;
         private TextView unbind;
