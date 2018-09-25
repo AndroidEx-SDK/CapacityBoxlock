@@ -94,7 +94,8 @@ public class BLEDeviceListAdapter extends BaseAdapter {
         viewHolder.deviceBtn.setOnClickListener(mListener);
         viewHolder.deviceBtn.setTag(position);
         BluetoothDevice device = mLeDevices.get(position);
-        String deviceName = CalendarUtil.getName(device.getAddress());
+//        String deviceName = CalendarUtil.getName(device.getAddress());
+        String deviceName = device.getName();
         viewHolder.deviceName.setText(deviceName);
         viewHolder.deviceAddress.setText(device.getAddress());
         return view;

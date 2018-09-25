@@ -48,6 +48,12 @@ android {
         } catch (ignored) {
             return null
         }
+        android.applicationVariants.all { variant ->
+            variant.outputs.each { output ->
+                output.outputFile = new File("密运箱"+ "-" + buildType.name + "-v" +
+                        defaultConfig.versionName + "-" + defaultConfig.versionCode + ".apk" );
+            }
+        }
     }
 
     compileSdkVersion 27

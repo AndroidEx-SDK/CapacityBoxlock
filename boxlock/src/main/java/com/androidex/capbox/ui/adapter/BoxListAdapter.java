@@ -128,7 +128,7 @@ public class BoxListAdapter extends BaseAdapter {
         }
         holder.device_location.setText("："+latitude+"0°,"+longitude+"0°");
         holder.device_temp.setText("："+temperature+"℃");
-        holder.device_hum.setText("："+humidity+"%RH");
+        holder.device_hum.setText("`："+humidity+"%RH");
         holder.iv_online.setOnClickListener(mListener);
         holder.iv_online.setTag(position);
         holder.normalItemContentLayout.setOnClickListener(mListener);
