@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name">ZydcKJBox</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="hello_world" tools:ignore="MissingTranslation">Hello world!</string>
 
     <!-- 欢迎界面 -->
     <string name="copy_right">Xian ZhongYi DongKong KJ all rights reserved</string>
@@ -13,16 +13,15 @@
     <string name="main_title_tv">Intelligent Monitoring</string>
     <string name="user_name0">nickname:</string>
     <string name="user_name">Box</string>
-    <string name="user_age">6 years</string>
-    <string name="user_date0">birthday:</string>
-    <string name="user_date">2015-02-11</string>
+    <string name="user_age" tools:ignore="MissingTranslation">6 years</string>
+    <string name="user_date0" tools:ignore="MissingTranslation">birthday:</string>
     <string name="user_binding">device:</string>
     <string name="user_device">FF:FF:FF:FF:FF</string>
     <string name="main_max_temp1">highest:</string>
-    <string name="main_max_temp"></string>
+    <string name="main_max_temp" tools:ignore="MissingTranslation">Max Temp</string>
     <string name="main_max_temp2">℃</string>
     <string name="main_min_temp1">lowest:</string>
-    <string name="main_min_temp">0</string>
+    <string name="main_min_temp" tools:ignore="MissingTranslation">0</string>
     <string name="main_min_temp2">℃</string>
     <string name="main_temp">37.2</string>
     <string name="main_temp_unit">℃</string>
@@ -32,12 +31,12 @@
     <string name="main_min_hum1">lowest:</string>
     <string name="main_min_hum">26.6</string>
     <string name="main_min_hum2">%RH</string>
-    <string name="main_hum">37.2</string>
-    <string name="main_hum_unit">℃</string>
-    <string name="main_temp_type1">normothermia</string>
-    <string name="main_temp_type2">high fever</string>
+    <string name="main_hum" tools:ignore="MissingTranslation">37.2</string>
+    <string name="main_hum_unit" tools:ignore="MissingTranslation">℃</string>
+    <string name="main_temp_type1" tools:ignore="MissingTranslation">normothermia</string>
+    <string name="main_temp_type2" tools:ignore="MissingTranslation">high fever</string>
     <string name="main_temp_type3">ambient temp</string>
-    <string name="main_tv_temp">Real Time Monitoring</string>
+    <string name="main_tv_temp" tools:ignore="MissingTranslation">Real Time Monitoring</string>
     <string name="main_tv_setting">Feature Set</string>
     <string name="main_tv_find">Find Devices</string>
 
@@ -53,11 +52,11 @@
     <string name="adduser_title_tv">New User</string>
     <string name="adduser_title_tv1">Usermod</string>
     <string name="adduser_btn_binding">binding</string>
-    <string name="adduser_tv_name">NAME:</string>
-    <string name="adduser_tv_sex">SEX:</string>
-    <string name="adduser_tv_sex_man">male</string>
-    <string name="adduser_tv_sex_woman">lady</string>
-    <string name="adduser_tv_age">BIRTHDAY:</string>
+    <string name="adduser_tv_name" tools:ignore="MissingTranslation">NAME:</string>
+    <string name="adduser_tv_sex" tools:ignore="MissingTranslation">SEX:</string>
+    <string name="adduser_tv_sex_man" tools:ignore="MissingTranslation">male</string>
+    <string name="adduser_tv_sex_woman" tools:ignore="MissingTranslation">lady</string>
+    <string name="adduser_tv_age" tools:ignore="MissingTranslation">BIRTHDAY:</string>
 
     <!-- fragment_history -->
     <string name="history_title_tv">History</string>
@@ -85,7 +84,7 @@
     <string name="setting_tv_real">thermometer mode</string>
     <string name="setting_tv_mode">Type Of Alarm</string>
     <string name="setting_tv_device">Device</string>
-    <string name="setting_tv_down_fever">Nursing station</string>
+    <string name="setting_tv_down_fever" tools:ignore="MissingTranslation">Nursing station</string>
     <string name="setting_tv_about">About</string>
 
     <!-- activity_typeofalarm -->
@@ -111,10 +110,10 @@
     <string name="about_tv1">Version Number:V1.01</string>
     <string name="about_btn_tv">Version Check</string>
     <string name="about_tv2">(User License Agreement)</string>
-    <string name="about_tv3">All rights reserved: AndroidEx(Xi'an) Co., LTD</string>
-    <string name="about_tv4">www.androidex.com</string>
-    <string name="about_tv5"></string>
-    <string name="about_tv6"></string>
+    <string name="about_tv3" tools:ignore="StringEscaping">(User License Agreement)</string>
+    <string name="about_tv4">All rights reserved</string>
+    <string name="about_tv5">Copyright © 2014-2015 AndroidEx</string>
+    <string name="about_tv6">All rights reserved</string>
 
     <!-- activity_device -->
     <string name="device_title_tv">Device</string>
@@ -136,10 +135,10 @@
     <string name="downfever_tv_matters">Attentions in Daily Care</string>
 
     <!-- activity_massage -->
-    <string name="massage_tv_title">Five Massage Reducing Methods</string>
-    <string name="massage_tv_title1">1, Clear the Lung Meridian</string>
-    <string name="massage_tv_title1_place">Position: the ring finger’s pulp</string>
-    <string name="massage_tv_title1_method">Operation: Pinch the baby’s ring finger with your thumb
+    <string name="massage_tv_title" tools:ignore="MissingTranslation">Five Massage Reducing Methods</string>
+    <string name="massage_tv_title1" tools:ignore="MissingTranslation">1, Clear the Lung Meridian</string>
+    <string name="massage_tv_title1_place" tools:ignore="MissingTranslation">Position: the ring finger’s pulp</string>
+    <string name="massage_tv_title1_method" tools:ignore="MissingTranslation">Operation: Pinch the baby’s ring finger with your thumb
         and index finger. Push 50 times from the finger top to the end. Thus clear the baby’s lung
         meridian.
     </string>
@@ -191,9 +190,9 @@
     <string name="adduser_phone">Choose from the phone</string>
     <string name="adduser_back">return</string>
     <string name="adduser_date">Please select a date and time</string>
-    <string name="adduser_year"></string>
-    <string name="adduser_month"></string>
-    <string name="adduser_day"></string>
+    <string name="adduser_year">年</string>
+    <string name="adduser_month">月</string>
+    <string name="adduser_day">日</string>
     <string name="adduser_month_unit">month</string>
     <string name="adduser_day_unit">day</string>
     <string name="adduser_hour_unit">hour</string>
@@ -208,10 +207,10 @@
     <string name="bledevice_toast6">Time synchronization equipment failure</string>
 
     <!-- HistoryListActivity.java -->
-    <string name="historylist_fever">Fever: have fever</string>
+    <string name="historylist_fever" tools:ignore="MissingTranslation">Fever: have fever</string>
 
     <!-- MainActivity.java -->
-    <string name="main_exit">Press the return key once again and exit the program</string>
+    <string name="main_exit" tools:ignore="MissingTranslation">Press the return key once again and exit the program</string>
 
     <!-- TypeOfAlarmActivity.java -->
     <string name="typeofalarm_shake">shake</string>
@@ -238,28 +237,28 @@
 
     <!-- LockFragment.java -->
     <string name="itemfragment_ble_toast">Create a user first!</string>
-    <string name="itemfragment_username">baby</string>
+    <string name="itemfragment_username" tools:ignore="MissingTranslation">baby</string>
     <string name="itemfragment_exceed">Temperature is beyond measurement range.</string>
     <string name="itemfragment_toast1">disconnected</string>
     <string name="itemfragment_toast2">has been actively disconnect</string>
     <string name="itemfragment_toast3">Please first binding equipment</string>
     <string name="itemfragment_toast4">Fail to search device</string>
     <string name="itemfragment_toast5">Please reconnect the device</string>
-    <string name="itemfragment_dialog_fever">Stop the fever to remind</string>
-    <string name="itemfragment_dialog_cold">Stop warm clothing to remind</string>
-    <string name="itemfragment_dialog_kick">Stop kicking, remind</string>
+    <string name="itemfragment_dialog_fever" tools:ignore="MissingTranslation">Stop the fever to remind</string>
+    <string name="itemfragment_dialog_cold" tools:ignore="MissingTranslation">Stop warm clothing to remind</string>
+    <string name="itemfragment_dialog_kick" tools:ignore="MissingTranslation">Stop kicking, remind</string>
     <string name="itemfragment_dialog_lost">Has left a safe distance.</string>
 
     <!-- SettingFragment.java -->
     <string name="setting_tv_above">above</string>
     <string name="setting_dialog_title">Fever alarm</string>
-    <string name="setting_tv_open_kick_ok">Open the kicking, success.</string>
-    <string name="setting_tv_close_kick_ok">Close the kicking, success.</string>
-    <string name="setting_tv_open_real_time_ok">Open the thermometer model success.</string>
-    <string name="setting_tv_close_real_time_ok">Close the thermometer model success.</string>
-    <string name="setting_tv_open_indicator_light_ok">Open the temperature indicator light ofsuccess.</string>
+    <string name="setting_tv_open_kick_ok" tools:ignore="MissingTranslation">Open the kicking, success.</string>
+    <string name="setting_tv_close_kick_ok" tools:ignore="MissingTranslation">Close the kicking, success.</string>
+    <string name="setting_tv_open_real_time_ok" tools:ignore="MissingTranslation">Open the thermometer model success.</string>
+    <string name="setting_tv_close_real_time_ok" tools:ignore="MissingTranslation">Close the thermometer model success.</string>
+    <string name="setting_tv_open_indicator_light_ok" tools:ignore="MissingTranslation">Open the temperature indicator light ofsuccess.</string>
     <string name="setting_tv_ujuicer_alarm_ok">Anti lost alarm set successfully.</string>
-    <string name="setting_tv_close_indicator_light_ok">The temperature indicator light of success.</string>
+    <string name="setting_tv_close_indicator_light_ok" tools:ignore="MissingTranslation">The temperature indicator light of success.</string>
     <string name="setting_tv_ble_disconnect">Bluetooth not connected</string>
 
     <string name="setting_tv_below">below</string>
@@ -273,30 +272,30 @@
     <string name="app_label">Compass</string>
     <string name="getting_location">Getting location...</string>
     <string name="cannot_get_location">Cannot get your location</string>
-    <string name="location_north">%s N</string>
-    <string name="location_south">%s S</string>
-    <string name="location_east">%s E</string>
-    <string name="location_west">%s W</string>
+    <string name="location_north" tools:ignore="MissingTranslation">%s N</string>
+    <string name="location_south" tools:ignore="MissingTranslation">%s S</string>
+    <string name="location_east" tools:ignore="MissingTranslation">%s E</string>
+    <string name="location_west" tools:ignore="MissingTranslation">%s W</string>
 
     <string name="bracelet_bindfail">Bracelet is mac not bind</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" tools:ignore="MissingTranslation">Hello blank fragment</string>
 
-    <string name="text_inside_circle_button_text_normal">Text Inside Circle Button(Normal)</string>
-    <string name="text_inside_circle_button_text_highlighted">Text Inside Circle Button(Highlighted)</string>
-    <string name="text_inside_circle_button_text_unable">Text Inside Circle Button(Unable)</string>
+    <string name="text_inside_circle_button_text_normal" tools:ignore="MissingTranslation">Text Inside Circle Button(Normal)</string>
+    <string name="text_inside_circle_button_text_highlighted" tools:ignore="MissingTranslation">Text Inside Circle Button(Highlighted)</string>
+    <string name="text_inside_circle_button_text_unable" tools:ignore="MissingTranslation">Text Inside Circle Button(Unable)</string>
 
-    <string name="text_outside_circle_button_text_normal">Text Outside Circle Button(Normal)</string>
-    <string name="text_outside_circle_button_text_highlighted">Text Outside Circle Button(Highlighted)</string>
-    <string name="text_outside_circle_button_text_unable">Text Outside Circle Button(Unable)</string>
+    <string name="text_outside_circle_button_text_normal" tools:ignore="MissingTranslation">Text Outside Circle Button(Normal)</string>
+    <string name="text_outside_circle_button_text_highlighted" tools:ignore="MissingTranslation">Text Outside Circle Button(Highlighted)</string>
+    <string name="text_outside_circle_button_text_unable" tools:ignore="MissingTranslation">Text Outside Circle Button(Unable)</string>
 
-    <string name="text_ham_button_text_normal">Ham Button Text(Normal)</string>
-    <string name="text_ham_button_text_highlighted">Ham Button Text(Highlighted)</string>
-    <string name="text_ham_button_text_unable">Ham Button Text(Unable)</string>
-    <string name="text_ham_button_sub_text_normal">Ham Button Sub Text(Normal)</string>
-    <string name="text_ham_button_sub_text_highlighted">Ham Button Sub Text(Highlighted)</string>
-    <string name="text_ham_button_sub_text_unable">Ham Button Sub Text(Unable)</string>
+    <string name="text_ham_button_text_normal" tools:ignore="MissingTranslation">Ham Button Text(Normal)</string>
+    <string name="text_ham_button_text_highlighted" tools:ignore="MissingTranslation">Ham Button Text(Highlighted)</string>
+    <string name="text_ham_button_text_unable" tools:ignore="MissingTranslation">Ham Button Text(Unable)</string>
+    <string name="text_ham_button_sub_text_normal" tools:ignore="MissingTranslation">Ham Button Sub Text(Normal)</string>
+    <string name="text_ham_button_sub_text_highlighted" tools:ignore="MissingTranslation">Ham Button Sub Text(Highlighted)</string>
+    <string name="text_ham_button_sub_text_unable" tools:ignore="MissingTranslation">Ham Button Sub Text(Unable)</string>
 
     <!--xiaozd add-->
     <string name="marker_dialog_navigation_text">Navigation</string>
@@ -314,8 +313,246 @@
     <string name="rc_friday_format">Fri</string>
     <string name="rc_saturday_format">Sat</string>
     <string name="rc_sunsay_format">Sun</string>
-    <string name="rc_year_format"></string>
-    <string name="rc_month_format"></string>
-    <string name="rc_day_format"></string>
+    <string name="rc_year_format">Year format</string>
+    <string name="rc_month_format">Month format</string>
+    <string name="rc_day_format">Day format</string>
     <string name="rc_yesterday_format">Yesterday</string>
+    <string name="action_config">Config</string>
+    <string name="action_connectlist">Connect Lists</string>
+    <string name="current_temp">Cur. Temp</string>
+    <string name="main_tv_watchlist">Watchs</string>
+    <string name="main_tv_boxlist">Boxs</string>
+    <string name="main_tv_connectlist">Connected devices</string>
+    <string name="adduser_btn_unbinding">Unbind</string>
+    <string name="adduser_btn_signout">Quit</string>
+    <string name="adduser_btn_cancellation">Logout</string>
+    <string name="pull_to_refresh">Pull down for refresh</string>
+    <string name="release_to_refresh">Release for refresh</string>
+    <string name="refreshing">Refreshing...</string>
+    <string name="not_updated_yet">No update</string>
+    <string name="updated_at">Updated before %1$s</string>
+    <string name="updated_just_now">updated</string>
+    <string name="time_error">Time error</string>
+    <string name="setting">Setting</string>
+    <string name="testble">Ble debug</string>
+    <string name="setting_tv_rule">Unlock rule</string>
+    <string name="setting_tv_modes">Unlock mode</string>
+    <string name="setting_tv_clearFinger">Clear unlock fingerprints</string>
+    <string name="setting_tv_clearBecomeFinger">Clear silence fingerprints</string>
+    <string name="setting_tv_possessorFinger">Add fingerprints</string>
+    <string name="setting_tv_settingFinger">fingerprints setting</string>
+    <string name="setting_tv_becomeFinger">Silence fingerprints</string>
+    <string name="setting_tv_personnel">Carrer device</string>
+    <string name="setting_tv_distance">Alerm dist</string>
+    <string name="setting_tv_photograph">Carrer info</string>
+    <string name="setting_tv_phonenumbers">Carrer cell phone</string>
+    <string name="setting_tv_distance_settings">Dist setting</string>
+    <string name="setting_tv_configure">One key config</string>
+    <string name="setting_tv_heartbeatRate">Heart Feq.</string>
+    <string name="setting_tv_UrgencyHeartRate">Loss Hear Feq.</string>
+    <string name="setting_tv_temperature">Low temp</string>
+    <string name="setting_tv_temperature2">High temp</string>
+    <string name="setting_tv_lowhum">Low humi</string>
+    <string name="setting_tv_highhum">High humi</string>
+    <string name="setting_tv_alarm">Alerm Setting</string>
+    <string name="setting_tv_openalarm">Alerm Switch</string>
+    <string name="setting_tv_lockscreen">Lock screeem Switch</string>
+    <string name="setting_tv_lowtemp">Set low temp</string>
+    <string name="setting_tv_hightemp">Set high temp</string>
+    <string name="bledevice_toast7">设备未连接</string>
+    <string name="bledevice_toast_hand">手环已经连接</string>
+    <string name="bledevice_toast8">连接超时，请确定设备正常</string>
+    <string name="bledevice_toast9">手机蓝牙断开</string>
+    <string name="bledevice_toast10">已经是第一页</string>
+    <string name="bledevice_toast11">别扯了，已经到最后一页了</string>
+    <string name="bledevice_toast12">开始连接，请确定设备正常</string>
+    <string name="itemfragment_dialog_temp_out">温度超范围</string>
+    <string name="itemfragment_dialog_rssi_out">距离超范围</string>
+    <string name="label_login">登录</string>
+    <string name="label_automatic_login">自动登录</string>
+    <string name="label_configBox">配置箱体</string>
+    <string name="label_configbracelet">配置腕表</string>
+    <string name="label_settingLock">开锁设置</string>
+    <string name="label_settingTemp">温湿度设置</string>
+    <string name="label_startCarryScort">启动携行押运</string>
+    <string name="label_finish">提交</string>
+    <string name="label_register">提交审核</string>
+    <string name="label_user_login">用户登录</string>
+    <string name="label_box_name">箱体昵称</string>
+    <string name="label_device_list">设备列表</string>
+    <string name="label_user_login_account">手机号码</string>
+    <string name="label_edit_head">修改头像</string>
+    <string name="label_fre_heart">设置心跳频率</string>
+    <string name="label_fre_urgency_heart">设置紧急情况心跳频率</string>
+    <string name="label_img_clip">图片裁剪</string>
+    <string name="label_img_select">图片选择</string>
+    <string name="hint_phone_input">请输入11位手机号</string>
+    <string name="hint_uuid_commit">箱体uuid为空</string>
+    <string name="hint_boxname_commit">请设置箱体昵称</string>
+    <string name="hint_possessorFinger_commit">请设置所有人指纹信息</string>
+    <string name="hint_becomeFinger_commit">请设置无线静默指纹信息</string>
+    <string name="hint_unlocking_commit">请设置开锁次数</string>
+    <string name="hint_unlockingmode_commit">请设置开锁模式</string>
+    <string name="hint_carryPersonNum_commit">请添加携行人员</string>
+    <string name="hint_police_commit">警告，报警开关没开</string>
+    <string name="hint_heartbeatRate_commit">请设置正确的心跳频率(30s-120s)</string>
+    <string name="hint_locationRate_commit">请设置正确的定位频率(0s-30s)</string>
+    <string name="hint_highestTemp_commit">请设置最高温度(60°-100°)</string>
+    <string name="hint_lowestTemp_commit">请设置最低温度(0°-60°)</string>
+    <string name="hint_dismountPolice_commit">请开启破拆报警</string>
+    <string name="hint_become_commit">请开启无线静默</string>
+    <string name="hint_not_config">携行状态无法进行配置</string>
+    <string name="hint_password_input">请输入6-32位的密码</string>
+    <string name="hint_authcode_input">验证码不正确</string>
+    <string name="hint_cardid_input">身份证号码非法</string>
+    <string name="hint_regist_ok">提交成功，请耐心等待审核</string>
+    <string name="hint_regist_fail">审核未通过，请与客服联系</string>
+    <string name="hint_name_input">姓名非法</string>
+    <string name="hint_reg_ok">注册成功</string>
+    <string name="hint_reg_fail">注册失败</string>
+    <string name="hint_find_pwd_ok">密码找回成功</string>
+    <string name="hint_find_pwd_fail">密码找回失败</string>
+    <string name="hint_login_ok">登录成功</string>
+    <string name="hint_bind_ok">绑定成功</string>
+    <string name="hint_unbind_ok">解绑成功</string>
+    <string name="hint_unbind_fail">解绑失败</string>
+    <string name="hint_login_fail">登录失败</string>
+    <string name="label_login_ing">正在登陆</string>
+    <string name="label_config_ing">正在配置</string>
+    <string name="label_getlist_ing">正在获取设备列表</string>
+    <string name="label_intnet_fail">网络连接失败</string>
+    <string name="hint_password_not_equal">两次密码输入不同</string>
+    <string name="label_register_ing">正在注册</string>
+    <string name="label_find_pwd_ing">正在找回密码</string>
+    <string name="label_logout_ing">正在退出登录</string>
+    <string name="hint_logout_fail">退出登录失败</string>
+    <string name="hint_logout_ok">退出登录成功</string>
+    <string name="hint_logoff_ok">注销成功</string>
+    <string name="hint_password">密码</string>
+    <string name="hint_authcode">验证码</string>
+    <string name="label_reg_by_phone">手机号注册</string>
+    <string name="label_forget_password">忘记密码？</string>
+    <string name="label_user_req">注册账号</string>
+    <string name="label_finger_enter">指纹录入</string>
+    <string name="label_find_pwd">找回密码</string>
+    <string name="hint_input_phone">请输入手机号码</string>
+    <string name="hint_name">姓名</string>
+    <string name="hint_captcha">身份证号码</string>
+    <string name="label_get_captcha">身份验证</string>
+    <string name="hint_set_login_pwd">输入登录密码</string>
+    <string name="hint_input_new_pwd">输入新密码</string>
+    <string name="hint_set_login_pwd_confirm">确认登录密码</string>
+    <string name="hint_new_pwd_confirm">确认新密码</string>
+    <string name="hint_send_mobile_code_again">%ds后可重新获取</string>
+    <string name="label_send_mobile_code">获取验证码</string>
+    <string name="hint_get_mobile_code_ing">正在获取验证码</string>
+    <string name="hint_get_mobile_code_error">验证码错误，请重新输入</string>
+    <string name="hint_get_mobile_code_success"><font color="red">%ds</font><font color="#666666">后可重新获取</font></string>
+    <string name="hint_get_code_error">获取验证码失败</string>
+    <string name="label_ing">进行中</string>
+    <string name="hint_input_captcha">输入验证码</string>
+    <string name="hint_input_finger">请将手指放在箱体指纹传感器上</string>
+    <string name="hint_input_fingerfail">请再次将手指放在箱体指纹传感器上</string>
+    <string name="hint_input_fingeragin">请再次将手指放在箱体指纹传感器上</string>
+    <string name="hint_input_fingersucced">恭喜指纹录入完成</string>
+    <string name="fingerprint_recognition_start">开始指纹识别</string>
+    <string name="fingerprint_recognition_cancel">取消指纹识别</string>
+    <string name="fingerprint_recognition_hint">请轻触感应器验证指纹</string>
+    <string name="fingerprint_recognition_not_support">此设备不支持指纹解锁</string>
+    <string name="fingerprint_recognition_success">指纹识别成功</string>
+    <string name="fingerprint_recognition_failed">指纹识别失败，请重试！</string>
+    <string name="fingerprint_recognition_error">指纹识别错误，等待几秒之后再重试</string>
+    <string name="fingerprint_recognition_authenticating">指纹识别已经开启，请使用指纹解锁</string>
+    <string name="fingerprint_recognition_unlock_screen">测试密码解锁屏幕</string>
+    <string name="fingerprint_recognition_not_enrolled">您还没有录制指纹，请录入！</string>
+    <string name="fingerprint_not_set_unlock_screen_pws">系统没有设置锁屏密码！</string>
+    <string name="fingerprint_sys_setting_page">进入系统指纹设置页面</string>
+    <string name="sys_pwd_recognition_success">系统密码识别成功</string>
+    <string name="sys_pwd_recognition_failed">系统密码识别失败</string>
+    <string name="rc_audio_input">按住 说话</string>
+    <string name="rc_audio_input_hover">松开 发送</string>
+    <string name="track_query_title">轨迹查询</string>
+    <string name="track_analysis_title">轨迹分析</string>
+    <string name="track_setting_title">轨迹设置</string>
+    <string name="speeding">超 速</string>
+    <string name="harsh_breaking">急刹车</string>
+    <string name="harsh_accel">急变速</string>
+    <string name="harsh_steering">急转弯</string>
+    <string name="stay_point">停留点</string>
+    <string name="all_cancel">取消</string>
+    <string name="all_sure">确定</string>
+    <string name="track_analysis_speeding_title">超速详情</string>
+    <string name="track_analysis_breaking_title">急刹车详情</string>
+    <string name="track_analysis_accel_title">急变速详情</string>
+    <string name="track_analysis_steering_title">急转弯详情</string>
+    <string name="track_analysis_stay_title">停留点详情</string>
+    <string name="actual_speed">实际行驶速度：</string>
+    <string name="limit_speed">限定最高时速：</string>
+    <string name="acceleration">限定最高时速：</string>
+    <string name="initial_speed_1">限定最高时速：</string>
+    <string name="end_speed_1">加速后时速：</string>
+    <string name="initial_speed_2">刹车前时速：</string>
+    <string name="end_speed_2">刹车后时速：</string>
+    <string name="centripetal_acceleration">向心加速度：</string>
+    <string name="turn_type">转向类型：</string>
+    <string name="turn_speed">转向时速：</string>
+    <string name="stay_start_time">开始时间：</string>
+    <string name="stay_end_time">结束时间：</string>
+    <string name="stay_duration">停留时长：</string>
+    <string name="no_track_data">未查询到轨迹</string>
+    <string name="track_query_option_time">起止时间:</string>
+    <string name="track_query_option_process">纠偏与数据分析:</string>
+    <string name="track_query_option_radius_threshold">精度过滤(单位:米):</string>
+    <string name="track_query_option_transport_mode">交通方式:</string>
+    <string name="track_query_option_sort_type">排序规则:</string>
+    <string name="processed">纠偏</string>
+    <string name="denoise">去噪</string>
+    <string name="vacuate">抽稀</string>
+    <string name="mapmatch">绑路</string>
+    <string name="radius_value">过滤值：</string>
+    <string name="radius_hint">0</string>
+    <string name="driving_mode">驾车</string>
+    <string name="riding_mode">骑行</string>
+    <string name="walking_mode">步行</string>
+    <string name="all_supplement_model">里程补偿方式:</string>
+    <string name="all_coord_type">坐标类型:</string>
+    <string name="no_supplement">不补充</string>
+    <string name="straight">直线距离</string>
+    <string name="driving">最短驾车路线</string>
+    <string name="riding">最短骑行路线</string>
+    <string name="walking">最短步行路线</string>
+    <string name="asc">升序</string>
+    <string name="desc">降序</string>
+    <string name="bd09ll">百度经纬度坐标</string>
+    <string name="gcj02">国测局加密坐标</string>
+    <string name="start_time">开始：</string>
+    <string name="end_time">结束：</string>
+    <string name="user_date">User Date</string>
+    <string name="device_btn_bind">绑定</string>
+    <string name="device_status_become">静默状态</string>
+    <string name="setting_tv_silence">静默开关</string>
+    <string name="setting_tv_distancePolice">距离报警</string>
+    <string name="setting_tv_alarm_demolition">防拆报警</string>
+    <string name="setting_tv_tempPolice">温度报警</string>
+    <string name="setting_tv_humidityPolice">湿度报警</string>
+    <string name="setting_tv_fingerprint_unlock">静默模式指纹开锁</string>
+    <string name="setting_tv_factory_settings">恢复出厂设置</string>
+    <string name="setting_tv_wristband_factory_setings">重置腕表</string>
+    <string name="setting_tv_wristband">腕表配置</string>
+    <string name="setting_tv_box">配置</string>
+    <string name="setting_tv_boxConfig">密运箱配置</string>
+    <string name="setting_tv_settingFigner">指纹设置</string>
+    <string name="setting_tv_alowesthum">0℃</string>
+    <string name="setting_tv_highesthum">80℃</string>
+    <string name="setting_tv_Nolocation">箱体位置未知</string>
+    <string name="setting_tv_connectdevice">已连接设备</string>
+    <string name="typeofalarm_tv_distance">距离报警方式</string>
+    <string name="device_title_text3">绑定设备</string>
+    <string name="device_box_bind">已绑定携行箱</string>
+    <string name="device_watch_bind">已绑定腕表</string>
+    <string name="device_btn_online">离线</string>
+    <string name="device_status_leisure">空闲状态</string>
+    <string name="device_status_config">配置状态</string>
+    <string name="device_status_carry">携行状态</string>
+    <string name="device_status_open">开箱状态</string>
 </resources>

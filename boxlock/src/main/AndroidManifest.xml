@@ -5,9 +5,7 @@
     android:versionCode="1"
     android:versionName="1.0.0">
 
-    <uses-sdk
-        android:minSdkVersion="18"
-        android:targetSdkVersion="25" />
+    <uses-sdk android:targetSdkVersion="25" />
 
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />

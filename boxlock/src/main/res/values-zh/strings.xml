@@ -149,12 +149,11 @@
     <string name="about_title_tv">关于我们</string>
     <string name="about_null_versionNum">未检测到版本</string>
     <string name="about_tv_versionNum">版本号:Ver </string>
-    <string name="about_tv1">智能箱锁APP</string>
-    <string name="about_tv2">版本号:Ver1.0.0</string>
+    <string name="about_tv1">版本号:Ver1.0.0</string>
     <string name="about_btn_tv">版本检测</string>
     <string name="about_tv3">用户使用条款</string>
     <string name="about_tv4">版权所有</string>
-    <string name="about_tv5">Copyright © 2014-2015 lyp</string>
+    <string name="about_tv5">Copyright © 2014-2015 AndroidEx</string>
     <string name="about_tv6">All rights reserved</string>
 
     <!-- activity_device -->
@@ -425,9 +424,9 @@
     <string name="rc_friday_format">Fri</string>
     <string name="rc_saturday_format">Sat</string>
     <string name="rc_sunsay_format">Sun</string>
-    <string name="rc_year_format"></string>
-    <string name="rc_month_format"></string>
-    <string name="rc_day_format"></string>
+    <string name="rc_year_format">Year format</string>
+    <string name="rc_month_format">Month format</string>
+    <string name="rc_day_format">Day format</string>
     <string name="rc_yesterday_format">Yesterday</string>
 
 
@@ -505,5 +504,56 @@
 
     <string name="start_time">开始：</string>
     <string name="end_time">结束：</string>
+    <string name="about_tv2">用户使用条款</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="user_age">6 years</string>
+    <string name="user_date0">birthday:</string>
+    <string name="main_min_temp">0</string>
+    <string name="main_hum">37.2</string>
+    <string name="main_hum_unit">℃</string>
+    <string name="main_temp_type1">normothermia</string>
+    <string name="main_temp_type2">high fever</string>
+    <string name="main_tv_temp">Real Time Monitoring</string>
+    <string name="adduser_tv_name">NAME:</string>
+    <string name="adduser_tv_sex">SEX:</string>
+    <string name="adduser_tv_sex_woman">lady</string>
+    <string name="adduser_tv_sex_man">male</string>
+    <string name="adduser_tv_age">BIRTHDAY:</string>
+    <string name="setting_tv_down_fever">Nursing station</string>
+    <string name="massage_tv_title">Five Massage Reducing Methods</string>
+    <string name="massage_tv_title1">1, Clear the Lung Meridian</string>
+    <string name="massage_tv_title1_place">Position: the ring finger’s pulp</string>
+    <string name="massage_tv_title1_method">Operation: Pinch the baby’s ring finger with your thumb</string>
+    <string name="historylist_fever">"        and index finger. Push 50 times from the finger top to the end. Thus clear the baby’s lung"</string>
+    <string name="main_exit">"        meridian."</string>
+    <string name="itemfragment_username">"    "</string>
+    <string name="itemfragment_dialog_fever">Stop the fever to remind</string>
+    <string name="itemfragment_dialog_cold">Stop warm clothing to remind</string>
+    <string name="itemfragment_dialog_kick">Stop kicking, remind</string>
+    <string name="setting_tv_open_kick_ok">Open the kicking, success.</string>
+    <string name="setting_tv_close_kick_ok">Close the kicking, success.</string>
+    <string name="setting_tv_open_real_time_ok">Open the thermometer model success.</string>
+    <string name="setting_tv_close_real_time_ok">Close the thermometer model success.</string>
+    <string name="setting_tv_open_indicator_light_ok">Open the temperature indicator light ofsuccess.</string>
+    <string name="setting_tv_close_indicator_light_ok">The temperature indicator light of success.</string>
+    <string name="location_north">%s N</string>
+    <string name="location_south">%s S</string>
+    <string name="location_east">%s E</string>
+    <string name="location_west">%s W</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="text_inside_circle_button_text_normal">Text Inside Circle Button(Normal)</string>
+    <string name="text_inside_circle_button_text_highlighted">Text Inside Circle Button(Highlighted)</string>
+    <string name="text_inside_circle_button_text_unable">Text Inside Circle Button(Unable)</string>
+    <string name="text_outside_circle_button_text_normal">Text Outside Circle Button(Normal)</string>
+    <string name="text_outside_circle_button_text_unable">Text Outside Circle Button(Unable)</string>
+    <string name="text_outside_circle_button_text_highlighted">Text Outside Circle Button(Highlighted)</string>
+    <string name="text_ham_button_text_normal">Ham Button Text(Normal)</string>
+    <string name="text_ham_button_text_highlighted">Ham Button Text(Highlighted)</string>
+    <string name="main_max_temp">Max Temp</string>
+    <string name="user_date">User Date</string>
+    <string name="text_ham_button_text_unable">Ham Button Text(Unable)</string>
+    <string name="text_ham_button_sub_text_normal">Ham Button Sub Text(Normal</string>
+    <string name="text_ham_button_sub_text_highlighted">Ham Button Sub Text(Highlighted)</string>
+    <string name="text_ham_button_sub_text_unable">Ham Button Sub Text(Unable)</string>
 
 </resources>
